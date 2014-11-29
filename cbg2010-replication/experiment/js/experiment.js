@@ -48,16 +48,42 @@ function make_slides(f) {
      (the variable 'stim' will change between each of these values,
       and for each of these, present_handle will be run.) */
     present : [
-      {category: "morseths", color: "silver", part: "fur"},
-      {category: "blins", color: "red", part: "scales"},
-      {category: "zorbs", color: "orange", part: "tail"},
-      {category: "daiths", color: "gold", part: "stripes"},
-      {category: "moxes", color: "green", part: "shell"},
-      {category: "ludinos", color: "yellow", part: "legs"},
-      {category: "cheebas", color: "blue", part: "ears"},
-      {category: "lorches", color: "purple", part: "feathers"},
-      {category: "glippets", color: "copper", part: "spots"},
-      {category: "krivels", color: "pink", part: "teeth"}
+      {category: "morseths", color: "silver", part: "fur", danger:"This fur sheds particles that get lodged in your lungs and make it impossible to breathe.", irrelvant:"This fur is very curly and rough to the touch."},
+      {category: "blins", color: "red", part: "scales", danger:"These scales secrete a strong venom that kills you on the spot.", irrelvant:"These scales are soft, flexible, and very shiny."},
+      {category: "zorbs", color: "orange", part: "tail", danger:"These tails are so long and muscular that they can suffocate you in a matter of minutes.", irrelvant:"These tails are very long and usually get curled up in a ball."},
+      {category: "daiths", color: "gold", part: "stripes", danger:"These stripes deliver a powerful electric shock that's deadly to anyone within a few feet.", irrelvant:"These stripes are very thin and closely spaced"},
+      {category: "moxes", color: "green", part: "shell", danger: "These shells are so heavy that they would immediately crush your bones.", irrelvant:"These shalls have an octagonal shape and are very light."},
+      {category: "ludinos", color: "yellow", part: "legs", danger: "These legs are so powerful that a single blow could kill you.", irrelvant:"These legs are very long and covered with bumpy skin."},
+      {category: "cheebas", color: "blue", part: "ears", danger: "These ears are the home to dangerous parasites that can make you go deaf.", irrelvant:"These ears are small and and round."},
+      {category: "lorches", color: "purple", part: "feathers", danger: "These feathers are as sharp as needles and can easily get loged in you, causing massive bleeding.", irrelvant:"These feathers are wide and very smooth to the touch."},
+      {category: "glippets", color: "copper", part: "spots", danger: "These spots are the home to a contagious fungus that is deadly to anyone who becomes infected with it.", irrelvant:"These spots are very sensitive and cover most of their bodies."},
+      {category: "krivels", color: "pink", part: "teeth", danger: "These teeth are razor sharp and so powerful that a single bite can be lethal.", irrelvant:"These teeth are long and narrow."}
+    ],
+
+    present : [
+      {category: "ollers", color: "yellow", part: "fur", danger:"This fur sheds particles that get lodged in your lungs and make it impossible to breathe.", irrelvant:"This fur is very curly and rough to the touch."},
+      {category: "reesles", color: "blue", part: "scales", danger:"These scales secrete a strong venom that kills you on the spot.", irrelvant:"These scales are soft, flexible, and very shiny."},
+      {category: "taifels", color: "purple", part: "tail", danger:"These tails are so long and muscular that they can suffocate you in a matter of minutes.", irrelvant:"These tails are very long and usually get curled up in a ball."},
+      {category: "mooks", color: "copper", part: "stripes", danger:"These stripes deliver a powerful electric shock that's deadly to anyone within a few feet.", irrelvant:"These stripes are very thin and closely spaced"},
+      {category: "luzaks", color: "orange", part: "shell", danger: "These shells are so heavy that they would immediately crush your bones.", irrelvant:"These shalls have an octagonal shape and are very light."},
+      {category: "ackles", color: "silver", part: "legs", danger: "These legs are so powerful that a single blow could kill you.", irrelvant:"These legs are very long and covered with bumpy skin."},
+      {category: "elleps", color: "pink", part: "ears", danger: "These ears are the home to dangerous parasites that can make you go deaf.", irrelvant:"These ears are small and and round."},
+      {category: "plovs", color: "gold", part: "feathers", danger: "These feathers are as sharp as needles and can easily get loged in you, causing massive bleeding.", irrelvant:"These feathers are wide and very smooth to the touch."},
+      {category: "sapers", color: "red", part: "spots", danger: "These spots are the home to a contagious fungus that is deadly to anyone who becomes infected with it.", irrelvant:"These spots are very sensitive and cover most of their bodies."},
+      {category: "zoovs", color: "green", part: "teeth", danger: "These teeth are razor sharp and so powerful that a single bite can be lethal.", irrelvant:"These teeth are long and narrow."}
+    ],
+
+    present : [
+      {category: "kweps", color: "copper", part: "fur", danger:"This fur sheds particles that get lodged in your lungs and make it impossible to breathe.", irrelvant:"This fur is very curly and rough to the touch."},
+      {category: "dorbs", color: "yellow", part: "scales", danger:"These scales secrete a strong venom that kills you on the spot.", irrelvant:"These scales are soft, flexible, and very shiny."},
+      {category: "trufts", color: "green", part: "tail",danger:"These tails are so long and muscular that they can suffocate you in a matter of minutes.", irrelvant:"These tails are very long and usually get curled up in a ball."},
+      {category: "frams", color: "silver", part: "stripes", danger:"These stripes deliver a powerful electric shock that's deadly to anyone within a few feet.", irrelvant:"These stripes are very thin and closely spaced"},
+      {category: "javs", color: "purple", part: "shell", danger: "These shells are so heavy that they would immediately crush your bones.", irrelvant:"These shalls have an octagonal shape and are very light."},
+      {category: "feps", color: "pink", part: "legs", danger: "These legs are so powerful that a single blow could kill you.", irrelvant:"These legs are very long and covered with bumpy skin."},
+      {category: "kazzes", color: "orange", part: "ears", danger: "These ears are the home to dangerous parasites that can make you go deaf.", irrelvant:"These ears are small and and round."},
+      {category: "noobs", color: "red", part: "feathers", danger: "These feathers are as sharp as needles and can easily get loged in you, causing massive bleeding.", irrelvant:"These feathers are wide and very smooth to the touch."},
+      {category: "stups", color: "gold", part: "spots", danger: "These spots are the home to a contagious fungus that is deadly to anyone who becomes infected with it.", irrelvant:"These spots are very sensitive and cover most of their bodies."},
+      {category: "thups", color: "blue", part: "teeth", danger: "These teeth are razor sharp and so powerful that a single bite can be lethal.", irrelvant:"These teeth are long and narrow."}
     ],
 
     //this gets run only at the beginning of the block
