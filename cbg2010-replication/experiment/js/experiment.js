@@ -1,6 +1,6 @@
 function make_slides(f) {
   var slides = {};
-  var numTrials = 30;
+  var numTrials = allstims.length;
 
   slides.i0 = slide({
      name : "i0",
@@ -47,26 +47,26 @@ function make_slides(f) {
     /* trial information for this block
      (the variable 'stim' will change between each of these values,
       and for each of these, present_handle will be run.) */
-    present : _.shuffle(allstims),
+    present : _.range(numTrials),
 
     //this gets run only at the beginning of the block
-    present_handle : function(stim) {
+    present_handle : function(stim_num) {
       $(".err").hide();
       $('input[name="radio_button"]').prop('checked', false);
 
-      this.stim = stim; //I like to store this information in the slide so I can record it later.
-      this.stimtype = _.sample(["bare","danger","irrelevant"]);
-      this.prevalence = _.sample(["10","30","50","70","90"]);
+      this.stim = allstims[stim_num]; // allstims should be randomized, or stim_num should be
+      this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
+      this.prevalence = exp.prevalence_levels[this.stim.list][stim_num%10] // grab prevalence level for this list --- n mod 10'th item
 
-      var evidence_prompt = this.prevalence+ "% of "  + stim.category + " have " + stim.color + " " + stim.part + ".\n";
-      var query_prompt = utils.upperCaseFirst(stim.category) + " have " + stim.color + " " + stim.part + ".\n";
+      var evidence_prompt = this.prevalence+ "% of "  + this.stim.category + " have " + this.stim.color + " " + this.stim.part + ".\n";
+      var query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n";
 
       if (this.stimtype == 'danger'){
-        evidence_prompt+=stim.danger +"\n No other animals on this island have this kind of " + stim.category
+        evidence_prompt+=this.stim.danger +"\n No other animals on this island have this kind of " + this.stim.part
       }
 
       if (this.stimtype == 'irrelevant'){
-        evidence_prompt+=stim.irrelevant +"\n Other animals on this island also have this kind of " + stim.category
+        evidence_prompt+=this.stim.irrelevant +"\n Other animals on this island also have this kind of " + this.stim.part
       }
 
       $(".evidence").html(evidence_prompt);
@@ -248,9 +248,12 @@ function make_slides(f) {
 
 /// init ///
 function init() {
+  var prev_levels = ["10","10","30","30","50","50","70","70","90","90"];
   exp.trials = [];
   exp.catch_trials = [];
   exp.condition = _.sample(["truth-conditions", "implied-prevalence"]); //can randomize between subject conditions here
+  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
+  exp.prevalence_levels = [_.shuffle(prev_levels),_.shuffle(prev_levels),_.shuffle(prev_levels)];
   exp.system = {
       Browser : BrowserDetect.browser,
       OS : BrowserDetect.OS,
