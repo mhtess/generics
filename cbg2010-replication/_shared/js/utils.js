@@ -3,6 +3,12 @@ var utils = {
 	upperCaseFirst: function(str){
 		return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 	},
+
+	isNumeric: function(val){
+		var intRegex = /^\d+$/;
+		var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+))$/;
+		return (intRegex.test(val) || floatRegex.test(val))
+	},
 	
 	showSlide: function(slidename) {
 			$(".slide").hide();

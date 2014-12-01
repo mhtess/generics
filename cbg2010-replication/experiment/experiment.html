@@ -53,17 +53,16 @@
     <button onclick="_s.button()">Continue</button>
   </div>
 
-  <div class="slide" id="single_trial">
-    <p>Here is a single trial. Depending on the condition, you'll see different words below:</p>
-    <p class="display_condition">{{}}</p>
+  <div class="slide" id="implied_prevalence">
+    <p class="evidence"></p>
+    <p class="query"></p>
+
     <input type="text" id="text_response"></input>
     <button onclick="_s.button()">Continue</button>
-    <p class="err">Please write something.</p>
+    <p class="err">Please enter a number between 0-100.</p>
   </div>
 
-  <div class="slide"  id="2AFC">
-<!--     <p class='evidence'><span id="evidence-prompt">{{}}</span></p>
- -->    
+  <div class="slide"  id="truth_conditions">
     <p class="evidence"></p>
     <p>Is the following sentence true or false?</p>
     <p class="query"></p>

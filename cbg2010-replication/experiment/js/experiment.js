@@ -12,36 +12,78 @@ function make_slides(f) {
 
   slides.instructions = slide({
     name : "instructions",
-    // start: function(){
-    //   $("#total-num").html(15);  
-    // },
     button : function() {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
 
-  slides.single_trial = slide({
-    name: "single_trial",
-    start: function() {
+  slides.implied_prevalence = slide({
+    name: "implied_prevalence",
+
+    present : _.range(numTrials),
+
+    //this gets run only at the beginning of the block
+    present_handle : function(stim_num) {
       $(".err").hide();
-      $(".display_condition").html("You are in " + exp.condition + ".");
+      $("#text_response").val('')
+
+      this.stim = allstims[stim_num]; // allstims should be randomized, or stim_num should be
+      this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
+
+      var evidence_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n";
+      var query_prompt = "What percentage of "  + this.stim.category + " do you think have " + this.stim.color + " " + this.stim.part + "?\n";
+
+      if (this.stimtype == 'danger'){
+        evidence_prompt+=this.stim.danger +"\n No other animals on this island have this kind of " + this.stim.part
+      }
+
+      if (this.stimtype == 'irrelevant'){
+        evidence_prompt+=this.stim.irrelevant +"\n Other animals on this island also have this kind of " + this.stim.part
+      }
+
+      $(".evidence").html(evidence_prompt);
+      $(".query").html(query_prompt);
+
+       // this.init_radiios();
+       // exp.sliderPost = null; //erase current slider value
     },
+
     button : function() {
       response = $("#text_response").val();
-      if (!(utils.isNumeric(response))) {
+      if (!(response<=100 && response>=0)) {
         $(".err").show();
       } else {
-        exp.data_trials.push({
-          "trial_type" : "single_trial",
-          "response" : response
-        });
-        exp.go(); //make sure this is at the *end*, after you log your data
+        this.log_responses();
+
+        /* use _stream.apply(this); if and only if there is
+        "present" data. (and only *after* responses are logged) */
+        _stream.apply(this);
+
+
+      //   exp.data_trials.push({
+      //     "trial_type" : "single_trial",
+      //     "response" : response
+      //   });
+      //   exp.go(); //make sure this is at the *end*, after you log your data
+      // }
       }
+
     },
+
+        log_responses : function() {
+      exp.data_trials.push({
+        "trial_type" : "implied_prevalence",
+        "response" : $("#text_response").val(),
+        "stim_type": this.stimtype,
+        "stim_category": this.stim.category,
+        "stim_color": this.stim.color,
+        "stim_part":this.stim.part
+      });
+    }
   });
 
-  slides.two_afc = slide({
-    name: "2AFC",
+  slides.truth_conditions = slide({
+    name: "truth_conditions",
 
 
     /* trial information for this block
@@ -90,7 +132,7 @@ function make_slides(f) {
 
     log_responses : function() {
       exp.data_trials.push({
-        "trial_type" : "2AFC",
+        "trial_type" : "truth_conditions",
         "response" : $("input:radio[name=radio_button]:checked").val(),
         "stim_type": this.stimtype,
         "prevalence": this.prevalence
@@ -251,7 +293,7 @@ function init() {
   var prev_levels = ["10","10","30","30","50","50","70","70","90","90"];
   exp.trials = [];
   exp.catch_trials = [];
-  exp.condition = _.sample(["truth-conditions", "implied-prevalence"]); //can randomize between subject conditions here
+  exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
   exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
   exp.prevalence_levels = [_.shuffle(prev_levels),_.shuffle(prev_levels),_.shuffle(prev_levels)];
   exp.system = {
@@ -264,7 +306,7 @@ function init() {
     };
   //blocks of the experiment:
  // exp.structure=["i0", "instructions","two_afc","single_trial","two_afc","single_trial", "one_slider", "multi_slider", 'subj_info', 'thanks'];
-   exp.structure=["i0", "instructions","two_afc",'subj_info', 'thanks'];
+   exp.structure=["i0", "instructions",exp.condition,'subj_info', 'thanks'];
  
   exp.data_trials = [];
   //make corresponding slides:
