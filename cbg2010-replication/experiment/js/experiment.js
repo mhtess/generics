@@ -1,12 +1,11 @@
 function make_slides(f) {
   var slides = {};
-  var numTrials = allstims.length;
 
   slides.i0 = slide({
      name : "i0",
      start: function() {
       exp.startT = Date.now();
-      $("#total-num").html(numTrials);  
+      $("#total-num").html(exp.numTrials);  
      }
   });
 
@@ -20,18 +19,30 @@ function make_slides(f) {
   slides.implied_prevalence = slide({
     name: "implied_prevalence",
 
-    present : _.range(numTrials),
-
+   // present : _.shuffle(_.range(numTrials)),
+  present : _.range(exp.numTrials),
     //this gets run only at the beginning of the block
     present_handle : function(stim_num) {
+      this.startTime = Date.now();
+
       $(".err").hide();
       $("#text_response").val('')
 
-      this.stim = allstims[stim_num]; // allstims should be randomized, or stim_num should be
+      this.stim = exp.stims[stim_num]; // allstims should be randomized, or stim_num should be
+      this.trialNum = stim_num;
+
+      //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
+      this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
       this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
 
-      var evidence_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n";
       var query_prompt = "What percentage of "  + this.stim.category + " do you think have " + this.stim.color + " " + this.stim.part + "?\n";
+
+      if (this.determiner=='generic'){
+        var evidence_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n";
+      }
+      else{
+        var evidence_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.stim.color + " " + this.stim.part + ".\n";
+      }
 
       if (this.stimtype == 'danger'){
         evidence_prompt+=this.stim.danger +"\n No other animals on this island have this kind of " + this.stim.part
@@ -50,9 +61,10 @@ function make_slides(f) {
 
     button : function() {
       response = $("#text_response").val();
-      if (!(response<=100 && response>=0)) {
+      if (!(response<=100 && response>=0 && response!='')) {
         $(".err").show();
       } else {
+        this.rt = Date.now() - this.startTime;
         this.log_responses();
 
         /* use _stream.apply(this); if and only if there is
@@ -73,8 +85,11 @@ function make_slides(f) {
         log_responses : function() {
       exp.data_trials.push({
         "trial_type" : "implied_prevalence",
+        "trial_num": this.trialNum,
         "response" : $("#text_response").val(),
+        "rt":this.rt,
         "stim_type": this.stimtype,
+        "stim_determiner": this.determiner,
         "stim_category": this.stim.category,
         "stim_color": this.stim.color,
         "stim_part":this.stim.part
@@ -89,19 +104,31 @@ function make_slides(f) {
     /* trial information for this block
      (the variable 'stim' will change between each of these values,
       and for each of these, present_handle will be run.) */
-    present : _.range(numTrials),
+    present : _.range(exp.numTrials),
 
     //this gets run only at the beginning of the block
     present_handle : function(stim_num) {
+      this.startTime = Date.now();
       $(".err").hide();
       $('input[name="radio_button"]').prop('checked', false);
 
-      this.stim = allstims[stim_num]; // allstims should be randomized, or stim_num should be
+      this.stim = exp.stims[stim_num]; // allstims should be randomized, or stim_num should be
+      this.trialNum = stim_num;
+
+      //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
       this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
+      this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
+
       this.prevalence = exp.prevalence_levels[this.stim.list][stim_num%10] // grab prevalence level for this list --- n mod 10'th item
 
       var evidence_prompt = this.prevalence+ "% of "  + this.stim.category + " have " + this.stim.color + " " + this.stim.part + ".\n";
-      var query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n";
+
+      if (this.determiner=='generic'){
+        var query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n";
+      }
+      else{
+        var query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.stim.color + " " + this.stim.part + ".\n";
+      }
 
       if (this.stimtype == 'danger'){
         evidence_prompt+=this.stim.danger +"\n No other animals on this island have this kind of " + this.stim.part
@@ -122,6 +149,7 @@ function make_slides(f) {
       if (!($("input:radio[name=radio_button]").is(":checked"))) {
         $(".err").show();
       } else {
+        this.rt = Date.now() - this.startTime;
         this.log_responses();
 
         /* use _stream.apply(this); if and only if there is
@@ -133,9 +161,15 @@ function make_slides(f) {
     log_responses : function() {
       exp.data_trials.push({
         "trial_type" : "truth_conditions",
+        "trialNum":this.trialNum,
         "response" : $("input:radio[name=radio_button]:checked").val(),
+        "rt":this.rt,
         "stim_type": this.stimtype,
-        "prevalence": this.prevalence
+        "stim_prevalence": this.prevalence,
+        "stim_determiner": this.determiner,
+        "stim_category": this.stim.category,
+        "stim_color": this.stim.color,
+        "stim_part":this.stim.part
       });
     }
   });
@@ -294,8 +328,13 @@ function init() {
   exp.trials = [];
   exp.catch_trials = [];
   exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
-  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
+//  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
+  exp.stimtype = ["bare","bare","bare"]; //because there is list1, list2, list3
+  exp.determiner = _.shuffle(["generic","some","most"]);
+  exp.numTrials = allstims.length;
+  exp.stims = _.shuffle(allstims); // shuffle stims
   exp.prevalence_levels = [_.shuffle(prev_levels),_.shuffle(prev_levels),_.shuffle(prev_levels)];
+
   exp.system = {
       Browser : BrowserDetect.browser,
       OS : BrowserDetect.OS,
@@ -307,6 +346,7 @@ function init() {
   //blocks of the experiment:
  // exp.structure=["i0", "instructions","two_afc","single_trial","two_afc","single_trial", "one_slider", "multi_slider", 'subj_info', 'thanks'];
    exp.structure=["i0", "instructions",exp.condition,'subj_info', 'thanks'];
+   //exp.structure=['subj_info', 'thanks'];
  
   exp.data_trials = [];
   //make corresponding slides:

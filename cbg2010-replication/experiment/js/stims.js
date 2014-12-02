@@ -7,17 +7,17 @@ var allstims =
         {list:1, category: "reesles", color: "blue", part: "scales", danger:"These scales secrete a strong venom that kills you on the spot.", irrelevant:"These scales are soft, flexible, and very shiny."},
         {list:2, category: "dorbs", color: "yellow", part: "scales", danger:"These scales secrete a strong venom that kills you on the spot.", irrelevant:"These scales are soft, flexible, and very shiny."},
 
-        {list:0,category: "zorbs", color: "orange", part: "tail", danger:"These tails are so long and muscular that they can suffocate you in a matter of minutes.", irrelevant:"These tails are very long and usually get curled up in a ball."},
-        {list:1, category: "taifels", color: "purple", part: "tail", danger:"These tails are so long and muscular that they can suffocate you in a matter of minutes.", irrelevant:"These tails are very long and usually get curled up in a ball."},
-        {list:2, category: "trufts", color: "green", part: "tail",danger:"These tails are so long and muscular that they can suffocate you in a matter of minutes.", irrelevant:"These tails are very long and usually get curled up in a ball."},
+        {list:0,category: "zorbs", color: "orange", part: "tails", danger:"These tails are so long and muscular that they can suffocate you in a matter of minutes.", irrelevant:"These tails are very long and usually get curled up in a ball."},
+        {list:1, category: "taifels", color: "purple", part: "tails", danger:"These tails are so long and muscular that they can suffocate you in a matter of minutes.", irrelevant:"These tails are very long and usually get curled up in a ball."},
+        {list:2, category: "trufts", color: "green", part: "tails",danger:"These tails are so long and muscular that they can suffocate you in a matter of minutes.", irrelevant:"These tails are very long and usually get curled up in a ball."},
 
         {list:0,category: "daiths", color: "gold", part: "stripes", danger:"These stripes deliver a powerful electric shock that's deadly to anyone within a few feet.", irrelevant:"These stripes are very thin and closely spaced"},
         {list:1, category: "mooks", color: "copper", part: "stripes", danger:"These stripes deliver a powerful electric shock that's deadly to anyone within a few feet.", irrelevant:"These stripes are very thin and closely spaced"},
         {list:2, category: "frams", color: "silver", part: "stripes", danger:"These stripes deliver a powerful electric shock that's deadly to anyone within a few feet.", irrelevant:"These stripes are very thin and closely spaced"},
 
-        {list:0,category: "moxes", color: "green", part: "shell", danger: "These shells are so heavy that they would immediately crush your bones.", irrelevant:"These shalls have an octagonal shape and are very light."},
-        {list:1, category: "luzaks", color: "orange", part: "shell", danger: "These shells are so heavy that they would immediately crush your bones.", irrelevant:"These shalls have an octagonal shape and are very light."},
-        {list:2, category: "javs", color: "purple", part: "shell", danger: "These shells are so heavy that they would immediately crush your bones.", irrelevant:"These shalls have an octagonal shape and are very light."},
+        {list:0,category: "moxes", color: "green", part: "shells", danger: "These shells are so heavy that they would immediately crush your bones.", irrelevant:"These shalls have an octagonal shape and are very light."},
+        {list:1, category: "luzaks", color: "orange", part: "shells", danger: "These shells are so heavy that they would immediately crush your bones.", irrelevant:"These shalls have an octagonal shape and are very light."},
+        {list:2, category: "javs", color: "purple", part: "shells", danger: "These shells are so heavy that they would immediately crush your bones.", irrelevant:"These shalls have an octagonal shape and are very light."},
 
         {list:0,category: "ludinos", color: "yellow", part: "legs", danger: "These legs are so powerful that a single blow could kill you.", irrelevant:"These legs are very long and covered with bumpy skin."},
         {list:1, category: "ackles", color: "silver", part: "legs", danger: "These legs are so powerful that a single blow could kill you.", irrelevant:"These legs are very long and covered with bumpy skin."},
