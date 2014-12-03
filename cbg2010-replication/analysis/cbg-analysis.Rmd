@@ -1,0 +1,49 @@
+---
+title: "cgb2010-replication"
+author: "mht"
+date: "December 2, 2014"
+output: html_document
+---
+
+
+```{r}
+library(ggplot2)
+library(plyr)
+library(reshape2)
+library(ggthemes)
+setwd('/Users/mht/Documents/research/generics/cbg2010-replication/')
+turk.data<-read.table('cbg2010_anonymized-trials.tsv',header=T)
+
+turk.data$implied_prevalence <- as.numeric(levels(turk.data$response)[turk.data$response])
+turk.data$truth_conditions <- as.logical(levels(turk.data$response)[turk.data$response])
+
+turk.data$stim_prevalence <- factor(turk.data$stim_prevalence)
+
+```
+
+
+Number of responses for each prevalence level (for truth conditions task)
+```{r}
+table(turk.data[,c("stim_determiner","stim_prevalence")])
+```
+
+Number of responses for implied prevalence task.
+```{r}
+table(subset(turk.data,trial_type=='implied_prevalence')[,c("stim_determiner")])
+```
+
+
+
+```{r}
+ggplot(subset(turk.data,trial_type=='implied_prevalence'),aes(x=implied_prevalence,fill=stim_determiner))+
+  geom_histogram(binwidth=10)+
+  facet_wrap(~stim_determiner)+
+  theme_solarized()
+
+ggplot(subset(turk.data,trial_type=='truth_conditions'),aes(x=stim_prevalence,fill=truth_conditions))+
+  geom_bar(stat='bin')+
+  facet_wrap(~stim_determiner)+
+  theme_solarized()
+
+```
+
