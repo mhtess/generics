@@ -119,8 +119,8 @@ function make_slides(f) {
       this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
       this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
 
-      this.prevalence = exp.prevalence_levels[this.stim.list][stim_num%10] // grab prevalence level for this list --- n mod 10'th item
-
+      this.prevalence = exp.prevalence_levels[this.stim.list].splice(0,1)[0] // grab prevalence level for this list
+      
       var evidence_prompt = this.prevalence+ "% of "  + this.stim.category + " have " + this.stim.color + " " + this.stim.part + ".\n";
 
       if (this.determiner=='generic'){
