@@ -11,11 +11,20 @@ library(ggplot2)
 library(plyr)
 library(reshape2)
 library(ggthemes)
+library(gridExtra)
+library(bootstrap)
+theta <- function(x,xdata,na.rm=T) {mean(xdata[x],na.rm=na.rm)}
+ci.low <- function(x,na.rm=T) {
+  mean(x,na.rm=na.rm) - quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,.025,na.rm=na.rm)}
+ci.high <- function(x,na.rm=T) {
+  quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,.975,na.rm=na.rm) - mean(x,na.rm=na.rm)}
+
+
 setwd('/Users/mht/Documents/research/generics/cbg2010-replication/')
 turk.data<-read.table('cbg2010_anonymized-trials.tsv',header=T)
 
 turk.data$implied_prevalence <- as.numeric(levels(turk.data$response)[turk.data$response])
-turk.data$truth_conditions <- as.logical(levels(turk.data$response)[turk.data$response])
+turk.data$truth_conditions <- factor(as.logical(levels(turk.data$response)[turk.data$response]), levels=c("TRUE","FALSE"))
 
 turk.data$stim_prevalence <- factor(turk.data$stim_prevalence)
 
@@ -35,15 +44,82 @@ table(subset(turk.data,trial_type=='implied_prevalence')[,c("stim_determiner")])
 
 
 ```{r}
-ggplot(subset(turk.data,trial_type=='implied_prevalence'),aes(x=implied_prevalence,fill=stim_determiner))+
-  geom_histogram(binwidth=10)+
-  facet_wrap(~stim_determiner)+
-  theme_solarized()
+df0= ddply(turk.data, 
+           .(stim_determiner, trial_type, stim_prevalence), summarise,
+          truth_endorsements = sum(truth_conditions==TRUE))
 
-ggplot(subset(turk.data,trial_type=='truth_conditions'),aes(x=stim_prevalence,fill=truth_conditions))+
-  geom_bar(stat='bin')+
+
+a<-ggplot(subset(turk.data,trial_type=='implied_prevalence'),aes(x=implied_prevalence,fill=stim_determiner))+
+ # geom_line(stat='histogram')+
+  geom_density(alpha=.5)+
+  #geom_histogram(binwidth=10)+
   facet_wrap(~stim_determiner)+
-  theme_solarized()
+  theme_solarized()+
+  guides(fill=F)
+
+b<-ggplot(df0,aes(x=stim_prevalence,y = truth_endorsements,color=stim_determiner))+
+  geom_line()+
+ # geom_bar(stat='bin',alpha=0.5)+
+  facet_wrap(~stim_determiner)+
+  theme_solarized()+
+  guides(color=F)+
+  scale_x_continuous(breaks=c(10,30,50,70,90)) 
+
+
+grid.arrange(a,b)
+```
+
+Replicate figure 3 from CGB 2010
+
+```{r}
+df<-ddply(subset(turk.data,trial_type=='truth_conditions'), 
+      .(stim_determiner, stim_prevalence), summarise, 
+      true_responses= table(truth_conditions)[["TRUE"]]/length(truth_conditions))
+
+ggplot(df, aes(x=stim_prevalence,y=true_responses,colour=stim_determiner, group=stim_determiner))+
+  geom_line(size=2)+
+  facet_wrap(~stim_determiner,nrow=3)+
+  theme_solarized()+
+  ylab("proportion of 'true' responses")+
+  guides(colour=F)
 
 ```
 
+
+Replicate figure 2 of CGB 2010
+```{r}
+
+bootstrap.ci <- function(x){
+  
+  agr = aggregate(subj_prevalence ~ trial_type + stim_determiner, data=x, FUN=mean)
+  agr$CILow = aggregate(subj_prevalence ~ trial_type + stim_determiner, data=x, FUN=ci.low)$subj_prevalence
+  agr$CIHigh = aggregate(subj_prevalence ~ trial_type + stim_determiner, data=x, FUN=ci.high)$subj_prevalence
+  agr$YMin = agr$subj_prevalence - agr$CILow
+  agr$YMax = agr$subj_prevalence + agr$CIHigh
+  return(agr)
+}
+
+turk.data$stim_prevalence <- as.numeric(levels(turk.data$stim_prevalence)[turk.data$stim_prevalence])
+
+df2<-ddply(subset(turk.data, truth_conditions%in%c("TRUE",NA)), 
+       .(trial_type, stim_determiner, workerid), summarise, 
+       subj_prevalence = mean(implied_prevalence),
+       subj_truth_prevalence = mean(stim_prevalence))
+
+df2$subj_prevalence[is.na(df2$subj_prevalence)] <- df2$subj_truth_prevalence[!is.na(df2$subj_truth_prevalence)]
+
+df2.bs<-bootstrap.ci(df2)
+df2.bs$trial_type <- factor(df2.bs$trial_type, levels=c("truth_conditions","implied_prevalence"))
+
+ggplot(df2.bs, aes(x=stim_determiner,y=subj_prevalence,fill=trial_type, group=trial_type))+
+  geom_bar(stat='identity',position=position_dodge(0.5), width=0.5)+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),
+                width=0.2,
+                size=1,
+                position=position_dodge(0.5),
+                colour='black')+
+  theme_solarized()+
+  ylab("average prevalence")+
+  scale_fill_brewer(type='qual',palette=1)
+
+```
