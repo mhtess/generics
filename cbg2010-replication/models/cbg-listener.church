@@ -1,0 +1,65 @@
+(define (state-prior) (uniform-draw '(0 1 3 5 7 9 10)))
+
+(define (sentence-prior) (uniform-draw (list 'all 'some 'most)))
+
+(define (all state) (= 10 state))
+(define (some state) (< 0 state))
+(define (none state) (= 0 state))
+(define (most state) (< 5 state))
+
+; pass strings, which then call functions of the same name
+(define (meaning word)
+  (case word
+        (('all) all)
+        (('some) some)
+        (('most) most)
+        (('none) none)))
+
+; RSA w/ "how many" QUD
+(define hm-listener1
+  (mem (lambda (words) 
+  (enumeration-query
+   (define state (state-prior))
+   state
+   (equal? words (apply multinomial (hm-speaker state)))))))
+
+(define hm-speaker 
+  (mem (lambda (state)
+  (enumeration-query
+   (define words (sentence-prior))
+   words
+   (equal? state (apply multinomial (hm-listener0 words)))))))
+
+(define hm-listener0
+  (mem (lambda (words) 
+    (enumeration-query
+    (define state (state-prior))
+    state
+    ((meaning words) state)))))
+
+
+(barplot (hm-listener1 'some))
+
+
+; RSA w/ "sentence true?" QUD
+
+(define st-speaker 
+  (mem (lambda (state words)
+  (enumeration-query
+   ;(define words (sentence-prior))
+
+   ((meaning words) state)
+
+   (equal? ((meaning words) state) 
+    (apply multinomial (st-listener0 state words ((meaning words) state))))))))
+
+(define st-listener0
+  (mem (lambda (state words truth) 
+    (enumeration-query
+    
+    ((meaning words) state)
+
+    true))))
+
+
+(barplot (st-listener0 'some))
