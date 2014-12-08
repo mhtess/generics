@@ -1,11 +1,17 @@
 (define (state-prior) (uniform-draw '(0 1 3 5 7 9 10)))
 
-(define (all state) (= 10 state))
-(define (some state) (< 0 state))
-(define (none state) (= 0 state))
-(define (most state) (< 5 state))
+(define (threshold-prior) (uniform-draw '(0 1 3 5 7 9)))
+(define (threshold-most-prior) (uniform-draw '(4.9 5)))
 
-(define (how-many state) state)
+(define (all state threshold) (= 10 state))
+(define (relaxed-all state threshold) (<= 9 state))
+(define (some state threshold) (< 0 state))
+(define (none state threshold) (= 0 state))
+(define (most state threshold-most) (< threshold-most state))
+
+(define (generic state threshold) (< threshold state))
+
+(define (how-many state threshold) state)
 
 ; pass strings, which then call functions of the same name
 (define (meaning word)
@@ -14,46 +20,55 @@
         (('some) some)
         (('most) most)
         (('none) none)
-        (('how-many) how-many)))
+        (('how-many) how-many)
+        (('generic) generic)))
 
 (define listener1
   (mem (lambda (words QUD) 
   (enumeration-query
+   (define theta (threshold-prior))
+   ;(define theta-most (threshold-most-prior))
+   (define theta-most 5)
    (define state (state-prior))
-   (define QUD-val ((meaning QUD) state))
+   (define QUD-val ((meaning QUD) state theta))
    
    QUD-val
 
-   (equal? words (apply multinomial (speaker1 state QUD)))))))
+   (equal? words (apply multinomial (speaker1 state theta theta-most QUD)))))))
 
 (define speaker1
-  (mem (lambda (state QUD)
+  (mem (lambda (state theta theta-most QUD)
   (enumeration-query
    ;(define QUD (if (flip) 'some 'state))
    ;(define words (uniform-draw (list 'some 'none)))
-   (define words (uniform-draw (list 'none 'some 'most 'all)))
-   (define QUD-val ((meaning QUD) state))
+   (define words (uniform-draw (list 'generic 'some 'most 'all)))
+   (define QUD-val ((meaning QUD) state theta))
 
    words
 
    (equal? QUD-val
-    (apply multinomial (listener0 words QUD)))))))
+    (apply multinomial (listener0 words theta theta-most QUD)))))))
 
 (define listener0
-  (mem (lambda (words QUD) 
+  (mem (lambda (words theta theta-most QUD) 
     (enumeration-query
     (define state (state-prior))
-    (define QUD-val ((meaning QUD) state))
+    (define QUD-val ((meaning QUD) state theta))
 
     QUD-val
 
     ;(if (flip 0.95)
-      ((meaning words) state)
+    (if (equal? words 'most)
+      ((meaning words) state theta-most)
+      ((meaning words) state theta))
      ; true)
     ))))
 
-;(map (lambda (x) (listener1 x 'how-many)) (list 'none 'some 'most 'all))
+;(listener1 'most 'how-many)
+(map (lambda (x) (listener1 x 'how-many)) (list 'some 'most 'generic))
 ;(map (lambda (x) (listener1 x 'some)) (list 'none 'some 'most 'all))
 
 ;(map (lambda (x) (speaker1 x 'how-many)) '(1 3 5 7 9 10))
-(map (lambda (x) (speaker1 x 'some)) '(1 3 5 7 9 10))
+;(map (lambda (x) (speaker1 x 'some)) '(1 3 5 7 9 10))
+
+
