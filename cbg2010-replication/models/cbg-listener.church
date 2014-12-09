@@ -8,8 +8,10 @@
 (define (some state threshold) (< 0 state))
 (define (none state threshold) (= 0 state))
 (define (most state threshold-most) (< threshold-most state))
+(define (anti-most state threshold-most) (>= threshold-most state))
 
 (define (generic state threshold) (< threshold state))
+(define (anti-generic state threshold) (>= threshold state))
 
 (define (how-many state threshold) state)
 
@@ -18,13 +20,38 @@
   (case word
         (('all) all)
         (('some) some)
-        (('most) most)
         (('none) none)
+        (('most) most)
+        (('anti-most) anti-most)
         (('how-many) how-many)
-        (('generic) generic)))
+        (('generic) generic)
+        (('anti-generic) anti-generic)
+        ))
+
+
+(define speaker2
+  (mem (lambda (state QUD)
+  (enumeration-query
+   (define theta (threshold-prior))
+   ;(define theta-most (threshold-most-prior))
+   (define theta-most 5)
+   ;(define QUD (if (flip) 'some 'state))
+   (define words (uniform-draw (list 'generic 'anti-generic)))
+;;   (define words (uniform-draw (list 'some 'none)))
+;;    (define words (uniform-draw (list 'most 'anti-most)))
+;;   (define words (uniform-draw (list 'generic 'some 'most 'all)))
+   (define QUD-val ((meaning QUD) state theta))
+
+   words
+
+   (equal? QUD-val
+  ;;  (apply multinomial (listener1 words theta theta-most QUD)) ;; listener1 doesn't do inference over theta
+    (apply multinomial (listener1 words QUD)) ;; listener1 does inference over theta
+    )))))
 
 (define listener1
-  (mem (lambda (words QUD) 
+  (mem (lambda (words QUD) ;; listener1 does inference over theta
+ ;; (mem (lambda (words theta theta-most QUD) ;; listener1 doesn't do inference over theta
   (enumeration-query
    (define theta (threshold-prior))
    ;(define theta-most (threshold-most-prior))
@@ -37,11 +64,17 @@
    (equal? words (apply multinomial (speaker1 state theta theta-most QUD)))))))
 
 (define speaker1
-  (mem (lambda (state theta theta-most QUD)
+ ;; (mem (lambda (state QUD) ;; speaker1 does inference over theta
+  (mem (lambda (state theta theta-most QUD) ;; speaker1 doesn't do inference over theta
   (enumeration-query
+   (define theta (threshold-prior))
+   ;(define theta-most (threshold-most-prior))
+   (define theta-most 5)
    ;(define QUD (if (flip) 'some 'state))
-   ;(define words (uniform-draw (list 'some 'none)))
-   (define words (uniform-draw (list 'generic 'some 'most 'all)))
+   (define words (uniform-draw (list 'generic 'anti-generic)))
+   ;;(define words (uniform-draw (list 'most 'anti-most)))
+   ;;(define words (uniform-draw (list 'some 'none)))
+   ;;(define words (uniform-draw (list 'generic 'some 'most)))
    (define QUD-val ((meaning QUD) state theta))
 
    words
@@ -65,10 +98,11 @@
     ))))
 
 ;(listener1 'most 'how-many)
-(map (lambda (x) (listener1 x 'how-many)) (list 'some 'most 'generic))
-;(map (lambda (x) (listener1 x 'some)) (list 'none 'some 'most 'all))
+;;(map (lambda (x) (listener1 x 'how-many)) (list 'some 'most 'generic))
+;(map (lambda (x) (listener1 x 'how-many)) (list 'generic 'some 'most))
 
 ;(map (lambda (x) (speaker1 x 'how-many)) '(1 3 5 7 9 10))
 ;(map (lambda (x) (speaker1 x 'some)) '(1 3 5 7 9 10))
+;(map (lambda (x) (speaker1 x 'how-many)) '(1 3 5 7 9 10))
 
-
+(map (lambda (x) (speaker2 x 'generic)) '(1 3 5 7 9 10))
