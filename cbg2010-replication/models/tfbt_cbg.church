@@ -1,0 +1,122 @@
+
+
+;; background
+(define (state-prior) (uniform-draw '(0 1 2 3 4 5 6 7 8 9 10)))
+
+(define (all state threshold) (= 10 state))
+(define (relaxed-all state threshold) (<= 9 state))
+
+(define (some state some-threshold) (< some-threshold state))
+(define (none state threshold) (= 0 state))
+
+(define (most state most-threshold) (< most-threshold state))
+(define (anti-most state most-threshold) (>= most-threshold state))
+
+(define (generic state generic-threshold) (< generic-threshold state))
+(define (anti-generic state generic-threshold) (>= generic-threshold state))
+
+(define (mu state dummy) true)
+(define (how-many state dummy) state)
+
+(define (raise-to-power dist alph)
+  (list (first dist) (map (lambda (x) (pow x alph)) (second dist))))
+
+(define (meaning word)
+  (case word
+        (('all) all)
+        (('some) some)
+        (('none) none)
+        (('most) most)
+        (('anti-most) anti-most)
+        (('how-many) how-many)
+        (('generic) generic)
+        (('anti-generic) anti-generic)
+        (('mu) mu)))
+
+
+(define cognitive-model 
+  (mem 
+  (lambda (generic-theta most-theta some-theta QUD utterance)
+
+  (define (theta-meaning word)
+    (case word
+        (('most-theta) most-theta)
+        (('some-theta) some-theta)
+        (('generic-theta) generic-theta)
+        (('how-many-theta) 'null)))
+
+  (define (theta words)
+    (theta-meaning (string-append words '-theta)))
+
+  (define listener1
+    (mem (lambda (words) ;; listener1 doesn't do inference over theta
+    (enumeration-query
+     (define state (state-prior))
+     (define QUD-val ((meaning QUD) state (theta QUD)))
+
+     QUD-val
+
+     (equal? words (apply multinomial (raise-to-power (speaker1 state) alpha)))))))
+
+  (define speaker1
+    (mem (lambda (state)
+    (enumeration-query
+     (define words
+      (case QUD
+        (('generic)  (uniform-draw (list 'generic 'anti-generic)))
+        (('some) (uniform-draw (list 'some 'none)))
+        (('most) (uniform-draw (list 'most 'anti-most)))
+        (('how-many) (uniform-draw (list 'most 'some 'generic)))))
+      (define QUD-val ((meaning QUD) state (theta QUD)))
+
+     words
+
+     (equal? QUD-val
+      (apply multinomial (listener0 words)))))))
+
+
+  (define listener0
+    (mem (lambda (words) 
+      (enumeration-query
+      (define state (state-prior))
+      (define QUD-val ((meaning QUD) state (theta QUD)))
+
+      QUD-val
+
+      ((meaning words) state (theta words))))))
+
+  
+
+  (listener1 utterance)
+
+  )))
+
+(define tfbt-model
+  (mem (lambda (QUD utterance)
+    (enumeration-query
+    (define generic-theta (uniform-draw '(0 1 2 3 4)))
+    (define some-theta (uniform-draw '(0 1 2 3 4)))
+    (define most-theta (uniform-draw '(4 5 6 7 8)))
+
+    (cognitive-model generic-theta most-theta some-theta QUD utterance)
+
+    true))))
+
+(define alpha 2)
+
+;(cognitive-model 3 5 0 'how-many 'some)
+(tfbt-model 'how-many 'some)
+
+
+;; cbg analysis
+; (define inner-product (lambda (lst)
+;   (sum (map (lambda (x y) (* x y)) (first lst) (second lst)))))
+
+; (define normalize (lambda (lst)
+;   (map (lambda (x) (/ x (sum lst))) lst)))
+
+; (define (gen-probs model-preds) 
+;   (let ([gen-pos (map (lambda (lst) (position (first lst) utterance)) model-preds)])
+;     (map (lambda (y i) (if (< i 0) 0 (list-ref (second y) i))) model-preds gen-pos)))
+
+
