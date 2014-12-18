@@ -35,9 +35,10 @@ function make_slides(f) {
       this.trialNum = stim_num;
 
       //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
-      this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
-      //this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
-      this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
+      //this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
+      this.determiner = exp.determiner[0] // exp.determiner between-subjects var
+      this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
+      //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
 
       var query_prompt = "What percentage of "  + this.stim.category + " do you think have " + this.stim.color + " " + this.stim.part + "?\n";
 
@@ -118,9 +119,10 @@ function make_slides(f) {
       this.trialNum = stim_num;
 
       //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
-      this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
-      //this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
-      this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
+      //this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
+      this.determiner = exp.determiner[0] // exp.determiner between-subjects var
+      this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
+      //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
       this.prevalence = exp.prevalence_levels[this.stim.list].splice(0,1)[0] // grab prevalence level for this list
       
       this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;

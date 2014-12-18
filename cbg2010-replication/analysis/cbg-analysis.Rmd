@@ -220,5 +220,29 @@ ggplot(df.b,aes(x=trial_prompt,y=value,fill=trial_prompt))+
                 colour='white')+
   guides(fill=F)+
   ylim(0,100)
-  
+```
+
+
+# Experiment 3 -- replicate experiment 4 of CBG
+
+The idea is to see if the generic theta differs across contexts, thus motivating a lifted variable model from a bayesian data analysis standpoint
+
+```{r exp3}
+
+library(ggthemes)
+
+
+setwd('/Users/mht/Documents/research/generics/cbg2010-replication/data/')
+td<-read.table('cbgR-exp3_anonymized-trials.tsv',header=T)
+td$workerid <- factor(td$workerid)
+td$rt <- td$rt/1000
+td$stim_prevalence <- factor(td$stim_prevalence)
+
+
+td$implied_prevalence <- to.n(td$response)
+td$truth_conditions <- factor(as.logical(levels(td$response)[td$response]), 
+                              x = levels=c("TRUE","FALSE"))
+
+
+
 ```
