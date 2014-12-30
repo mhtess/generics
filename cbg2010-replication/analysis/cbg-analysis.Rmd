@@ -6,7 +6,7 @@ output: html_document
 ---
 
 
-```{r}
+```{r exp1}
 library(ggplot2)
 library(plyr)
 library(reshape2)
@@ -32,12 +32,12 @@ turk.data$stim_prevalence <- factor(turk.data$stim_prevalence)
 
 
 Number of responses for each prevalence level (for truth conditions task)
-```{r}
+```{r resp1Atab}
 table(turk.data[,c("stim_determiner","stim_prevalence")])
 ```
 
 Number of responses for implied prevalence task.
-```{r}
+```{r resp2Btab}
 table(subset(turk.data,trial_type=='implied_prevalence')[,c("stim_determiner")])
 ```
 
@@ -135,7 +135,7 @@ trial_prompt == catprop is where subjects were given evidence that the category 
 trial_prompt == plain is the cbg paradigm without the quantifier/generic sentence for evidence (bare bones)
 
 
-```{r}
+```{r exp2}
 setwd('/Users/mht/Documents/research/generics/cbg2010-replication/')
 turk.data<-read.table('cbg2010prior_anonymized-trials.tsv',header=T)
 summary(turk.data)
@@ -227,13 +227,21 @@ ggplot(df.b,aes(x=trial_prompt,y=value,fill=trial_prompt))+
 
 The idea is to see if the generic theta differs across contexts, thus motivating a lifted variable model from a bayesian data analysis standpoint
 
+
 ```{r exp3}
 
 library(ggthemes)
 
 
 setwd('/Users/mht/Documents/research/generics/cbg2010-replication/data/')
-td<-read.table('cbgR-exp3_anonymized-trials.tsv',header=T)
+td0<-read.table('cbgR-exp1_anonymized-trials.tsv',header=T)
+#write.csv(td0, file='cbgR-exp1_anonymized-trials.csv')
+td1<-read.table('cbgR-exp3_anonymized-trials.tsv',header=T)
+#write.csv(td1, file='cbgR-exp3_anonymized-trials.csv')
+
+
+td1$workerid<-td1$workerid+length(levels(factor(td0$workerid)))
+td<-rbind(td0,td1)
 td$workerid <- factor(td$workerid)
 td$rt <- td$rt/1000
 td$stim_prevalence <- factor(td$stim_prevalence)
@@ -241,8 +249,168 @@ td$stim_prevalence <- factor(td$stim_prevalence)
 
 td$implied_prevalence <- to.n(td$response)
 td$truth_conditions <- factor(as.logical(levels(td$response)[td$response]), 
-                              x = levels=c("TRUE","FALSE"))
+                              levels=c("TRUE","FALSE"))
+
+```
+Number of responses for each prevalence level (for truth conditions task)
+```{r}
+table(td1[,c("stim_determiner","stim_prevalence")])/6
+```
+
+Number of responses for implied prevalence task.
+```{r}
+table(subset(td1,trial_type=='implied_prevalence')[,c("stim_determiner")])/30
+```
+
+
+
+
+```{r}
+df0= ddply(td, 
+           .(stim_determiner, trial_type, stim_prevalence), summarise,
+          truth_endorsements = sum(truth_conditions==TRUE))
+
+df<-ddply(subset(td,trial_type=='truth_conditions'), 
+      .(stim_determiner, stim_prevalence, stim_type), summarise, 
+      true_responses= table(truth_conditions)[["TRUE"]]/length(truth_conditions))
+
+
+  ggplot(subset(td,trial_type=='implied_prevalence'),
+          aes(x=implied_prevalence,fill=stim_type))+
+ # geom_line(stat='histogram')+
+  #geom_density(alpha=.8)+
+  geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),binwidth=10)+
+  facet_grid(stim_type~stim_determiner)+
+  theme_solarized()+
+  guides(fill=F)+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x =       element_text(size=14,color='black'),
+        strip.text.y =       element_text(size=14,color='black'))
+
+b<-ggplot(df, aes(x=stim_prevalence,y=true_responses,colour=stim_type, 
+                  group=stim_determiner))+
+  geom_line(size=1,alpha=0.90)+
+  facet_wrap(stim_type~stim_determiner)+
+  #theme_bw()+
+  theme_solarized()+
+  ylab("proportion of 'true' responses")
+
+
+grid.arrange(a,b)
+```
+
+Replicate figure 3 from CGB 2010 (w CIs)
+
+```{r}
+
+bootstrap.ci.tc <- function(x){
+  
+  agr = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=mean)
+  agr$CILow = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.low)$truth_num
+  agr$CIHigh = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.high)$truth_num
+  agr$YMin = agr$truth_num - agr$CILow
+  agr$YMax = agr$truth_num + agr$CIHigh
+  return(agr)
+}
+
+tc<-subset(td,trial_type=='truth_conditions')
+tc$truth_num <- 1*as.logical(tc$truth_conditions)
+tc.bs<-bootstrap.ci.tc(tc)
+
+
+ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num, fill=stim_type))+
+  geom_bar(stat='identity',position=position_dodge(), alpha=0.8)+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),
+              width=0.2,
+          #    size=1,
+              position=position_dodge(0.9),
+              colour='black')+
+  facet_wrap(~stim_determiner)+
+  theme_solarized()+
+  ylab("proportion of 'true' responses")
+
+ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_type, group=stim_type))+
+  geom_point(size=3, position=position_dodge(0.5))+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_type),
+              width=0.3,
+              size=0.8,
+              position=position_dodge(0.5))+
+  facet_wrap(~stim_determiner)+
+  theme_solarized()+
+  ylab("proportion of 'true' responses")+
+  scale_colour_brewer(type='qual',palette=6)+
+  theme(strip.text.x =       element_text(size=14,color='black'))
+
+
+
 
 
 
 ```
+
+
+Replicate figure 2 of CGB 2010
+```{r}
+
+bootstrap.ci <- function(x){
+  
+  agr = aggregate(subj_prevalence ~ trial_type + stim_determiner + stim_type, data=x, FUN=mean)
+  agr$CILow = aggregate(subj_prevalence ~ trial_type + stim_determiner + stim_type, data=x, FUN=ci.low)$subj_prevalence
+  agr$CIHigh = aggregate(subj_prevalence ~ trial_type + stim_determiner + stim_type, data=x, FUN=ci.high)$subj_prevalence
+  agr$YMin = agr$subj_prevalence - agr$CILow
+  agr$YMax = agr$subj_prevalence + agr$CIHigh
+  return(agr)
+}
+
+td$stim_prevalence <- to.n(td$stim_prevalence)
+
+df2<-ddply(subset(td, truth_conditions%in%c("TRUE",NA)), 
+       .(trial_type, stim_determiner, stim_type, workerid), summarise, 
+       subj_prevalence = mean(implied_prevalence),
+       subj_truth_prevalence = mean(stim_prevalence))
+
+df2$subj_prevalence[is.na(df2$subj_prevalence)] <- df2$subj_truth_prevalence[!is.na(df2$subj_truth_prevalence)]
+
+df2.bs<-bootstrap.ci(df2)
+df2.bs$trial_type <- factor(df2.bs$trial_type, levels=c("truth_conditions","implied_prevalence"))
+
+ggplot(df2.bs, aes(x=stim_determiner,y=subj_prevalence,fill=trial_type, group=trial_type))+
+  geom_bar(stat='identity',position=position_dodge(0.5), width=0.5)+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),
+                width=0.2,
+                size=1,
+                position=position_dodge(0.5),
+                colour='black')+
+  theme_solarized()+
+  facet_wrap(~stim_type,nrow=1)+
+  ylab("average prevalence")+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x =       element_text(size=14,color='black'))
+
+ggplot(df2.bs, aes(x=trial_type,y=subj_prevalence,fill=stim_type, group=stim_type))+
+  geom_bar(stat='identity',position=position_dodge(0.5), width=0.5)+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),
+                width=0.2,
+                size=1,
+                position=position_dodge(0.5),
+                colour='black')+
+  theme_solarized()+
+  facet_wrap(~stim_determiner)+
+  ylab("average prevalence")+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x =       element_text(size=14,color='black'))
+```
+
+# Bayesian data analysis
+
+## Infer thresholds for quantifiers from implied prevalence task
+
+```{r tfbt1}
+setwd('/Users/mht/Documents/research/generics/cbg2010-replication/models/')
+posterior<-read.csv('post_bare-most_1000_100_L1f10_impliedPrev.csv',header=F)
+qplot(data=posterior,x=V1,geom='histogram')
+
+
+```
+
+
