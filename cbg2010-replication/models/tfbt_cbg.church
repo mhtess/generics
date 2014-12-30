@@ -1,4 +1,31 @@
+(define uniform-score (lambda (lowerbound upperbound)
+  (- 0 (log (- upperbound lowerbound))))) ;;assuming values are in the range
 
+(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
+(define data-file (string-append data-path 'cbgR-exp1_anonymized-trials.csv))
+(define alldata (read-csv data-file))
+
+(define task 'implied_prevalence)
+(define quantifier 'most)
+(define context 'bare)
+
+(define task? (lambda (x) (equal? (fourth x) task)))
+(define quantifier? (lambda (x) (equal? (seventh x) quantifier)))
+(define context? (lambda (x) (equal? (fifth x) context)))
+
+(define all-true (lambda (lst) (apply and lst)))
+
+(define data-subset (filter 
+  (lambda (x) (and (task? x) (quantifier? x) (context? x))) 
+  alldata))
+
+(define prevalence-data (map (lambda (x) (last (but-last x))) data-subset))
+
+(define simplified-data
+  (map (lambda (x) (round (/ (string->number x) 10))) prevalence-data))
+
+(define super-simplified-data
+  (repeat 8 (lambda () (uniform-draw simplified-data))))
 
 ;; background
 (define (state-prior) (uniform-draw '(0 1 2 3 4 5 6 7 8 9 10)))
@@ -87,31 +114,58 @@
 
   
 
-  (listener1 utterance)
-
-  )))
+  (listener1 utterance))))
 
 (define tfbt-model
-  (mem (lambda (QUD utterance context)
-    (enumeration-query
+ ; (lambda (QUD utterance context)
+  (lambda (QUD utterance)
+    (mh-query 1000 100
 
-    (define generic-theta (mem (lambda (context) (uniform-draw '(0 1 2 3 4)))))
-    (define some-theta (uniform-draw '(0 1 2 3 4)))
-    (define most-theta (uniform-draw '(4 5 6 7 8)))
+    ;(define generic-theta (mem (lambda (context) (uniform-draw '(0 1 2 3 4)))))
+     (define generic-theta (uniform-draw '(0 1 2 3 4)))
+     (define some-theta (uniform-draw '(0 1 2 3 4)))
+     (define most-theta (uniform-draw '(4 5 6 7 8)))
 
-    (cognitive-model generic-theta most-theta some-theta QUD utterance)
+    (define phi (uniform 0 1))
+
+    ; (define generic-theta (uniform 0 10))
+    ; (define some-theta (uniform 0 10))
+    ; (define most-theta (uniform 0 10))
+
+    (define guessing? (flip phi))
+
+    (define model-predictions
+      (cognitive-model generic-theta most-theta some-theta QUD utterance))
+
+    (define L1-distance
+     (map 
+      (lambda (x) (abs (- x (apply multinomial model-predictions))))
+      simplified-data))
+
+    (define factoring
+      (factor (- 0 (* 10 (sum L1-distance)))))
+
+    most-theta
+    ;(cognitive-model generic-theta most-theta some-theta QUD utterance)
     ;; if (= QUD truth?) probably will have to pass state into cog-model
 
-    true))))
+    true)))
 
 (define alpha 2)
 
 (define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
 
-;(cognitive-model 3 5 0 'how-many 'some)
-(tfbt-model 'how-many 'some)
+(define samples (transpose (list (tfbt-model 'how-many 'most))))
 
+(define output-file-name (string-append 'post_bare-most_descrete_1000_100_L1f3_impliedPrev '.csv))
+(write-csv samples output-file-name)
+(define complete? 'complete)
+complete?
 
+;(cognitive-model 3 5 0 'how-many 'most)
+;(length simplified-data)
+;(length simplified-data)
+;super-simplified-data
 ;; cbg analysis
 ; (define inner-product (lambda (lst)
 ;   (sum (map (lambda (x y) (* x y)) (first lst) (second lst)))))
