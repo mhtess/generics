@@ -1,19 +1,38 @@
+; example call
+;; church -a 'implied_prevalence,most,bare,100,10,3' tfbt_cbg.church
+
+(define args (regexp_split argstring ","))
+
+(define task (first args))
+(define quantifier (second args))
+(define context (third args))
+(define mh_samples (fourth args))
+(define mh_burnin (fifth args))
+(define factoring_factor (sixth args))
+
+(define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
+
+(define QUD (lambda (task quantifier)
+  (case task
+    (('implied_prevalence) 'how-many)
+    (('truth_conditions) quantifier))))
+
 (define uniform-score (lambda (lowerbound upperbound)
   (- 0 (log (- upperbound lowerbound))))) ;;assuming values are in the range
 
+(define all-true (lambda (lst) (apply and lst)))
+
 (define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
-(define data-file (string-append data-path 'cbgR-exp1_anonymized-trials.csv))
+(define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
 (define alldata (read-csv data-file))
 
-(define task 'implied_prevalence)
-(define quantifier 'most)
-(define context 'bare)
+; (define task 'implied_prevalence)
+; (define quantifier 'most)
+; (define context 'bare)
 
 (define task? (lambda (x) (equal? (fourth x) task)))
 (define quantifier? (lambda (x) (equal? (seventh x) quantifier)))
 (define context? (lambda (x) (equal? (fifth x) context)))
-
-(define all-true (lambda (lst) (apply and lst)))
 
 (define data-subset (filter 
   (lambda (x) (and (task? x) (quantifier? x) (context? x))) 
@@ -22,16 +41,17 @@
 (define prevalence-data (map (lambda (x) (last (but-last x))) data-subset))
 
 (define simplified-data
-  (map (lambda (x) (round (/ (string->number x) 10))) prevalence-data))
+  (map (lambda (x) (string->number x)) prevalence-data))
+;  (map (lambda (x) (round (/ (string->number x) 10))) prevalence-data)) ; round for conditioning on discrete data
 
-(define super-simplified-data
-  (repeat 8 (lambda () (uniform-draw simplified-data))))
+; (define super-simplified-data
+;   (repeat 8 (lambda () (uniform-draw simplified-data))))
 
 ;; background
-(define (state-prior) (uniform-draw '(0 1 2 3 4 5 6 7 8 9 10)))
+(define (state-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
 
-(define (all state threshold) (= 10 state))
-(define (relaxed-all state threshold) (<= 9 state))
+(define (all state threshold) (= 100 state))
+(define (relaxed-all state threshold) (<= 90 state))
 
 (define (some state some-threshold) (< some-threshold state))
 (define (none state threshold) (= 0 state))
@@ -59,6 +79,8 @@
         (('generic) generic)
         (('anti-generic) anti-generic)
         (('mu) mu)))
+
+
 
 
 (define cognitive-model 
@@ -119,18 +141,27 @@
 (define tfbt-model
  ; (lambda (QUD utterance context)
   (lambda (QUD utterance)
-    (mh-query 1000 100
+    (mh-query 
+
+    (string->number mh_samples)
+    (string->number mh_burnin)
+
+    (define query-statement (lambda (utterance)
+      (case utterance
+          (('most) most-theta)
+          (('some) some-theta)
+          (('generic) generic-theta))))
 
     ;(define generic-theta (mem (lambda (context) (uniform-draw '(0 1 2 3 4)))))
-     (define generic-theta (uniform-draw '(0 1 2 3 4)))
-     (define some-theta (uniform-draw '(0 1 2 3 4)))
-     (define most-theta (uniform-draw '(4 5 6 7 8)))
+     ; (define generic-theta (uniform-draw '(0 1 2 3 4)))
+     ; (define some-theta (uniform-draw '(0 1 2 3 4)))
+     ; (define most-theta (uniform-draw '(4 5 6 7 8)))
 
     (define phi (uniform 0 1))
 
-    ; (define generic-theta (uniform 0 10))
-    ; (define some-theta (uniform 0 10))
-    ; (define most-theta (uniform 0 10))
+    (define generic-theta (uniform 0 100))
+    (define some-theta (uniform 0 100))
+    (define most-theta (uniform 0 100))
 
     (define guessing? (flip phi))
 
@@ -143,9 +174,9 @@
       simplified-data))
 
     (define factoring
-      (factor (- 0 (* 10 (sum L1-distance)))))
+      (factor (- 0 (* (string->number factoring_factor) (sum L1-distance)))))
 
-    most-theta
+    (query-statement utterance)
     ;(cognitive-model generic-theta most-theta some-theta QUD utterance)
     ;; if (= QUD truth?) probably will have to pass state into cog-model
 
@@ -153,12 +184,12 @@
 
 (define alpha 2)
 
-(define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
-
-(define samples (transpose (list (tfbt-model 'how-many 'most))))
-
-(define output-file-name (string-append 'post_bare-most_descrete_1000_100_L1f3_impliedPrev '.csv))
+(define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
+(define output-file-name (string-append 'post_ context '_ quantifier '_ task 
+  '_mh mh_samples '_ mh_burnin 'L1norm_f factoring_factor 
+  '_alpha (number->string alpha) '.csv))
 (write-csv samples output-file-name)
+
 (define complete? 'complete)
 complete?
 
