@@ -1,6 +1,15 @@
 ; example call
 ;; church -a 'implied_prevalence,most,bare,100,10,3' tfbt_cbg.church
 
+; church -a 'implied_prevalence,most,danger,10000,100,3' tfbt_cbg.church &
+; church -a 'implied_prevalence,most,distinct,10000,100,3' tfbt_cbg.church &
+; church -a 'implied_prevalence,most,irrelevant,10000,100,3' tfbt_cbg.church &
+; church -a 'implied_prevalence,some,danger,10000,100,3' tfbt_cbg.church &
+; church -a 'implied_prevalence,some,distinct,10000,100,3' tfbt_cbg.church &
+; church -a 'implied_prevalence,some,irrelevant,10000,100,3' tfbt_cbg.church &
+
+;;church -a 'truth_conditions,some,irrelevant,10,1,3' tfbt_cbg.church &
+
 (define args (regexp_split argstring ","))
 
 (define task (first args))
@@ -22,8 +31,11 @@
 
 (define all-true (lambda (lst) (apply and lst)))
 
-;(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
-(define data-path '/home/mht/generics/cbg2010-replication/data/)
+(define string->boolean (lambda (str)
+  (equal? str 'True)))
+
+(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
+; (define data-path '/home/mht/generics/cbg2010-replication/data/)
 
 (define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
 (define alldata (read-csv data-file))
@@ -40,14 +52,20 @@
   (lambda (x) (and (task? x) (quantifier? x) (context? x))) 
   alldata))
 
-(define prevalence-data (map (lambda (x) (last (but-last x))) data-subset))
+(define query-data (map (lambda (x) (last (but-last x))) data-subset))
+(define evidence-data (map (lambda (x) (string->number (last (but-last (but-last (but-last x)))))) data-subset))
+
 
 (define simplified-data
-  (map (lambda (x) (string->number x)) prevalence-data))
+    (case task
+    (('implied_prevalence) (map (lambda (x) (string->number x)) query-data))
+    (('truth_conditions) (map (lambda (x) (string->boolean x)) query-data))))
+
+;  (map (lambda (x) (string->number x)) query-data))
 ;  (map (lambda (x) (round (/ (string->number x) 10))) prevalence-data)) ; round for conditioning on discrete data
 
 ; (define super-simplified-data
-;   (repeat 8 (lambda () (uniform-draw simplified-data))))
+;   (repeat 20 (lambda () (uniform-draw simplified-data))))
 
 ;; background
 (define (state-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
@@ -83,12 +101,11 @@
         (('mu) mu)))
 
 
-
-
 (define cognitive-model 
   (mem 
-  (lambda (generic-theta most-theta some-theta QUD utterance)
-
+  (lambda (generic-theta most-theta some-theta QUD evidence)
+;; input could be utterance (for listener / implied_prevalence)
+;; or state (for speaker / truth_conditions)
   (define (theta-meaning word)
     (case word
         (('most-theta) most-theta)
@@ -137,12 +154,14 @@
       ((meaning words) state (theta words))))))
 
   
-
-  (listener1 utterance))))
+  (if (equal? QUD 'how-many)
+      (listener1 evidence)
+      (speaker1 evidence)))))
 
 (define tfbt-model
  ; (lambda (QUD utterance context)
-  (lambda (QUD utterance)
+  (lambda (QUD utterance state)
+    ;; note: state will be 'null for implied_prevalence task
     (mh-query 
 
     (string->number mh_samples)
@@ -153,6 +172,11 @@
           (('most) most-theta)
           (('some) some-theta)
           (('generic) generic-theta))))
+
+     (define evidence
+      (if (equal? QUD 'how-many)
+          utterance
+          state))
 
     ;(define generic-theta (mem (lambda (context) (uniform-draw '(0 1 2 3 4)))))
      ; (define generic-theta (uniform-draw '(0 1 2 3 4)))
@@ -167,33 +191,61 @@
 
     (define guessing? (flip phi))
 
+    ; (define model-predictions
+    ;   (cognitive-model generic-theta most-theta some-theta QUD evidence))
+
+    ; for truth_conditions task, get model-predictions for each of the prevalence levels
     (define model-predictions
-      (cognitive-model generic-theta most-theta some-theta QUD utterance))
+      (map (lambda (evid) (cognitive-model generic-theta most-theta some-theta QUD evid))
+        (sort (unique evidence-data))))
 
-    (define L1-distance
-     (map 
-      (lambda (x) (abs (- x (apply multinomial model-predictions))))
-      simplified-data))
+    ; (define L1-distance
+    ;  (map 
+    ;   (lambda (x) (abs (- x (apply multinomial model-predictions))))
+    ;   simplified-data))
 
-    (define factoring
-      (factor (- 0 (* (string->number factoring_factor) (sum L1-distance)))))
+    ; (define factoring
+    ;   (factor (- 0 (* (string->number factoring_factor) (sum L1-distance)))))
 
-    (query-statement utterance)
-    ;(cognitive-model generic-theta most-theta some-theta QUD utterance)
-    ;; if (= QUD truth?) probably will have to pass state into cog-model
+    ;(query-statement utterance)
+    ;phi
+    model-predictions
 
     true)))
+    ; (if (equal? QUD 'how-many)
+    ;     true
+    ;     (if guessing? (flip)
+    ;                   (all-true 
+    ;                     (map (lambda (x)
+    ;                       (equal? x 
+    ;                         (equal? (apply multinomial model-predictions) utterance))) 
+    ;                     simplified-data)))))))
 
 (define alpha 2)
 
-(define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
-(define output-file-name (string-append 'post_ context '_ quantifier '_ task 
-  '_mh mh_samples '_ mh_burnin 'L1norm_f factoring_factor 
-  '_alpha (number->string alpha) '.csv))
-(write-csv samples output-file-name)
+(define x (first data-subset))
+;(unique evidence-data)
+(display (list (sort (unique evidence-data)) (tfbt-model (QUD task quantifier) quantifier 10)))
+;(second data-subset)
+;simplified-data
+;prevalence-data
+;(define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
+; (define output-file-name (string-append 'post_ context '_ quantifier '_ task 
+;   '_mh mh_samples '_ mh_burnin 'L1norm_f factoring_factor 
+;   '_alpha (number->string alpha) '.csv))
+; (write-csv samples output-file-name)
 
-(define complete? 'complete)
-complete?
+; (define complete? 'complete)
+; complete?
+
+
+
+
+
+
+
+
+
 
 ;(cognitive-model 3 5 0 'how-many 'most)
 ;(length simplified-data)
