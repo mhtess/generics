@@ -22,7 +22,9 @@
 
 (define all-true (lambda (lst) (apply and lst)))
 
-(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
+;(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
+(define data-path '/home/mht/research/generics/cbg2010-replication/data/)
+
 (define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
 (define alldata (read-csv data-file))
 
