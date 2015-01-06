@@ -8,7 +8,19 @@
 ; church -a 'implied_prevalence,some,distinct,10000,100,3' tfbt_cbg.church &
 ; church -a 'implied_prevalence,some,irrelevant,10000,100,3' tfbt_cbg.church &
 
-;;church -a 'truth_conditions,some,irrelevant,10,1,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,bare,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,distinct,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,danger,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,irrelevant,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,bare,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,distinct,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,danger,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,irrelevant,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,bare,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,distinct,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,danger,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,irrelevant,10000,100,3' tfbt_cbg.church &
+
 
 (define args (regexp_split argstring ","))
 
@@ -17,22 +29,22 @@
 (define context (third args))
 (define mh_samples (fourth args))
 (define mh_burnin (fifth args))
-(define factoring_factor (sixth args))
+(define alpha (sixth args))
 
 (define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
 
 (define QUD (lambda (task quantifier)
-  (case task
-    (('implied_prevalence) 'how-many)
-    (('truth_conditions) quantifier))))
+              (case task
+                    (('implied_prevalence) 'how-many)
+                    (('truth_conditions) quantifier))))
 
 (define uniform-score (lambda (lowerbound upperbound)
-  (- 0 (log (- upperbound lowerbound))))) ;;assuming values are in the range
+                        (- 0 (log (- upperbound lowerbound))))) ;;assuming values are in the range
 
 (define all-true (lambda (lst) (apply and lst)))
 
 (define string->boolean (lambda (str)
-  (equal? str 'True)))
+                          (equal? str 'True)))
 
 (define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
 ; (define data-path '/home/mht/generics/cbg2010-replication/data/)
@@ -40,36 +52,33 @@
 (define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
 (define alldata (read-csv data-file))
 
-; (define task 'implied_prevalence)
-; (define quantifier 'most)
-; (define context 'bare)
 
 (define task? (lambda (x) (equal? (fourth x) task)))
 (define quantifier? (lambda (x) (equal? (seventh x) quantifier)))
 (define context? (lambda (x) (equal? (fifth x) context)))
 (define stimulus-prevlevel? (lambda (lst target) (equal? 
-  (string->number (last (but-last (but-last (but-last lst)))))
-  target)))
+                                                  (string->number (last (but-last (but-last (but-last lst)))))
+                                                  target)))
 
 (define data-subset (filter 
-  (lambda (x) (and (task? x) (quantifier? x) (context? x))) 
-  alldata))
+                     (lambda (x) (and (task? x) (quantifier? x) (context? x))) 
+                     alldata))
 
 (define query-data (map (lambda (x) (last (but-last x))) data-subset))
 (define evidence-data (map (lambda (x) (string->number (last (but-last (but-last (but-last x)))))) data-subset))
 
 (define sorted-truthcond-data
   (map 
-  (lambda (y) 
-    (map (lambda (z) (string->boolean (last (but-last z))))
-    (filter (lambda (x) (stimulus-prevlevel? x y)) data-subset)))
-  (sort (unique evidence-data))))
+   (lambda (y) 
+     (map (lambda (z) (string->boolean (last (but-last z))))
+          (filter (lambda (x) (stimulus-prevlevel? x y)) data-subset)))
+   (sort (unique evidence-data))))
 
 
 (define simplified-data
-    (case task
-    (('implied_prevalence) (map (lambda (x) (string->number x)) query-data))
-    (('truth_conditions) (map (lambda (x) (string->boolean x)) query-data))))
+  (case task
+        (('implied_prevalence) (map (lambda (x) (string->number x)) query-data))
+        (('truth_conditions) (map (lambda (x) (string->boolean x)) query-data))))
 
 ;  (map (lambda (x) (string->number x)) query-data))
 ;  (map (lambda (x) (round (/ (string->number x) 10))) prevalence-data)) ; round for conditioning on discrete data
@@ -113,214 +122,121 @@
 
 (define cognitive-model 
   (mem 
-  (lambda (generic-theta most-theta some-theta QUD evidence)
-;; input could be utterance (for listener / implied_prevalence)
-;; or state (for speaker / truth_conditions)
-  (define (theta-meaning word)
-    (case word
-        (('most-theta) most-theta)
-        (('some-theta) some-theta)
-        (('generic-theta) generic-theta)
-        (('how-many-theta) 'null)))
-
-  (define (theta words)
-    (theta-meaning (string-append words '-theta)))
-
-  (define listener1
-    (mem (lambda (words) ;; listener1 doesn't do inference over theta
-    (enumeration-query
-     (define state (state-prior))
-     (define QUD-val ((meaning QUD) state (theta QUD)))
-
-     QUD-val
-
-     (equal? words (apply multinomial (raise-to-power (speaker1 state) alpha)))))))
-
-  (define speaker1
-    (mem (lambda (state)
-    (enumeration-query
-     (define words
-      (case QUD
-        (('generic)  (uniform-draw (list 'generic 'anti-generic)))
-        (('some) (uniform-draw (list 'some 'none)))
-        (('most) (uniform-draw (list 'most 'anti-most)))
-        (('how-many) (uniform-draw (list 'most 'some 'generic)))))
-      (define QUD-val ((meaning QUD) state (theta QUD)))
-
-     words
-
-     (equal? QUD-val
-      (apply multinomial (listener0 words)))))))
+   (lambda (generic-theta most-theta some-theta QUD evidence)
+     ;; input could be utterance (for listener / implied_prevalence)
+     ;; or state (for speaker / truth_conditions)
+     (define (theta-meaning word)
+       (case word
+             (('most-theta) most-theta)
+             (('some-theta) some-theta)
+             (('generic-theta) generic-theta)
+             (('how-many-theta) 'null)))
+     (define (theta words)
+       (theta-meaning (string-append words '-theta)))
 
 
-  (define listener0
-    (mem (lambda (words) 
-      (enumeration-query
-      (define state (state-prior))
-      (define QUD-val ((meaning QUD) state (theta QUD)))
 
-      QUD-val
+     (define listener1
+       (mem (lambda (words) ;; listener1 doesn't do inference over theta
+              (enumeration-query
+               (define state (state-prior))
+               (define QUD-val ((meaning QUD) state (theta QUD)))
 
-      ((meaning words) state (theta QUD))))))
+               QUD-val
 
-  
-  (if (equal? QUD 'how-many)
-      (listener1 evidence)
-      (speaker1 evidence)))))
+               (equal? words (apply multinomial (raise-to-power (speaker1 state) (string->number alpha))))))))
+
+     (define speaker1
+       (mem (lambda (state)
+              (enumeration-query
+               (define words
+                 (case QUD
+                       (('generic)  (uniform-draw (list 'generic 'anti-generic)))
+                       (('some) (uniform-draw (list 'some 'none)))
+                       (('most) (uniform-draw (list 'most 'anti-most)))
+                       (('how-many) (uniform-draw (list 'most 'some 'generic)))))
+               (define QUD-val ((meaning QUD) state (theta QUD)))
+
+               words
+
+               (equal? QUD-val
+                       (apply multinomial (listener0 words)))))))
+
+     (define listener0
+       (mem (lambda (words) 
+              (enumeration-query
+               (define state (state-prior))
+               (define QUD-val ((meaning QUD) state (theta QUD)))
+
+               QUD-val
+
+               ((meaning words) state (theta QUD))))))
+
+
+     (if (equal? QUD 'how-many)
+         (listener1 evidence)
+         (speaker1 evidence)))))
 
 (define tfbt-model
- ; (lambda (QUD utterance context)
-  (lambda (QUD utterance state)
-    ;; note: state will be 'null for implied_prevalence task
+  ; (lambda (QUD utterance context)
+  (lambda (QUD utterance)
     (mh-query 
+     (string->number mh_samples)
+     (string->number mh_burnin)
 
-    (string->number mh_samples)
-    (string->number mh_burnin)
+     (define query-statement (lambda (utterance)
+                               (case utterance
+                                     (('most) most-theta)
+                                     (('some) some-theta)
+                                     (('generic) generic-theta))))
+     (define phi (uniform 0 1)) ;; guessing parameter
+     (define generic-theta (uniform 0 100))
+     (define some-theta (uniform 0 100))
+     (define most-theta (uniform 0 100))
+     (define alt-words
+       (case QUD
+             (('generic)  (list 'generic 'anti-generic))
+             (('some) (list 'some 'none))
+             (('most) (list 'most 'anti-most))
+             (('how-many) (list 'most 'some 'generic))))
+     ; (define model-predictions
+     ;   (cognitive-model generic-theta most-theta some-theta QUD evidence))
+     ; for truth_conditions task, get model-predictions for each of the prevalence levels
+     (define model-predictions
+       (map 
+        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
+        (sort (unique evidence-data))))
 
-    (define query-statement (lambda (utterance)
-      (case utterance
-          (('most) most-theta)
-          (('some) some-theta)
-          (('generic) generic-theta))))
+     ;; compute the score for each data point, and sum then together
+     (define scores
+       (lambda (truthcond-byprev modelpred-byprev)
+         (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
+                                                         (second alt-words))) truthcond-byprev)]
+                [match (lambda (x) (position (first modelpred-byprev) x))]
+                [prob (lambda (x) (if (= (match x) -1) 0
+                                      (list-ref (second modelpred-byprev) (match x))))]
+                [score-marginalized-phi (lambda (x) 
+                                          (log (abs (+ (- (prob x) 0.5) (/ (- 1 phi) 2)))))])
+           (sum (map score-marginalized-phi data-as-quantifier)))))
 
-     (define evidence
-      (if (equal? QUD 'how-many)
-          utterance
-          state))
+     (define dummyvar-for-factoring
+       (factor (sum (map scores sorted-truthcond-data model-predictions))))
 
-    ;(define generic-theta (mem (lambda (context) (uniform-draw '(0 1 2 3 4)))))
-     ; (define generic-theta (uniform-draw '(0 1 2 3 4)))
-     ; (define some-theta (uniform-draw '(0 1 2 3 4)))
-     ; (define most-theta (uniform-draw '(4 5 6 7 8)))
+     (query-statement utterance)
 
-    (define phi (uniform 0 1))
+     true)))
 
-    (define generic-theta (uniform 0 100))
-    (define some-theta (uniform 0 100))
-    (define most-theta (uniform 0 100))
-
-
-   (define alt-words
-    (case QUD
-      (('generic)  (list 'generic 'anti-generic))
-      (('some) (list 'some 'none))
-      (('most) (list 'most 'anti-most))
-      (('how-many) (list 'most 'some 'generic))))
-
-    ;(define guessing? (flip phi))
-
-    ; (define model-predictions
-    ;   (cognitive-model generic-theta most-theta some-theta QUD evidence))
-
-    ; for truth_conditions task, get model-predictions for each of the prevalence levels
-    (define model-predictions
-      (map 
-        (lambda (evid) (cognitive-model generic-theta most-theta some-theta QUD evid))
-      (sort (unique evidence-data))))
-
-  ;  (define modelpred-byprev (first model-predictions))
-  ;  (define truthcond-byprev (first sorted-truthcond-data))
-
-   (define scores
-      (lambda (truthcond-byprev modelpred-byprev)
-        (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
-                                                          (second alt-words))) truthcond-byprev)]
-               [match (lambda (x) (position (first modelpred-byprev) x))]
-               [prob (lambda (x) (if (= (match x) -1) 0
-                      (list-ref (second modelpred-byprev) (match x))))]
-               [score-marginalized-phi (lambda (x) 
-                                        (log (abs (+ (- (prob x) 0.5) (/ (- 1 phi) 2)))))])
-        (sum (map score-marginalized-phi data-as-quantifier)))))
-
-  ; (map scores sorted-truthcond-data model-predictions)
-    (define dummyvar-for-factoring
-      (factor (sum (map scores sorted-truthcond-data model-predictions))))
+;; truth conditions task: compute mean acceptance rate at each prevalence level
+;(map (lambda (x) (mean (map boolean->number x))) sorted-truthcond-data)
 
 
-    ;modelpred-byprev
+(define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
+(define output-file-name (string-append 'post_ context '_ quantifier '_ task 
+   '_mh mh_samples '_ mh_burnin '_alpha alpha '.csv))
+ (write-csv samples output-file-name)
 
-    ; (define data-as-quantifier (map (lambda (x) (if x 'some 'none)) truthcond-byprev))
-    ; (define match (lambda (x) (position (first modelpred-byprev) x)))
-    ; (define prob (lambda (x) (if (= (match x) -1) 0
-    ;   (list-ref (second modelpred-byprev) (match x)))))
-
-    ; ;; need to write the proper score function (this only works for prob==1 or 0)
-    ; (define score-marginalized-phi (lambda (x) 
-    ;     (log (abs (+ (- (prob x) 0.5) (/ (- 1 phi) 2) )))))
-
-  
-
-  ;  (sum (map score-marginalized-phi data-as-quantifier))
-; (all-true
-;       (map (lambda (x)
-;           (if (guessing?) (flip)
-;           (equal? x 
-;             (equal? (apply multinomial modelpred-byprev) utterance))))
-;       truthcond-byprev))
-
-    ; (define L1-distance
-    ;  (map 
-    ;   (lambda (x) (abs (- x (apply multinomial model-predictions))))
-    ;   simplified-data))
-
-    ; (define factoring
-    ;   (factor (- 0 (* (string->number factoring_factor) (sum L1-distance)))))
-
-    (query-statement utterance)
-   ; phi
-   ; model-predictions
-
-    ; (all-true 
-    ;   (map (lambda (truthcond-byprev modelpred-byprev)
-
-      ; (all-true 
-      ;   (map (lambda (x)
-      ;       (if (guessing?) (flip)
-      ;       (equal? x 
-      ;         (equal? (apply multinomial modelpred-byprev) utterance))))
-      ;   truthcond-byprev))
-
-      ;)
-      ; sorted-truthcond-data model-predictions))
-
-
-true
-)))
-
-    ; (if (equal? QUD 'how-many)
-    ;     true
-    ;     (all-true 
-    ;       (map (lambda (truthcond-byprev modelpred-byprev)
-    ;         (map (lambda (x)
-    ;             (equal? x 
-    ;               (equal? (apply multinomial modelpred-byprev) utterance)))
-    ;         truthcond-byprev))
-    ;       sorted-truthcond-data model-predictions)))
-
-(define alpha 2)
-;sorted-truthcond-data
-;(unique evidence-data)
-;(sum (map boolean->number (tfbt-model (QUD task quantifier) quantifier 10)))
-
-(mean (tfbt-model (QUD task quantifier) quantifier 10))
-
-;(second data-subset)
-;simplified-data
-;prevalence-data
-;(define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
-; (define output-file-name (string-append 'post_ context '_ quantifier '_ task 
-;   '_mh mh_samples '_ mh_burnin 'L1norm_f factoring_factor 
-;   '_alpha (number->string alpha) '.csv))
-; (write-csv samples output-file-name)
-
-; (define complete? 'complete)
-; complete?
-
-
-
-
-
-
+ (define complete? 'complete)
+ complete?
 
 
 
