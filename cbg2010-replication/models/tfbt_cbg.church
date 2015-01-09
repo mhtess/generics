@@ -8,18 +8,18 @@
 ; church -a 'implied_prevalence,some,distinct,10000,100,3' tfbt_cbg.church &
 ; church -a 'implied_prevalence,some,irrelevant,10000,100,3' tfbt_cbg.church &
 
-; time church -a 'truth_conditions,generic,bare,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,distinct,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,danger,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,irrelevant,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,some,bare,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,some,distinct,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,some,danger,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,some,irrelevant,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,most,bare,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,most,distinct,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,most,danger,10000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,most,irrelevant,10000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,bare,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,distinct,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,danger,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,irrelevant,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,bare,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,distinct,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,danger,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,irrelevant,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,bare,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,distinct,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,danger,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,irrelevant,1000,100,3' tfbt_cbg.church &
 
 
 (define args (regexp_split argstring ","))
@@ -30,6 +30,7 @@
 (define mh_samples (fourth args))
 (define mh_burnin (fifth args))
 (define alpha (sixth args))
+(define expnum (seventh args))
 
 (define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
 
@@ -46,10 +47,13 @@
 (define string->boolean (lambda (str)
                           (equal? str 'True)))
 
-(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
-; (define data-path '/home/mht/generics/cbg2010-replication/data/)
+;(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
+(define data-path '/home/mht/generics/cbg2010-replication/data/)
 
-(define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
+;(define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
+;(define data-file (string-append data-path 'cbgR-exp4_anonymized-trials.csv))
+(define data-file (string-append data-path 'cbgR-exp5_anonymized-trials.csv))
+
 (define alldata (read-csv data-file))
 
 
@@ -131,6 +135,7 @@
              (('some-theta) some-theta)
              (('generic-theta) generic-theta)
              (('how-many-theta) 'null)))
+     
      (define (theta words)
        (theta-meaning (string-append words '-theta)))
 
@@ -190,9 +195,11 @@
                                      (('some) some-theta)
                                      (('generic) generic-theta))))
      (define phi (uniform 0 1)) ;; guessing parameter
-     (define generic-theta (uniform 0 100))
-     (define some-theta (uniform 0 100))
-     (define most-theta (uniform 0 100))
+
+     (define generic-theta (if (equal? QUD 'generic) (uniform 0 100) 'null))
+     (define some-theta (if (equal? QUD 'some) (uniform 0 100) 'null))
+     (define most-theta (if (equal? QUD 'most) (uniform 0 100) 'null))
+     
      (define alt-words
        (case QUD
              (('generic)  (list 'generic 'anti-generic))
@@ -231,7 +238,7 @@
 
 
 (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
-(define output-file-name (string-append 'post_ context '_ quantifier '_ task 
+(define output-file-name (string-append 'post_exp 'expnum context '_ quantifier '_ task 
    '_mh mh_samples '_ mh_burnin '_alpha alpha '.csv))
  (write-csv samples output-file-name)
 
