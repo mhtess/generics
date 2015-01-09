@@ -14,7 +14,7 @@ d1<-read.table('cbgR-exp1_anonymized-trials.tsv',header=T)
 #d2<-read.table('cbgR-exp2_anonymized-trials.tsv',header=T)
 d3<-read.table('cbgR-exp3_anonymized-trials.tsv',header=T)
 
-bool.tonum<-function(bool){abs(as.numeric(bool)*1-2)}
+#bool.tonum<-function(bool){abs(as.numeric(bool)*1-2)}
 #d2$workerid<-d2$workerid+length(levels(factor(d1$workerid)))
 #d3$workerid<-d3$workerid+length(levels(factor(d2$workerid)))+length(levels(factor(d1$workerid)))
 d3$workerid<-d3$workerid+length(levels(factor(d1$workerid)))
@@ -614,6 +614,14 @@ td4$rt <- td4$rt/1000
 td4$truth_conditions <- factor(as.logical(levels(td4$response)[td4$response]), 
                               levels=c("TRUE","FALSE"))
 
+td4$truth_num <- bool.tonum(td4$truth_conditions)
+
+
+results<-glmer(truth_num ~ stim_prevalence*stim_type + (1 | workerid) + (1 | stim_category), data=td4, family='binomial')
+summary(results)
+
+
+
 tc<-subset(td4,trial_type=='truth_conditions')
 tc<-subset(td4,workerid<30)
 tc$truth_num <- 1*as.logical(tc$truth_conditions)
@@ -714,5 +722,72 @@ summary(aov(truth_num~(stim_prevalence*stim_type),
     data=td5))
 ```
 
+Are the alternative contexts having an effect on endorsements? One preliminary way to test this is to look at the endorsements for the bare, as the number of Nondistinct contexts have been seen.
 
+First, I'll code the data for the number of nondistinct contexts seen by the participant.
+
+```{r exp5contextEffect}
+
+
+cntxt.ef5<-ddply(td5, .(workerid), summarise,
+      trialnum = trialNum,
+      nondistinct_seen=cumsum(as.numeric(stim_type=='nondistinctive')),
+      dangdistinct_seen=cumsum(as.numeric(stim_type=='danger/distinct')),
+      nonbare_seen=cumsum(as.numeric(stim_type!='bare')),
+      context = stim_type,
+      response = truth_num,
+      prevlev = stim_prevalence)
+
+
+## effect of nondistinct seen
+nondist_seen.df5<- ddply(cntxt.ef5, .(nondistinct_seen, prevlev, context), 
+                  summarise,
+                  pr.true=(sum(response) / length(response)),
+                  n = length(response))
+      
+ggplot(data=subset(nondist_seen.df5,context=='bare'), aes(x=nondistinct_seen,y=pr.true))+
+  facet_wrap(~prevlev,nrow=1)+
+  geom_point(color='white')+
+ # theme_bw()+
+  scale_x_continuous(breaks=c(0,1,2,3,4,5,6,7,8,9,10))+
+  xlab("number of nondistinct seen")+
+  ylab("proportion of true responses")+
+  ggtitle("bare generic endorsements by nondistinct contexts seen and prevalence level")
+
+## effect of dangerous and distinct seen
+dangdist_seen.df5<- ddply(cntxt.ef5, .(dangdistinct_seen, prevlev, context), 
+                  summarise,
+                  pr.true=(sum(response) / length(response)),
+                  n = length(response))
+      
+ggplot(data=subset(dangdist_seen.df5,context=='bare'), aes(x=dangdistinct_seen,y=pr.true))+
+  facet_wrap(~prevlev,nrow=1)+
+  geom_point(color='white')+
+ # theme_bw()+
+  scale_x_continuous(breaks=c(0,1,2,3,4,5,6,7,8,9,10))+
+  xlab("number of dangerous/distinct seen")+
+  ylab("proportion of true responses")+
+  ggtitle("bare generic endorsements by dangerous/distinct contexts seen and prevalence level")
+
+## effect of other contexts seen (collapsed across dd & nd)
+nonbare_seen.df5<- ddply(cntxt.ef5, .(nonbare_seen, prevlev, context), 
+                  summarise,
+                  pr.true=(sum(response) / length(response)),
+                  n = length(response))
+      
+ggplot(data=subset(nonbare_seen.df5,context=='bare'), aes(x=nonbare_seen,y=pr.true))+
+  facet_wrap(~prevlev,nrow=1)+
+  geom_point(color='white')+
+ # theme_bw()+
+  scale_x_continuous(breaks=c(0,2,4,6,8,10,12,14,16,18,20))+
+  xlab("number of non-bare seen")+
+  ylab("proportion of true responses")+
+  ggtitle("bare generic endorsements vs. non-bare contexts seen and prevalence level")
+
+
+
+
+
+
+```
 
