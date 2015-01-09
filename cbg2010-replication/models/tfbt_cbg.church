@@ -21,7 +21,7 @@
 ; time church -a 'truth_conditions,most,danger,1000,100,3' tfbt_cbg.church &
 ; time church -a 'truth_conditions,most,irrelevant,1000,100,3' tfbt_cbg.church &
 
-; time church -a 'truth_conditions,generic,bare,1000,100,3,5' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,bare,10,1,3,5' tfbt_cbg.church &
 ; time church -a 'truth_conditions,generic,danger/distinct,1000,100,3,5' tfbt_cbg.church &
 ; time church -a 'truth_conditions,generic,nondistinctive,1000,100,3,5' tfbt_cbg.church &
 
@@ -50,15 +50,14 @@
 (define string->boolean (lambda (str)
                           (equal? str 'True)))
 
-;(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
-(define data-path '/home/mht/generics/cbg2010-replication/data/)
+(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
+;(define data-path '/home/mht/generics/cbg2010-replication/data/)
 
 ;(define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
 ;(define data-file (string-append data-path 'cbgR-exp4_anonymized-trials.csv))
 (define data-file (string-append data-path (string-append 'cbgR-exp expnum '_anonymized-trials.csv)))
 
 (define alldata (read-csv data-file))
-
 
 (define task? (lambda (x) (equal? (fourth x) task)))
 (define quantifier? (lambda (x) (equal? (seventh x) quantifier)))
@@ -72,8 +71,10 @@
                      alldata))
 
 (define query-data (map (lambda (x) (last (but-last x))) data-subset))
-(define evidence-data (map (lambda (x) (string->number (last (but-last (but-last (but-last x)))))) data-subset))
+;(define evidence-data (map (lambda (x) (string->number (last (but-last (but-last (but-last x)))))) data-subset))
+(define evidence-data (map (lambda (x) (string->number (last (but-last (but-last x))))) data-subset))
 
+(display (sort (unique evidence-data)))
 (define sorted-truthcond-data
   (map 
    (lambda (y) 
@@ -202,7 +203,8 @@
      (define generic-theta (if (equal? QUD 'generic) (uniform 0 100) 'null))
      (define some-theta (if (equal? QUD 'some) (uniform 0 100) 'null))
      (define most-theta (if (equal? QUD 'most) (uniform 0 100) 'null))
-     
+
+
      (define alt-words
        (case QUD
              (('generic)  (list 'generic 'anti-generic))
@@ -212,6 +214,8 @@
      ; (define model-predictions
      ;   (cognitive-model generic-theta most-theta some-theta QUD evidence))
      ; for truth_conditions task, get model-predictions for each of the prevalence levels
+
+
      (define model-predictions
        (map 
         (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
@@ -238,7 +242,6 @@
 
 ;; truth conditions task: compute mean acceptance rate at each prevalence level
 ;(map (lambda (x) (mean (map boolean->number x))) sorted-truthcond-data)
-
 
 (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
 (define output-file-name (string-append 'post_exp 'expnum context '_ quantifier '_ task 
