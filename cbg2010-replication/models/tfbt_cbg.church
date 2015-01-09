@@ -21,6 +21,9 @@
 ; time church -a 'truth_conditions,most,danger,1000,100,3' tfbt_cbg.church &
 ; time church -a 'truth_conditions,most,irrelevant,1000,100,3' tfbt_cbg.church &
 
+; time church -a 'truth_conditions,generic,bare,1000,100,3,5' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,danger/distinct,1000,100,3,5' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,nondistinctive,1000,100,3,5' tfbt_cbg.church &
 
 (define args (regexp_split argstring ","))
 
@@ -52,7 +55,7 @@
 
 ;(define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
 ;(define data-file (string-append data-path 'cbgR-exp4_anonymized-trials.csv))
-(define data-file (string-append data-path 'cbgR-exp5_anonymized-trials.csv))
+(define data-file (string-append data-path (string-append 'cbgR-exp expnum '_anonymized-trials.csv)))
 
 (define alldata (read-csv data-file))
 
