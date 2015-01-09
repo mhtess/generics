@@ -14,6 +14,7 @@ d1<-read.table('cbgR-exp1_anonymized-trials.tsv',header=T)
 #d2<-read.table('cbgR-exp2_anonymized-trials.tsv',header=T)
 d3<-read.table('cbgR-exp3_anonymized-trials.tsv',header=T)
 
+bool.tonum<-function(bool){abs(as.numeric(bool)*1-2)}
 #d2$workerid<-d2$workerid+length(levels(factor(d1$workerid)))
 #d3$workerid<-d3$workerid+length(levels(factor(d2$workerid)))+length(levels(factor(d1$workerid)))
 d3$workerid<-d3$workerid+length(levels(factor(d1$workerid)))
@@ -41,6 +42,7 @@ library(reshape2)
 library(ggthemes)
 library(gridExtra)
 library(bootstrap)
+library(lme4)
 theta <- function(x,xdata,na.rm=T) {mean(xdata[x],na.rm=na.rm)}
 ci.low <- function(x,na.rm=T) {
   mean(x,na.rm=na.rm) - quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,.025,na.rm=na.rm)}
@@ -56,6 +58,18 @@ turk.data$truth_conditions <- factor(as.logical(levels(turk.data$response)[turk.
 turk.data$stim_prevalence <- factor(turk.data$stim_prevalence)
 ```
 
+Some frequentists inferential statistics
+```{r}
+
+truth.conds<- subset(turk.data, trial_type=='truth_conditions')
+truth.conds$truth_num <-bool.tonum(truth.conds$truth_conditions)
+results<-glmer(truth_num ~ stim_prevalence*stim_determiner + (1 | workerid), data=truth.conds, family='binomial')
+summary(results)
+
+summary(aov(truth_num~(stim_prevalence*stim_determiner)+Error(workerid/(stim_prevalence*stim_determiner)),
+    data=truth.conds))
+```
+
 
 Number of responses for each prevalence level (for truth conditions task)
 ```{r resp1Atab, echo=FALSE}
@@ -67,6 +81,17 @@ Number of responses for implied prevalence task.
 table(subset(turk.data,trial_type=='implied_prevalence')[,c("stim_determiner")])
 ```
 
+
+```{r anova1}
+df<-ddply(subset(turk.data,trial_type=='truth_conditions' & truth_conditions==TRUE), 
+      .(stim_prevalence, stim_determiner), summarise,
+      count = sum(as.numeric(truth_conditions))
+
+df<-rbind(df,c(10,'most',0))
+df$count<-to.n(df$count)
+      
+
+```
 
 Plot *implied prevalence* (top) and proportion of "true" responses at each stated prevalence level (bottom, replicated figure 3 from CGB 2010)
 
@@ -284,7 +309,7 @@ df<-ddply(subset(td,trial_type=='truth_conditions'),
       true_responses= table(truth_conditions)[["TRUE"]]/length(truth_conditions))
 
 
-ggplot(subset(td,trial_type=='implied_prevalence'),
+a<-ggplot(subset(td,trial_type=='implied_prevalence'),
           aes(x=implied_prevalence,fill=stim_type))+
   geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),binwidth=10)+
   facet_grid(stim_type~stim_determiner)+
@@ -328,7 +353,7 @@ ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_type, group=
               width=0.3,
               size=0.8,
               position=position_dodge(0.5))+
-  facet_wrap(~stim_determiner)+
+  facet_wrap(~stim_determiner,nrow=3)+
   theme_bw()+
   ylab("proportion of 'true' responses")+
   scale_colour_brewer(type='qual',palette=6)+
@@ -450,7 +475,244 @@ ggplot(data=all.data,aes(x=value,fill=context))+
 ## Infer thresholds for quantifiers from truth conditions task
 
 ```{r tfbt.tc.1}
-g0<-read.csv('/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/post_bare_generic_truth_conditions_mh1000_10_alpha3.csv',header=F)
-qplot(data=g0,x=V1,geom='histogram', fill='blue')+  theme_bw()
+tfbt.dir <- '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/'
+
+d0<-read.csv(paste(tfbt.dir,'post_bare_most_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+d0$quantifier<-'most'
+d0$context<-'bare'
+d1<-read.csv(paste(tfbt.dir,'post_danger_most_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+d1$quantifier<-'most'
+d1$context<-'danger'
+d2<-read.csv(paste(tfbt.dir,'post_distinct_most_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+d2$quantifier<-'most'
+d2$context<-'distinct'
+d3<-read.csv(paste(tfbt.dir,'post_irrelevant_most_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+d3$quantifier<-'most'
+d3$context<-'irrelevant'
+
+e0<-read.csv(paste(tfbt.dir,'post_bare_some_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+e0$quantifier<-'some'
+e0$context<-'bare'
+e1<-read.csv(paste(tfbt.dir,'post_danger_some_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+e1$quantifier<-'some'
+e1$context<-'danger'
+e2<-read.csv(paste(tfbt.dir,'post_distinct_some_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+e2$quantifier<-'some'
+e2$context<-'distinct'
+e3<-read.csv(paste(tfbt.dir,'post_irrelevant_some_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+e3$quantifier<-'some'
+e3$context<-'irrelevant'
+
+f0<-read.csv(paste(tfbt.dir,'post_bare_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+f0$quantifier<-'generic'
+f0$context<-'bare'
+f1<-read.csv(paste(tfbt.dir,'post_danger_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+f1$quantifier<-'generic'
+f1$context<-'danger'
+f2<-read.csv(paste(tfbt.dir,'post_distinct_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+f2$quantifier<-'generic'
+f2$context<-'distinct'
+f3<-read.csv(paste(tfbt.dir,'../post_irrelevant_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+f3$quantifier<-'generic'
+f3$context<-'irrelevant'
+
+all.data<-rbind(f0,f1,f2,f3,e0,e1,e2,e3,d0,d1,d2,d3)
+
+all.data$quantifier<- factor(all.data$quantifier)
+all.data$context<-factor(all.data$context)
+
+ggplot(data=all.data,aes(x=value,fill=context))+
+  geom_density()+
+  facet_grid(context~quantifier)+
+  theme_bw()+
+  scale_x_continuous(breaks=c(10,30,50,70,90))
+
+ddply(all.data, .(context, quantifier), summarise, mean(value))
 
 ```
+
+
+Chain 2 (replication)
+
+```{r tfbt.tc.2}
+tfbt.dir <- '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/'
+
+d0<-read.csv(paste(tfbt.dir,'postChain2_bare_most_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+d0$quantifier<-'most'
+d0$context<-'bare'
+d1<-read.csv(paste(tfbt.dir,'postChain2_danger_most_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+d1$quantifier<-'most'
+d1$context<-'danger'
+d2<-read.csv(paste(tfbt.dir,'postChain2_distinct_most_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+d2$quantifier<-'most'
+d2$context<-'distinct'
+d3<-read.csv(paste(tfbt.dir,'postChain2_irrelevant_most_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+d3$quantifier<-'most'
+d3$context<-'irrelevant'
+
+e0<-read.csv(paste(tfbt.dir,'postChain2_bare_some_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+e0$quantifier<-'some'
+e0$context<-'bare'
+e1<-read.csv(paste(tfbt.dir,'postChain2_danger_some_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+e1$quantifier<-'some'
+e1$context<-'danger'
+e2<-read.csv(paste(tfbt.dir,'postChain2_distinct_some_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+e2$quantifier<-'some'
+e2$context<-'distinct'
+e3<-read.csv(paste(tfbt.dir,'postChain2_irrelevant_some_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+e3$quantifier<-'some'
+e3$context<-'irrelevant'
+
+f0<-read.csv(paste(tfbt.dir,'postChain2_bare_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+f0$quantifier<-'generic'
+f0$context<-'bare'
+f1<-read.csv(paste(tfbt.dir,'postChain2_danger_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+f1$quantifier<-'generic'
+f1$context<-'danger'
+f2<-read.csv(paste(tfbt.dir,'postChain2_distinct_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+f2$quantifier<-'generic'
+f2$context<-'distinct'
+f3<-read.csv(paste(tfbt.dir,'postChain2_irrelevant_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F,col.names='value')
+f3$quantifier<-'generic'
+f3$context<-'irrelevant'
+
+all.data2<-rbind(f0,f1,f2,f3,e0,e1,e2,e3,d0,d1,d2,d3)
+
+all.data2$quantifier<- factor(all.data$quantifier)
+all.data2$context<-factor(all.data$context)
+
+ggplot(data=all.data2,aes(x=value,fill=context))+
+  geom_density()+
+  facet_grid(context~quantifier)+
+  theme_bw()+
+  scale_x_continuous(breaks=c(10,30,50,70,90))
+
+ddply(all.data, .(context, quantifier), summarise, mean(value))
+
+```
+
+
+# Experiment 4 -- within-subjects effect of context on Generic
+
+The idea now is to see if the generic theta differs across contexts, thus motivating a lifted variable model from a bayesian data analysis standpoint.
+
++ **truth conditions** = given a prevalence level (XX% of warfles have purple feathers) and a sentence (*generic*, *most*, *some*), answer if the sentence is True or False
+
+The sentence is between subjects (subjects see only generics or mosts or somes).
+
+Within-subject is the context:
+
++ **distinctive**
++ **irrelevant**
++ **bare**
+
+```{r exp4}
+
+setwd('/Users/mht/Documents/research/generics/cbg2010-replication/data/')
+td4<-read.table('cbgR-exp4-trials.tsv',header=T)
+td4$rt <- td4$rt/1000
+td4$truth_conditions <- factor(as.logical(levels(td4$response)[td4$response]), 
+                              levels=c("TRUE","FALSE"))
+
+tc<-subset(td4,trial_type=='truth_conditions')
+tc<-subset(td4,workerid<30)
+tc$truth_num <- 1*as.logical(tc$truth_conditions)
+tc.bs<-bootstrap.ci.tc(tc)
+
+ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_type, group=stim_type))+
+  geom_point(size=3, position=position_dodge(0.5))+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_type),
+              width=0.3,
+              size=0.8,
+              position=position_dodge(0.5))+
+  facet_wrap(~stim_determiner,nrow=3)+
+  theme_bw()+
+  ylab("proportion of 'true' responses")+
+  scale_colour_brewer(type='qual',palette=6)+
+  theme(strip.text.x =       element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))
+
+
+Number of responses for each prevalence level (for truth conditions task)
+```{r, echo=FALSE}
+table(td1[,c("stim_determiner","stim_prevalence")])/6
+```
+
+Subject-wise thresholds for generic across 3 contexts
+
+```{r}
+df<-ddply(subset(td4,trial_type=='truth_conditions' & truth_conditions==TRUE), 
+      .(workerid, stim_type), summarise,
+      mean_prev = mean(stim_prevalence),
+      min_prev = min(stim_prevalence))
+
+ggplot(data=df, aes(x=min_prev,fill=stim_type,group=stim_type))+
+  geom_histogram()+
+  facet_wrap(~stim_type)+
+  theme_bw()
+
+```
+
+
+Recreate ANOVA from CBG Exp 4
+
+```{r anova}
+df<-ddply(subset(td4,trial_type=='truth_conditions' & truth_conditions==TRUE), 
+      .(stim_prevalence, stim_type), summarise,
+      count = sum(as.numeric(truth_conditions)))
+
+td4$truth_num<-abs(as.numeric(td4$truth_conditions)*1-2)
+
+results<-glmer(truth_num ~ stim_prevalence*stim_type + (1 | workerid), data=td4, family='binomial')
+summary(results)
+
+
+summary(aov(truth_num~(stim_prevalence*stim_type)+Error(workerid/(stim_prevalence*stim_type)),
+    data=td4))
+
+```
+
+
+# Experiment 4 -- within-subjects effect of context on Generic (Replicate truth conditions of Exp 1 of CBG exactly)
+
++ **truth conditions** = given a prevalence level (XX% of warfles have purple feathers) and a sentence (*generic*, *most*, *some*), answer if the sentence is True or False
+
+The sentence is between subjects (subjects see only generics or mosts or somes).
+
+Within-subject is the context:
+
++ **dangerous and distinctive**
++ **nondistinctive control**
++ **bare**
+
+```{r exp5}
+td5<-read.table('cbgR-exp5-trials.tsv',header=T)
+td5$rt <- td5$rt/1000
+td5$truth_conditions <- factor(as.logical(levels(td5$response)[td5$response]), 
+                              levels=c("TRUE","FALSE"))
+
+td5$truth_num <- bool.tonum(td5$truth_conditions)
+tc.bs<-bootstrap.ci.tc(td5)
+
+ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_type, group=stim_type))+
+  geom_point(size=3, position=position_dodge(0.5))+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_type),
+              width=0.3,
+              size=0.8,
+              position=position_dodge(0.5))+
+  facet_wrap(~stim_determiner,nrow=3)+
+  theme_bw()+
+  ylab("proportion of 'true' responses")+
+  scale_colour_brewer(type='qual',palette=6)+
+  theme(strip.text.x =       element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))
+
+results<-glmer(truth_num ~ stim_prevalence*stim_type + (1 | workerid), data=td5, family='binomial')
+summary(results)
+
+summary(aov(truth_num~(stim_prevalence*stim_type),
+    data=td5))
+```
+
+
+
