@@ -25,7 +25,7 @@
 \usepackage{apacite}
 
 
-\title{Generics and such}
+\title{Communicating generically}
  
 \author{{\large \bf Michael Henry Tessler (mhtessler@stanford.edu)} \\
   \AND {\large \bf Noah D. Goodman (ngoodman@stanford.edu)} \\
@@ -53,13 +53,13 @@ These different dependent measures, we argue, imply different Questions Under Di
 
 
 
-\section{Communicators in a rational speech-act}
+\section{Sentence verification is a speaker task}
 
-DegenGoodman2014. Model.
+DegenGoodman2014.  Truth conditions task --> QUD = ``generic true?'' Model.
 
-\section{A rational speech-act model of generics}
+But what is the semantics of the generic? \citeA{Cimpian2010}, experiments 1, 3, and 4 found that the truth conditions of the generic are sensitive to the context.  Our goal is to replicate this finding, and use Bayesian data analysis to infer the threshold of the speaker model. This bears some similarity to Michael Franke's approach for cogsci from last year.
 
-\section{Experiment 1 --- \citeA{Cimpian2010} replication}
+\section{\citeA{Cimpian2010} Experiment 1 replication}
 
 \subsection{Materials}
 
@@ -67,13 +67,22 @@ DegenGoodman2014. Model.
 
 \subsection{Results}
 
-\section{Cognitive Model Evaluation}
-
 \section{The full bayesian thing}
 
 \subsection{Inferring quantifier threshold by context}
 
-\section{Are generics like adjectives?}
+Here we'll find that the generic threshold changes by context. We might also want to show that ``most'' and ``some'' do not change by context.
+
+\subsection{Are generics like adjectives?}
+
+To determine if a generic is true or false, we must refer to context. The threshold in the threshold-semantic view of the statement varies by context. This property has been shown to be an important feature in the semantics of gradable adjectives (e.g. \emph{tall}) \cite{Lassiter2014}.  
+
+\section{Lifted-variable speech act model}
+
+We can start in a single context, with a uniform prior over states. We can look at the posterior over states, for listener1. As well, we can look at the posterior over thetas. This depends of course on the alternatives, for which we may want to consider only the experimental alternatives \emph{some, most, generic} or for which we may want to include \emph{all}.  Either way, here we'll recreate the asymmetry between listener and speaker --- between implied prevalence and truth conditions. 
+
+
+
 
 
 
