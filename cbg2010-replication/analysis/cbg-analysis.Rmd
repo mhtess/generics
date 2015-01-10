@@ -610,6 +610,9 @@ Within-subject is the context:
 
 setwd('/Users/mht/Documents/research/generics/cbg2010-replication/data/')
 td4<-read.table('cbgR-exp4-trials.tsv',header=T)
+#write.csv(td4, file='cbgR-exp4_anonymized-trials.csv')
+
+
 td4$rt <- td4$rt/1000
 td4$truth_conditions <- factor(as.logical(levels(td4$response)[td4$response]), 
                               levels=c("TRUE","FALSE"))
@@ -681,7 +684,7 @@ summary(aov(truth_num~(stim_prevalence*stim_type)+Error(workerid/(stim_prevalenc
 ```
 
 
-# Experiment 4 -- within-subjects effect of context on Generic (Replicate truth conditions of Exp 1 of CBG exactly)
+# Experiment 5 -- within-subjects effect of context on Generic (Replicate truth conditions of Exp 1 of CBG exactly)
 
 + **truth conditions** = given a prevalence level (XX% of warfles have purple feathers) and a sentence (*generic*, *most*, *some*), answer if the sentence is True or False
 
@@ -695,11 +698,16 @@ Within-subject is the context:
 
 ```{r exp5}
 td5<-read.table('cbgR-exp5-trials.tsv',header=T)
+td5$stim_type<-gsub("danger/distinct","dangerdistinct",td5$stim_type)
+#write.csv(td5, file='cbgR-exp5_anonymized-trials.csv')
+
 td5$rt <- td5$rt/1000
 td5$truth_conditions <- factor(as.logical(levels(td5$response)[td5$response]), 
                               levels=c("TRUE","FALSE"))
 
 td5$truth_num <- bool.tonum(td5$truth_conditions)
+
+
 tc.bs<-bootstrap.ci.tc(td5)
 
 ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_type, group=stim_type))+
@@ -714,30 +722,119 @@ ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_type, group=
   scale_colour_brewer(type='qual',palette=6)+
   theme(strip.text.x =       element_text(size=14,color='black'))+
   scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))
-
-results<-glmer(truth_num ~ stim_prevalence*stim_type + (1 | workerid), data=td5, family='binomial')
-summary(results)
-
-summary(aov(truth_num~(stim_prevalence*stim_type),
-    data=td5))
 ```
 
-Are the alternative contexts having an effect on endorsements? One preliminary way to test this is to look at the endorsements for the bare, as the number of Nondistinct contexts have been seen.
+### frequentist statistics
 
-First, I'll code the data for the number of nondistinct contexts seen by the participant.
-
-```{r exp5contextEffect}
+```{r exp4_5_stats}
+cntxt.ef4<-ddply(td4, .(workerid), summarise,
+      trialnum = trialNum,
+      irrelevant_seen=cumsum(as.numeric(stim_type=='irrelevant')),
+      distinct_seen=cumsum(as.numeric(stim_type=='distinct')),
+      nonbare_seen=cumsum(as.numeric(stim_type!='bare')),
+      context = stim_type,
+      response = truth_num,
+      prevlev = stim_prevalence,
+      item = stim_category)
 
 
 cntxt.ef5<-ddply(td5, .(workerid), summarise,
       trialnum = trialNum,
       nondistinct_seen=cumsum(as.numeric(stim_type=='nondistinctive')),
-      dangdistinct_seen=cumsum(as.numeric(stim_type=='danger/distinct')),
+      dangdistinct_seen=cumsum(as.numeric(stim_type=='dangerdistinct')),
       nonbare_seen=cumsum(as.numeric(stim_type!='bare')),
       context = stim_type,
       response = truth_num,
-      prevlev = stim_prevalence)
+      prevlev = stim_prevalence,
+      item = stim_category)
 
+
+
+rs4.mixed<-glmer(response ~ prevlev*context + (1 | workerid) + (1 | item), data=cntxt.ef4, family = 'binomial')
+summary(rs4.mixed)
+
+
+rs5.simple<-glm(response ~ prevlev*context,data=cntxt.ef5,family='binomial')
+summary(rs5.simple)
+
+rs5.mixed<-glmer(response ~ prevlev*context + (1 | workerid) + (1 | item), data=cntxt.ef5, family = 'binomial')
+summary(rs5.mixed)
+
+
+```
+
+### bayesian statistics
+
+## Infer thresholds for quantifiers from truth conditions task
+
+```{r tfbt.tc.1}
+tfbt.dir <- '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/'
+
+
+f0<-read.csv(paste(tfbt.dir,'post_exp5bare_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+f0$quantifier<-'generic'
+f0$context<-'bare'
+# ggplot(data=f0,aes(x=value))+geom_histogram()+
+#   scale_x_continuous(limits=c(0,100),breaks=c(10,30,50,70,90))
+f1<-read.csv(paste(tfbt.dir,'post_exp5nondistinctive_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+f1$quantifier<-'generic'
+f1$context<-'nondistinctive-control'
+f2<-read.csv(paste(tfbt.dir,'post_exp5dangerdistinct_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+f2$quantifier<-'generic'
+f2$context<-'danger-distinct'
+
+
+all.data<-rbind(f0,f2,f1)
+
+all.data$quantifier<- factor(all.data$quantifier)
+all.data$context<-factor(all.data$context)
+
+ggplot(data=all.data,aes(x=value,fill=context))+
+  geom_density(alpha=0.8)+
+  facet_wrap(~context)+
+  theme_bw()+
+  guides(fill=F)+
+  scale_x_continuous(breaks=c(10,30,50,70,90))+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x = element_text(size=14,color='black'))
+
+
+
+g0<-read.csv(paste(tfbt.dir,'post_exp4bare_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+g0$quantifier<-'generic'
+g0$context<-'bare'
+g1<-read.csv(paste(tfbt.dir,'post_exp4irrelevant_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+g1$quantifier<-'generic'
+g1$context<-'irrelevant'
+g2<-read.csv(paste(tfbt.dir,'post_exp4distinct_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+g2$quantifier<-'generic'
+g2$context<-'distinct'
+
+exp4.tfbt<-rbind(g0,g1,g2)
+
+exp4.tfbt$quantifier<- factor(exp4.tfbt$quantifier)
+exp4.tfbt$context<-factor(exp4.tfbt$context)
+
+ggplot(data=exp4.tfbt,aes(x=value,fill=context))+
+  geom_density()+
+  facet_wrap(~context)+
+  theme_bw()+
+  scale_x_continuous(breaks=c(10,30,50,70,90))
+
+
+ddply(all.data, .(context, quantifier), summarise, mean(value))
+
+```
+
+
+
+
+
+Are the alternative contexts having an effect on endorsements? One preliminary way to test this is to look at the endorsements for the bare, as the number of Nondistinct contexts have been seen.
+
+First, I'll code the data for the number of nondistinct contexts seen by the participant.
+
+```{r exp4_5contextEffect}
 
 ## effect of nondistinct seen
 nondist_seen.df5<- ddply(cntxt.ef5, .(nondistinct_seen, prevlev, context), 
@@ -783,11 +880,73 @@ ggplot(data=subset(nonbare_seen.df5,context=='bare'), aes(x=nonbare_seen,y=pr.tr
   xlab("number of non-bare seen")+
   ylab("proportion of true responses")+
   ggtitle("bare generic endorsements vs. non-bare contexts seen and prevalence level")
+```
+
+Are there order effects in generic acceptability?
+
+```{r order.effects}
+## effect of trial --- exp 5
+cntxt.ef5$trialCat<-(cntxt.ef5$trialnum<15)
+cntxt.ef5$trialCat<-factor(cntxt.ef5$trialCat,levels=c(TRUE,FALSE),labels=c("early","late"))
 
 
+rs5<-glm(response ~ prevlev*context*trialCat, data=cntxt.ef5, family='binomial')
+summary(rs5)
+with(cntxt.ef5,interaction.plot(context,trialCat,response))
+with(cntxt.ef5,interaction.plot(prevlev,trialCat,response))
 
 
+glmer(response ~prevlev*context*trialCat + (context*prevlev*trialCat| workerid), data=cntxt.ef5)
 
+summary(rs5)
+
+trials_seen.df5<- ddply(cntxt.ef5, .(trialnum, prevlev, context), 
+                  summarise,
+                  pr.true=(sum(response) / length(response)),
+                  n = length(response))
+      
+ggplot(data=subset(trials_seen.df5,context=='bare'), aes(x=trialnum,y=pr.true))+
+  facet_wrap(~prevlev,nrow=1)+
+  geom_point(color='white')+
+ # theme_bw()+
+#  scale_x_continuous(breaks=c(0,2,4,6,8,10,12,14,16,18,20))+
+  xlab("trial num")+
+  ylab("proportion of true responses")+
+  ggtitle("exp 5 -- bare generic endorsements vs.trials seen and prevalence level")
+
+ggplot(data=subset(trials_seen.df5,context=='bare'), aes(x=trialnum,y=n))+ 
+  facet_wrap(~prevlev,nrow=1)+
+  geom_point(color='white')+
+ # theme_bw()+
+#  scale_x_continuous(breaks=c(0,2,4,6,8,10,12,14,16,18,20))+
+  xlab("trial num")+
+  ylab("number of responses")+
+  ggtitle("bare generic endorsements vs.trials seen and prevalence level")
+
+
+## effect of trial --- exp 4
+trials_seen.df4<- ddply(cntxt.ef4, .(trialnum, prevlev, context), 
+                  summarise,
+                  pr.true=(sum(response) / length(response)),
+                  n = length(response))
+      
+ggplot(data=subset(trials_seen.df4,context=='bare'), aes(x=trialnum,y=pr.true))+
+  facet_wrap(~prevlev,nrow=1)+
+  geom_point(color='white')+
+ # theme_bw()+
+#  scale_x_continuous(breaks=c(0,2,4,6,8,10,12,14,16,18,20))+
+  xlab("trial num")+
+  ylab("proportion of true responses")+
+  ggtitle("exp 4 - bare generic endorsements vs.trials seen and prevalence level")
+
+ggplot(data=subset(trials_seen.df4,context=='bare'), aes(x=trialnum,y=n))+
+  facet_wrap(~prevlev,nrow=1)+
+  geom_point(color='white')+
+ # theme_bw()+
+#  scale_x_continuous(breaks=c(0,2,4,6,8,10,12,14,16,18,20))+
+  xlab("trial num")+
+  ylab("number of responses")+
+  ggtitle("exp 4-- bare generic endorsements vs.trials seen and prevalence level")
 
 ```
 
