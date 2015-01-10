@@ -204,9 +204,10 @@
 
      (define query-statement (lambda (utterance)
                                (case utterance
-                                     (('most) most-theta)
-                                     (('some) some-theta)
-                                     (('generic) generic-theta))))
+                                     (('most) (list phi most-theta))
+                                     (('some) (list phi some-theta))
+                                     (('generic) (list phi generic-theta)))))
+
      (define phi (uniform 0 1)) ;; guessing parameter
 
      (define generic-theta (if (equal? QUD 'generic) (uniform 0 100) 'null))
@@ -254,8 +255,12 @@
 ;(map (lambda (x) (mean (map boolean->number x))) sorted-truthcond-data)
 
 (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
-(define output-file-name (string-append 'post_exp expnum context '_ quantifier '_ task 
-   '_mh mh_samples '_ mh_burnin '_alpha alpha '.csv))
+
+(define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
+
+
+(define output-file-name (string-append  output-path 'post_wPhi_exp expnum context '_ quantifier '_ task 
+   '_mh mh_samples '_ mh_lag '_alpha alpha '.csv))
  (write-csv samples output-file-name)
 
  (define complete? 'complete)
