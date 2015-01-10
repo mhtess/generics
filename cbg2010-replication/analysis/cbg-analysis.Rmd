@@ -767,31 +767,39 @@ summary(rs5.mixed)
 
 ## Infer thresholds for quantifiers from truth conditions task
 
-```{r tfbt.tc.1}
+```{r tfbt.tc.exp4.exp5}
 tfbt.dir <- '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/'
 
 
-f0<-read.csv(paste(tfbt.dir,'post_exp5bare_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+f0<-read.csv(paste(tfbt.dir,'post_wPhi_exp5bare_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names=c('phi','theta','dummmy'))
 f0$quantifier<-'generic'
 f0$context<-'bare'
-# ggplot(data=f0,aes(x=value))+geom_histogram()+
+# ggplot(data=f0,aes(x=theta))+geom_histogram()+
 #   scale_x_continuous(limits=c(0,100),breaks=c(10,30,50,70,90))
-f1<-read.csv(paste(tfbt.dir,'post_exp5nondistinctive_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+# ggplot(data=f0,aes(x=phi))+geom_histogram()+
+#   scale_x_continuous(limits=c(0,1))
+
+f1<-read.csv(paste(tfbt.dir,'post_wPhi_exp5nondistinctive_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names=c('phi','theta','dummmy'))
 f1$quantifier<-'generic'
 f1$context<-'nondistinctive-control'
-f2<-read.csv(paste(tfbt.dir,'post_exp5dangerdistinct_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+
+f2<-read.csv(paste(tfbt.dir,'post_wPhi_exp5dangerdistinct_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names=c('phi','theta','dummmy'))
 f2$quantifier<-'generic'
 f2$context<-'danger-distinct'
 
 
 all.data<-rbind(f0,f2,f1)
+all.data$phi <- all.data$phi*100
 
 all.data$quantifier<- factor(all.data$quantifier)
 all.data$context<-factor(all.data$context)
 
-ggplot(data=all.data,aes(x=value,fill=context))+
+exp5.tfbt<-melt(all.data[,c(1,2,4,5)],id.vars=c('quantifier','context'))
+exp5.tfbt$variable<-factor(exp5.tfbt$variable,levels=c("theta","phi"))
+
+ggplot(data=exp5.tfbt,aes(x=value,fill=context))+
   geom_density(alpha=0.8)+
-  facet_wrap(~context)+
+  facet_grid(variable~context)+
   theme_bw()+
   guides(fill=F)+
   scale_x_continuous(breaks=c(10,30,50,70,90))+
@@ -799,27 +807,33 @@ ggplot(data=all.data,aes(x=value,fill=context))+
   theme(strip.text.x = element_text(size=14,color='black'))
 
 
-
-g0<-read.csv(paste(tfbt.dir,'post_exp4bare_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+g0<-read.csv(paste(tfbt.dir,'post_wPhi_exp4bare_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names=c('phi','theta','dummmy'))
 g0$quantifier<-'generic'
 g0$context<-'bare'
-g1<-read.csv(paste(tfbt.dir,'post_exp4irrelevant_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+g1<-read.csv(paste(tfbt.dir,'post_wPhi_exp4irrelevant_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names=c('phi','theta','dummmy'))
 g1$quantifier<-'generic'
 g1$context<-'irrelevant'
-g2<-read.csv(paste(tfbt.dir,'post_exp4distinct_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names='value')
+g2<-read.csv(paste(tfbt.dir,'post_wPhi_exp4distinct_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names=c('phi','theta','dummmy'))
 g2$quantifier<-'generic'
 g2$context<-'distinct'
 
-exp4.tfbt<-rbind(g0,g1,g2)
+a.data<-rbind(g0,g1,g2)
+a.data$phi <- a.data$phi*100
+a.data$quantifier<- factor(a.data$quantifier)
+a.data$context<-factor(a.data$context)
 
-exp4.tfbt$quantifier<- factor(exp4.tfbt$quantifier)
-exp4.tfbt$context<-factor(exp4.tfbt$context)
+exp4.tfbt<-melt(a.data[,c(1,2,4,5)],id.vars=c('quantifier','context'))
+exp4.tfbt$variable<-factor(exp4.tfbt$variable,levels=c("theta","phi"))
 
 ggplot(data=exp4.tfbt,aes(x=value,fill=context))+
-  geom_density()+
-  facet_wrap(~context)+
+  geom_density(alpha=0.8)+
+  facet_grid(variable~context)+
   theme_bw()+
-  scale_x_continuous(breaks=c(10,30,50,70,90))
+  guides(fill=F)+
+  scale_x_continuous(breaks=c(10,30,50,70,90))+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x = element_text(size=14,color='black'))
+
 
 
 ddply(all.data, .(context, quantifier), summarise, mean(value))
