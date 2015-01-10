@@ -21,9 +21,13 @@
 ; time church -a 'truth_conditions,most,danger,1000,100,3' tfbt_cbg.church &
 ; time church -a 'truth_conditions,most,irrelevant,1000,100,3' tfbt_cbg.church &
 
-; time church -a 'truth_conditions,generic,bare,1000,100,3,5' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,danger/distinct,1000,100,3,5' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,nondistinctive,1000,100,3,5' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,bare,1000,3,3,5' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,dangerdistinct,1000,3,3,5' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,nondistinctive,1000,3,3,5' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,bare,1000,3,3,4' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,distinct,1000,3,3,4' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,irrelevant,1000,3,3,4' tfbt_cbg.church &
+
 
 (define args (regexp_split argstring ","))
 
@@ -31,7 +35,7 @@
 (define quantifier (second args))
 (define context (third args))
 (define mh_samples (fourth args))
-(define mh_burnin (fifth args))
+(define mh_lag (fifth args))
 (define alpha (sixth args))
 (define expnum (seventh args))
 
@@ -196,7 +200,7 @@
   (lambda (QUD utterance)
     (mh-query 
      (string->number mh_samples)
-     (string->number mh_burnin)
+     (string->number mh_lag)
 
      (define query-statement (lambda (utterance)
                                (case utterance
@@ -208,7 +212,6 @@
      (define generic-theta (if (equal? QUD 'generic) (uniform 0 100) 'null))
      (define some-theta (if (equal? QUD 'some) (uniform 0 100) 'null))
      (define most-theta (if (equal? QUD 'most) (uniform 0 100) 'null))
-
 
      (define alt-words
        (case QUD
