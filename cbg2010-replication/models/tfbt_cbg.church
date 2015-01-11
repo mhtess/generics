@@ -65,7 +65,7 @@
 
 (define task? (lambda (x) (equal? (fourth x) task)))
 (define quantifier? (lambda (x) (equal? (seventh x) quantifier)))
-(define context? (lambda (x) (equal? (fifth x) context)))
+(define context? (lambda (x context) (equal? (fifth x) context)))
 ; (define stimulus-prevlevel? (lambda (lst target) (equal? 
 ;                                                   (string->number (last (but-last (but-last (but-last lst)))))
 ;                                                   target)))
@@ -74,15 +74,51 @@
                                                   (string->number (last (but-last (but-last lst))))
                                                   target)))
 
-(define data-subset (filter 
-                     (lambda (x) (and (task? x) (quantifier? x) (context? x))) 
-                     alldata))
+(define all-contexts (unique (map fifth (rest alldata))))
 
-(define query-data (map (lambda (x) (last (but-last x))) data-subset))
+
+(define data-subset 
+  (if (equal? context 'all)
+    (map
+      (lambda (c)
+        (filter 
+          (lambda (x) (and (task? x) (quantifier? x) (context? x c)))
+          alldata))
+      all-contexts)
+    (filter 
+      (lambda (x) (and (task? x) (quantifier? x) (context? x context))) 
+      alldata)))
+
+(define query-data 
+    (if (equal? context 'all)
+      (map (lambda (y) (map (lambda (x) (last (but-last x))) y)) data-subset)
+      (map (lambda (x) (last (but-last x))) data-subset)))
+
 ;(define evidence-data (map (lambda (x) (string->number (last (but-last (but-last (but-last x)))))) data-subset))
-(define evidence-data (map (lambda (x) (string->number (last (but-last (but-last x))))) data-subset))
+(define evidence-data 
+    (if (equal? context 'all)
+        (map (lambda (y) (map (lambda (x) (string->number (last (but-last (but-last x))))) y)) data-subset)
+        (map (lambda (x) (string->number (last (but-last (but-last x))))) data-subset)))
+
+(define unique-evidence-data
+  (if (equal? context 'all)
+    (map (lambda (evidence-data-for-one-context) 
+      (sort (unique evidence-data-for-one-context)))
+    evidence-data)
+    (sort (unique evidence-data))))
 
 (define sorted-truthcond-data
+  (if (equal? context 'all) ; resulting data is 3(contexts) x 5 (levels) x N (trials)
+    (map (lambda (data-for-one-context unique-evidence-data-for-one-context)
+      (map (lambda (evidence) 
+       (map (lambda (z) 
+        (string->boolean (last (but-last z))))
+       (filter (lambda (one-trial) 
+        (stimulus-prevlevel? one-trial evidence))
+       data-for-one-context)))
+      unique-evidence-data-for-one-context))
+    data-subset
+    unique-evidence-data)
   (map 
    (lambda (y) 
      (map 
@@ -90,9 +126,9 @@
           (filter 
             (lambda (x) (stimulus-prevlevel? x y))
             data-subset)))
-    (sort (unique evidence-data))))
+    (sort (unique evidence-data)))))
 
-(define simplified-data
+(define simplified-data ;;; obsolete
   (case task
         (('implied_prevalence) (map (lambda (x) (string->number x)) query-data))
         (('truth_conditions) (map (lambda (x) (string->boolean x)) query-data))))
@@ -202,17 +238,17 @@
      (string->number mh_samples)
      (string->number mh_lag)
 
-     (define query-statement (lambda (utterance)
+     (define query-statement (lambda (utterance context)
                                (case utterance
-                                     (('most) (list phi most-theta))
-                                     (('some) (list phi some-theta))
-                                     (('generic) (list phi generic-theta)))))
+                                     (('most) (list phi (most-theta context)))
+                                     (('some) (list phi (some-theta context)))
+                                     (('generic) (list phi (generic-theta context))))))
 
      (define phi (uniform 0 1)) ;; guessing parameter
 
-     (define generic-theta (if (equal? QUD 'generic) (uniform 0 100) 'null))
-     (define some-theta (if (equal? QUD 'some) (uniform 0 100) 'null))
-     (define most-theta (if (equal? QUD 'most) (uniform 0 100) 'null))
+     (define generic-theta (mem (lambda (context) (if (equal? QUD 'generic) (uniform 0 100) 'null))))
+     (define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
+     (define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
 
      (define alt-words
        (case QUD
@@ -226,9 +262,17 @@
 
 
      (define model-predictions
+      (if (equal? context 'all)
+        (map 
+          (lambda (unique-evidence-data-for-one-context context)
+            (map 
+              (lambda (evidence) 
+              (cognitive-model (generic-theta context) (most-theta context) (some-theta context) QUD evidence))
+            unique-evidence-data-for-one-context))
+        unique-evidence-data all-contexts)
        (map 
         (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
-        (sort (unique evidence-data))))
+        unique-evidence-data)))
 
     ; (display model-predictions)
 
@@ -247,7 +291,14 @@
      (define dummyvar-for-factoring
        (factor (sum (map scores sorted-truthcond-data model-predictions))))
 
-     (query-statement utterance)
+
+
+     (if (equal? context 'all)
+      (map (lambda (c) (query-statement utterance c))
+        all-contexts)
+      (query-statement utterance context))
+
+
 
      true)))
 
@@ -261,10 +312,11 @@
 
 (define output-file-name (string-append  output-path 'post_wPhi_exp expnum context '_ quantifier '_ task 
    '_mh mh_samples '_ mh_lag '_alpha alpha '.csv))
- (write-csv samples output-file-name)
-
- (define complete? 'complete)
- complete?
+ 
+ ;(write-csv samples output-file-name)
+(display samples)
+;(define complete? 'complete)
+;complete?
 
 
 
