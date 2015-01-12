@@ -14,7 +14,7 @@ d1<-read.table('cbgR-exp1_anonymized-trials.tsv',header=T)
 #d2<-read.table('cbgR-exp2_anonymized-trials.tsv',header=T)
 d3<-read.table('cbgR-exp3_anonymized-trials.tsv',header=T)
 
-#bool.tonum<-function(bool){abs(as.numeric(bool)*1-2)}
+bool.tonum<-function(bool){abs(as.numeric(bool)*1-2)}
 #d2$workerid<-d2$workerid+length(levels(factor(d1$workerid)))
 #d3$workerid<-d3$workerid+length(levels(factor(d2$workerid)))+length(levels(factor(d1$workerid)))
 d3$workerid<-d3$workerid+length(levels(factor(d1$workerid)))
@@ -89,8 +89,6 @@ df<-ddply(subset(turk.data,trial_type=='truth_conditions' & truth_conditions==TR
 
 df<-rbind(df,c(10,'most',0))
 df$count<-to.n(df$count)
-      
-
 ```
 
 Plot *implied prevalence* (top) and proportion of "true" responses at each stated prevalence level (bottom, replicated figure 3 from CGB 2010)
@@ -149,6 +147,40 @@ ggplot(df2.bs, aes(x=stim_determiner,y=subj_prevalence,fill=trial_type, group=tr
   theme_bw()+
   ylab("average prevalence")+
   scale_fill_brewer(type='qual',palette=1)
+
+```
+
+Replicate figure 3 with CIs
+
+```{r}
+
+bootstrap.ci.tc <- function(x){
+  
+  agr = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=mean)
+  agr$CILow = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.low)$truth_num
+  agr$CIHigh = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.high)$truth_num
+  agr$YMin = agr$truth_num - agr$CILow
+  agr$YMax = agr$truth_num + agr$CIHigh
+  return(agr)
+}
+
+tc<-subset(turk.data,trial_type=='truth_conditions')
+tc$truth_num <- 1*as.logical(tc$truth_conditions)
+tc.bs<-bootstrap.ci.tc(tc)
+
+ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_determiner, group=stim_determiner))+
+  geom_point(size=3, position=position_dodge(0.5))+
+  geom_line()+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_determiner),
+              width=0.3,
+              size=0.8,
+              position=position_dodge(0.5))+
+  facet_wrap(~stim_determiner,nrow=3)+
+  theme_bw()+
+  ylab("proportion of 'true' responses")+
+  scale_colour_brewer(type='qual',palette=6)+
+  theme(strip.text.x =element_text(size=14,color='black'))+
+  guides(colour=F)
 
 ```
 
@@ -331,7 +363,7 @@ grid.arrange(a,b)
 
 Replicate figure 3 from CGB 2010 (w CIs)
 
-```{r}
+```{r exp3fig3}
 
 bootstrap.ci.tc <- function(x){
   
@@ -357,7 +389,7 @@ ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_type, group=
   theme_bw()+
   ylab("proportion of 'true' responses")+
   scale_colour_brewer(type='qual',palette=6)+
-  theme(strip.text.x =       element_text(size=14,color='black'))
+  theme(strip.text.x =element_text(size=14,color='black'))
 
 ```
 
@@ -707,6 +739,8 @@ td5$truth_conditions <- factor(as.logical(levels(td5$response)[td5$response]),
 
 td5$truth_num <- bool.tonum(td5$truth_conditions)
 
+#split by first half/second half to look at order effects
+#tc.bs<-bootstrap.ci.tc(td5[td5$trialNum>15,])
 
 tc.bs<-bootstrap.ci.tc(td5)
 
