@@ -128,10 +128,10 @@
             data-subset)))
     (sort (unique evidence-data)))))
 
-(define simplified-data ;;; obsolete
-  (case task
-        (('implied_prevalence) (map (lambda (x) (string->number x)) query-data))
-        (('truth_conditions) (map (lambda (x) (string->boolean x)) query-data))))
+; (define simplified-data ;;; obsolete
+;   (case task
+;         (('implied_prevalence) (map (lambda (x) (string->number x)) query-data))
+;         (('truth_conditions) (map (lambda (x) (string->boolean x)) query-data))))
 
 ;  (map (lambda (x) (string->number x)) query-data))
 ;  (map (lambda (x) (round (/ (string->number x) 10))) prevalence-data)) ; round for conditioning on discrete data
@@ -183,7 +183,10 @@
              (('most-theta) most-theta)
              (('some-theta) some-theta)
              (('generic-theta) generic-theta)
-             (('how-many-theta) 'null)))
+             (('how-many-theta) 'null)
+             (('anti-generic-theta) generic-theta)
+             (('none-theta) some-theta)
+             (('anti-most-theta) anti-most)))
      
      (define (theta words)
        (theta-meaning (string-append words '-theta)))
@@ -224,7 +227,7 @@
 
                QUD-val
 
-               ((meaning words) state (theta QUD))))))
+               ((meaning words) state (theta words))))))
 
 
      (if (equal? QUD 'how-many)
@@ -310,6 +313,9 @@
 ;   (map (lambda (y) (map (lambda (x) (string-append x '_ y)) '(phi theta))) all-contexts)
 ;   )))
 
+
+; (define test (cognitive-model 10 50 0 'how-many 'generic))
+; (display test)
 (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
 
 (define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
@@ -319,7 +325,7 @@
    '_mh mh_samples '_ mh_lag '_alpha alpha '.csv))
  
 (write-csv samples output-file-name)
-(display all-contexts)
+; (display all-contexts)
 (define complete? 'complete)
 complete?
 
