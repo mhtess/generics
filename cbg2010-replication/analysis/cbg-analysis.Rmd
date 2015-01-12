@@ -770,7 +770,6 @@ summary(rs5.mixed)
 ```{r tfbt.tc.exp4.exp5}
 tfbt.dir <- '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/'
 
-
 f0<-read.csv(paste(tfbt.dir,'post_wPhi_exp5bare_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,col.names=c('phi','theta','dummmy'))
 f0$quantifier<-'generic'
 f0$context<-'bare'
@@ -840,7 +839,30 @@ ddply(all.data, .(context, quantifier), summarise, mean(value))
 
 ```
 
+Using a phi common across contexts
+```{r tfbt.commonPhi} 
+test0<-read.csv(paste(tfbt.dir,'post_wPhi_exp5all_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,
+                col.names=c("nondistinctive_phi","nondistinctive_theta","blank","bare_phi","bare_theta","blank","dangerdistinct_phi","dangerdistinct_theta","blank","blank"))[,c(1,2,4,5,7,8)]
 
+test0$nondistinctive_phi<-test0$nondistinctive_phi*100
+test0$bare_phi <- test0$bare_phi*100
+test0$dangerdistinct_phi <- test0$dangerdistinct_phi*100
+x<-melt(test0)
+
+x1<-cbind(x,ldply(strsplit(as.character(x$variable),"_")))
+x1$V2<-factor(x1$V2,levels=c("theta","phi"))
+
+
+ggplot(data=x1,aes(x=value,fill=V1))+
+  geom_density(alpha=0.8)+
+  facet_grid(V2~V1)+
+  theme_bw()+
+  guides(fill=F)+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x = element_text(size=14,color='black'))
+
+```
 
 
 
