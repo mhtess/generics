@@ -1,0 +1,138 @@
+;; background
+(define (prevalence-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
+
+(define (yes QUD state)
+  (case QUD
+    (('all) (> all-threshold state))
+    (('some) (> some-threshold state))
+    (('most) (> most-threshold state))))
+
+(define (all state threshold) (= 100 state))
+(define (relaxed-all state threshold) (<= 90 state))
+(define (some state some-threshold) (< some-threshold state))
+(define (none state some-threshold) (>= some-threshold state))
+(define (most state most-threshold) (< most-threshold state))
+(define (anti-most state most-threshold) (>= most-threshold state))
+(define (generic state generic-threshold) (< generic-threshold state))
+(define (anti-generic state generic-threshold) (>= generic-threshold state))
+
+(define (mu state dummy) true)
+(define (how-many state dummy) state)
+
+(define (raise-to-power dist alph)
+  (list (first dist) (map (lambda (x) (pow x alph)) (second dist))))
+
+(define all-threshold 99)
+(define some-threshold 0)
+(define most-threshold 50)
+
+(define all-contexts '(bare danger distinct))
+
+(define (meaning word)
+  (case word
+        (('all) all)
+        (('some) some)
+        (('none) none)
+        (('most) most)
+        (('anti-most) anti-most)
+        (('how-many) how-many)
+        (('generic) generic)
+        (('anti-generic) anti-generic)
+        (('mu) mu)))
+
+
+; (define speaker1
+;  (mem (lambda (state)
+;         (enumeration-query
+;          (define QUD (uniform-draw (list 'all 'some 'most)))
+;          (define words (yes QUD state))
+
+;          words
+
+;          true
+;          ;(yes QUD state)
+;          ))))
+
+
+; (speaker1 10)
+
+(define cognitive-model 
+  (mem 
+   (lambda (QUD evidence context)
+     ;; input could be utterance (for listener / implied_prevalence)
+     ;; or state (for speaker / truth_conditions)
+
+    
+
+     (define listener1
+       (mem (lambda (words context) ;; listener1 does inference over theta
+              (enumeration-query
+
+               (define importance (mem (lambda (context) (uniform 0 1))))
+               (define relative-importance (lambda (context) (/ (importance context) (sum (map importance all-contexts)))))
+
+               (define prevalence (prevalence-prior))
+               (define generic-theta (uniform 0 100))
+
+               (define QUD-val ((meaning QUD) prevalence importance (theta QUD)))
+
+               QUD-val
+
+               (equal? words 
+                (apply multinomial (raise-to-power (speaker1 state context) (string->number alpha))))
+               ))))
+
+     (define speaker1
+       (mem (lambda (prevalence context)
+              (enumeration-query
+             (define (theta words context)
+               (theta-meaning (string-append words '-theta) context))
+
+             (define (theta-meaning word context)
+               (case word
+                     (('most-theta) 50)
+                     (('some-theta) 1)
+                     (('generic-theta) (generic-theta context))
+                     (('how-many-theta) 'null)
+                     (('anti-generic-theta) (generic-theta context))
+                     (('none-theta) 1)
+                     (('anti-most-theta) 50)))
+
+               (define words
+                 (case QUD
+                       (('generic)  (uniform-draw (list 'generic 'anti-generic)))
+                       (('some) (uniform-draw (list 'some 'none)))
+                       (('most) (uniform-draw (list 'most 'anti-most)))
+                       (('how-many) (uniform-draw (list 'most 'some 'generic)))))
+
+               (define importance (mem (lambda (context) (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1)))))
+               (define relative-importance (lambda (context) (/ (importance context) (sum (map importance all-contexts)))))
+
+               (define generic-theta (mem (lambda (context) (* (relative-importance context) 
+                (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100))))))
+    
+               (define QUD-val ((meaning QUD) prevalence (theta QUD context)))
+
+               words
+
+               (equal? QUD-val
+                       (apply multinomial (listener0 words (generic-theta context))))))))
+
+     (define listener0
+       (mem (lambda (words theta-val) 
+              (enumeration-query
+
+               (define prevalence (prevalence-prior))
+
+               (define QUD-val ((meaning QUD) prevalence theta-val))
+
+               QUD-val
+
+               ((meaning words) prevalence theta-val)))))
+
+
+     (if (equal? QUD 'how-many)
+         (listener1 evidence context)
+         (speaker1 evidence context)))))
+
+(cognitive-model 'generic 50 'bare)
