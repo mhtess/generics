@@ -289,7 +289,9 @@
            (sum (map score-marginalized-phi data-as-quantifier)))))
 
      (define dummyvar-for-factoring
-       (factor (sum (map scores sorted-truthcond-data model-predictions))))
+      (if (equal? context 'all)
+       (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
+       (factor (sum (map scores sorted-truthcond-data model-predictions)))))
 
 
 
@@ -304,6 +306,9 @@
 
 ;; truth conditions task: compute mean acceptance rate at each prevalence level
 ;(map (lambda (x) (mean (map boolean->number x))) sorted-truthcond-data)
+; (define header (flatten (list 
+;   (map (lambda (y) (map (lambda (x) (string-append x '_ y)) '(phi theta))) all-contexts)
+;   )))
 
 (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
 
@@ -313,10 +318,10 @@
 (define output-file-name (string-append  output-path 'post_wPhi_exp expnum context '_ quantifier '_ task 
    '_mh mh_samples '_ mh_lag '_alpha alpha '.csv))
  
- ;(write-csv samples output-file-name)
-(display samples)
-;(define complete? 'complete)
-;complete?
+(write-csv samples output-file-name)
+(display all-contexts)
+(define complete? 'complete)
+complete?
 
 
 
