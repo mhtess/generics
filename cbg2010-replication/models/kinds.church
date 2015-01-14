@@ -1,36 +1,23 @@
-(define kind-given-property
-    (lambda (label prevalence property)
+(define pr-kind-given-property ;; probability of a kind given observing the property
+    (lambda (prevalence distinctive)
   (enumeration-query
 
+    (define other-kind-prevalence 
+            (if distinctive 0.1 0.7))
 
     (define observe-property 
-        (lambda (prevalence kind property label)
-        (or (and (is? kind label) (flip prevalence))
-            (and (is? kind 'other) (flip 0.5)))))
+        (lambda (prevalence kind)
+        (or (and (equal? kind 'morseth) (flip prevalence))
+            (and (equal? kind 'other) (flip other-kind-prevalence)))))
+    (define kind (uniform-draw '(morseth other)))
 
-    (define (is? k label) (equal? label k))
-
-;    (define kinds '(morseth blin reesle zorb other))
-    (define kinds '(morseth blin other))
-    (define properties '(silver-fur red-scales blue-scales orange-tail other))
-    (define kind (uniform-draw kinds))
-
-
-    ;; 30% of morseths have silver fur
-    (define silver-fur (or (and (is? 'morseth) (flip 0.3)) 
-                            (and  (is? 'other) (flip 0.5))))
-    ;; 50% of blins have red scales
-    (define red-scales (or (and (is? 'blin) (flip 0.5)) 
-                            (and (is? 'other) (flip 0.5))))
-
-    (is? kind label)
-    ;kind
+    (equal? kind 'morseth)
    
-    (observe-property prevalence kind property label)))) ;; prevalence % of kind have property
-
+    (observe-property prevalence kind)))) ;; prevalence % of kind have property
 
 (define get-true-prob (lambda (lst)
     (list-ref (second lst) (position (first lst) #t))))
+
 (define generic? (lambda (property-predictive-power threshold) (> property-predictive-power threshold)))
 (define no-generic? (lambda (property-predictive-power threshold) (<= property-predictive-power threshold)))
 
@@ -39,29 +26,45 @@
         (('yes) generic?)
         (('no) no-generic?))))
 
-(define speaker-of-kinds
-    (enumeration-query 
+(define (state-prior) (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1)))
 
+(define listener0-of-kinds
+    (mem (lambda (words theta)
+        (enumeration-query
+            (define state (state-prior))
+            (define QUD-val ((meaning words) state theta))
+
+            QUD-val
+
+            ((meaning words) state theta)))))
+
+
+(define speaker1-of-kinds
+    (mem (lambda (prevalence distinctive)
+    (enumeration-query 
         (define theta (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)));; threshold for claiming the generic to be true
         ;; doesn't operate over prevalence but predictive power
         (define words (uniform-draw '(yes no)))
         
         (define label 'morseth)
         (define property 'silver-fur)
-        (define prevalence 0.8)
 
-        (define state (get-true-prob (kind-given-property label prevalence property))) ;;; state is the p(kind | property)
+        (define state (get-true-prob (pr-kind-given-property prevalence distinctive))) ;;; state is the p(kind | property)
         (define QUD-val ((meaning words) state theta));; to complete.
         
         words
-        ;ppp
+       ; (listener-of-kinds words theta)
+        ;state
 
-        ;(equal? )
-        QUD-val
-        ))
+        ;true))
+          (equal? QUD-val
+             (apply multinomial (listener0-of-kinds words theta)))))))
+
+
 
 ;(kind-given-property kind prevalence property)
-speaker-of-kinds
+;(map (lambda (x) (get-true-prob (kind-given-property 'morseth x 'si))) (list 0.1 0.3 0.5 0.7 0.9))
+(map speaker1-of-kinds (list 0.1 0.3 0.5 0.7 0.9) (list #t #t #t #t #t))
+;(map speaker1-of-kinds (list 0.1 0.3 0.5 0.7 0.9) (list #f #f #f #f #f))
 
-;(meaning 'no)
-;(get-true-prob (kind-given-property 'morseth 0.3 'silver-fur))
+
