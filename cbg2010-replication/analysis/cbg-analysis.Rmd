@@ -166,6 +166,11 @@ bootstrap.ci.tc <- function(x){
 
 tc<-subset(turk.data,trial_type=='truth_conditions')
 tc$truth_num <- 1*as.logical(tc$truth_conditions)
+
+tc.bs<-bootstrap.ci.tc(tc[tc$trialNum<15,])
+tc.bs<-bootstrap.ci.tc(tc[tc$trialNum>=15,])
+
+
 tc.bs<-bootstrap.ci.tc(tc)
 
 ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_determiner, group=stim_determiner))+
@@ -306,8 +311,11 @@ library(ggthemes)
 
 setwd('/Users/mht/Documents/research/generics/cbg2010-replication/data/')
 td0<-read.table('cbgR-exp1_anonymized-trials.tsv',header=T)
+
+#td0$trialNum<-(1+as.numeric(rownames(td0))) %% 30
 #write.csv(td0, file='cbgR-exp1_anonymized-trials.csv')
 td1<-read.table('cbgR-exp3_anonymized-trials.tsv',header=T)
+#td1$trialNum<-(1+as.numeric(rownames(td1))) %% 30
 #write.csv(td1, file='cbgR-exp3_anonymized-trials.csv')
 
 
@@ -377,7 +385,15 @@ bootstrap.ci.tc <- function(x){
 
 tc<-subset(td,trial_type=='truth_conditions')
 tc$truth_num <- 1*as.logical(tc$truth_conditions)
+
+tc.bs<-bootstrap.ci.tc(tc[tc$trialNum<15,])
+tc.bs<-bootstrap.ci.tc(tc[tc$trialNum>=15,])
+
+
+
 tc.bs<-bootstrap.ci.tc(tc)
+
+tc.bs$stim_type<-factor(tc.bs$stim_type,labels=c("exp1-bare","exp3-danger","exp3-distinct", "exp3-irrelevant"))
 
 ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_type, group=stim_type))+
   geom_point(size=3, position=position_dodge(0.5))+
@@ -660,6 +676,10 @@ summary(results)
 tc<-subset(td4,trial_type=='truth_conditions')
 tc<-subset(td4,workerid<30)
 tc$truth_num <- 1*as.logical(tc$truth_conditions)
+
+tc.bs<-bootstrap.ci.tc(tc[tc$trialNum<15,])
+tc.bs<-bootstrap.ci.tc(tc[tc$trialNum>=15,])
+
 tc.bs<-bootstrap.ci.tc(tc)
 
 ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_type, group=stim_type))+
@@ -898,7 +918,41 @@ ggplot(data=x1,aes(x=value,fill=V1))+
 
 ```
 
+### "Kinder" model
 
+```{r tfbt.kinder.exp5}
+#d<-read.csv(paste('kinder_exp5all_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F)
+#d<-read.csv(paste('kinder_qudIsLorch_exp5all_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F)
+#d<-read.csv(paste('kinder_qudWhoIsIt_exp5all_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F)
+#d<-read.csv(paste('kinder_qudUncertain_l0predictivepower_exp7all_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F)
+#d<-read.csv(paste('kinder_qudUncertain_justPrev_exp7all_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F)
+d<-read.csv(paste('kinder_qudUncertain_prevForGen_exp7all_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F)
+
+
+d.tidy <- d %>%
+  select(V1,V2,V3,V5,V6,V7,V9,V10,V11) %>%
+  rename(nondistinct_phi = V1,
+         nondistinct_theta = V2,
+         nondistinct_other = V3,
+         bare_phi = V5,
+         bare_theta = V6,
+         bare_other = V7,
+         distinct_phi = V9, 
+         distinct_theta = V10,
+         distinct_other= V11) %>%
+  gather(variable,value) %>%
+  separate(variable,into=c('context','variable') ,sep="_")
+
+d.tidy$variable<-factor(d.tidy$variable,levels=c("theta","other","phi"))
+
+ggplot(d.tidy,aes(x=value,fill=context))+
+  geom_histogram()+
+  facet_grid(variable~context)+
+  theme_bw()
+
+
+
+```
 
 Are the alternative contexts having an effect on endorsements? One preliminary way to test this is to look at the endorsements for the bare, as the number of Nondistinct contexts have been seen.
 
@@ -1017,6 +1071,127 @@ ggplot(data=subset(trials_seen.df4,context=='bare'), aes(x=trialnum,y=n))+
   xlab("trial num")+
   ylab("number of responses")+
   ggtitle("exp 4-- bare generic endorsements vs.trials seen and prevalence level")
+```
+
+# Experiment 7
+
+### Same as Exp 5 but with Prevalence levels = {5, 15, 25, 35, 45}
+
+```{r exp7}
+td7<-read.table('cbgR-exp7-trials.tsv',header=T)
+td7$stim_type<-gsub("danger/distinct","dangerdistinct",td7$stim_type)
+#write.csv(td7, file='cbgR-exp7_anonymized-trials.csv')
+
+td7$rt <- td7$rt/1000
+td7$truth_conditions <- factor(as.logical(levels(td7$response)[td7$response]), 
+                              levels=c("TRUE","FALSE"))
+
+td7$truth_num <- bool.tonum(td7$truth_conditions)
+
+split by first half/second half to look at order effects
+tc.bs<-bootstrap.ci.tc(td7[td7$trialNum<=15,])
+
+
+tc.bs<-bootstrap.ci.tc(td7)
+
+ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,colour=stim_type, group=stim_type))+
+ # geom_line(size=0.3,position=position_dodge(0.4))+
+  geom_point(size=3, position=position_dodge(0.4))+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_type),
+              width=0.3,
+              size=0.8,
+              position=position_dodge(0.4))+
+  facet_wrap(~stim_determiner,nrow=3)+
+  theme_bw()+
+  ylab("proportion of 'true' responses")+
+  scale_colour_brewer(type='qual',palette=6)+
+  theme(strip.text.x =       element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))
+```
+
+Some stats
+```{r exp7.stats}
+
+cntxt.ef7<-ddply(td7, .(workerid), summarise,
+      trialnum = trialNum,
+      nondistinct_seen=cumsum(as.numeric(stim_type=='nondistinctive')),
+      dangdistinct_seen=cumsum(as.numeric(stim_type=='dangerdistinct')),
+      nonbare_seen=cumsum(as.numeric(stim_type!='bare')),
+      context = stim_type,
+      response = truth_num,
+      prevlev = stim_prevalence,
+      item = stim_category)
+
+
+cntxt.ef7$trialCat<-(cntxt.ef7$trialnum<15)
+cntxt.ef7$trialCat<-factor(cntxt.ef7$trialCat,levels=c(TRUE,FALSE),labels=c("early","late"))
+
+
+rs7<-glm(response ~ prevlev*context*trialCat, data=cntxt.ef7, family='binomial')
+summary(rs7)
+with(cntxt.ef7,interaction.plot(context,trialCat,response))
+with(cntxt.ef7,interaction.plot(prevlev,trialCat,response))
+
+
+rs7.simple<-glm(response ~ prevlev*context,data=cntxt.ef7,family='binomial')
+summary(rs7.simple)
+
+rs7.mixed<-glmer(response ~ prevlev*context + (1 | workerid) + (1 | item), data=cntxt.ef7, family = 'binomial')
+summary(rs7.mixed)
+```
+
+Using a phi common across contexts
+```{r tfbt7.commonPhi} 
+test0<-read.csv(paste(tfbt.dir,'post_wPhi_exp7all_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F,
+                col.names=c("nondistinctive_phi","nondistinctive_theta","blank","bare_phi","bare_theta","blank","dangerdistinct_phi","dangerdistinct_theta","blank","blank"))[,c(1,2,4,5,7,8)]
+
+test0$nondistinctive_phi<-test0$nondistinctive_phi*100
+test0$bare_phi <- test0$bare_phi*100
+test0$dangerdistinct_phi <- test0$dangerdistinct_phi*100
+x<-melt(test0)
+
+x1<-cbind(x,ldply(strsplit(as.character(x$variable),"_")))
+x1$V2<-factor(x1$V2,levels=c("theta","phi"))
+
+
+ggplot(data=x1,aes(x=value,fill=V1))+
+  geom_density(alpha=0.8)+
+  #geom_histogram(alpha=0.8)+
+  facet_grid(V2~V1)+
+  theme_bw()+
+  guides(fill=F)+
+  scale_x_continuous(breaks=c(5,15,25,35,45,75),limits=c(0,100))+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x = element_text(size=14,color='black'))
+```
+
+## TFBT on the "kinds" model
+```{r tfbt7.kinds} 
+test0<-read.csv(paste(tfbt.dir,'KindMod_post_wPhi_exp5all_generic_truth_conditions_mh2000_3_alpha3.csv',sep=''),header=F,
+                col.names=c("nondistinctive_phi","nondistinctive_theta","nondistinctive_other",
+                            "blank","bare_phi","bare_theta","bare_other","blank",
+                            "dangerdistinct_phi","dangerdistinct_theta","dangerdistinct_other",
+                            "blank","blank"))[,c(1,2,3,5,6,7,9,10,11)]
+
+test0$nondistinctive_theta<-test0$nondistinctive_theta/100
+test0$bare_theta <- test0$bare_theta/100
+test0$dangerdistinct_theta <- test0$dangerdistinct_theta/100
+x<-melt(test0)
+x1<-cbind(x,ldply(strsplit(as.character(x$variable),"_")))
+x1$V2<-factor(x1$V2,levels=c("theta","other","phi"))
+
+ggplot(data=x1,aes(x=value,fill=V1))+
+  #geom_density(alpha=0.8)+
+  geom_histogram(alpha=0.8)+
+  facet_grid(V2~V1)+
+  theme_bw()+
+  guides(fill=F)+
+  scale_x_continuous(breaks=c(0.1,0.3,0.5,0.70,0.9),limits=c(0,1))+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x = element_text(size=14,color='black'))
+
+
 
 ```
+
 

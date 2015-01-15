@@ -182,7 +182,7 @@
 
 
   (define kind-given-property ;; probability of a kind given observing the property
-    (lambda (prevalence other-kind-prevalence)
+    (mem (lambda (prevalence other-kind-prevalence)
         (enumeration-query
         ;; here, we say XX% lorches have purple feathers means if we find a lorch
         ;; then (flip XX) it has purple feathers
@@ -199,17 +199,18 @@
 
         kind
    
-        (observe-property prevalence kind)))) ;; condition on: observing purple feathers
+        (observe-property prevalence kind))))) ;; condition on: observing purple feathers
 
 
         (define get-lorch-prob (lambda (lst)
             (list-ref (second lst) (position (first lst) 'lorch))))
 
-        (define generic? (lambda (property-predictive-power threshold) (> property-predictive-power threshold)))
-;        (define generic? (lambda (property-predictive-power threshold)  (display (list property-predictive-power threshold))))
-        (define no-generic? (lambda (property-predictive-power threshold) (<= property-predictive-power threshold)))
-        (define who-is-it? (lambda (state theta) (flip state)))
-        (define not-lorch? (lambda (state theta) (not (flip state))))
+        (define generic? (lambda (property-predictive-power threshold prevalence) (> prevalence threshold)))
+;        (define generic? (lambda (property-predictive-power threshold prevalence) (> property-predictive-power threshold)))
+        (define no-generic? (lambda (property-predictive-power threshold prevalence) (<= prevalence threshold)))
+;        (define no-generic? (lambda (property-predictive-power threshold prevalence) (<= property-predictive-power threshold)))
+        (define who-is-it? (lambda (property-predictive-power theta prevalence) (flip property-predictive-power)))
+        (define not-lorch? (lambda (property-predictive-power theta prevalence) (not (flip property-predictive-power))))
 
         (define meaning (lambda (word)
             (case word
@@ -229,28 +230,35 @@
             (enumeration-query 
 
                 ;(define theta (theta-prior))
+
                 (define predictive-power (get-lorch-prob (kind-given-property prevalence other-kind-prevalence))) 
+                ;(define predictive-power prevalence) 
 
                 (define qud (qud-prior))
+                ;(define qud 'who-is-it)
                 (define words (utterance-prior)) 
 
-                (define QUDval ((meaning qud) predictive-power theta))
+                (define QUDval ((meaning qud) predictive-power theta prevalence))
 
                 words
 
                 (equal? QUDval
-                    (apply multinomial (listener0-of-kinds words theta qud)))))))
+                    (apply multinomial (listener0-of-kinds words theta qud other-kind-prevalence)))))))
 
 
-              (define listener0-of-kinds
-                  (mem (lambda (words theta qud)
-                      (enumeration-query
-                          (define prevalence (state-prior))
-                          (define QUDval ((meaning qud) prevalence theta))
-                          
-                          QUDval
+          (define listener0-of-kinds
+              (mem (lambda (words theta qud other-kind-prevalence)
+                  (enumeration-query
+                      (define prevalence (state-prior))
+                      (define predictive-power (get-lorch-prob (kind-given-property prevalence other-kind-prevalence)))
+                      ;(define predictive-power prevalence)
+                      ;(define QUDval ((meaning qud) predictive-power theta))
+                      (define QUDval ((meaning qud) predictive-power theta prevalence))
+                      
+                      QUDval
 
-                          ((meaning words) prevalence theta)))))
+;                          ((meaning words) prevalence theta)))))
+                      ((meaning words) predictive-power theta prevalence)))))
 
 
             (speaker1-of-kinds theta evidence other-kind-prevalence))))
@@ -291,63 +299,62 @@
         (map 
           (lambda (unique-evidence-data-for-one-context context)
             (map 
-              (lambda (evidence) (cognitive-model (generic-theta context) evidence (other-kind-prevalence context)))
+              (lambda (evidence) (cognitive-model (generic-theta context) (/ evidence 100) (other-kind-prevalence context)))
             unique-evidence-data-for-one-context))
         unique-evidence-data all-contexts)
        (map 
-              (lambda (evidence) (cognitive-model (generic-theta context) evidence (other-kind-prevalence context)))
+              (lambda (evidence) (cognitive-model (generic-theta context) (/ evidence 100) (other-kind-prevalence context)))
         unique-evidence-data)))
 
     ; (display model-predictions)
 
      ; ;; compute the score for each data point, and sum then together
-     ; (define scores
-     ;   (lambda (truthcond-byprev modelpred-byprev)
-     ;     (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
-     ;                                                     (second alt-words))) truthcond-byprev)]
-     ;            [match (lambda (x) (position (first modelpred-byprev) x))]
-     ;            [prob (lambda (x) (if (= (match x) -1) 0
-     ;                                  (list-ref (second modelpred-byprev) (match x))))]
-     ;            [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
-     ;       (sum (map score-marginalized-phi data-as-quantifier)))))
+     (define scores
+       (lambda (truthcond-byprev modelpred-byprev)
+         (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
+                                                         (second alt-words))) truthcond-byprev)]
+                [match (lambda (x) (position (first modelpred-byprev) x))]
+                [prob (lambda (x) (if (= (match x) -1) 0
+                                      (list-ref (second modelpred-byprev) (match x))))]
+                [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
+           (sum (map score-marginalized-phi data-as-quantifier)))))
 
-     ; (define dummyvar-for-factoring
-     ;  (if (equal? context 'all)
-     ;   (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
-     ;   (factor (sum (map scores sorted-truthcond-data model-predictions)))))
+     (define dummyvar-for-factoring
+      (if (equal? context 'all)
+       (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
+       (factor (sum (map scores sorted-truthcond-data model-predictions)))))
 
 
-     ; (if (equal? context 'all)
-     ;  (map (lambda (c) (query-statement utterance c))
-     ;    all-contexts)
-     ;  (query-statement utterance context))
+     (if (equal? context 'all)
+      (map (lambda (c) (query-statement c))
+        all-contexts)
+      (query-statement context))
 
-  model-predictions
+ ; model-predictions
 
      true)))
 
 
-(display (cognitive-model 0.1 0.3 0.6))
+; (display (cognitive-model 0.1 0.3 0.6))
 ;; truth conditions task: compute mean acceptance rate at each prevalence level
 ;(map (lambda (x) (mean (map boolean->number x))) sorted-truthcond-data)
 ; (define header (flatten (list 
 ;   (map (lambda (y) (map (lambda (x) (string-append x '_ y)) '(phi theta))) all-contexts)
 ;   )))
 
-
 ; (define test (cognitive-model 10 50 0 'how-many 'generic))
 ; (display test)
-; (define samples (transpose (list (tfbt-model))))
-
-; (display samples)
-
-; (define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
+(define samples (transpose (list (tfbt-model))))
 
 
-; (define output-file-name (string-append  output-path 'post_wPhi_exp expnum context '_ quantifier '_ task 
-;    '_mh mh_samples '_ mh_lag '_alpha alpha '.csv))
+(define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
+
+
+(define output-file-name (string-append  output-path 'kinder_qudUncertain_prevForGen_exp expnum context '_ quantifier '_ task 
+   '_mh mh_samples '_ mh_lag '_alpha alpha '.csv))
  
-; (write-csv samples output-file-name)
+(write-csv samples output-file-name)
+
 ; ; (display all-contexts)
 (define complete? 'complete)
 complete?
