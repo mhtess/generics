@@ -1,0 +1,373 @@
+; example call
+;; church -a 'implied_prevalence,most,bare,100,10,3' tfbt_cbg.church
+
+; church -a 'implied_prevalence,most,danger,10000,100,3' tfbt_cbg.church &
+; church -a 'implied_prevalence,most,distinct,10000,100,3' tfbt_cbg.church &
+; church -a 'implied_prevalence,most,irrelevant,10000,100,3' tfbt_cbg.church &
+; church -a 'implied_prevalence,some,danger,10000,100,3' tfbt_cbg.church &
+; church -a 'implied_prevalence,some,distinct,10000,100,3' tfbt_cbg.church &
+; church -a 'implied_prevalence,some,irrelevant,10000,100,3' tfbt_cbg.church &
+
+; time church -a 'truth_conditions,generic,bare,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,distinct,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,danger,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,irrelevant,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,bare,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,distinct,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,danger,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,some,irrelevant,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,bare,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,distinct,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,danger,1000,100,3' tfbt_cbg.church &
+; time church -a 'truth_conditions,most,irrelevant,1000,100,3' tfbt_cbg.church &
+
+; time church -a 'truth_conditions,generic,bare,1000,3,3,5' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,dangerdistinct,1000,3,3,5' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,nondistinctive,1000,3,3,5' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,bare,1000,3,3,4' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,distinct,1000,3,3,4' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,irrelevant,1000,3,3,4' tfbt_cbg.church &
+
+
+(define args (regexp_split argstring ","))
+
+(define task (first args))
+(define quantifier (second args))
+(define context (third args))
+(define mh_samples (fourth args))
+(define mh_lag (fifth args))
+(define alpha (sixth args))
+(define expnum (seventh args))
+
+(define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
+
+(define QUD (lambda (task quantifier)
+              (case task
+                    (('implied_prevalence) 'how-many)
+                    (('truth_conditions) quantifier))))
+
+(define uniform-score (lambda (lowerbound upperbound)
+                        (- 0 (log (- upperbound lowerbound))))) ;;assuming values are in the range
+
+(define all-true (lambda (lst) (apply and lst)))
+
+(define string->boolean (lambda (str)
+                          (equal? str 'True)))
+
+(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
+;(define data-path '/home/mht/generics/cbg2010-replication/data/)
+
+;(define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
+;(define data-file (string-append data-path 'cbgR-exp4_anonymized-trials.csv))
+(define data-file (string-append data-path (string-append 'cbgR-exp expnum '_anonymized-trials.csv)))
+
+(define alldata (read-csv data-file))
+
+(define task? (lambda (x) (equal? (fourth x) task)))
+(define quantifier? (lambda (x) (equal? (seventh x) quantifier)))
+(define context? (lambda (x context) (equal? (fifth x) context)))
+; (define stimulus-prevlevel? (lambda (lst target) (equal? 
+;                                                   (string->number (last (but-last (but-last (but-last lst)))))
+;                                                   target)))
+
+(define stimulus-prevlevel? (lambda (lst target) (equal? 
+                                                  (string->number (last (but-last (but-last lst))))
+                                                  target)))
+
+(define all-contexts (unique (map fifth (rest alldata))))
+
+
+(define data-subset 
+  (if (equal? context 'all)
+    (map
+      (lambda (c)
+        (filter 
+          (lambda (x) (and (task? x) (quantifier? x) (context? x c)))
+          alldata))
+      all-contexts)
+    (filter 
+      (lambda (x) (and (task? x) (quantifier? x) (context? x context))) 
+      alldata)))
+
+(define query-data 
+    (if (equal? context 'all)
+      (map (lambda (y) (map (lambda (x) (last (but-last x))) y)) data-subset)
+      (map (lambda (x) (last (but-last x))) data-subset)))
+
+;(define evidence-data (map (lambda (x) (string->number (last (but-last (but-last (but-last x)))))) data-subset))
+(define evidence-data 
+    (if (equal? context 'all)
+        (map (lambda (y) (map (lambda (x) (string->number (last (but-last (but-last x))))) y)) data-subset)
+        (map (lambda (x) (string->number (last (but-last (but-last x))))) data-subset)))
+
+(define unique-evidence-data
+  (if (equal? context 'all)
+    (map (lambda (evidence-data-for-one-context) 
+      (sort (unique evidence-data-for-one-context)))
+    evidence-data)
+    (sort (unique evidence-data))))
+
+(define sorted-truthcond-data
+  (if (equal? context 'all) ; resulting data is 3(contexts) x 5 (levels) x N (trials)
+    (map (lambda (data-for-one-context unique-evidence-data-for-one-context)
+      (map (lambda (evidence) 
+       (map (lambda (z) 
+        (string->boolean (last (but-last z))))
+       (filter (lambda (one-trial) 
+        (stimulus-prevlevel? one-trial evidence))
+       data-for-one-context)))
+      unique-evidence-data-for-one-context))
+    data-subset
+    unique-evidence-data)
+  (map 
+   (lambda (y) 
+     (map 
+      (lambda (z) (string->boolean (last (but-last z))))
+          (filter 
+            (lambda (x) (stimulus-prevlevel? x y))
+            data-subset)))
+    (sort (unique evidence-data)))))
+
+; (define simplified-data ;;; obsolete
+;   (case task
+;         (('implied_prevalence) (map (lambda (x) (string->number x)) query-data))
+;         (('truth_conditions) (map (lambda (x) (string->boolean x)) query-data))))
+
+;  (map (lambda (x) (string->number x)) query-data))
+;  (map (lambda (x) (round (/ (string->number x) 10))) prevalence-data)) ; round for conditioning on discrete data
+
+; (define super-simplified-data
+;   (repeat 20 (lambda () (uniform-draw simplified-data))))
+
+;; background
+;(define (state-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
+;(define (state-prior) (uniform-draw '(0 5 10 15 20 25 30 35 40 45 50)))
+
+(define (all state threshold) (= 100 state))
+(define (relaxed-all state threshold) (<= 90 state))
+
+(define (some state some-threshold) (< some-threshold state))
+(define (none state some-threshold) (>= some-threshold state))
+
+(define (most state most-threshold) (< most-threshold state))
+(define (anti-most state most-threshold) (>= most-threshold state))
+
+(define (generic state generic-threshold) (< generic-threshold state))
+(define (anti-generic state generic-threshold) (>= generic-threshold state))
+
+(define (mu state dummy) true)
+(define (how-many state dummy) state)
+
+(define (raise-to-power dist alph)
+  (list (first dist) (map (lambda (x) (pow x alph)) (second dist))))
+
+(define (meaning word)
+  (case word
+        (('all) all)
+        (('some) some)
+        (('none) none)
+        (('most) most)
+        (('anti-most) anti-most)
+        (('how-many) how-many)
+        (('generic) generic)
+        (('anti-generic) anti-generic)
+        (('mu) mu)))
+
+
+(define cognitive-model 
+  (mem 
+   (lambda (theta evidence other-kind-prevalence)
+     ;; input could be utterance (for listener / implied_prevalence)
+     ;; or state (for speaker / truth_conditions)
+
+
+  (define kind-given-property ;; probability of a kind given observing the property
+    (lambda (prevalence other-kind-prevalence)
+        (enumeration-query
+        ;; here, we say XX% lorches have purple feathers means if we find a lorch
+        ;; then (flip XX) it has purple feathers
+        ; (define other-kind-prevalence ;; presumably, measure this empirically.
+        ;     (case context
+        ;         (('nondistinct) 0.7)
+        ;         (('bare) 0.3)
+        ;         (('distinct) 0.1)))
+        (define observe-property 
+            (lambda (prevalence kind)
+            (or (and (equal? kind 'lorch) (flip prevalence))
+                (and (equal? kind 'other) (flip other-kind-prevalence)))))
+        (define kind (uniform-draw '(lorch other)))
+
+        kind
+   
+        (observe-property prevalence kind)))) ;; condition on: observing purple feathers
+
+
+        (define get-lorch-prob (lambda (lst)
+            (list-ref (second lst) (position (first lst) 'lorch))))
+
+        (define generic? (lambda (property-predictive-power threshold) (> property-predictive-power threshold)))
+;        (define generic? (lambda (property-predictive-power threshold)  (display (list property-predictive-power threshold))))
+        (define no-generic? (lambda (property-predictive-power threshold) (<= property-predictive-power threshold)))
+        (define who-is-it? (lambda (state theta) (flip state)))
+        (define not-lorch? (lambda (state theta) (not (flip state))))
+
+        (define meaning (lambda (word)
+            (case word
+                (('generic) generic?)
+                (('anti-generic) no-generic?)
+                (('not-a-lorch) not-lorch?)
+                (('is-lorch) generic?)
+                (('who-is-it) who-is-it?))))
+
+       ; (define (theta-prior) (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))
+        (define (state-prior) (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1)))
+        (define (utterance-prior) (uniform-draw '(generic anti-generic)))
+        (define (qud-prior) (uniform-draw (list 'is-lorch 'who-is-it)))
+
+        (define speaker1-of-kinds
+            (mem (lambda (theta prevalence other-kind-prevalence)
+            (enumeration-query 
+
+                ;(define theta (theta-prior))
+                (define predictive-power (get-lorch-prob (kind-given-property prevalence other-kind-prevalence))) 
+
+                (define qud (qud-prior))
+                (define words (utterance-prior)) 
+
+                (define QUDval ((meaning qud) predictive-power theta))
+
+                words
+
+                (equal? QUDval
+                    (apply multinomial (listener0-of-kinds words theta qud)))))))
+
+
+              (define listener0-of-kinds
+                  (mem (lambda (words theta qud)
+                      (enumeration-query
+                          (define prevalence (state-prior))
+                          (define QUDval ((meaning qud) prevalence theta))
+                          
+                          QUDval
+
+                          ((meaning words) prevalence theta)))))
+
+
+            (speaker1-of-kinds theta evidence other-kind-prevalence))))
+
+(define tfbt-model
+  ; (lambda (QUD utterance context)
+  (lambda ()
+    (mh-query 
+     (string->number mh_samples)
+     (string->number mh_lag)
+
+     ; (define query-statement (lambda (utterance context)
+     ;                           (case utterance
+     ;                                 (('most) (list phi (most-theta context)))
+     ;                                 (('some) (list phi (some-theta context)))
+     ;                                 (('generic) (list phi (generic-theta context))))))
+
+    (define (query-statement context) (list phi (generic-theta context) (other-kind-prevalence context)))
+
+     (define phi (uniform 0 1)) ;; guessing parameter
+     (define generic-theta (mem (lambda (context) (uniform 0 1))))
+     (define other-kind-prevalence (mem (lambda (context) (uniform 0 1))))
+
+     ; (define alt-words
+     ;   (case QUD
+     ;         (('generic)  (list 'generic 'anti-generic))
+     ;         (('some) (list 'some 'none))
+     ;         (('most) (list 'most 'anti-most))
+     ;         (('how-many) (list 'most 'some 'generic))))
+
+    (define alt-words (list 'generic 'anti-generic))
+     ; (define model-predictions
+     ;   (cognitive-model generic-theta most-theta some-theta QUD evidence))
+     ; for truth_conditions task, get model-predictions for each of the prevalence levels
+
+     (define model-predictions
+      (if (equal? context 'all)
+        (map 
+          (lambda (unique-evidence-data-for-one-context context)
+            (map 
+              (lambda (evidence) (cognitive-model (generic-theta context) evidence (other-kind-prevalence context)))
+            unique-evidence-data-for-one-context))
+        unique-evidence-data all-contexts)
+       (map 
+              (lambda (evidence) (cognitive-model (generic-theta context) evidence (other-kind-prevalence context)))
+        unique-evidence-data)))
+
+    ; (display model-predictions)
+
+     ; ;; compute the score for each data point, and sum then together
+     ; (define scores
+     ;   (lambda (truthcond-byprev modelpred-byprev)
+     ;     (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
+     ;                                                     (second alt-words))) truthcond-byprev)]
+     ;            [match (lambda (x) (position (first modelpred-byprev) x))]
+     ;            [prob (lambda (x) (if (= (match x) -1) 0
+     ;                                  (list-ref (second modelpred-byprev) (match x))))]
+     ;            [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
+     ;       (sum (map score-marginalized-phi data-as-quantifier)))))
+
+     ; (define dummyvar-for-factoring
+     ;  (if (equal? context 'all)
+     ;   (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
+     ;   (factor (sum (map scores sorted-truthcond-data model-predictions)))))
+
+
+     ; (if (equal? context 'all)
+     ;  (map (lambda (c) (query-statement utterance c))
+     ;    all-contexts)
+     ;  (query-statement utterance context))
+
+  model-predictions
+
+     true)))
+
+
+(display (cognitive-model 0.1 0.3 0.6))
+;; truth conditions task: compute mean acceptance rate at each prevalence level
+;(map (lambda (x) (mean (map boolean->number x))) sorted-truthcond-data)
+; (define header (flatten (list 
+;   (map (lambda (y) (map (lambda (x) (string-append x '_ y)) '(phi theta))) all-contexts)
+;   )))
+
+
+; (define test (cognitive-model 10 50 0 'how-many 'generic))
+; (display test)
+; (define samples (transpose (list (tfbt-model))))
+
+; (display samples)
+
+; (define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
+
+
+; (define output-file-name (string-append  output-path 'post_wPhi_exp expnum context '_ quantifier '_ task 
+;    '_mh mh_samples '_ mh_lag '_alpha alpha '.csv))
+ 
+; (write-csv samples output-file-name)
+; ; (display all-contexts)
+(define complete? 'complete)
+complete?
+
+
+
+
+;(cognitive-model 3 5 0 'how-many 'most)
+;(length simplified-data)
+;(length simplified-data)
+;super-simplified-data
+;; cbg analysis
+; (define inner-product (lambda (lst)
+;   (sum (map (lambda (x y) (* x y)) (first lst) (second lst)))))
+
+; (define normalize (lambda (lst)
+;   (map (lambda (x) (/ x (sum lst))) lst)))
+
+; (define (gen-probs model-preds) 
+;   (let ([gen-pos (map (lambda (lst) (position (first lst) utterance)) model-preds)])
+;     (map (lambda (y i) (if (< i 0) 0 (list-ref (second y) i))) model-preds gen-pos)))
+
+
