@@ -36,7 +36,7 @@
 (define context (third args))
 (define mh_samples (fourth args))
 (define mh_lag (fifth args))
-(define alpha (sixth args))
+(define speaker-optimality (sixth args))
 (define expnum (seventh args))
 
 (define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
@@ -141,7 +141,9 @@
 
 ;; background
 ;(define (state-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
-(define (state-prior) (uniform-draw '(0 5 10 15 20 25 30 35 40 45 50)))
+(define (theta-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90)))
+;(define (state-prior) (uniform-draw '(0 5 10 15 20 25 30 35 40 45 50)))
+(define (qud-prior) (uniform-draw (list 'is-lorch 'who-is-it)))
 
 (define (all state threshold) (= 100 state))
 (define (relaxed-all state threshold) (<= 90 state))
@@ -158,8 +160,12 @@
 (define (mu state dummy) true)
 (define (how-many state dummy) state)
 
+(define who-is-it? (lambda (state theta) (flip state)))
+
 (define (raise-to-power dist alph)
   (list (first dist) (map (lambda (x) (pow x alph)) (second dist))))
+
+
 
 (define (meaning word)
   (case word
@@ -171,12 +177,15 @@
         (('how-many) how-many)
         (('generic) generic)
         (('anti-generic) anti-generic)
-        (('mu) mu)))
+        (('mu) mu)
+        (('is-lorch) generic?)
+        (('who-is-it) who-is-it?)))
 
 
 (define cognitive-model 
   (mem 
-   (lambda (generic-theta most-theta some-theta QUD evidence)
+  ; (lambda (generic-theta most-theta some-theta QUD evidence) ;; fixed treshold model (obviously wrong)
+   (lambda (gamma delta QUD evidence)
      ;; input could be utterance (for listener / implied_prevalence)
      ;; or state (for speaker / truth_conditions)
      (define (theta-meaning word)
@@ -193,47 +202,74 @@
        (theta-meaning (string-append words '-theta)))
 
 
+    ;; can't enumerate over continuous state-prior, so bin 
+    (define pseudocount_alpha (* gamma delta))
+    (define pseudocount_beta (* (- 1 gamma) delta))
+
+    (define (beta-rv) (* 10 (beta pseudocount_alpha pseudocount_beta))) ;; multiplied by 10 so i can use floor to bin
+    (define beta-samples (repeat 1000 beta-rv))
+    (define bins '(0 1 2 3 4 5 6 7 8 9))
+    (define quintile-hist (lambda (x bins nsamp)
+                            (map (lambda (n) (/ (length (filter (lambda (i) 
+                              (= (floor i) n)) x)) nsamp)) bins)))
+
+    (define quintile-probs (map (lambda (x) (+ 0.0001 x)) (quintile-hist beta-samples bins 1000)))
+
+   ; (define blah (display quintile-probs))
+    ; multiply by 10 to be consistent with other state prior above
+    (define (state-prior) (* (multinomial bins quintile-probs) 10))
+
 
      (define listener1
        (mem (lambda (words) ;; listener1 doesn't do inference over theta
               (enumeration-query
                (define state (state-prior))
-               (define QUD-val ((meaning QUD) state (theta QUD)))
+               (define generic-theta (theta-prior))
+;               (define QUD-val ((meaning QUD) state (theta QUD)))
 
-               QUD-val
+               generic-theta
 
-               (equal? words (apply multinomial (raise-to-power (speaker1 state) (string->number alpha))))))))
+               (equal? words 
+                (apply multinomial (raise-to-power (speaker1 state generic-theta) 
+                  (string->number speaker-optimality))))))))
 
      (define speaker1
-       (mem (lambda (state)
+       (mem (lambda (state generic-theta)
               (enumeration-query
-               (define words
-                 (case QUD
-                       (('generic)  (uniform-draw (list 'generic 'anti-generic)))
-                       (('some) (uniform-draw (list 'some 'none)))
-                       (('most) (uniform-draw (list 'most 'anti-most)))
-                       (('how-many) (uniform-draw (list 'most 'some 'generic)))))
-               (define QUD-val ((meaning QUD) state (theta QUD)))
+               
+                (define words (uniform-draw (list 'generic 'mu)))
+                ;(define words (uniform-draw (list 'generic-lorch 'generic-other)))
+
+               ; (define words
+               ;   (case QUD
+               ;         (('generic)  (uniform-draw (list 'generic 'anti-generic)))
+               ;         (('some) (uniform-draw (list 'some 'none)))
+               ;         (('most) (uniform-draw (list 'most 'anti-most)))
+               ;         (('how-many) (uniform-draw (list 'most 'some 'generic)))))
+               ;(define QUD-val ((meaning QUD) state (theta QUD)))
 
                words
 
-               (equal? QUD-val
-                       (apply multinomial (listener0 words)))))))
+;               (equal? QUD-val
+               (equal? state
+                       (apply multinomial (listener0 words generic-theta)))))))
 
      (define listener0
-       (mem (lambda (words) 
+       (mem (lambda (words generic-theta) 
               (enumeration-query
                (define state (state-prior))
-               (define QUD-val ((meaning QUD) state (theta QUD)))
+              ; (define QUD-val ((meaning QUD) state (theta QUD)))
 
-               QUD-val
+               ;QUD-val
+               state
 
-               ((meaning words) state (theta words))))))
+               ((meaning words) state generic-theta)))))
 
 
-     (if (equal? QUD 'how-many)
-         (listener1 evidence)
-         (speaker1 evidence)))))
+     ; (if (equal? QUD 'how-many)
+     ;     (listener1 evidence)
+     ;     (speaker1 evidence))
+    (listener1 'generic))))
 
 (define tfbt-model
   ; (lambda (QUD utterance context)
@@ -242,17 +278,24 @@
      (string->number mh_samples)
      (string->number mh_lag)
 
-     (define query-statement (lambda (utterance context)
-                               (case utterance
-                                     (('most) (list phi (most-theta context)))
-                                     (('some) (list phi (some-theta context)))
-                                     (('generic) (list phi (generic-theta context))))))
+     ; (define query-statement (lambda (utterance context)
+     ;                           (case utterance
+     ;                                 (('most) (list phi (most-theta context)))
+     ;                                 (('some) (list phi (some-theta context)))
+     ;                                 (('generic) (list phi (generic-theta context))))))
+
+     (define query-statement (lambda (context) (list phi (gamma context) (delta context))))
+
 
      (define phi (uniform 0 1)) ;; guessing parameter
 
-     (define generic-theta (mem (lambda (context) (if (equal? QUD 'generic) (uniform 0 100) 'null))))
-     (define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
-     (define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
+     ;(define generic-theta (mem (lambda (context) (if (equal? QUD 'generic) (uniform 0 100) 'null))))
+     ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
+     ;(define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
+
+     (define gamma (mem (lambda (context) (uniform 0 1))))
+     (define delta (mem (lambda (context) (uniform 0 10))))
+
 
      (define alt-words
        (case QUD
@@ -264,44 +307,86 @@
      ;   (cognitive-model generic-theta most-theta some-theta QUD evidence))
      ; for truth_conditions task, get model-predictions for each of the prevalence levels
 
+     ;;; for speaker model
+     ; (define model-predictions
+     ;  (if (equal? context 'all)
+     ;    (map 
+     ;      (lambda (unique-evidence-data-for-one-context context)
+     ;        (map 
+     ;          (lambda (evidence) 
+     ;          (cognitive-model (generic-theta context) (most-theta context) (some-theta context) QUD evidence))
+     ;        unique-evidence-data-for-one-context))
+     ;    unique-evidence-data all-contexts)
+     ;   (map 
+     ;    (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
+     ;    unique-evidence-data)))
+     ; ;; compute the score for each data point, and sum then together
+     ; (define scores
+     ;   (lambda (truthcond-byprev modelpred-byprev)
+     ;     (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
+     ;                                                     (second alt-words))) truthcond-byprev)]
+     ;            [match (lambda (x) (position (first modelpred-byprev) x))]
+     ;            [prob (lambda (x) (if (= (match x) -1) 0
+     ;                                  (list-ref (second modelpred-byprev) (match x))))]
+     ;            [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) x))))])
+     ;       (sum (map score-marginalized-phi data-as-quantifier)))))
 
+     ;;; for listener model
      (define model-predictions
       (if (equal? context 'all)
         (map 
           (lambda (unique-evidence-data-for-one-context context)
-            (map 
-              (lambda (evidence) 
-              (cognitive-model (generic-theta context) (most-theta context) (some-theta context) QUD evidence))
-            unique-evidence-data-for-one-context))
-        unique-evidence-data all-contexts)
-       (map 
-        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
-        unique-evidence-data)))
-
-    ; (display model-predictions)
+            ;; lang-model returns model predictions, this is an enumerated posterior over thetas
+            (let* ([lang-model  (cognitive-model (gamma context) (delta context) 'how-many 'generic)]
+              ;; zipped preds reformats the predictions into tuples of (theta1 prob1) ... (thetaN probN)
+                   [zipped-preds (zip (first lang-model) (second lang-model))])
+              ;; for a given context, we have model predictions; we map over evidence levels
+              (map (lambda (evidence) 
+             ;   ;; for an evidence level, we marginalize over posterior_thetas
+             ;   ;; returning p(yes)
+                 (sum (map second (filter (lambda (x) (generic evidence (first x))) zipped-preds))))
+               unique-evidence-data-for-one-context)
+            ))
+        unique-evidence-data all-contexts)))
 
      ;; compute the score for each data point, and sum then together
      (define scores
        (lambda (truthcond-byprev modelpred-byprev)
-         (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
-                                                         (second alt-words))) truthcond-byprev)]
-                [match (lambda (x) (position (first modelpred-byprev) x))]
-                [prob (lambda (x) (if (= (match x) -1) 0
-                                      (list-ref (second modelpred-byprev) (match x))))]
-                [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) x))))])
-           (sum (map score-marginalized-phi data-as-quantifier)))))
+         (let* ([prob (lambda (x) (if x modelpred-byprev (- 1 modelpred-byprev)))]
+                [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
+           (sum (map score-marginalized-phi truthcond-byprev)))))
+       ;   (map prob truthcond-byprev))))
 
      (define dummyvar-for-factoring
       (if (equal? context 'all)
-       (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
-       (factor (sum (map scores sorted-truthcond-data model-predictions)))))
+       (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))))
+
+     ;;; for speaker model 
+     ;; compute the score for each data point, and sum then together
+     ; (define scores
+     ;   (lambda (truthcond-byprev modelpred-byprev)
+     ;     (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
+     ;                                                     (second alt-words))) truthcond-byprev)]
+     ;            [match (lambda (x) (position (first modelpred-byprev) x))]
+     ;            [prob (lambda (x) (if (= (match x) -1) 0
+     ;                                  (list-ref (second modelpred-byprev) (match x))))]
+     ;            [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) x))))])
+     ;       (sum (map score-marginalized-phi data-as-quantifier)))))
+
+     ; (define dummyvar-for-factoring
+     ;  (if (equal? context 'all)
+     ;   (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
+     ;   (factor (sum (map scores sorted-truthcond-data model-predictions)))))
 
 
 
      (if (equal? context 'all)
-      (map (lambda (c) (query-statement utterance c))
-        all-contexts)
-      (query-statement utterance context))
+      (map (lambda (c) (query-statement c)) all-contexts))
+;; for fixed threshold model
+     ; (if (equal? context 'all)
+     ;  (map (lambda (c) (query-statement utterance c))
+     ;    all-contexts)
+     ;  (query-statement utterance context))
 
 
 
@@ -314,15 +399,24 @@
 ;   )))
 
 
-; (define test (cognitive-model 10 50 0 'how-many 'generic))
+;(define test (cognitive-model 5 4 'how-many 'generic))
 ; (display test)
-(define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
 
+
+;(cognitive-model 1 1 'how-many 'generic)
+
+;(list (QUD task quantifier) quantifier)
+;(tfbt-model (QUD task quantifier) quantifier)
+(define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
+samples
 (define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
 
 
-(define output-file-name (string-append  output-path 'post_wPhi_exp expnum context '_ quantifier '_ task 
-   '_mh mh_samples '_ mh_lag '_alpha alpha '.csv))
+(define output-file-name (string-append  output-path 'listen_betaHyper2_exp expnum context '_ quantifier '_ task 
+    '_mh mh_samples '_ mh_lag '_alpha speaker-optimality '.csv))
+
+; (define output-file-name (string-append  output-path 'post_wPhi_exp expnum context '_ quantifier '_ task 
+;     '_mh mh_samples '_ mh_lag '_alpha alpha '.csv))
  
 (write-csv samples output-file-name)
 ; (display all-contexts)
