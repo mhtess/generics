@@ -53,7 +53,7 @@
 \newcommand{\red}[1]{\textcolor{Red}{#1}}  
 
 
-\title{Generics can be vague}
+\title{Generics might be vague}
  
  \author{{\large \bf Michael Henry Tessler, Noah D. Goodman } \\
 	\{mhtessler, ngoodman\}@stanford.edu \\
@@ -129,8 +129,7 @@ These statistics tell us that there were significantly more ``true'' responses i
 			(map generic all-prevalences all-contexts)))
 \end{lstlisting}
 
-Here, we say that we, as scientists, have perfect uncertainty about what the generic might mean a priori. Thus, the generic-threshold follows a uniform prior distribution between 0 and 1\footnote{If the true threshold turns out to be 0, the generic ``Lorches have purple feathers'' would mean essentially, ``Some lorches have purple feathers''. If the threshold turned out to be very close to 1, the generic would mean essentially: ``All lorches have purple feathers''.}. The generic, here, has a truth-functional meaning such that it is \lstinline{true} when the prevalence is over \lstinline{generic-threshold}, and false when it is not. The \lstinline{query} function is written to return \lstinline{generic-threshold}, which is the parameter we are interested in inferring. Finally, the last line is our condition statement: we condition on the data we collected in Experiment 1, \lstinline{map}ping appropriately over the various contexts and prevalence levels given to the participants. 
-
+Here, we say that we, as scientists, have perfect uncertainty about what the generic might mean a priori. Thus, the generic-threshold follows a uniform prior distribution between 0 and 1\footnote{If the true threshold turns out to be 0, the generic ``Lorches have purple feathers'' would mean essentially, ``Some lorches have purple feathers''. If the threshold turned out to be very close to 1, the generic would mean essentially: ``All lorches have purple feathers''.}. The generic, here, has a truth-functional meaning such that it is \lstinline{true} when the prevalence is over \lstinline{generic-threshold}, and false when it is not. The \lstinline{query} function is written to return \lstinline{generic-threshold}, which is the parameter we are interested in inferring. Finally, the last line is our condition statement: we condition on the data we collected in Experiment 1, \lstinline{map}ping appropriately over the various contexts and prevalence levels given to the participants\footnote{Technically, we must also include a guessing parameter, to account for instances when a participant responds in a contradictory manner to what the inferred threshold would imply}. 
 
 %They also performed analyses testing the relation between two dependent measures for understanding generics. In this latter analysis, they found that the quantifier ``most'' expressed a symmetry between these two dependent measures, while the generic had an asymmetry \footnote{This asymmetry has also been replicated in adults and observed in children \cite{Brandone2014}}.
 
@@ -140,38 +139,38 @@ Here, we say that we, as scientists, have perfect uncertainty about what the gen
 
 
 
-\section{Sentence verification is a speaker task}
-
-DegenGoodman2014.  Truth conditions task --> QUD = ``generic true?'' Model.
-
-But what is the semantics of the generic? \citeA{Cimpian2010}, experiments 1, 3, and 4 found that the truth conditions of the generic are sensitive to the context.  Our goal is to replicate this finding, and use Bayesian data analysis to infer the threshold of the speaker model. This bears some similarity to Michael Franke's approach for cogsci from last year.
-
-
-
-
-\section{The full bayesian thing}
-
-Computational models of cognition typically have parameters. Many of these parameters are of theoretically interest, because they are posited to reside within the head of the subject.
-
-\subsection{Inferring quantifier threshold by context}
-
-Here we'll find that the generic threshold changes by context. We might also want to show that ``most'' and ``some'' do not change by context.
-
-\subsection{Are generics like adjectives?}
-
-To determine if a generic is true or false, we must refer to context. The threshold in the threshold-semantic view of the statement varies by context. This property has been shown to be an important feature in the semantics of gradable adjectives (e.g. \emph{tall}) \cite{Lassiter2014}.  
-
-\section{Lifted-variable speech act model}
-
-We can start in a single context, with a uniform prior over states. We can look at the posterior over states, for listener1. As well, we can look at the posterior over thetas. This depends of course on the alternatives, for which we may want to consider only the experimental alternatives \emph{some, most, generic} or for which we may want to include \emph{all}.  Either way, here we'll recreate the asymmetry between listener and speaker --- between implied prevalence and truth conditions. 
-
-\citeA{Cimpian2010} report a ``paradoxical asymmetry at the core of generic meaning'' which manifests as the generic having ``extremely strong implications but requiring little evidence to be judged true''. Here, we explain this ``paradox'' by the different Questions Under Discussions in the tasks used and by the different roles intrinsic to speech-acts: the role of the speaker and the role of the listener. 
-
-\subsection{Questions Under Discussion in two tasks}
-
-\citeA{Cimpian2010} used two tasks (with different dependent measures) to get at the comparison between ``acceptance'' and ``implications''. These two tasks --- called ``truth conditions'' and ``implied prevalence'' -- used different questions and different dependent measures to get at the meaning of generics. In the ``truth conditions'' task, subjects are given evidence about the prevalence of a property (e.g. ``50\% of morseths have silver fur'') and are asked to judge the corresponding generic (i.e. ``Morseths have silver fur'') to be either true or false. In the ``implied prevalence'' task, subjects are given a generic statement and asked ``What percentage of morseths do you think have silver fur?''
-
-\citeA{Degen2014} argue that the \emph{sentence verification} (``truth conditions'') task should be modeled as a speaker task, and that the \emph{sentence interpretation} (``implied prevalence'') task should be modeled as a listener task. In addition to different communicative roles, there are also different implicit Questions Under Discusision. In the ``truth conditions'' task, the QUD seems to be ``is the generic true or false?'', whereas in the ``implied prevalence'' task, the QUD seems to be ``what percentage of category X have property Y?''.
+%	\section{Sentence verification is a speaker task}
+%	
+%	DegenGoodman2014.  Truth conditions task --> QUD = ``generic true?'' Model.
+%	
+%	But what is the semantics of the generic? \citeA{Cimpian2010}, experiments 1, 3, and 4 found that the truth conditions of the generic are sensitive to the context.  Our goal is to replicate this finding, and use Bayesian data analysis to infer the threshold of the speaker model. This bears some similarity to Michael Franke's approach for cogsci from last year.
+%	
+%	
+%	
+%	
+%	\section{The full bayesian thing}
+%	
+%	Computational models of cognition typically have parameters. Many of these parameters are of theoretically interest, because they are posited to reside within the head of the subject.
+%	
+%	\subsection{Inferring quantifier threshold by context}
+%	
+%	Here we'll find that the generic threshold changes by context. We might also want to show that ``most'' and ``some'' do not change by context.
+%	
+%	\subsection{Are generics like adjectives?}
+%	
+%	To determine if a generic is true or false, we must refer to context. The threshold in the threshold-semantic view of the statement varies by context. This property has been shown to be an important feature in the semantics of gradable adjectives (e.g. \emph{tall}) \cite{Lassiter2014}.  
+%	
+%	\section{Lifted-variable speech act model}
+%	
+%	We can start in a single context, with a uniform prior over states. We can look at the posterior over states, for listener1. As well, we can look at the posterior over thetas. This depends of course on the alternatives, for which we may want to consider only the experimental alternatives \emph{some, most, generic} or for which we may want to include \emph{all}.  Either way, here we'll recreate the asymmetry between listener and speaker --- between implied prevalence and truth conditions. 
+%	
+%	\citeA{Cimpian2010} report a ``paradoxical asymmetry at the core of generic meaning'' which manifests as the generic having ``extremely strong implications but requiring little evidence to be judged true''. Here, we explain this ``paradox'' by the different Questions Under Discussions in the tasks used and by the different roles intrinsic to speech-acts: the role of the speaker and the role of the listener. 
+%	
+%	\subsection{Questions Under Discussion in two tasks}
+%	
+%	\citeA{Cimpian2010} used two tasks (with different dependent measures) to get at the comparison between ``acceptance'' and ``implications''. These two tasks --- called ``truth conditions'' and ``implied prevalence'' -- used different questions and different dependent measures to get at the meaning of generics. In the ``truth conditions'' task, subjects are given evidence about the prevalence of a property (e.g. ``50\% of morseths have silver fur'') and are asked to judge the corresponding generic (i.e. ``Morseths have silver fur'') to be either true or false. In the ``implied prevalence'' task, subjects are given a generic statement and asked ``What percentage of morseths do you think have silver fur?''
+%	
+%	\citeA{Degen2014} argue that the \emph{sentence verification} (``truth conditions'') task should be modeled as a speaker task, and that the \emph{sentence interpretation} (``implied prevalence'') task should be modeled as a listener task. In addition to different communicative roles, there are also different implicit Questions Under Discusision. In the ``truth conditions'' task, the QUD seems to be ``is the generic true or false?'', whereas in the ``implied prevalence'' task, the QUD seems to be ``what percentage of category X have property Y?''.
 
 
 
