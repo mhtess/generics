@@ -1,3 +1,8 @@
+// direct replication of CBG exp 1: generics in 3 contexts {bare, dangerous and distinctive, nondistinctive control}
+
+// proper item level randomization
+// each 3 body part stimulus-set paired with a random permutation of the contexts
+
 function make_slides(f) {
   var slides = {};
 
@@ -9,15 +14,8 @@ function make_slides(f) {
      }
   });
 
-  slides.cbg_instructions = slide({
-    name : "cbg_instructions",
-    button : function() {
-      exp.go(); //use exp.go() if and only if there is no "present" data.
-    }
-  });
-
-  slides.elaborate_instructions = slide({
-    name : "elaborate_instructions",
+  slides.instructions = slide({
+    name : "instructions",
     button : function() {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
@@ -26,7 +24,8 @@ function make_slides(f) {
   slides.implied_prevalence = slide({
     name: "implied_prevalence",
 
-    present : _.range(exp.numTrials),
+   // present : _.shuffle(_.range(numTrials)),
+  present : _.range(exp.numTrials),
     //this gets run only at the beginning of the block
     present_handle : function(stim_num) {
       this.startTime = Date.now();
@@ -36,55 +35,27 @@ function make_slides(f) {
 
       this.stim = exp.stims[stim_num]; // allstims should be randomized, or stim_num should be
       this.trialNum = stim_num;
-      this.prevalence = exp.prevalence_levels[this.stim.list].splice(0,1)[0] // grab prevalence level for this list
-
 
       //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
       //this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
+      this.determiner = exp.determiner[0] // exp.determiner between-subjects var
       this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
-      this.stimtype == 'bare' ? this.adjective = '' : null;      
+      //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
+
+      var query_prompt = "What percentage of "  + this.stim.category + " do you think have " + this.stim.color + " " + this.stim.part + "?\n";
+
+
       this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;
       this.stimtype == 'distinct' ? this.adjective = 'distinctive ': null;
       this.stimtype == 'irrelevant' ? this.adjective = this.stim.extraneous + ' ': null;
-      this.stimtype == 'danger-distinct' ? this.adjective = 'dangerous ' : null;
-      this.stimtype == 'nondistinctive' ? this.adjective = this.stim.extraneous + ' ': null;
 
-      console.log(this.stimtype)
-
-      //var query_prompt = "What percentage of animals do you think have " + this.stim.color + " " + this.stim.part + "?\n";
-
-      if (exp.condition=='catprop'){
-        //this.evidence_prompt =  "A different team has recently reported finding an animal with "+ this.adjective + this.stim.color + " " + this.stim.part + " on the island. \n"
-        var query_prompt = "In your expert opinion, what percentage of animals on this island do you think have " + 
-                            this.adjective + this.stim.color + " " + this.stim.part + "?\n";
-      } else{
-       /// this.evidence_prompt = utils.upperCaseFirst(this.stim.color) + " " + this.stim.part + " "
-        var query_prompt = "What percentage of animals on this island do you think have " + this.adjective + 
-                          this.stim.color + " " + this.stim.part + "?\n";
-      }
-      this.evidence_prompt = this.prevalence+ "% of "  + this.stim.category + " have " + this.adjective + 
-                              this.stim.color + " " + this.stim.part + ".\n";
+      this.determiner=='generic' ?
+        this.evidence_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n" :
+        this.evidence_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n";
 
       this.stimtype=='danger' ? this.evidence_prompt+=this.stim.dangerous:null;
       this.stimtype=='distinct' ? this.evidence_prompt+=this.stim.distinctive:null;
       this.stimtype=='irrelevant' ? this.evidence_prompt+=this.stim.irrelevant:null;
-
-      // this.stimtype=='danger-distinct' ? this.evidence_prompt+=(utils.upperCaseFirst(this.stim.color) + " " + this.stim.part + " " + 
-      //   this.stim.dangerfrag +" "+ this.stim.distinctgen):null;
-
-      // this.stimtype=='nondistinctive' ? this.evidence_prompt+=( utils.upperCaseFirst(this.stim.color)+ " " +
-      //           this.stim.irrelevant.substr(this.stim.irrelevant.indexOf(" ") + 1)  + ' ' + 
-      //           "Other animals " + this.stim.nondistinctive.split(' ').slice(2).join(' ')):null;
-
-      this.stimtype=='danger-distinct' ? this.evidence_prompt+=(this.stim.dangerous + " " + this.stim.dangdistinctive):null;
-
-      this.stimtype=='nondistinctive' ? this.evidence_prompt+=(this.stim.irrelevant + " " + this.stim.nondistinctive):null;
-
-
-
-      // if (exp.condition=='catprop'){
-      //   this.evidence_prompt+= " Your team just identified a new animal on the island, which they're calling " + this.stim.category + ".";
-      // };
 
 
       $(".evidence").html(this.evidence_prompt);
@@ -119,8 +90,7 @@ function make_slides(f) {
 
         log_responses : function() {
       exp.data_trials.push({
-        "trial_type" : "prior_elicitation",
-        "trial_prompt" : exp.condition,
+        "trial_type" : "implied_prevalence",
         "trial_num": this.trialNum,
         "response" : $("#text_response").val(),
         "rt":this.rt,
@@ -128,8 +98,7 @@ function make_slides(f) {
         "stim_determiner": this.determiner,
         "stim_category": this.stim.category,
         "stim_color": this.stim.color,
-        "stim_part":this.stim.part,
-        "stim_prev":this.prevalence
+        "stim_part":this.stim.part
       });
     }
   });
@@ -153,30 +122,62 @@ function make_slides(f) {
       this.trialNum = stim_num;
 
       //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
-      this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
-      this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
+      //this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
+      this.determiner = exp.determiner[0] // exp.determiner between-subjects var
+      // BAD
+      //this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
+      // BETTER
+      this.stimtype = exp.stims[stim_num].context
 
+      //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
       this.prevalence = exp.prevalence_levels[this.stim.list].splice(0,1)[0] // grab prevalence level for this list
-      
-      var evidence_prompt = this.prevalence+ "% of "  + this.stim.category + " have " + this.stim.color + " " + this.stim.part + ".\n";
 
-      if (this.determiner=='generic'){
-        var query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n";
-      }
-      else{
-        var query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.stim.color + " " + this.stim.part + ".\n";
-      }
+      this.stimtype == 'bare' ? this.adjective = '' : null;      
+      this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;
+      this.stimtype == 'distinct' ? this.adjective = 'distinctive ': null;
+      this.stimtype == 'irrelevant' ? this.adjective = this.stim.extraneous + ' ': null;
+      this.stimtype == 'danger-distinct' ? this.adjective = 'dangerous ' : null;
+      this.stimtype == 'nondistinctive' ? this.adjective = this.stim.extraneous + ' ': null;
 
-      if (this.stimtype == 'danger'){
-        evidence_prompt+=this.stim.danger +"\n No other animals on this island have this kind of " + this.stim.part
-      }
+      this.evidence_prompt = this.prevalence+ "% of "  + this.stim.category + " have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n";
 
-      if (this.stimtype == 'irrelevant'){
-        evidence_prompt+=this.stim.irrelevant +"\n Other animals on this island also have this kind of " + this.stim.part
-      }
+      // if (this.determiner=='generic'){
+      //   var query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n";
+      // }
+      // else{
+      //   var query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.stim.color + " " + this.stim.part + ".\n";
+      // }
 
-      $(".evidence").html(evidence_prompt);
-      $(".query").html(query_prompt);
+      // if (this.stimtype == 'danger'){
+      //   evidence_prompt+=this.stim.danger +"\n No other animals on this island have this kind of " + this.stim.part
+      // }
+
+      // if (this.stimtype == 'irrelevant'){
+      //   evidence_prompt+=this.stim.irrelevant +"\n Other animals on this island also have this kind of " + this.stim.part
+      // }
+
+      // this.determiner=='generic' ?
+      //   (this.stimtype=='bare' ?
+      //     this.query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n" :
+      //     this.query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n"
+      //     ) :
+      //   (this.stimtype=='bare' ?
+      //     this.query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.stim.color + " " + this.stim.part + ".\n":
+      //     this.query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n"
+      //   );
+
+      this.determiner=='generic' ?
+        this.query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n":
+        this.query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n";
+
+      this.stimtype=='danger' ? this.evidence_prompt+=this.stim.dangerous:null;
+      this.stimtype=='distinct' ? this.evidence_prompt+=this.stim.distinctive:null;
+      this.stimtype=='irrelevant' ? this.evidence_prompt+=this.stim.irrelevant:null;
+      this.stimtype == 'danger-distinct' ? this.evidence_prompt+=(this.stim.dangerous + ' ' + this.stim.dangdistinctive):null;
+      this.stimtype=='nondistinctive' ? this.evidence_prompt+=(this.stim.irrelevant + ' ' + this.stim.nondistinctive):null;
+
+      $(".evidence").html(this.evidence_prompt);
+      $(".query").html(this.query_prompt);
 
        // this.init_radiios();
        // exp.sliderPost = null; //erase current slider value
@@ -362,26 +363,31 @@ function make_slides(f) {
 /// init ///
 function init() {
   var prev_levels = ["10","10","30","30","50","50","70","70","90","90"];
+  var contexts = ["bare","danger-distinct","nondistinctive"];
+
   exp.trials = [];
   exp.catch_trials = [];
-  // one between subjects condition:
-  // original cover story vs. elaborate cover story
-  // original cs paired with a Plain presentation of prior elicitation, which is basically
-  //  cbg minus the evidence sentence
-  // elaborate cs paired with evidence about category and property
-  exp.instructions = _.sample(["cbg_instructions","elaborate_instructions"])//can randomize between subject conditions here
-  exp.instructions = "cbg_instructions";
-  if (exp.instructions=='cbg_instructions'){
-    exp.condition = "plain"
-  } else {
-    exp.condition = "catprop"
-  }
-  exp.stimtype = _.shuffle(["bare","danger-distinct","nondistinctive"]); //because there is list1, list2, list3
-
+//  exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
+  exp.condition = "truth_conditions";
+//  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
+//  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
 //  exp.determiner = _.shuffle(["generic","some","most"]);
-  exp.numTrials = allstims.length;
-//  exp.numTrials = 20;
-  exp.stims = _.shuffle(allstims); // shuffle stims
+  exp.determiner = ["generic","generic","generic"];
+  exp.instructions = "elaborate_instructions";
+
+  exp.numTrials = utils.flatten(allstims).length;
+
+  var stims_with_context = 
+    allstims.map(function (x) {
+      var context_assign = _.shuffle(contexts);
+      x[0].context = context_assign[0];
+      x[1].context = context_assign[1];
+      x[2].context = context_assign[2];
+      return x;
+      });
+
+  exp.stims = _.shuffle(utils.flatten(stims_with_context)); // shuffle stims
+
   exp.prevalence_levels = [_.shuffle(prev_levels),_.shuffle(prev_levels),_.shuffle(prev_levels)];
 
   exp.system = {
@@ -393,8 +399,9 @@ function init() {
       screenUW: exp.width
     };
   //blocks of the experiment:
- // exp.structure=["i0", "instructions","two_afc","single_trial","two_afc","single_trial", "one_slider", "multi_slider", 'subj_info', 'thanks'];
-   exp.structure=["i0",exp.instructions,"implied_prevalence",'subj_info', 'thanks'];
+  console.log(exp.instructions)
+ // exp.structure=["i0", "two_afc","single_trial","two_afc","single_trial", "one_slider", "multi_slider", 'subj_info', 'thanks'];
+   exp.structure=["i0", "instructions", exp.condition,'subj_info', 'thanks'];
    //exp.structure=['subj_info', 'thanks'];
  
   exp.data_trials = [];

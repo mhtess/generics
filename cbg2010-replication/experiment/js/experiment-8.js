@@ -45,7 +45,8 @@ function make_slides(f) {
       //this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
  //     this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
       // NEW
-      this.stimtype = exp.stimtype[stim_num%10][this.stim.list]
+    //  this.stimtype = exp.stimtype[stim_num%10][this.stim.list]
+      this.stimtype = exp.stims[stim_num].context
 
       this.stimtype == 'bare' ? this.adjective = '' : null;      
       this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;
@@ -369,9 +370,9 @@ function init() {
 
   var prev_levels = ["10","10","30","30","50","50","70","70","90","90"];
   var contexts = ["bare","danger-distinct","nondistinctive"];
-  var all_contexts = utils.flatten(contexts.map(function(x) {return utils.fillArray(x,10);}));
-  var all_contexts = utils.fillArray(contexts,10) // 10 item types (e.g. tails) x 3 lists
-  all_contexts = all_contexts.map(function(x) {return _.shuffle(x);}) // for each item, each list is randomly assigned
+  //var all_contexts = utils.flatten(contexts.map(function(x) {return utils.fillArray(x,10);}));
+  //var all_contexts = utils.fillArray(contexts,10) // 10 item types (e.g. tails) x 3 lists
+  //all_contexts = all_contexts.map(function(x) {return _.shuffle(x);}) // for each item, each list is randomly assigned
 
   exp.trials = [];
   exp.catch_trials = [];
@@ -389,14 +390,22 @@ function init() {
   }
 
 //  exp.stimtype = _.shuffle(["bare","danger-distinct","nondistinctive"]); //because there is list1, list2, list3
-  exp.stimtype = all_contexts;
+ // exp.stimtype = all_contexts;
 
 //  exp.determiner = _.shuffle(["generic","some","most"]);
 
-  exp.numTrials = allstims.length;
+  exp.numTrials = utils.flatten(allstims).length;
+  var stims_with_context = 
+    allstims.map(function (x) {
+      var context_assign = _.shuffle(contexts);
+      x[0].context = context_assign[0];
+      x[1].context = context_assign[1];
+      x[2].context = context_assign[2];
+      return x;
+      });
 //  exp.numTrials = 20;
 
-  exp.stims = _.shuffle(allstims); // shuffle stims
+  exp.stims = _.shuffle(utils.flatten(stims_with_context)); // shuffle stims
   exp.prevalence_levels = [_.shuffle(prev_levels),_.shuffle(prev_levels),_.shuffle(prev_levels)];
 
   exp.system = {

@@ -1,105 +1,108 @@
-(define pr-kind-given-property ;; probability of a kind given observing the property
-    (lambda (prevalence distinctive)
-  (enumeration-query
+(define kind-given-property ;; probability of a kind given observing the property
+    (lambda (prevalence context)
+        (enumeration-query
 
-    (define other-kind-prevalence ;(uniform-draw '(0.1 0.3 0.5 0.7 0.9)))
-            (if distinctive 0.1 0.5))
+        ;; here, we say XX% lorches have purple feathers means if we find a lorch
+        ;; then (flip XX) it has purple feathers
 
-    (define observe-property 
-        (lambda (prevalence kind)
-        (or (and (equal? kind 'morseth) (flip prevalence))
-            (and (equal? kind 'other) (flip other-kind-prevalence)))))
-    (define kind (uniform-draw '(morseth other)))
+        (define other-kind-prevalence ;; presumably, measure this empirically.
+            (case context
+                (('nondistinct) 0.7)
+                (('bare) 0.3)
+                (('distinct) 0.1)))
 
-    (equal? kind 'morseth)
+        (define observe-property 
+            (lambda (prevalence kind)
+            (or (and (equal? kind 'lorch) (flip prevalence))
+                (and (equal? kind 'other) (flip other-kind-prevalence)))))
+
+        (define kind (uniform-draw '(lorch other)))
+
+        kind
    
-    (observe-property prevalence kind)))) ;; prevalence % of kind have property
+        (observe-property prevalence kind)))) ;; condition on: observing purple feathers
 
-(define get-true-prob (lambda (lst)
-    (list-ref (second lst) (position (first lst) #t))))
+
+(define get-lorch-prob (lambda (lst)
+    (list-ref (second lst) (position (first lst) 'lorch))))
 
 (define generic? (lambda (property-predictive-power threshold) (> property-predictive-power threshold)))
 (define no-generic? (lambda (property-predictive-power threshold) (<= property-predictive-power threshold)))
-(define morseth? (lambda (state theta) (flip state)))
-(define not-morseth? (lambda (state theta) (not (flip state))))
+(define who-is-it? (lambda (state theta) (flip state)))
+(define not-lorch? (lambda (state theta) (not (flip state))))
 
 (define meaning (lambda (word)
     (case word
         (('yes) generic?)
         (('no) no-generic?)
-        (('morseth) morseth?)
-        (('not-a-morseth) not-morseth?))))
+        (('not-a-lorch) not-lorch?)
+        (('is-lorch) generic?)
+        (('who-is-it) who-is-it?))))
 
+(define (theta-prior) (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))
 (define (state-prior) (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1)))
-
-(define listener0-of-kinds
-    (mem (lambda (words theta QUD)
-        (enumeration-query
-            (define state (state-prior))
-
-            (define (QUDval QUD)
-                (case QUD
-                    (('is-morseth) ((meaning words) state theta))
-                    (('who-is-it) (flip state))))
-        
-            QUDval
-
-            ((meaning words) state theta)))))
-
+(define (utterance-prior) (uniform-draw '(yes no)))
+(define (qud-prior) (uniform-draw (list 'is-lorch 'who-is-it)))
 
 (define speaker1-of-kinds
-;    (mem (lambda (prevalence distinctive)
-    (mem (lambda (prevalence distinctive)
+    (mem (lambda (prevalence context)
     (enumeration-query 
-        ;(define theta (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)));; threshold for claiming the generic to be true
-        ;; doesn't operate over prevalence but predictive power
-        (define theta 0.1)
 
-        (define state (get-true-prob (pr-kind-given-property prevalence distinctive))) 
+        (define theta (theta-prior))
+        (define predictive-power (get-lorch-prob (kind-given-property prevalence context))) 
 
-        (define QUD (uniform-draw (list 'is-morseth 'who-is-it)))
+        (define qud (qud-prior))
+        (define words (utterance-prior)) 
 
-        
-        (define words (uniform-draw '(yes no)))
+        (define QUDval ((meaning qud) predictive-power theta))
 
-        (define (QUDval QUD)
-            (case QUD
-                (('is-morseth) ((meaning words) state theta))
-                (('who-is-it) (flip state))))
 
         words
 
-        true))))
-        ; (and (QUDval QUD) (equal? QUD 'who-is-it))
-        ; ))))
-          ; (equal? QUD-val
-          ;    (apply multinomial (listener0-of-kinds words theta QUD)))))))
+        (equal? QUDval
+            (apply multinomial (listener0-of-kinds words theta qud)))))))
 
 
-(define listener1
-  (mem (lambda (words QUD) ;; listener1 does inference over theta
-  (enumeration-query
-   (define theta (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))
-   ;(define theta-most (threshold-most-prior))
-   (define prevalence (state-prior))
-   (define state (get-true-prob (pr-kind-given-property prevalence distinctive))) 
-   (define QUD-val ((meaning words) state theta))
+(define listener0-of-kinds
+    (mem (lambda (words theta qud)
+        (enumeration-query
+            (define prevalence (state-prior))
+            (define QUDval ((meaning qud) prevalence theta))
+            
+            QUDval
 
-  state
-
-   (equal? words 
-    (apply multinomial (raise-to-power (speaker1-of-kinds state theta) alpha)))))))
+            ((meaning words) prevalence theta)))))
 
 
+(list
+    (speaker1-of-kinds 0.3 'bare)
+    (speaker1-of-kinds 0.3 'distinct)
+    (speaker1-of-kinds 0.3 'nondistinct))
 
-;(kind-given-property kind prevalence property)
 
-(speaker1-of-kinds 0.3 #t)
+; (define listener1
+;   (mem (lambda (words QUD) ;; listener1 does inference over theta
+;   (enumeration-query
+;    (define theta (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))
+;    ;(define theta-most (threshold-most-prior))
+;    (define prevalence (state-prior))
+;    (define state (get-true-prob (pr-kind-given-property prevalence context))) 
+;    (define QUD-val ((meaning words) state theta))
+
+;   state
+
+;    (equal? words 
+;     (apply multinomial (raise-to-power (speaker1-of-kinds state theta) alpha)))))))
+
+
+
+;(kind-given-property 0.5 'bare)
+
 
 ; (define get-yes-prob (lambda (lst)
 ;     (list-ref (second lst) (position (first lst) 'yes))))
 
-;     ;(map (lambda (x) (get-true-prob (kind-given-property 'morseth x 'si))) (list 0.1 0.3 0.5 0.7 0.9))
+;     ;(map (lambda (x) (get-true-prob (kind-given-property 'lorch x 'si))) (list 0.1 0.3 0.5 0.7 0.9))
 ; ;(map (lambda (x y) (get-yes-prob (speaker1-of-kinds x y))) (list 0.1 0.3 0.5 0.7 0.9) (list #t #t #t #t #t))
 
 ; (map (lambda (x y) (get-yes-prob (speaker1-of-kinds x y))) 

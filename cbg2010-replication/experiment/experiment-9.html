@@ -32,7 +32,7 @@
     <link href="css/local-style.css" rel="stylesheet" type="text/css"/>
 
     <!-- experiment file -->
-    <script src="js/experiment-6.js"></script>
+    <script src="js/experiment-9.js"></script>
     <script src="js/stims.js"></script>
   </head>
 
@@ -53,7 +53,7 @@
     <button onclick="_s.button()">Continue</button>
   </div>
 
-  <div class="slide" id="elaborate_instructions">
+  <div class="slide" id="instructions">
     <h3>Instructions</h3>
     <p>Recently, a team of scientists discovered a remote island with many animals that we did not know existed. Satellite imagery tells us that this island is very large and has many different animals on it. </p>
     <p>In this experiment, you are the resident zoologist of the team and are expected to provide your expert opinion on many questions about these animals. Since the island is so recently discovered, nobody knows the answers to these questions (yet!), but your expert knowledge makes you the most trustworthy source on these matters.</p>
@@ -66,13 +66,14 @@
     <p class="evidence"></p>
     <p class="query"></p>
 
-    <input type="text" id="text_response" maxlength="3" size="3"></input>
-    <t>%</t>
+    <input type="text" id="text_response" maxlength="6" size="6"></input>
+    <br>
     <button onclick="_s.button()">Continue</button>
-    <p class="err">Please enter a number between 0-100.</p>
+    <p class="err">Please enter a number between 0-100,000. Please don't use commas.</p>
   </div>
 
   <div class="slide"  id="truth_conditions">
+    <br>
     <p class="evidence"></p>
     <p>Is the following sentence true or false?</p>
     <p class="query"></p>

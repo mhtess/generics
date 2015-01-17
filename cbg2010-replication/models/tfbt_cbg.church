@@ -221,7 +221,7 @@
 
 
      (define listener1
-       (mem (lambda (words) ;; listener1 doesn't do inference over theta
+       (mem (lambda (words) ;; listener1 does do inference over theta
               (enumeration-query
                (define state (state-prior))
                (define generic-theta (theta-prior))

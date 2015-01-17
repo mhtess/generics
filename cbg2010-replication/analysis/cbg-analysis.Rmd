@@ -14,7 +14,6 @@ d1<-read.table('cbgR-exp1_anonymized-trials.tsv',header=T)
 #d2<-read.table('cbgR-exp2_anonymized-trials.tsv',header=T)
 d3<-read.table('cbgR-exp3_anonymized-trials.tsv',header=T)
 
-bool.tonum<-function(bool){abs(as.numeric(bool)*1-2)}
 #d2$workerid<-d2$workerid+length(levels(factor(d1$workerid)))
 #d3$workerid<-d3$workerid+length(levels(factor(d2$workerid)))+length(levels(factor(d1$workerid)))
 d3$workerid<-d3$workerid+length(levels(factor(d1$workerid)))
@@ -48,6 +47,27 @@ ci.low <- function(x,na.rm=T) {
   mean(x,na.rm=na.rm) - quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,.025,na.rm=na.rm)}
 ci.high <- function(x,na.rm=T) {
   quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,.975,na.rm=na.rm) - mean(x,na.rm=na.rm)}
+
+bool.tonum<-function(bool){abs(as.numeric(bool)*1-2)}
+bootstrap.ci <- function(x){
+  agr = aggregate(subj_prevalence ~ trial_type + stim_determiner, data=x, FUN=mean)
+  agr$CILow = aggregate(subj_prevalence ~ trial_type + stim_determiner, data=x, FUN=ci.low)$subj_prevalence
+  agr$CIHigh = aggregate(subj_prevalence ~ trial_type + stim_determiner, data=x, FUN=ci.high)$subj_prevalence
+  agr$YMin = agr$subj_prevalence - agr$CILow
+  agr$YMax = agr$subj_prevalence + agr$CIHigh
+  return(agr)
+}
+
+bootstrap.ci.tc <- function(x){
+  
+  agr = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=mean)
+  agr$CILow = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.low)$truth_num
+  agr$CIHigh = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.high)$truth_num
+  agr$YMin = agr$truth_num - agr$CILow
+  agr$YMax = agr$truth_num + agr$CIHigh
+  return(agr)
+}
+
 
 
 setwd('/Users/mht/Documents/research/generics/cbg2010-replication/data/')
@@ -117,14 +137,6 @@ grid.arrange(a,b)
 Replicate figure 2 of CGB 2010 *asymmetry of truth_conditions and implied_prevalence*
 ```{r}
 
-bootstrap.ci <- function(x){
-  agr = aggregate(subj_prevalence ~ trial_type + stim_determiner, data=x, FUN=mean)
-  agr$CILow = aggregate(subj_prevalence ~ trial_type + stim_determiner, data=x, FUN=ci.low)$subj_prevalence
-  agr$CIHigh = aggregate(subj_prevalence ~ trial_type + stim_determiner, data=x, FUN=ci.high)$subj_prevalence
-  agr$YMin = agr$subj_prevalence - agr$CILow
-  agr$YMax = agr$subj_prevalence + agr$CIHigh
-  return(agr)
-}
 
 turk.data$stim_prevalence <- as.numeric(levels(turk.data$stim_prevalence)[turk.data$stim_prevalence])
 
@@ -153,16 +165,6 @@ ggplot(df2.bs, aes(x=stim_determiner,y=subj_prevalence,fill=trial_type, group=tr
 Replicate figure 3 with CIs
 
 ```{r}
-
-bootstrap.ci.tc <- function(x){
-  
-  agr = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=mean)
-  agr$CILow = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.low)$truth_num
-  agr$CIHigh = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.high)$truth_num
-  agr$YMin = agr$truth_num - agr$CILow
-  agr$YMax = agr$truth_num + agr$CIHigh
-  return(agr)
-}
 
 tc<-subset(turk.data,trial_type=='truth_conditions')
 tc$truth_num <- 1*as.logical(tc$truth_conditions)
@@ -317,7 +319,8 @@ td0<-read.table('cbgR-exp1_anonymized-trials.tsv',header=T)
 td1<-read.table('cbgR-exp3_anonymized-trials.tsv',header=T)
 #td1$trialNum<-(1+as.numeric(rownames(td1))) %% 30
 #write.csv(td1, file='cbgR-exp3_anonymized-trials.csv')
-
+td1$item<-paste(td1$stim_color,td1$stim_part,sep='_')
+#levels(factor(subset(td1,stim_type=='danger')$item))
 
 td1$workerid<-td1$workerid+length(levels(factor(td0$workerid)))
 td<-rbind(td0,td1)
@@ -753,6 +756,9 @@ td5<-read.table('cbgR-exp5-trials.tsv',header=T)
 td5$stim_type<-gsub("danger/distinct","dangerdistinct",td5$stim_type)
 #write.csv(td5, file='cbgR-exp5_anonymized-trials.csv')
 
+td5$item<-paste(td5$stim_color,td5$stim_part,sep='_')
+levels(factor(subset(td5,stim_type=='bare')$item))
+
 td5$rt <- td5$rt/1000
 td5$truth_conditions <- factor(as.logical(levels(td5$response)[td5$response]), 
                               levels=c("TRUE","FALSE"))
@@ -806,7 +812,6 @@ cntxt.ef5<-ddply(td5, .(workerid), summarise,
 
 rs4.mixed<-glmer(response ~ prevlev*context + (1 | workerid) + (1 | item), data=cntxt.ef4, family = 'binomial')
 summary(rs4.mixed)
-
 
 rs5.simple<-glm(response ~ prevlev*context,data=cntxt.ef5,family='binomial')
 summary(rs5.simple)
@@ -950,9 +955,42 @@ ggplot(d.tidy,aes(x=value,fill=context))+
   facet_grid(variable~context)+
   theme_bw()
 
+```
 
+### Listener model w/ beta hyperprior
+
+```{r tfbt.kinder.exp5}
+setwd('../models/bayesian_analysis/')
+d<-read.csv(paste('listen_betaHyper2_exp5all_generic_truth_conditions_mh10000_3_alpha3.csv',sep=''),header=F)
+
+
+d.tidy <- d %>%
+  select(V1,V2,V3,V5,V6,V7,V9,V10,V11) %>%
+  rename(nondistinct_phi = V1,
+         nondistinct_gamma = V2,
+         nondistinct_delta = V3,
+         bare_phi = V5,
+         bare_gamma = V6,
+         bare_delta = V7,
+         distinct_phi = V9, 
+         distinct_gamma = V10,
+         distinct_delta= V11) %>%
+  gather(variable,value) %>%
+  separate(variable,into=c('context','variable') ,sep="_")
+
+d.tidy$variable<-factor(d.tidy$variable,levels=c("gamma","delta","phi"))
+
+ggplot(d.tidy,aes(x=value,fill=context))+
+  geom_histogram()+
+  facet_grid(context~variable,scale='free')+
+  theme_bw()
+
++
+  xlim(0,1)
 
 ```
+
+
 
 Are the alternative contexts having an effect on endorsements? One preliminary way to test this is to look at the endorsements for the bare, as the number of Nondistinct contexts have been seen.
 
@@ -1073,7 +1111,81 @@ ggplot(data=subset(trials_seen.df4,context=='bare'), aes(x=trialnum,y=n))+
   ggtitle("exp 4-- bare generic endorsements vs.trials seen and prevalence level")
 ```
 
-# Experiment 7
+# Experiment 6: p(property | any-animal) elicitation
+
+
+```{r exp6}
+setwd('/Users/mht/Documents/research/generics/cbg2010-replication/data/')
+turk.data<-read.table('cbgR-exp6-trials.tsv',header=T)
+summary(turk.data)
+```
+
+
+Reaction time histograms
+
+```{r}
+ggplot(turk.data,aes(x=rt/60000,fill=stim_type))+
+  geom_histogram()+
+  facet_wrap(~stim_type)+
+  guides(fill=F)+
+  xlab('rt in minutes')+
+  theme_bw()
+```
+
+
+Prevalence histograms / densities, broken up by context
+
+and then by item and context
+
+```{r}
+ggplot(turk.data,aes(x=response,fill=stim_type))+
+  #geom_histogram(binwidth=1, aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]))+
+  geom_histogram(binwidth=1)+
+  #geom_density()+
+  facet_wrap(~stim_type)+
+  guides(fill=F)+
+  theme_bw()
+
+
+ddply(turk.data, .(stim_type), 
+                  summarise,
+                  pr.true=mean(response),
+                  med = median(response),
+                  variance = sqrt(var(response)))
+
+
+ggplot(turk.data,aes(x=response,fill=stim_type))+
+  geom_histogram(binwidth=5, aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]))+
+  #geom_density()+
+  facet_grid(stim_type~item)+
+  guides(fill=F)+
+  theme_bw()
+
+levels(factor(subset(turk.data,stim_type=='bare')$item))
+
+ggplot(turk.data,aes(x=trial_num,y=response,color=stim_type))+
+  geom_point()+
+  theme_bw()
+
+
+```
+
+```{r exp6.stats}
+
+turk.data$item<-paste(turk.data$stim_color,turk.data$stim_part,sep="_")
+
+rs6.mixed<-lmer(response ~ trial_num+ stim_type + (1 | workerid) + (1 | item), data=turk.data)
+
+summary(rs6.mixed)
+
+d<-ddply(turk.data, .(stim_type, item), 
+                  summarise,
+                  mean = mean(response))
+
+ggplot(d,aes(x=mean,fill='bare'))
+```
+
+# Experiment 7: finer grain
 
 ### Same as Exp 5 but with Prevalence levels = {5, 15, 25, 35, 45}
 
@@ -1189,9 +1301,93 @@ ggplot(data=x1,aes(x=value,fill=V1))+
   scale_x_continuous(breaks=c(0.1,0.3,0.5,0.70,0.9),limits=c(0,1))+
   scale_fill_brewer(type='qual',palette=6)+
   theme(strip.text.x = element_text(size=14,color='black'))
+```
 
+
+# Experiment 8 -- frequency elicitation
+
+
+```{r exp8}
+setwd("~/Documents/research/generics/cbg2010-replication/data")
+d<-read.table('cbgR-exp8-trials.tsv',header=T)
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+table(d$stim_type,d$item)
+table(d$stim_type,d$stim_part)
+
+d0<-subset(d,response<50000)
+sketchy<-c(6,13,22,29)
+
+d0<-subset(d,!(workerid%in%sketchy))
+
+ggplot(d,aes(x=response,fill=stim_type))+
+  geom_histogram()+
+  facet_wrap(~workerid)
+
+ggplot(d0,aes(x=response,fill=stim_type))+
+  #geom_histogram(binwidth=1, aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]))+
+  geom_histogram()+
+  #geom_density()+
+  facet_wrap(~stim_type)+
+  guides(fill=F)+
+  theme_bw()
+
+ddply(d0, .(stim_type), 
+                  summarise,
+                  pr.true=mean(response),
+                  med = median(response),
+                  variance = sqrt(var(response)))
 
 
 ```
+
+
+
+# Experiment 9 -- replication (exp 5) with proper randomization
+
+
+```{r exp9}
+setwd("~/Documents/research/generics/cbg2010-replication/data")
+d<-read.table('cbgR-exp9-trials.tsv',header=T)
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+table(d$stim_type,d$item)
+table(d$stim_type,d$stim_part)
+
+levels(factor(subset(d,stim_type=='bare')$item))
+
+d$rt <- d$rt/1000
+d$truth_conditions <- factor(as.logical(levels(d$response)[d$response]), 
+                              levels=c("TRUE","FALSE"))
+
+d$truth_num <- bool.tonum(d$truth_conditions)
+
+ggplot(d,aes(x=factor(truth_num),fill=stim_type))+
+  geom_histogram()+
+  facet_wrap(~item)+
+  #facet_wrap(~workerid)
+
+#split by first half/second half to look at order effects
+#tc.bs<-bootstrap.ci.tc(d[d$trialNum>15,])
+)
+
+tc.bs<-bootstrap.ci.tc(d)
+
+ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,
+                  colour=stim_type, group=stim_type))+
+  geom_point(size=3, position=position_dodge(0.5))+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_type),
+              width=0.3,
+              size=0.8,
+              position=position_dodge(0.5))+
+  facet_wrap(~stim_determiner,nrow=3)+
+  ylab("proportion of 'true' responses")+
+  scale_colour_brewer(type='qual',palette=6)+
+  theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))
+
+
+```
+
+
+
 
 
