@@ -91,15 +91,15 @@
  ;; (mem (lambda (words theta theta-most QUD) ;; listener1 doesn't do inference over theta
   (enumeration-query
    (define theta (threshold-prior))
-   (define theta-most (threshold-most-prior))
-   ;(define theta-most 5)
+   ;(define theta-most (threshold-most-prior))
+   (define theta-most 5)
    (define state (state-prior))
     (define QUD-val 
       (if (equal? QUD 'most)
         ((meaning QUD) state theta-most)
         ((meaning QUD) state theta)))
 
-   QUD-val
+  (generic state theta)
 
    (equal? words (apply multinomial (raise-to-power (speaker1-knowsTheta state theta theta-most QUD) alpha)))))))
 
@@ -178,21 +178,22 @@
 ;(define l0 (listener0 utterance 3 5 'most))
 
 (define l1 (listener1 utterance 'how-many))
-(define s1 (map (lambda (x) (speaker1 x utterance)) '(1 3 5 7 9)))
-(define s2 (map (lambda (x) (speaker2 x utterance)) '(1 3 5 7 9)))
+l1
 
-(define inner-product (lambda (lst)
-  (sum (map (lambda (x y) (* x y)) (first lst) (second lst)))))
+; (define s1 (map (lambda (x) (speaker1 x utterance)) '(1 3 5 7 9)))
+; (define s2 (map (lambda (x) (speaker2 x utterance)) '(1 3 5 7 9)))
 
-(define normalize (lambda (lst)
-  (map (lambda (x) (/ x (sum lst))) lst)))
+; (define inner-product (lambda (lst)
+;   (sum (map (lambda (x y) (* x y)) (first lst) (second lst)))))
 
-(define (gen-probs model-preds) 
-  (let ([gen-pos (map (lambda (lst) (position (first lst) utterance)) model-preds)])
-    (map (lambda (y i) (if (< i 0) 0 (list-ref (second y) i))) model-preds gen-pos)))
+; (define normalize (lambda (lst)
+;   (map (lambda (x) (/ x (sum lst))) lst)))
 
-(list (inner-product l1)
-     (inner-product (list (normalize (gen-probs s1)) '(1 3 5 7 9)))
-      (inner-product (list (normalize (gen-probs s2)) '(1 3 5 7 9))))
+; (define (gen-probs model-preds) 
+;   (let ([gen-pos (map (lambda (lst) (position (first lst) utterance)) model-preds)])
+;     (map (lambda (y i) (if (< i 0) 0 (list-ref (second y) i))) model-preds gen-pos)))
 
-;s1
+; (list (inner-product l1)
+;      (inner-product (list (normalize (gen-probs s1)) '(1 3 5 7 9)))
+;       (inner-product (list (normalize (gen-probs s2)) '(1 3 5 7 9))))
+
