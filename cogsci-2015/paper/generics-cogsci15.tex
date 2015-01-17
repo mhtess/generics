@@ -24,8 +24,31 @@
 \usepackage{pslatex}
 \usepackage{apacite}
 \usepackage{url}
-
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{listings}
 \usepackage{color}
+\usepackage{textcomp}
+
+\lstset{
+  language=Scheme, % Andreas Stuhlmuller. Scheme listings. https://github.com/stuhlmueller/scheme-listings.git
+  columns=fixed,
+  tabsize=2,
+  extendedchars=true,
+  breaklines=true,
+  frame=single,
+%  numbers=left,
+  numbersep=5pt,
+   basicstyle=\scriptsize\ttfamily
+%  rulesepcolor=\color{solarized@base03},
+%  numberstyle=\tiny\color{solarized@base01},
+%  keywordstyle=\color{solarized@green},
+%  stringstyle=\color{solarized@cyan}\ttfamily,
+%  identifierstyle=\color{blue},
+%  commentstyle=\color{solarized@base01},
+%  emphstyle=\color{solarized@red}
+}
+
 \definecolor{Red}{RGB}{255,0,0}
 \newcommand{\red}[1]{\textcolor{Red}{#1}}  
 
@@ -56,6 +79,13 @@ The meaning of generic propositions is hard to pin down. On one hand, generics w
 
 How are we to understand these data? One interpretation is that context changes the truth-conditions for a generic statement, but that within a context, the truth-conditions are stable. We sought out to test by doing a Bayesian data analysis of the generic truth-conditions data. 
 
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{fig1_replication}
+    \caption{Replication of CBG Exp. 1, generics condition}
+  \label{fig:replication}
+\end{figure}
+
 \section{Experiment 1 --- CBG (Exp. 1) replication}
 
 Exp. 1 attempted to replicate the finding of CBG Exp. 1 that context affects the proportion of ``true'' responses to a generic statement. 
@@ -76,7 +106,31 @@ Participants saw a prevalence statement and either (1) dangerous \& distinct sta
 
 \subsubsection{Results}
 
-Our results replicated the findings of the CBG, inso far as the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts \red{[insert some stats here]}. 
+Our results replicated the findings of the CBG, inso far as the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts (Figure \ref{fig:replication}) \red{[insert some stats here]}. 
+
+\section{Bayesian data analysis}
+
+These statistics tell us that there were significantly more ``true'' responses in one context vs. another, and and that these relative proportions of ``true'' responses were most different at the lower prevalence levels. What we'd really like to know, however, is the truth-functional threshold of the generic across these three contexts. To do this, we will have to move beyond NHST to do Bayesian inference over the unknown threshold of generic. The data analysis model can be written very simply in Church.
+
+\begin{lstlisting}
+(define bayesian-data-analysis 
+	(query
+	
+		(define generic-threshold 
+			(lambda (context) (uniform 0 1)))
+	
+		(define generic 
+			(lambda (prevalence context) 
+				(> prevalence (generic-threshold context))))
+				
+		generic-threshold
+		
+		(= experiment1-data 
+			(map generic all-prevalences all-contexts)))
+\end{lstlisting}
+
+Here, we say that we, as scientists, have perfect uncertainty about what the generic might mean a priori. Thus, the generic-threshold follows a uniform prior distribution between 0 and 1\footnote{If the true threshold turns out to be 0, the generic ``Lorches have purple feathers'' would mean essentially, ``Some lorches have purple feathers''. If the threshold turned out to be very close to 1, the generic would mean essentially: ``All lorches have purple feathers''.}. The generic, here, has a truth-functional meaning such that it is \lstinline{true} when the prevalence is over \lstinline{generic-threshold}, and false when it is not. The \lstinline{query} function is written to return \lstinline{generic-threshold}, which is the parameter we are interested in inferring. Finally, the last line is our condition statement: we condition on the data we collected in Experiment 1, \lstinline{map}ping appropriately over the various contexts and prevalence levels given to the participants. 
+
 
 %They also performed analyses testing the relation between two dependent measures for understanding generics. In this latter analysis, they found that the quantifier ``most'' expressed a symmetry between these two dependent measures, while the generic had an asymmetry \footnote{This asymmetry has also been replicated in adults and observed in children \cite{Brandone2014}}.
 
