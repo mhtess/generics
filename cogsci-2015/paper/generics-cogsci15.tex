@@ -23,16 +23,19 @@
 \usepackage{cogsci}
 \usepackage{pslatex}
 \usepackage{apacite}
+\usepackage{url}
+
+\usepackage{color}
+\definecolor{Red}{RGB}{255,0,0}
+\newcommand{\red}[1]{\textcolor{Red}{#1}}  
 
 
 \title{Generics can be vague}
  
-\author{{\large \bf Michael Henry Tessler (mhtessler@stanford.edu)} \\
-  \AND {\large \bf Noah D. Goodman (ngoodman@stanford.edu)} \\
-  Department of Psychology, 450 Serra Mall \\
-  Stanford, CA 94305 USA}
-
-
+ \author{{\large \bf Michael Henry Tessler, Noah D. Goodman } \\
+	\{mhtessler, ngoodman\}@stanford.edu \\
+  Department of Psychology, Stanford University}
+ 
 \begin{document}
 
 \maketitle
@@ -49,7 +52,33 @@ generics; pragmatics; bayesian cognitive model; bayesian data analysis
 
 The meaning of generic propositions is hard to pin down. On one hand, generics would seem to suggest an almost universal quantification, as in ``Dogs bark''. Others, like ``Mosquitos carry the West Nile virus'', express a relation that applies only to a small subset of the kind. 
 
-\citeA{Cimpian2010} carried out a series of studies designed to test the influence of context on participants' willingness to accept the relevant generics. They also performed analyses testing the relation between two dependent measures of understanding generics. In this latter analysis, they found that the quantifier ``most'' expressed a symmetry between these two dependent measures, while the generic had an asymmetry \footnote{This asymmetry has also been replicated in adults and observed in children \cite{Brandone2014}}. 
+\citeA{Cimpian2010} (henceforth, CBG) carried out a series of studies designed to examine the truth conditions and implications of generic statements. They found evidence for the influence of context on participants' willingness to accept the relevant generics. In their paradigm, participants were given an evidence statement in terms of the percentage of a category that had a property (e.g. ``30\% of lorches have purple feathers.''). Participants were asked whether the associated generic statement (i.e. ``Lorches have purple feathers'') was true or false. The authors manipulated context by adding some additional statements about the property. In their first experiment, these extra statements either described the ``dangerousness and distinctiveness'' (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers'') of the property or some nondangerous feature and the property's nondistinctiveness (e.g.  ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.''). The authors found that the dangerous and distinctive context increased the overall proportion of ``true'' responses of the generic propositions.
+
+How are we to understand these data? One interpretation is that context changes the truth-conditions for a generic statement, but that within a context, the truth-conditions are stable. We sought out to test by doing a Bayesian data analysis of the generic truth-conditions data. 
+
+\section{Experiment 1 --- CBG (Exp. 1) replication}
+
+Exp. 1 attempted to replicate the finding of CBG Exp. 1 that context affects the proportion of ``true'' responses to a generic statement. 
+
+\subsection{Method}
+
+\subsubsection{Participants}
+
+We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk. 
+
+\subsubsection{Procedure and materials}
+
+Our procedure was identical to CBG ``truth conditions'' task, except in that our instructions were elaborated to improve interest and motivation\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-9.html}}. 
+
+We used the same materials as CBG (available in their Appendix). The materials used were 30 novel animals (e.g. lorches, morseths, blins) each paired with a unique property. Properties were color---body-part pairs (e.g. purple feathers, orange tails). Each participant saw 10 animal-property pairs per context. Those 10 items were randomly paired with 1 of 5 ``prevalence levels'': \{10, 30, 50, 70, 90\} \%; each prevalence level appeared 2 times per context. 
+
+Participants saw a prevalence statement and either (1) dangerous \& distinct statements, (2) control \& irrelevant statements, or (3) nothing else. Participants were asked ``Is the following sentence true or false?'', below which was presented the associated generic statement. 
+
+\subsubsection{Results}
+
+Our results replicated the findings of the CBG, inso far as the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts \red{[insert some stats here]}. 
+
+%They also performed analyses testing the relation between two dependent measures for understanding generics. In this latter analysis, they found that the quantifier ``most'' expressed a symmetry between these two dependent measures, while the generic had an asymmetry \footnote{This asymmetry has also been replicated in adults and observed in children \cite{Brandone2014}}.
 
 %The data analysis involved comparing the mean of the prevalence ratings associated with \emph{True} endorsements of the generic with the mean prevalence ratings elicited by the generic in a separate task. In the experimental pragmatics literature, the dependent measure involved in the ``truth conditions'' task is called \emph{sentence verification}; in the ``implied prevalence'' task, it is a \emph{sentence interpretation}. 
 %
@@ -63,13 +92,8 @@ DegenGoodman2014.  Truth conditions task --> QUD = ``generic true?'' Model.
 
 But what is the semantics of the generic? \citeA{Cimpian2010}, experiments 1, 3, and 4 found that the truth conditions of the generic are sensitive to the context.  Our goal is to replicate this finding, and use Bayesian data analysis to infer the threshold of the speaker model. This bears some similarity to Michael Franke's approach for cogsci from last year.
 
-\section{\citeA{Cimpian2010} Experiment 1 replication}
 
-\subsection{Materials}
 
-\subsection{Method}
-
-\subsection{Results}
 
 \section{The full bayesian thing}
 
