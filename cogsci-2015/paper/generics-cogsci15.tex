@@ -30,6 +30,9 @@
 \usepackage{color}
 \usepackage{textcomp}
 
+\graphicspath{{figures/}}
+
+
 \lstset{
   language=Scheme, % Andreas Stuhlmuller. Scheme listings. https://github.com/stuhlmueller/scheme-listings.git
   columns=fixed,
@@ -132,6 +135,20 @@ These statistics tell us that there were significantly more ``true'' responses i
 Here, we say that we, as scientists, have perfect uncertainty about what the generic might mean a priori. Thus, the generic-threshold follows a uniform prior distribution between 0 and 1\footnote{If the true threshold turns out to be 0, the generic ``Lorches have purple feathers'' would mean essentially, ``Some lorches have purple feathers''. If the threshold turned out to be very close to 1, the generic would mean essentially: ``All lorches have purple feathers''.}. The generic, here, has a truth-functional meaning such that it is \lstinline{true} when the prevalence is over \lstinline{generic-threshold}, and false when it is not. The \lstinline{query} function is written to return \lstinline{generic-threshold}, which is the parameter we are interested in inferring. Finally, the last line is our condition statement: we condition on the data we collected in Experiment 1, \lstinline{map}ping appropriately over the various contexts and prevalence levels given to the participants\footnote{Technically, we must also include a guessing parameter, to account for instances when a participant responds in a contradictory manner to what the inferred threshold would imply}. 
 
 \subsection{Results}
+
+The results can be seen if Figure \ref{fig:bda1a}. In the ``bare'' condition, the analysis says the threshold is between 0 and 30, but is uncertain where exactly in that range the threshold would be. Critically, in the ``dangerous and distinctive'' context, the analysis infers a lower threshold, less than 10. This matches with the intuition, and the empirical results, that a dangerous and distinctive context allows for the generic to be more permissive (e.g. ``Mosquitos carry West Nile Virus'' is true, even though very few mosquitoes actually do). Finally, and intruigingly, the analysis infers a 3rd distinct threshold profile for the nondistinctive context.  For this, it says that threshold is most likely under 30 but above 10. This is an overall higher inferred threshold for the nondistinctive category, and an aspect missed by standard NHST. 
+
+There is something fundamentally wrong about this cognitive model, however. The model is a simple model of truth-functional semantics, stating that any situation with a prevalence greater than the threshold will return True, and anything less, will return False. We see the consequences of these assumptions in the data analysis parameter $\phi$. $\phi$ represents the percentage of responses that the data analysis model wants to attribute to guessing. This proportion is somewhere between 50 and 60\%. The amount of guessing is so high because our computational model is inflexible.
+
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{fig2_bda1_combined}
+    \caption{Inferred threshold for the generic across contexts}
+  \label{fig:bda1a}
+\end{figure}
+
+
 \begin{itemize}
 \item Inferred value of theta across contexts. 
 \item $\phi$ parameter. 
