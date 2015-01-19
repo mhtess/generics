@@ -53,7 +53,7 @@
 \newcommand{\red}[1]{\textcolor{Red}{#1}}  
 
 
-\title{Generics might be vague}
+\title{Generic meanings are vague but rationally inferred from context}
  
  \author{{\large \bf Michael Henry Tessler, Noah D. Goodman } \\
 	\{mhtessler, ngoodman\}@stanford.edu \\
@@ -131,6 +131,27 @@ These statistics tell us that there were significantly more ``true'' responses i
 
 Here, we say that we, as scientists, have perfect uncertainty about what the generic might mean a priori. Thus, the generic-threshold follows a uniform prior distribution between 0 and 1\footnote{If the true threshold turns out to be 0, the generic ``Lorches have purple feathers'' would mean essentially, ``Some lorches have purple feathers''. If the threshold turned out to be very close to 1, the generic would mean essentially: ``All lorches have purple feathers''.}. The generic, here, has a truth-functional meaning such that it is \lstinline{true} when the prevalence is over \lstinline{generic-threshold}, and false when it is not. The \lstinline{query} function is written to return \lstinline{generic-threshold}, which is the parameter we are interested in inferring. Finally, the last line is our condition statement: we condition on the data we collected in Experiment 1, \lstinline{map}ping appropriately over the various contexts and prevalence levels given to the participants\footnote{Technically, we must also include a guessing parameter, to account for instances when a participant responds in a contradictory manner to what the inferred threshold would imply}. 
 
+\subsection{Results}
+\begin{itemize}
+\item Inferred value of theta across contexts. 
+\item $\phi$ parameter. 
+\item Posterior predictive of fixed threshold model?
+
+Rather than just say the context gives rise to different thresholds, we should instead consider that the threshold is \emph{inferred}, by the subject, from context. This gives rise to a slightly different type of model... a cognitive, language-understanding model.
+\end{itemize}
+
+\section{Lifted-variable RSA}
+\begin{itemize}
+
+\item Emphasize distinctions between bayesian data analysis and bayesian cognition. 
+
+\item Condition on Exp 1 data to infer hyperprior parameters $\gamma$ and $\delta$. 
+
+\item Exp 2 to confirm $\gamma$ and $\delta$. 
+
+\item Some linking function to condition on Exp 1 \& 2 simultaneously,  to perhaps, infer rationality parameter and get some posterior predictives.
+
+\end{itemize}
 %They also performed analyses testing the relation between two dependent measures for understanding generics. In this latter analysis, they found that the quantifier ``most'' expressed a symmetry between these two dependent measures, while the generic had an asymmetry \footnote{This asymmetry has also been replicated in adults and observed in children \cite{Brandone2014}}.
 
 %The data analysis involved comparing the mean of the prevalence ratings associated with \emph{True} endorsements of the generic with the mean prevalence ratings elicited by the generic in a separate task. In the experimental pragmatics literature, the dependent measure involved in the ``truth conditions'' task is called \emph{sentence verification}; in the ``implied prevalence'' task, it is a \emph{sentence interpretation}. 
