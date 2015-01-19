@@ -171,6 +171,71 @@ Rather than just say context gives rise to different thresholds, we should inste
 %\end{itemize}
 
 \section{Lifted-variable RSA}
+
+The bayesian data analysis above provides evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the inferred value of the guessing parameter $\phi$ suggest, however, that our model of cognition is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, we propose people have uncertainty about the true threshold and actively reason about this meaning from context. 
+
+To formalize this, we draw on work from the Rational Speech-Act (RSA) theory of communication \cite{Frank2012}. In this framework, a listener infers the meaning of an utterance by a recursive reasoning process, wherein she considers the thought-processes of a speaker whose goal is to be informative. This theory has had tremendous support for providing quantitative predictions of a number of linguistic phenomena including scalar implicature, hyperbole, and multiple class reasoning paradigms \cite{Goodman2013, Kao2014, Tessler2014, Lassiter2014a}. 
+
+\citeA{Lassiter2014} proposed an elaboration of the theory to account for interpreting vague, gradable adjectives like \emph{tall}. They propose the meaning of an adjective like \emph{tall} is a standard truth-functional meaning such that the adjective is true if the object in question has a height greater than the threshold $\theta_{tall}$. The suggestion, though, is that the listener has uncertainty about what $\theta_{tall}$ actually is, and infers that value of $\theta_{tall}$ via the same recursive reasoning process. Here, we borrow the same formalism to try account for the uncertainty in generic meaning.
+
+In Church, the model looks like
+
+\begin{lstlisting}
+(define rational-speech-act
+
+
+	(define pragmatic-listener
+		(lambda (utterance)
+			(define state (state-prior))
+			(define generic-theta (theta-prior))
+			
+			generic-theta
+			
+			(equal? utterance (speaker state generic-theta))))
+			
+	(define speaker 
+		(lambda (state generic-theta)
+			(define utterance (utterance-prior))
+			
+			utterance
+			
+			(equal? state (literal-listener utterance generic-theta))))
+			
+	(define literal-listener
+		(lambda (utterance generic-theta)
+			(define state (state-prior))
+			
+			state
+			
+			(utterance state generic-theta))))
+\end{lstlisting}
+
+We propose that the subject in this task is actively reasoning about the threshold, i.e. the truth-conditions of the generic. Note how this is different from the previous model, wherein the subject is presumed to already know the threshold, and that she just has to look it up what it is in the context--to--threshold mapping. 
+
+Now, how is the subject supposed to reason about the threshold? We propose that the subject reasons about the threshold via the contextual information given to her. In CBG, this contextual information are the 3 conditions: \emph{dangerous and distinct}, \emph{nondistinct}, and \emph{bare}. In this simple model, the contextual information could provide different \lstinline{state-prior} distributions. \lstinline{state-prior} represents the percentage of the kind that has the property. Naively, this would be \lstinline{(uniform 0 1)}, or equivalently \lstinline{(beta 1 1)}. However, we propose that the subject doesn't know exactly what this prior distribution over states looks like. We put uncertainty over the parameters of this beta distribution, \lstinline{(beta gamma delta)}\footnote{For ease of interpretation, we are parametrizing the \lstinline{beta} distribution by its mean and some measure of its variability ... \lstinline{(beta (* gamma delta) (* (- 1 gamma) delta))}} 
+
+Thus, we put a bayesian data analysis model over our Rational Speech-Act model of language understanding, to see how context might influence the prior distribution. In Church, this looks like
+
+\begin{lstlisting}
+(define the-full-bayesian-thing
+	(query
+	
+		(define gamma
+			(lambda (context) (uniform 0 1)))
+			
+		(define delta
+			(lambda (context) (uniform 0 20)))
+	
+		(define rational-speech-act
+			(lambda ( (gamma context) (delta context) ) 
+				...))
+				
+		'((map gamma all-contexts) (map delta all-contexts))
+		
+		(= experiment1-data 
+			(map rational-speech-act all-prevalences all-contexts))))
+\end{lstlisting}
+
 \begin{itemize}
 
 \item Emphasize distinctions between bayesian data analysis and bayesian cognition. 
