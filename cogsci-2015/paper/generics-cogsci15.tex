@@ -136,9 +136,9 @@ Here, we say that we, as scientists, have perfect uncertainty about what the gen
 
 \subsection{Results}
 
-The results can be seen if Figure \ref{fig:bda1a}. In the ``bare'' condition, the analysis says the threshold is between 0 and 30, but is uncertain where exactly in that range the threshold would be. Critically, in the ``dangerous and distinctive'' context, the analysis infers a lower threshold, less than 10. This matches with the intuition, and the empirical results, that a dangerous and distinctive context allows for the generic to be more permissive (e.g. ``Mosquitos carry West Nile Virus'' is true, even though very few mosquitoes actually do). Finally, and intruigingly, the analysis infers a 3rd distinct threshold profile for the nondistinctive context.  For this, it says that threshold is most likely under 30 but above 10. This is an overall higher inferred threshold for the nondistinctive category, and an aspect missed by standard NHST. 
+The results can be seen if Figure \ref{fig:bda1a}. In the ``bare'' condition, the analysis says the threshold is between 0 and 30, but is uncertain where exactly in that range the threshold would be. Critically, in the ``dangerous and distinctive'' context, the analysis infers a lower threshold, less than 10. This matches with the intuition, and the empirical results, that a dangerous and distinctive context allows for the generic to be more permissive (e.g. ``Mosquitos carry West Nile Virus'' is true, even though very few mosquitoes actually do). Finally, and most intriguingly, the analysis infers a 3rd distinct threshold profile for the nondistinctive context.  For this, it says that threshold is greater than 10, but could be as high as 50. This is an overall higher inferred threshold for the nondistinctive category, and an aspect totally missed by standard NHST. 
 
-There is something fundamentally wrong about this cognitive model, however. The model is a simple model of truth-functional semantics, stating that any situation with a prevalence greater than the threshold will return True, and anything less, will return False. We see the consequences of these assumptions in the data analysis parameter $\phi$. $\phi$ represents the percentage of responses that the data analysis model wants to attribute to guessing. This proportion is somewhere between 50 and 60\%. The amount of guessing is so high because our computational model is inflexible.
+There is something fundamentally wrong about this analysis, however. Specifically, there is a problem with the cognitive model. The model is a simple model of truth-functional semantics, stating that any situation with a prevalence greater than the threshold will return True, and anything less, will return False. We see the consequences of these assumptions in the data analysis parameter $\phi$. $\phi$ represents the percentage of responses that the data analysis model wants to attribute to guessing. This proportion is somewhere between 40 and 50\%. The amount of guessing is so high because our computational model is inflexible.
 
 
 \begin{figure}
@@ -148,14 +148,27 @@ There is something fundamentally wrong about this cognitive model, however. The 
   \label{fig:bda1a}
 \end{figure}
 
+This can also be seen in the posterior predictive distribution of responses. The model matches the trajectory of the dangerous \& distinct context reasonably well, but is too dichotomous in the other contexts. The correlation between the posterior predictive and the data is $r = 0.86$. 
 
-\begin{itemize}
-\item Inferred value of theta across contexts. 
-\item $\phi$ parameter. 
-\item Posterior predictive of fixed threshold model?
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{fig3_bda1_postpred}
+    \caption{Posterior predictive using fixed-threshold semantics}
+  \label{fig:bda1posteriorpred}
+\end{figure}
 
-Rather than just say the context gives rise to different thresholds, we should instead consider that the threshold is \emph{inferred}, by the subject, from context. This gives rise to a slightly different type of model... a cognitive, language-understanding model.
-\end{itemize}
+
+
+
+
+%\begin{itemize}
+%\item Inferred value of theta across contexts. 
+%\item $\phi$ parameter. 
+%\item Posterior predictive of fixed threshold model?
+
+Rather than just say context gives rise to different thresholds, we should instead consider that the threshold is \emph{actively inferred}, by the subject, from context. This gives rise to a slightly different type of model... a cognitive, language-understanding model.
+
+%\end{itemize}
 
 \section{Lifted-variable RSA}
 \begin{itemize}
