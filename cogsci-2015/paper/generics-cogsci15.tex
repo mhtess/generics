@@ -138,15 +138,17 @@ Here, we say that we, as scientists, have perfect uncertainty about what the gen
 
 The results can be seen if Figure \ref{fig:bda1a}. In the ``bare'' condition, the analysis says the threshold is between 0 and 30, but is uncertain where exactly in that range the threshold would be. Critically, in the ``dangerous and distinctive'' context, the analysis infers a lower threshold, less than 10. This matches with the intuition, and the empirical results, that a dangerous and distinctive context allows for the generic to be more permissive (e.g. ``Mosquitos carry West Nile Virus'' is true, even though very few mosquitoes actually do). Finally, and most intriguingly, the analysis infers a 3rd distinct threshold profile for the nondistinctive context.  For this, it says that threshold is greater than 10, but could be as high as 50. This is an overall higher inferred threshold for the nondistinctive category, and an aspect totally missed by standard NHST. 
 
-There is something fundamentally wrong about this analysis, however. Specifically, there is a problem with the cognitive model. The model is a simple model of truth-functional semantics, stating that any situation with a prevalence greater than the threshold will return True, and anything less, will return False. We see the consequences of these assumptions in the data analysis parameter $\phi$. $\phi$ represents the percentage of responses that the data analysis model wants to attribute to guessing. This proportion is somewhere between 40 and 50\%. The amount of guessing is so high because our computational model is inflexible.
-
-
 \begin{figure}
 \centering
     \includegraphics[width=\columnwidth]{fig2_bda1_combined}
     \caption{Inferred threshold for the generic across contexts}
   \label{fig:bda1a}
 \end{figure}
+
+There is something fundamentally wrong about this analysis, however. Specifically, there is a problem with the cognitive model. The model is a simple model of truth-functional semantics, stating that any situation with a prevalence greater than the threshold will return True, and anything less, will return False. We see the consequences of these assumptions in the data analysis parameter $\phi$. $\phi$ represents the percentage of responses that the data analysis model wants to attribute to guessing. This proportion is somewhere between 40 and 50\%. The amount of guessing is so high because our computational model is inflexible.
+
+
+
 
 This can also be seen in the posterior predictive distribution of responses. The model matches the trajectory of the dangerous \& distinct context reasonably well, but is too dichotomous in the other contexts. The correlation between the posterior predictive and the data is $r = 0.86$. 
 
@@ -174,9 +176,9 @@ Rather than just say context gives rise to different thresholds, we should inste
 
 The bayesian data analysis above provides evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the inferred value of the guessing parameter $\phi$ suggest, however, that our model of cognition is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, we propose people have uncertainty about the true threshold and actively reason about this meaning from context. 
 
-To formalize this, we draw on work from the Rational Speech-Act (RSA) theory of communication \cite{Frank2012}. In this framework, a listener infers the meaning of an utterance by a recursive reasoning process, wherein she considers the thought-processes of a speaker whose goal is to be informative. This theory has had tremendous support for providing quantitative predictions of a number of linguistic phenomena including scalar implicature, hyperbole, and multiple class reasoning paradigms \cite{Goodman2013, Kao2014, Tessler2014, Lassiter2014a}. 
+To formalize this, we draw on work from the Rational Speech-Act (RSA) theory of communication \cite{Frank2012}. In this framework, a listener infers the meaning of an utterance by a recursive reasoning process, wherein she considers the thought-processes of a speaker whose goal is to be informative. This theory has had tremendous support for providing quantitative predictions of a number of linguistic phenomena including scalar implicature, hyperbole, and multiple classes of reasoning paradigms \cite{Goodman2013, Kao2014, Tessler2014, Lassiter2014}. 
 
-\citeA{Lassiter2014} proposed an elaboration of the theory to account for interpreting vague, gradable adjectives like \emph{tall}. They propose the meaning of an adjective like \emph{tall} is a standard truth-functional meaning such that the adjective is true if the object in question has a height greater than the threshold $\theta_{tall}$. The suggestion, though, is that the listener has uncertainty about what $\theta_{tall}$ actually is, and infers that value of $\theta_{tall}$ via the same recursive reasoning process. Here, we borrow the same formalism to try account for the uncertainty in generic meaning.
+\citeA{Lassiter2015} proposed an elaboration of the theory to account for interpreting vague, gradable adjectives like \emph{tall}. They propose the meaning of an adjective like \emph{tall} is a standard truth-functional meaning such that the adjective is true if the object in question has a height greater than the threshold $\theta_{tall}$. The suggestion, though, is that the listener has uncertainty about what $\theta_{tall}$ actually is, and infers that value of $\theta_{tall}$ via the same recursive reasoning process. Here, we borrow the same formalism to try account for the uncertainty in generic meaning.
 
 In Church, the model looks like
 
@@ -224,7 +226,7 @@ Thus, we put a bayesian data analysis model over our Rational Speech-Act model o
 			(lambda (context) (uniform 0 1)))
 			
 		(define delta
-			(lambda (context) (uniform 0 20)))
+			(lambda (context) (uniform 0 5)))
 	
 		(define rational-speech-act
 			(lambda ( (gamma context) (delta context) ) 
@@ -236,11 +238,38 @@ Thus, we put a bayesian data analysis model over our Rational Speech-Act model o
 			(map rational-speech-act all-prevalences all-contexts))))
 \end{lstlisting}
 
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{fig4_bda2_hyper}
+    \caption{Hyperprior parameters for lifted-variable RSA model}
+  \label{fig:bda2hyperparams}
+\end{figure}
+
+We can examine the inferred hyperprior parameter values for the Lifted-variable RSA model. $\gamma$ is a measure of central tendency, and of primary concern for this analysis. We can see that if this were the correct model of human cognition, the prior probability of the \emph{dangerous \& distinctive} condition would be heavily skewed towards lower prevalence levels. This makes sense insofar as a distinctive feature is one that is relatively rare. Our intuitions are again confirmed in the inferred distribution of the \emph{nondistinctive} context. A nondistinctive feature is one that is very common. The prior distribution of the \emph{bare} context lies somewhere in between these two extremes: neither distinctive nor nondistinctive.
+
+
+
+
+The posterior predictive distributions marginalizes over the hyperprior parameters. The predictions for the lifted variable RSA model are in Figure \ref{fig:postpred2}. We can see here that model has some persistent uncertain about what the true threshold is and this is manifested in its intermediate endorsement rates for the generic at lower prevalence levels. We reconstruct the curves of Figure \ref{fig:replication} well; the model--data correlation is $r = 0.97$. 
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{fig5_bda2_postpred}
+    \caption{Posterior predictive using lifted-variable RSA}
+  \label{fig:postpred2}
+\end{figure}
+
+
+
+
+
+
+
 \begin{itemize}
 
-\item Emphasize distinctions between bayesian data analysis and bayesian cognition. 
+\item Replace figure 4 (hyperprior parameters) with mean distribution?
 
-\item Condition on Exp 1 data to infer hyperprior parameters $\gamma$ and $\delta$. 
+\item Collapse Figure 3 \& 5 (posterior predictive) into one
 
 \item Exp 2 to confirm $\gamma$ and $\delta$. 
 
