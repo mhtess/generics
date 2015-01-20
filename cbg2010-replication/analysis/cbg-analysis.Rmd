@@ -35,18 +35,18 @@ all.experiments<-rbind(d1,d3)
 
 
 ```{r exp1}
-library(ggplot2)
-library(plyr)
-library(reshape2)
+# library(ggplot2)
+# library(plyr)
+# library(reshape2)
 library(ggthemes)
-library(gridExtra)
-library(bootstrap)
-library(lme4)
-theta <- function(x,xdata,na.rm=T) {mean(xdata[x],na.rm=na.rm)}
-ci.low <- function(x,na.rm=T) {
-  mean(x,na.rm=na.rm) - quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,.025,na.rm=na.rm)}
-ci.high <- function(x,na.rm=T) {
-  quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,.975,na.rm=na.rm) - mean(x,na.rm=na.rm)}
+# library(gridExtra)
+# library(bootstrap)
+# library(lme4)
+# theta <- function(x,xdata,na.rm=T) {mean(xdata[x],na.rm=na.rm)}
+# ci.low <- function(x,na.rm=T) {
+#   mean(x,na.rm=na.rm) - quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,.025,na.rm=na.rm)}
+# ci.high <- function(x,na.rm=T) {
+#   quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,.975,na.rm=na.rm) - mean(x,na.rm=na.rm)}
 
 bool.tonum<-function(bool){abs(as.numeric(bool)*1-2)}
 bootstrap.ci <- function(x){
@@ -910,16 +910,33 @@ x<-melt(test0)
 
 x1<-cbind(x,ldply(strsplit(as.character(x$variable),"_")))
 x1$V2<-factor(x1$V2,levels=c("theta","phi"))
+x1$V1<-factor(x1$V1, levels=c("dangerdistinct","nondistinctive","bare"))
 
-
-ggplot(data=x1,aes(x=value,fill=V1))+
+a<-ggplot(data=subset(x1,V2=='theta'),aes(x=value,fill=V1))+
   geom_density(alpha=0.8)+
-  facet_grid(V2~V1)+
-  theme_bw()+
-  guides(fill=F)+
+ # facet_grid(V2~V1)+
+  theme_paper()+
+#  guides(fill=F)+
   scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
   scale_fill_brewer(type='qual',palette=6)+
-  theme(strip.text.x = element_text(size=14,color='black'))
+  theme(strip.text.x = element_text(size=14,color='black'),
+        legend.position='bottom',
+        legend.direction='horizontal')+
+  guides(fill=guide_legend(title="Context"))+
+  xlab("generic threshold")
+
+b<-ggplot(data=subset(x1,V2=='phi'),aes(x=value))+
+  geom_density(alpha=0.8,fill='grey69')+
+ # facet_grid(V2~V1)+
+  theme_paper()+
+#  guides(fill=F)+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x = element_text(size=14,color='black'))+
+#  guides(fill=guide_legend(title="Context"))+
+  xlab("phi (guessing parameter)")
+
+grid.arrange(a,b,nrow=1)
 
 ```
 
@@ -959,7 +976,7 @@ ggplot(d.tidy,aes(x=value,fill=context))+
 
 ### Listener model w/ beta hyperprior
 
-```{r tfbt.kinder.exp5}
+```{r tfbt.hyperprio.exp5}
 setwd('../models/bayesian_analysis/')
 d<-read.csv(paste('listen_betaHyper2_exp5all_generic_truth_conditions_mh10000_3_alpha3.csv',sep=''),header=F)
 
@@ -1348,6 +1365,9 @@ ddply(d0, .(stim_type),
 ```{r exp9}
 setwd("~/Documents/research/generics/cbg2010-replication/data")
 d<-read.table('cbgR-exp9-trials.tsv',header=T)
+
+#write.csv(d, file='cbgR-exp9-trials.csv')
+
 d$item <- paste(d$stim_color,d$stim_part,sep="_")
 table(d$stim_type,d$item)
 table(d$stim_type,d$stim_part)
@@ -1367,27 +1387,297 @@ ggplot(d,aes(x=factor(truth_num),fill=stim_type))+
 
 #split by first half/second half to look at order effects
 #tc.bs<-bootstrap.ci.tc(d[d$trialNum>15,])
-)
 
 tc.bs<-bootstrap.ci.tc(d)
 
-ggplot(tc.bs, aes(x=factor(stim_prevalence),y=truth_num,
-                  colour=stim_type, group=stim_type))+
-  geom_point(size=3, position=position_dodge(0.5))+
-  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_type),
-              width=0.3,
-              size=0.8,
-              position=position_dodge(0.5))+
-  facet_wrap(~stim_determiner,nrow=3)+
-  ylab("proportion of 'true' responses")+
-  scale_colour_brewer(type='qual',palette=6)+
-  theme(strip.text.x = element_text(size=14,color='black'))+
-  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))
+tc.bs$stim_type<-factor(tc.bs$stim_type,levels=c('danger-distinct','nondistinctive','bare'))
 
+ggplot(tc.bs, aes(x=stim_prevalence,y=truth_num,
+                  colour=stim_type, group=stim_type))+
+  geom_point(size=3, position=position_dodge(4))+
+  geom_line(size=0.5,position=position_dodge(4))+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_type),
+              width=5,
+              size=0.8,
+              position=position_dodge(4))+
+  scale_colour_brewer(type='qual',palette=6)+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))+
+  xlab("XX% of lorches have purple feathers")+
+  ylab('proportion of "true" responses')+
+  coord_fixed(100)
+```
+
+### bayesian data of fixed threshold model
+
+
+```{r tfbtexp9-fixedTheta}
+d<-read.csv(paste('post_wPhi_exp9all_generic_truth_conditions_mh1000_3_alpha3.csv',sep=''),header=F)
+
+
+d.tidy <- d %>%
+  select(V1,V2,V3,V4) %>%
+  rename(phi = V1,
+         danger_distinct = V2,
+         nondistinct = V3,
+         bare = V4) %>%
+  gather(variable,value)
+
+a<-ggplot(subset(d.tidy,variable!='phi'),aes(x=value,fill=variable))+
+  geom_density(alpha=0.8)+
+ # facet_grid(V2~V1)+
+  theme_paper()+
+#  guides(fill=F)+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x = element_text(size=14,color='black'),
+        legend.position='bottom',
+        legend.direction='horizontal')+
+  guides(fill=guide_legend(title="Context"))+
+  xlab("generic threshold")
+
+
+
+b<- ggplot(subset(d.tidy,variable=='phi'),aes(x=value))+
+  geom_density(alpha=0.8,fill='grey10')+
+ # facet_grid(V2~V1)+
+  theme_paper()+
+#  guides(fill=F)+
+  scale_x_continuous(breaks=c(0,.25,.50,.75,1),limits=c(0,1))+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x = element_text(size=14,color='black'))+
+#  guides(fill=guide_legend(title="Context"))+
+  xlab("phi (guessing parameter)")
+
+grid.arrange(a,b,nrow=1)
+ # facet_grid(variable~context)+
+
+```
+
+Posterior predictive for fixed threshold
+
+```{r}
+d.tidy <- d %>%
+  select(V6,V11,V16, V21, V26,
+         V32, V37, V42, V47, V52,
+         V58, V63, V68, V73, V78
+         ) %>%
+  rename(dangerdistinct_10 = V6,
+         dangerdistinct_30 = V11,
+         dangerdistinct_50 = V16,
+         dangerdistinct_70 = V21,
+         dangerdistinct_90 = V26,
+         nondistinct_10 = V32,
+         nondistinct_30 = V37,
+         nondistinct_50 = V42,
+         nondistinct_70 = V47,
+         nondistinct_90 = V52,
+         bare_10 = V58,
+         bare_30 = V63,
+         bare_50 = V68,
+         bare_70 = V73,
+         bare_90 = V78) %>% 
+  gather(evidence, response)%>%
+  separate(evidence, into = c("context","prevalence"), sep="_")
+
+d.tidy$value<-as.numeric(d.tidy$response=='generic')
+
+ddply(d.tidy , .(context,prevalence), summarise,
+      mean = sum(response=='generic') / length(response))
+
+d.stats<-ddply(d.tidy, .(context,prevalence), summarise,
+      mean = mean(value),
+      CIlow=quantile(value,probs=0.025),
+      CIhigh=quantile(value,probs=0.975))
+
+
+# pp.stats<-ddply(pp.tidy, .(context,prevalence), summarise,
+#       mean = mean(value),
+#       CIlow = quantile(value,probs=0.025),
+#       CIhigh = quantile(value,probs=0.975))
+
+
+
+
+d.stats$context<-factor(d.stats$context,levels=c('dangerdistinct','nondistinct','bare'), labels=c('danger_distinct','nondistinctive','bare'))
+d.stats$prevalence<-as.numeric(d.stats$prevalence)
+
+ggplot(data=d.stats,aes(x=prevalence,y=mean,color=context,group=context))+
+  geom_point(size=3, position=position_dodge(2))+
+  geom_line(size=0.5,position=position_dodge(2))+
+#       geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
+#               width=0.5,
+#               size=3)+
+  scale_colour_brewer(type='qual',palette=6)+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1.05))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))+
+  xlab("XX% of lorches have purple feathers")+
+  ylab('proportion of "true" responses')+
+  coord_fixed(100)
+
+
+tc.bs<-rename(tc.bs, prevalence=stim_prevalence, context=stim_type, pr.true=truth_num)  
+
+m<-merge(d.sum,tc.bs, by=c("context", "prevalence"))
+with(m, cor(pr.true.x,pr.true.y))
 
 ```
 
 
+### TFBT on Listener1 model with $\Beta$ Hyperprior 
 
 
+```{r}
+setwd('../models/bayesian_analysis/')
+# d<-read.csv(paste('listen_betaHyper_exp9all_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=T)
+
+d<-read.csv(paste('listen_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F)
+
+
+# 
+# params.tidy <- d %>%
+#   select(danger_gamma,danger_delta,nondistinct_gamma,nondistinct_delta,
+#          bare_gamma,bare_delta) %>%
+#   gather(variable,value) %>%
+#   separate(variable,into=c('context','variable') ,sep="_")
+
+params.tidy <- d %>%
+  select(V2,V3,V5,V6,V8,V9) %>%
+  rename(dangerdistinct_gamma = V2,
+         dangerdistinct_delta = V3,
+         nondistinct_gamma = V5,
+         nondistinct_delta = V6,
+         bare_gamma=V8,
+         bare_delta=V9) %>%
+  gather(variable,value) %>%
+  separate(variable,into=c('context','variable') ,sep="_")
+
+#phi.tidy <- d %>% select(phi)
+phi.tidy <- d %>% select(V1) %>% rename(phi=V1)
+
+
+params.tidy$variable<-factor(params.tidy$variable,levels=c("gamma","delta"))
+params.tidy$context<-factor(params.tidy$context,
+                            levels=c("dangerdistinct","nondistinct","bare"))
+
+myBreaks <- list(a = seq(0,1,0.1), b=seq(0,5,0.5))
+params.hist <- mapply(function(x, b) geom_histogram(data = x, breaks = b,position=position_dodge(), alpha=0.8), 
+              dlply(params.tidy, .(variable)), myBreaks)
+
+range_act <- c(0,1)
+
+range(subset(params.tidy,variable=='gamma')$value)
+  
+  range(, 
+                   range(subset(params.tidy,variable=='delta')$value))
+
+dummy <- data.frame(value = range_act,
+                    variable = "gamma", 
+                    context = c("dangerdistinct","nondistinct","bare"),
+                    stringsAsFactors=FALSE)
+
+ggplot(params.tidy,aes(x=value,fill=context))+
+   geom_histogram(alpha=0.8)+
+#  geom_blank(data=dummy)+
+  #geom_density(alpha=0.8)+
+#  params.hist + 
+  facet_grid(context~variable,scale='free')+
+  theme_paper()+
+  guides(fill=F)+
+  xlab("inferred parameter value")+
+  scale_fill_brewer(type='qual',palette=6)
+
+
+ggplot(phi.tidy,aes(x=phi))+
+  geom_density(alpha=0.8,fill='grey10')+
+  theme_paper()+
+  xlab("phi")
+```
+
+With posterior predictive.
+
+```{r postpred.liftedvar.exp9}
+
+pp.tidy<- d %>%
+  select(V12,V13,V14,V15,V16,
+         V18,V19,V20,V21,V22,
+         V24,V25,V26,V27,V28) %>%
+  rename(danger_10= V12,
+         danger_30= V13,
+         danger_50 = V14,
+         danger_70 = V15,
+         danger_90 = V16,
+         nondistinct_10 = V18,
+         nondistinct_30 = V19,
+         nondistinct_50 = V20,
+         nondistinct_70 = V21,
+         nondistinct_90 = V22,
+         bare_10 = V24,
+         bare_30= V25,
+         bare_50 = V26,
+         bare_70 = V27,
+         bare_90 = V28) %>%
+  gather(variable,value) %>%
+  separate(variable,into=c('context','prevalence') ,sep="_")
+
+pp.stats<-ddply(pp.tidy, .(context,prevalence), summarise,
+      mean = mean(value),
+      CIlow = quantile(value,probs=0.025),
+      CIhigh = quantile(value,probs=0.975))
+
+
+pp.stats$context<-factor(pp.stats$context,levels=c('danger','nondistinct','bare'), labels=c('danger-distinct','nondistinctive','bare'))
+pp.stats$prevalence<-as.numeric(pp.stats$prevalence)
+
+ggplot(data=pp.stats,aes(x=prevalence,y=mean,color=context,group=context))+
+  geom_point(size=3, position=position_dodge(4))+
+  geom_line(size=0.5,position=position_dodge(4))+
+  geom_errorbar(aes(ymin=CIlow,ymax=CIhigh,colour=context),
+              width=5,
+              size=0.8,
+              position=position_dodge(4))+
+  scale_colour_brewer(type='qual',palette=6)+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))+
+  xlab("XX% of lorches have purple feathers")+
+  ylab('proportion of "true" responses')+
+  coord_fixed(100)
+
+
+# tc.bs<-rename(tc.bs, prevalence=stim_prevalence, context=stim_type, pr.true=truth_num)  
+
+m<-merge(pp.stats,tc.bs, by=c("context", "prevalence"))
+with(m, cor(mean,pr.true))
+
+ggplot(data=m, aes(x=mean, y=pr.true,color=context))+
+  geom_point(size=3)+
+  geom_abline(intercept=0,slope=1,linetype=3)+
+  geom_errorbarh(aes(xmin=CIlow,xmax=CIhigh),
+              height=0.04,
+              size=0.5)+
+    geom_errorbar(aes(ymin=YMin,ymax=YMax),
+              width=0.04,
+              size=0.5)+
+  theme_paper()+
+    scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1.05))+
+    scale_x_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1.05))+
+  guides(color=guide_legend(title="Context"))+
+  xlab("model posterior predictive")+
+  ylab('experiment 1 data')+
+  coord_fixed(1)+
+    scale_colour_brewer(type='qual',palette=6)
+
+
+
+
+```
 
