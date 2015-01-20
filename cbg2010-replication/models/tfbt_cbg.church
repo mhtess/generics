@@ -21,12 +21,14 @@
 ; time church -a 'truth_conditions,most,danger,1000,100,3' tfbt_cbg.church &
 ; time church -a 'truth_conditions,most,irrelevant,1000,100,3' tfbt_cbg.church &
 
-; time church -a 'truth_conditions,generic,bare,1000,3,3,5' tfbt_cbg.church &
 ; time church -a 'truth_conditions,generic,dangerdistinct,1000,3,3,5' tfbt_cbg.church &
 ; time church -a 'truth_conditions,generic,nondistinctive,1000,3,3,5' tfbt_cbg.church &
 ; time church -a 'truth_conditions,generic,bare,1000,3,3,4' tfbt_cbg.church &
 ; time church -a 'truth_conditions,generic,distinct,1000,3,3,4' tfbt_cbg.church &
 ; time church -a 'truth_conditions,generic,irrelevant,1000,3,3,4' tfbt_cbg.church &
+
+
+; time church -a 'truth_conditions,generic,all,100,50,3,9' tfbt_cbg.church &
 
 
 (define args (regexp_split argstring ","))
@@ -44,7 +46,7 @@
 (define QUD (lambda (task quantifier)
               (case task
                     (('implied_prevalence) 'how-many)
-                    (('truth_conditions) quantifier))))
+                    (('truth_conditions) 'truth))))
 
 (define uniform-score (lambda (lowerbound upperbound)
                         (- 0 (log (- upperbound lowerbound))))) ;;assuming values are in the range
@@ -59,7 +61,8 @@
 
 ;(define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
 ;(define data-file (string-append data-path 'cbgR-exp4_anonymized-trials.csv))
-(define data-file (string-append data-path (string-append 'cbgR-exp expnum '_anonymized-trials.csv)))
+;(define data-file (string-append data-path (string-append 'cbgR-exp expnum '_anonymized-trials.csv)))
+(define data-file (string-append data-path (string-append 'cbgR-exp expnum '-trials.csv)))
 
 (define alldata (read-csv data-file))
 
@@ -76,6 +79,7 @@
 
 (define all-contexts (unique (map fifth (rest alldata))))
 
+(display all-contexts)
 
 (define data-subset 
   (if (equal? context 'all)
@@ -188,6 +192,7 @@
    (lambda (gamma delta QUD evidence)
      ;; input could be utterance (for listener / implied_prevalence)
      ;; or state (for speaker / truth_conditions)
+
      (define (theta-meaning word)
        (case word
              (('most-theta) most-theta)
@@ -206,6 +211,9 @@
     (define pseudocount_alpha (* gamma delta))
     (define pseudocount_beta (* (- 1 gamma) delta))
 
+    ; (display gamma)
+    ; (display delta)
+
     (define (beta-rv) (* 10 (beta pseudocount_alpha pseudocount_beta))) ;; multiplied by 10 so i can use floor to bin
     (define beta-samples (repeat 1000 beta-rv))
     (define bins '(0 1 2 3 4 5 6 7 8 9))
@@ -219,6 +227,16 @@
     ; multiply by 10 to be consistent with other state prior above
     (define (state-prior) (* (multinomial bins quintile-probs) 10))
 
+    (define speaker2
+      (mem (lambda (state)
+      (enumeration-query
+
+        (define words (uniform-draw (list 'generic 'anti-generic)))
+
+       words
+
+       (equal? state (apply multinomial (listener1 words)))))))
+
 
      (define listener1
        (mem (lambda (words) ;; listener1 does do inference over theta
@@ -226,8 +244,10 @@
                (define state (state-prior))
                (define generic-theta (theta-prior))
 ;               (define QUD-val ((meaning QUD) state (theta QUD)))
+          ;      (define blah (display generic-theta))
 
-               generic-theta
+ ;              generic-theta
+                state
 
                (equal? words 
                 (apply multinomial (raise-to-power (speaker1 state generic-theta) 
@@ -237,7 +257,9 @@
        (mem (lambda (state generic-theta)
               (enumeration-query
                
-                (define words (uniform-draw (list 'generic 'mu)))
+      ;          (define words (uniform-draw (list 'generic 'mu)))
+              (define words (uniform-draw (list 'generic 'anti-generic)))
+
                 ;(define words (uniform-draw (list 'generic-lorch 'generic-other)))
 
                ; (define words
@@ -266,10 +288,9 @@
                ((meaning words) state generic-theta)))))
 
 
-     ; (if (equal? QUD 'how-many)
-     ;     (listener1 evidence)
-     ;     (speaker1 evidence))
-    (listener1 'generic))))
+     (if (equal? QUD 'truth)
+          (speaker2 evidence)
+          (listener1 'generic)))))
 
 (define tfbt-model
   ; (lambda (QUD utterance context)
@@ -284,7 +305,7 @@
      ;                                 (('some) (list phi (some-theta context)))
      ;                                 (('generic) (list phi (generic-theta context))))))
 
-     (define query-statement (lambda (context) (list phi (gamma context) (delta context))))
+     (define query-statement (lambda (context) (list (gamma context) (delta context))))
 
 
      (define phi (uniform 0 1)) ;; guessing parameter
@@ -293,13 +314,17 @@
      ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
      ;(define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
 
-     (define gamma (mem (lambda (context) (uniform 0 1))))
-     (define delta (mem (lambda (context) (uniform 0 10))))
+     ; (define gamma (mem (lambda (context) (uniform 0 1))))
+     ; (define delta (mem (lambda (context) (uniform 0 5))))
+
+     (define gamma (mem (lambda (context) (uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
+     (define delta (mem (lambda (context) (uniform-draw '(0.01 0.1 0.25 0.5 0.75 1 1.5 2 3 4 5 6 7 8)))))
+
 
 
      (define alt-words
        (case QUD
-             (('generic)  (list 'generic 'anti-generic))
+             (('truth)  (list 'generic 'anti-generic))
              (('some) (list 'some 'none))
              (('most) (list 'most 'anti-most))
              (('how-many) (list 'most 'some 'generic))))
@@ -308,80 +333,116 @@
      ; for truth_conditions task, get model-predictions for each of the prevalence levels
 
      ;;; for speaker model
-     ; (define model-predictions
-     ;  (if (equal? context 'all)
-     ;    (map 
-     ;      (lambda (unique-evidence-data-for-one-context context)
-     ;        (map 
-     ;          (lambda (evidence) 
-     ;          (cognitive-model (generic-theta context) (most-theta context) (some-theta context) QUD evidence))
-     ;        unique-evidence-data-for-one-context))
-     ;    unique-evidence-data all-contexts)
-     ;   (map 
-     ;    (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
-     ;    unique-evidence-data)))
-     ; ;; compute the score for each data point, and sum then together
-     ; (define scores
-     ;   (lambda (truthcond-byprev modelpred-byprev)
-     ;     (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
-     ;                                                     (second alt-words))) truthcond-byprev)]
-     ;            [match (lambda (x) (position (first modelpred-byprev) x))]
-     ;            [prob (lambda (x) (if (= (match x) -1) 0
-     ;                                  (list-ref (second modelpred-byprev) (match x))))]
-     ;            [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) x))))])
-     ;       (sum (map score-marginalized-phi data-as-quantifier)))))
-
-     ;;; for listener model
      (define model-predictions
       (if (equal? context 'all)
         (map 
           (lambda (unique-evidence-data-for-one-context context)
-            ;; lang-model returns model predictions, this is an enumerated posterior over thetas
-            (let* ([lang-model  (cognitive-model (gamma context) (delta context) 'how-many 'generic)]
-              ;; zipped preds reformats the predictions into tuples of (theta1 prob1) ... (thetaN probN)
-                   [zipped-preds (zip (first lang-model) (second lang-model))])
-              ;; for a given context, we have model predictions; we map over evidence levels
-              (map (lambda (evidence) 
-             ;   ;; for an evidence level, we marginalize over posterior_thetas
-             ;   ;; returning p(yes)
-                 (sum (map second (filter (lambda (x) (generic evidence (first x))) zipped-preds))))
-               unique-evidence-data-for-one-context)
-            ))
-        unique-evidence-data all-contexts)))
-
+            (map 
+              (lambda (evidence) 
+              (cognitive-model (gamma context) (delta context) QUD evidence))
+            unique-evidence-data-for-one-context))
+        unique-evidence-data all-contexts)
+       (map 
+        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
+        unique-evidence-data)))
      ;; compute the score for each data point, and sum then together
      (define scores
        (lambda (truthcond-byprev modelpred-byprev)
-         (let* ([prob (lambda (x) (if x modelpred-byprev (- 1 modelpred-byprev)))]
+         (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
+                                                         (second alt-words))) truthcond-byprev)]
+                [match (lambda (x) (position (first modelpred-byprev) x))]
+                [prob (lambda (x) (if (= (match x) -1) 0
+                                      (list-ref (second modelpred-byprev) (match x))))]
+                [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) x))))])
+           (sum (map score-marginalized-phi data-as-quantifier)))))
+
+     ;; for speaker model 
+     ; compute the score for each data point, and sum then together
+     (define scores
+       (lambda (truthcond-byprev modelpred-byprev)
+         (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
+                                                         (second alt-words))) truthcond-byprev)]
+                [match (lambda (x) (position (first modelpred-byprev) x))]
+                [prob (lambda (x) (if (= (match x) -1) 0
+                                      (list-ref (second modelpred-byprev) (match x))))]
                 [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
-           (sum (map score-marginalized-phi truthcond-byprev)))))
-       ;   (map prob truthcond-byprev))))
+           (sum (map score-marginalized-phi data-as-quantifier)))))
 
      (define dummyvar-for-factoring
       (if (equal? context 'all)
-       (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))))
+       (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
+       (factor (sum (map scores sorted-truthcond-data model-predictions)))))
 
-     ;;; for speaker model 
-     ;; compute the score for each data point, and sum then together
+
+     (define posterior-predictive
+      (if (equal? context 'all)
+        (map 
+          (lambda (unique-evidence-data-for-one-context context)
+            (map 
+              (lambda (evidence) 
+              (cognitive-model (gamma context) (delta context) QUD evidence))
+            unique-evidence-data-for-one-context))
+        unique-evidence-data all-contexts)
+       (map 
+        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
+        unique-evidence-data)))
+
+     ;;; for listener model
+     ; (define model-predictions
+     ;  (if (equal? context 'all)
+     ;    (map 
+     ;      (lambda (unique-evidence-data-for-one-context context)
+     ;        ;; lang-model returns model predictions, this is an enumerated posterior over thetas
+     ;        (let* ([lang-model  (cognitive-model (gamma context) (delta context) 'how-many 'generic)]
+     ;          ;; zipped preds reformats the predictions into tuples of (theta1 prob1) ... (thetaN probN)
+     ;               [zipped-preds (zip (first lang-model) (second lang-model))])
+     ;          ;; for a given context, we have model predictions; we map over evidence levels
+     ;          (map (lambda (evidence) 
+     ;         ;   ;; for an evidence level, we marginalize over posterior_thetas
+     ;         ;   ;; returning p(yes)
+     ;             (sum (map second (filter (lambda (x) (generic evidence (first x))) zipped-preds))))
+     ;           unique-evidence-data-for-one-context)
+     ;        ))
+     ;    unique-evidence-data all-contexts)))
+
+     ; ;; compute the score for each data point, and sum then together
      ; (define scores
      ;   (lambda (truthcond-byprev modelpred-byprev)
-     ;     (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
-     ;                                                     (second alt-words))) truthcond-byprev)]
-     ;            [match (lambda (x) (position (first modelpred-byprev) x))]
-     ;            [prob (lambda (x) (if (= (match x) -1) 0
-     ;                                  (list-ref (second modelpred-byprev) (match x))))]
-     ;            [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) x))))])
-     ;       (sum (map score-marginalized-phi data-as-quantifier)))))
+     ;     (let* ([prob (lambda (x) (if x modelpred-byprev (- 1 modelpred-byprev)))]
+     ;            [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
+     ;       (sum (map score-marginalized-phi truthcond-byprev)))))
+     ;   ;   (map prob truthcond-byprev))))
 
      ; (define dummyvar-for-factoring
      ;  (if (equal? context 'all)
-     ;   (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
-     ;   (factor (sum (map scores sorted-truthcond-data model-predictions)))))
+     ;   (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))))
+
+
+     ;  (define posterior-predictive
+     ;  (if (equal? context 'all)
+     ;    (map 
+     ;      (lambda (unique-evidence-data-for-one-context context)
+     ;        ;; lang-model returns model predictions, this is an enumerated posterior over thetas
+     ;        (let* ([lang-model  (cognitive-model (gamma context) (delta context) 'how-many 'generic)]
+     ;          ;; zipped preds reformats the predictions into tuples of (theta1 prob1) ... (thetaN probN)
+     ;               [zipped-preds (zip (first lang-model) (second lang-model))])
+     ;          ;; for a given context, we have model predictions; we map over evidence levels
+     ;          (map (lambda (evidence) 
+     ;         ;   ;; for an evidence level, we marginalize over posterior_thetas
+     ;         ;   ;; returning p(yes)
+     ;             (sum (map second (filter (lambda (x) (generic evidence (first x))) zipped-preds))))
+     ;           unique-evidence-data-for-one-context)
+     ;        ))
+     ;    unique-evidence-data all-contexts)))
 
 
 
+
+    (list phi
      (if (equal? context 'all)
       (map (lambda (c) (query-statement c)) all-contexts))
+     posterior-predictive
+     )
 ;; for fixed threshold model
      ; (if (equal? context 'all)
      ;  (map (lambda (c) (query-statement utterance c))
@@ -392,53 +453,19 @@
 
      true)))
 
-;; truth conditions task: compute mean acceptance rate at each prevalence level
-;(map (lambda (x) (mean (map boolean->number x))) sorted-truthcond-data)
-; (define header (flatten (list 
-;   (map (lambda (y) (map (lambda (x) (string-append x '_ y)) '(phi theta))) all-contexts)
-;   )))
 
 
-;(define test (cognitive-model 5 4 'how-many 'generic))
-; (display test)
+;(cognitive-model 0.3 1 'truth 30)
 
-
-;(cognitive-model 1 1 'how-many 'generic)
-
-;(list (QUD task quantifier) quantifier)
-;(tfbt-model (QUD task quantifier) quantifier)
 (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
-samples
 (define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
 
 
-(define output-file-name (string-append  output-path 'listen_betaHyper2_exp expnum context '_ quantifier '_ task 
-    '_mh mh_samples '_ mh_lag '_alpha speaker-optimality '.csv))
+(define output-file-name (string-append  output-path 'speak2_betaHyper_discreteHyper_exp expnum context '_ quantifier '_ task 
+     '_mh mh_samples '_ mh_lag '_alpha speaker-optimality '.csv))
 
-; (define output-file-name (string-append  output-path 'post_wPhi_exp expnum context '_ quantifier '_ task 
-;     '_mh mh_samples '_ mh_lag '_alpha alpha '.csv))
- 
-(write-csv samples output-file-name)
-; (display all-contexts)
-(define complete? 'complete)
-complete?
-
-
-
-
-;(cognitive-model 3 5 0 'how-many 'most)
-;(length simplified-data)
-;(length simplified-data)
-;super-simplified-data
-;; cbg analysis
-; (define inner-product (lambda (lst)
-;   (sum (map (lambda (x y) (* x y)) (first lst) (second lst)))))
-
-; (define normalize (lambda (lst)
-;   (map (lambda (x) (/ x (sum lst))) lst)))
-
-; (define (gen-probs model-preds) 
-;   (let ([gen-pos (map (lambda (lst) (position (first lst) utterance)) model-preds)])
-;     (map (lambda (y i) (if (< i 0) 0 (list-ref (second y) i))) model-preds gen-pos)))
+ (write-csv samples output-file-name)
+ (define complete? 'complete)
+ complete?
 
 
