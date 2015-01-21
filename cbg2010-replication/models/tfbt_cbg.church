@@ -258,7 +258,9 @@
               (enumeration-query
                
       ;          (define words (uniform-draw (list 'generic 'mu)))
-              (define words (uniform-draw (list 'generic 'anti-generic)))
+              (define words (if (equal? QUD 'truth)
+                              (uniform-draw (list 'generic 'anti-generic))
+                              (uniform-draw (list 'generic 'mu))))
 
                 ;(define words (uniform-draw (list 'generic-lorch 'generic-other)))
 
@@ -285,7 +287,12 @@
                ;QUD-val
                state
 
-               ((meaning words) state generic-theta)))))
+               (case words
+                (('generic) ((meaning words) state generic-theta))
+                (('most) ((meaning words) state 50))
+                (('some) ((meaning words) state 1))
+                (('anti-generic) ((meaning words) state generic-theta))
+                (('mu) ((meaning words) state null)))))))
 
 
      (if (equal? QUD 'truth)
@@ -318,7 +325,7 @@
      ; (define delta (mem (lambda (context) (uniform 0 5))))
 
      (define gamma (mem (lambda (context) (uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
-     (define delta (mem (lambda (context) (uniform-draw '(0.01 0.1 0.25 0.5 0.75 1 1.5 2 3 4 5 6 7 8)))))
+     (define delta (mem (lambda (context) (uniform-draw '(0.01 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
 
 
 
@@ -374,18 +381,26 @@
        (factor (sum (map scores sorted-truthcond-data model-predictions)))))
 
 
-     (define posterior-predictive
+     (define speaker-predictive
       (if (equal? context 'all)
         (map 
           (lambda (unique-evidence-data-for-one-context context)
             (map 
               (lambda (evidence) 
-              (cognitive-model (gamma context) (delta context) QUD evidence))
+              (cognitive-model (gamma context) (delta context) 'truth evidence))
             unique-evidence-data-for-one-context))
         unique-evidence-data all-contexts)
        (map 
         (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
         unique-evidence-data)))
+
+
+     (define listener-predictive
+      (if (equal? context 'all)
+        (map 
+          (lambda (context)
+            (cognitive-model (gamma context) (delta context) 'how-many 'generic))
+        all-contexts)))
 
      ;;; for listener model
      ; (define model-predictions
@@ -441,7 +456,8 @@
     (list phi
      (if (equal? context 'all)
       (map (lambda (c) (query-statement c)) all-contexts))
-     posterior-predictive
+     speaker-predictive
+     listener-predictive
      )
 ;; for fixed threshold model
      ; (if (equal? context 'all)
@@ -461,7 +477,7 @@
 (define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
 
 
-(define output-file-name (string-append  output-path 'speak2_betaHyper_discreteHyper_exp expnum context '_ quantifier '_ task 
+(define output-file-name (string-append  output-path 'speak_listenDifAlt_betaHyper_discreteHyper_exp expnum context '_ quantifier '_ task 
      '_mh mh_samples '_ mh_lag '_alpha speaker-optimality '.csv))
 
  (write-csv samples output-file-name)
