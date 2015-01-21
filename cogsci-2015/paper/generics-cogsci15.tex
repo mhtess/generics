@@ -89,7 +89,7 @@ I know there's bipartisan support in this chamber. Members of both parties have 
 
 \section{Introduction}
 
-Generic meanings are hard to pin down.  Consider President Obama's remark during the State of the Union Address. The second sentence is a generic statement about \emph{Members of both parties}. It invites the question: ``Exactly how many members told you this?'' President Obama's statement is conceivably true  for a range of possible values. At the same time, he is not a man to waste words, and so why does he go through the trouble of saying such a statement? Using our knowledge of the world---and the state of the Union---we can infer that probably not that many members have and probably that he would like us to think that many members have.
+Generic meanings are hard to pin down.  Consider President Obama's remark during the State of the Union Address. The second sentence is a generic statement about \emph{Members of both parties}. It invites the question: ``Exactly how many members told you this?'' President Obama's statement is conceivably true  for a range of possible values. At the same time, he is not a man to waste words, and so why does he go through the trouble of saying such a statement? In this paper, we will see that both the context in which his words are uttered and his effort in producing this statement contribute to the meaning we derive. % 
 
 Generic statements are puzzling because they accommodate a range of quantification. On one hand, generics would seem to suggest an almost universal quantification, as in ``Dogs bark''. Others, like ``Mosquitos carry West Nile virus'', express a relation that applies only to a small subset of the kind. It is perhaps this inherent uncertainty that leads generics to be so widespread in natural language. 
 
@@ -321,7 +321,7 @@ We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Tu
 
 Our procedure was identical to Experiment 1 in all aspects except the question that was asked of the participant\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-8.html}}. 
 
-Participants were presented with the following piece of information ``The island has 100,000 other animals on it.'' and asked the following question: ``How many other animals do you think have purple feathers?''
+In addition to the prevalence and contextual information, participants were presented with the following additional piece of information ``The island has 100,000 other animals on it.'' and asked the following question: ``How many other animals do you think have purple feathers?''
 
 \subsubsection{Results}
 
@@ -338,8 +338,35 @@ Experiment 2 recovered the shape of the inferred prior distributions from the li
 
 \section{Asymmetries in dependent measures}
 
-CBG also performed analyses testing the relation between two dependent measures for understanding generics. In this latter analysis, they found that the quantifier ``most'' expressed a symmetry between these two dependent measures, while the generic had an asymmetry \footnote{This asymmetry has also been replicated in adults and observed in children \cite{Brandone2014}}.
+CBG showed how contexts affects the endorsement for generic statements. An additional concern of their experiments surrounded the relation between two dependent measures for understanding generics. One dependent measure was the ``truth conditions'', or \emph{sentence verification} measure that we've been considering up to this point. The other was an ``implied prevalence'', or \emph{sentence interpretation} dependent measure. The latter was collected by giving participants the generic statement (plus, any additional contextual information), and asking the participant ``What percentage of lorches have purple feathers?''
 
+In their analysis, they found that the quantifier ``most'' expressed a symmetry between the two dependent measures, while the generic had an asymmetry\footnote{This asymmetry has since been replicated in adults and observed in children \cite{Brandone2014}}. In this section, we show how you can recover an asymmetry between these dependent measures by considering communicative roles and Questions Under Discussion (QUDs).
+
+\subsection{Speak and listen}
+
+\citeA{Degen2014} argued that differences between dependent measures in experimental effects of pragmatic inference can be accounted for by formal, probabilistic models of pragmatics. In particular, they suggest the \emph{sentence verification} measure is most closely related to production, and should therefore be modeled as a speaker. Additionally, \emph{sentence interpretation} was shown to be best accounted for by a model of a listener. We apply this same logic to the CBG paradigm to show how the asymmetry can come about from these different dependent measures.
+
+Figure \ref{fig:asymmetry} \red{doesn't show what we want it to show... yet}.
+
+
+
+\section{Discussion}
+
+We have shown how a Bayesian model of language understanding, motivated by contextual variation of the effective threshold of the generic statement, can explain the data. We have used technique in Bayesian data analysis to help arbitrate between two cognitive theories. The first was a simple theory that proposed that a generic was akin to some alien quantifier. This quantifier behaves like other quantifiers in that it has a fixed-threshold semantics. The only thing special about the generic is that the threshold is different for different contexts. We believe this is a tacit assumption of many approaches, but that this assumption lay hidden behind NHST of semantic content.
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{exp9_postpred_speakListen_asymmetry}
+    \caption{Symmetries and asymmetries among dependent measures and quantifiers.}
+  \label{fig:asymmetry}
+\end{figure}
+
+The alternative theory was that there is no known generic-threshold, even within a given context. There is only uncertainty, and though that uncertainty may be reduced by further contextual information, it never completely evaporates. Instead, we are only left with a posterior belief distribution over possible thresholds as well as a posterior belief distribution over possible worlds. 
+
+In this paper, we used techniques of both Bayesian Cognitive Science and Bayesian Data Analysis. The former helped us develop a rich, formal theory of language understanding. These sorts of theories have implications for psychology and linguistics. The latter helped us make inferences about our theories. Bayesian Data Analysis is crucial to make assumptions explicit (e.g. about fixed-threshold semantics) and clean up our data (e.g. discounting behavior that can conceivably be attributed to guessing). Together, they embody a manifestation of a more general philosophy of science: making assumptions explicit and beginning our science by announcing our uncertainty.
+
+What we're left is an explanation that not all pieces of language need definite semantic content. Mr. Obama's proclamation and the very fact that he went through the trouble to say it suggests that perhaps many members of Congress are able to talk to each other. From another angle, though, 
+we can use our knowledge of the world---and the Union---to determine that ``Members of both parties'' supporting Mr. Obama is probably a pretty rare feature; perhaps it would be distinctive of our time (relative to the past). By this logic, the threshold for validly producing the generic could be quite low.  But maybe we shouldn't spend so much energy inferring the threshold, and instead, listen to hear what his other words may suggest.
 
 %\begin{itemize}
 %
