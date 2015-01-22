@@ -118,14 +118,13 @@
       (map (lambda (y) (map (lambda (x) (last (but-last x))) y)) data-subset)
       (map (lambda (x) (last (but-last x))) data-subset)))
 
+(define nearest-ten (lambda (x) (* 10 (round (/ (string->number x) 10)))))
+
 (define implied-query-data 
     (if (equal? context 'all)
-      (map (lambda (y) (map (lambda (x) (last (but-last x))) y)) implied-subset)
-      (map (lambda (x) (last (but-last x))) implied-subset)))
+      (map (lambda (y) (map (lambda (x) (nearest-ten (last (but-last x)))) y)) implied-subset)
+      (map (lambda (x) (nearest-ten (last (but-last x)))) implied-subset)))
 
-;(display implied-query-data)
-
-(display (map (lambda (lst) (mean (map string->number lst))) implied-query-data))
 
 ;(define evidence-data (map (lambda (x) (string->number (last (but-last (but-last (but-last x)))))) data-subset))
 (define evidence-data 
@@ -245,7 +244,7 @@
 
     (define (beta-rv) (* 10 (beta pseudocount_alpha pseudocount_beta))) ;; multiplied by 10 so i can use floor to bin
     (define beta-samples (repeat 1000 beta-rv))
-    (define bins '(0 1 2 3 4 5 6 7 8 9))
+    (define bins '(0 1 2 3 4 5 6 7 8 9 10))
     (define quintile-hist (lambda (x bins nsamp)
                             (map (lambda (n) (/ (length (filter (lambda (i) 
                               (= (floor i) n)) x)) nsamp)) bins)))
@@ -346,7 +345,7 @@
 
      (define phi (uniform 0 1)) ;; guessing parameter
 
-     (define speaker-optimality (uniform 0 5))  
+     ;(define speaker-optimality (uniform 0 5))  
 
      ;(define generic-theta (mem (lambda (context) (if (equal? QUD 'generic) (uniform 0 100) 'null))))
      ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
@@ -371,6 +370,7 @@
      ; for truth_conditions task, get model-predictions for each of the prevalence levels
 
      ;;; for speaker model
+     ;;; condition on truth_conditions data
      (define model-predictions
       (if (equal? context 'all)
         (map 
@@ -410,6 +410,35 @@
       (if (equal? context 'all)
        (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
        (factor (sum (map scores sorted-truthcond-data model-predictions)))))
+
+
+
+     ;;; condition on exp3 (implied prevalence) data
+      (define implied_prev-predictions
+        (if (equal? context 'all)
+          (map 
+            (lambda (context)
+              (cognitive-model (gamma context) (delta context) 'how-many 'generic))
+          all-contexts)
+            (cognitive-model (gamma context) (delta context) 'how-many 'generic)))
+
+     (define scores-for-implied
+       (lambda (data modelpred)
+          (let* ([match (lambda (x) (position (first modelpred) x))]
+                [prob  (lambda (x) (if (= (match x) -1) 0
+                                      (list-ref (second modelpred) (match x))))]
+                [score-marginalized-phi 
+                  (lambda (x) (log (+ (* phi (/ 1 (length (first modelpred)))) (* (- 1 phi) (prob x)))))])
+
+           (sum (map score-marginalized-phi data)))))
+     
+     ;(define blah (display context))
+     (define factoring-implied_prev
+      (if (equal? context 'all)
+        (factor (sum (flatten (map (lambda (y x) (scores-for-implied y x)) implied-query-data implied_prev-predictions))))
+        (factor (scores-for-implied implied-query-data implied_prev-predictions))))
+
+
 
 
      (define speaker-predictive
@@ -489,6 +518,7 @@
       (map (lambda (c) (query-statement c)) all-contexts))
      speaker-predictive
      listener-predictive
+     speaker-optimality
      )
 ;; for fixed threshold model
      ; (if (equal? context 'all)
@@ -508,7 +538,7 @@
 (define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
 
 
-(define output-file-name (string-append  output-path 'speak_listenDifAlt_betaHyper_discreteHyper_exp expnum context '_ quantifier '_ task 
+(define output-file-name (string-append  output-path 'speak_listenDifAlt_condition2tasksChain2_betaHyper_discreteHyper_exp expnum context '_ quantifier '_ task 
      '_mh mh_samples '_ mh_lag '_alpha speaker-optimality '.csv))
 
  (write-csv samples output-file-name)
