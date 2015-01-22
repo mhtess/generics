@@ -28,7 +28,7 @@
 ; time church -a 'truth_conditions,generic,irrelevant,1000,3,3,4' tfbt_cbg.church &
 
 
-; time church -a 'truth_conditions,generic,all,100,50,3,9' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,all,100,50,1,9' tfbt_cbg.church &
 
 
 (define args (regexp_split argstring ","))
@@ -62,9 +62,15 @@
 ;(define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
 ;(define data-file (string-append data-path 'cbgR-exp4_anonymized-trials.csv))
 ;(define data-file (string-append data-path (string-append 'cbgR-exp expnum '_anonymized-trials.csv)))
+
 (define data-file (string-append data-path (string-append 'cbgR-exp expnum '-trials.csv)))
 
+(define implied-data-file (string-append data-path 'cbgR-exp3_anonymized-trials_noContext.csv))
+
+
 (define alldata (read-csv data-file))
+(define implieddata (read-csv implied-data-file))
+
 
 (define task? (lambda (x) (equal? (fourth x) task)))
 (define quantifier? (lambda (x) (equal? (seventh x) quantifier)))
@@ -78,8 +84,8 @@
                                                   target)))
 
 (define all-contexts (unique (map fifth (rest alldata))))
+(define implied-contexts (unique (map fifth (rest implieddata))))
 
-(display all-contexts)
 
 (define data-subset 
   (if (equal? context 'all)
@@ -93,10 +99,33 @@
       (lambda (x) (and (task? x) (quantifier? x) (context? x context))) 
       alldata)))
 
+(define implied-subset 
+  (if (equal? context 'all)
+    (map
+      (lambda (c)
+        (filter 
+          (lambda (x) (and (equal? (fourth x) 'implied_prevalence) (quantifier? x) (context? x c)))
+          implieddata))
+      all-contexts)
+    (filter 
+      (lambda (x) (and (task? x) (quantifier? x) (context? x context))) 
+      alldata)))
+
+
+
 (define query-data 
     (if (equal? context 'all)
       (map (lambda (y) (map (lambda (x) (last (but-last x))) y)) data-subset)
       (map (lambda (x) (last (but-last x))) data-subset)))
+
+(define implied-query-data 
+    (if (equal? context 'all)
+      (map (lambda (y) (map (lambda (x) (last (but-last x))) y)) implied-subset)
+      (map (lambda (x) (last (but-last x))) implied-subset)))
+
+;(display implied-query-data)
+
+(display (map (lambda (lst) (mean (map string->number lst))) implied-query-data))
 
 ;(define evidence-data (map (lambda (x) (string->number (last (but-last (but-last (but-last x)))))) data-subset))
 (define evidence-data 
@@ -317,6 +346,8 @@
 
      (define phi (uniform 0 1)) ;; guessing parameter
 
+     (define speaker-optimality (uniform 0 5))  
+
      ;(define generic-theta (mem (lambda (context) (if (equal? QUD 'generic) (uniform 0 100) 'null))))
      ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
      ;(define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
@@ -360,20 +391,20 @@
                 [match (lambda (x) (position (first modelpred-byprev) x))]
                 [prob (lambda (x) (if (= (match x) -1) 0
                                       (list-ref (second modelpred-byprev) (match x))))]
-                [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) x))))])
+                [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
            (sum (map score-marginalized-phi data-as-quantifier)))))
 
      ;; for speaker model 
      ; compute the score for each data point, and sum then together
-     (define scores
-       (lambda (truthcond-byprev modelpred-byprev)
-         (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
-                                                         (second alt-words))) truthcond-byprev)]
-                [match (lambda (x) (position (first modelpred-byprev) x))]
-                [prob (lambda (x) (if (= (match x) -1) 0
-                                      (list-ref (second modelpred-byprev) (match x))))]
-                [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
-           (sum (map score-marginalized-phi data-as-quantifier)))))
+     ; (define scores
+     ;   (lambda (truthcond-byprev modelpred-byprev)
+     ;     (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
+     ;                                                     (second alt-words))) truthcond-byprev)]
+     ;            [match (lambda (x) (position (first modelpred-byprev) x))]
+     ;            [prob (lambda (x) (if (= (match x) -1) 0
+     ;                                  (list-ref (second modelpred-byprev) (match x))))]
+     ;            [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
+     ;       (sum (map score-marginalized-phi data-as-quantifier)))))
 
      (define dummyvar-for-factoring
       (if (equal? context 'all)
