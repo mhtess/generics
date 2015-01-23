@@ -98,7 +98,9 @@ In their \emph{truth conditions} task, participants were given an evidence state
 
 In their \emph{implied prevalence} task, participants were supplied with the generic (still, with context as a within-subjects variable) and asked ``What percentage of lorches do you think have purple feathers?''. The authors consistently found that the generic was interpreted as referring to nearly all lorches. 
 
-This contextual effects on truth conditions and the asymmetry between verification and interpretation pose a puzzle for formal semantics. In this paper, we seek to explain both of these phenomena in terms of pragmatic inference arising from a vague statement. We draw on new advances in probabilistic pragmatics to formalize two possible theories of the generic. Further, we harness the power of Bayesian data analysis to mediate between these formal theories and draw inferences about cognitively interesting model parameters. 
+This contextual effects on truth conditions and the asymmetry between verification and interpretation pose a puzzle for formal semantics. In this paper, we seek to explain both of these phenomena in terms of pragmatic inference arising from a vague statement. \citeA{Degen2014} suggested that different dependent measures in experimental pragmatics paradigms map onto different communicative roles, and thus should be modeled accordingly. 
+
+We draw on new advances in probabilistic pragmatics to formalize two possible theories of the generic. Further, we harness the power of Bayesian data analysis to mediate between these formal theories and draw inferences about cognitively interesting model parameters. 
 
 
 %(e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers'')
@@ -107,15 +109,17 @@ This contextual effects on truth conditions and the asymmetry between verificati
 %How are we to understand these data? One interpretation is that context changes the truth-conditions for a generic statement, but that within a context, the truth-conditions are stable. A different sort of explanation is that context changes the nature of world somehow, and that generic meanings are inferred rationally from context. We draw on recent advances in probabilistic pragmatics and Bayesian data analysis to mediate between these two alternatives.
 
 
-\section{Experiment 1: CBG (Exp. 1) replication}
+\section{Experiment 1: CBG replication}
 
-Experiment 1 attempted to replicate the finding of CBG Exp. 1 that context affects the proportion of ``true'' responses to a generic statement. 
+Experiment 1 attempted to replicate the main findings of CBG: that context affects the proportion of ``true'' responses to a generic statement (Exp. 1a) and that there is an asymmetry between interpretation and verification of the truth conditions of the generic (Exp. 1b). 
 
-\subsection{Method}
+Exp. 1a and 1b were conducted on separate sessions, one week apart. \red{X} subjects were excluded because they completed both experiments.
+
+\subsection{Experiment 1a: \emph{truth conditions}}
 
 \subsubsection{Participants}
 
-We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk. 
+We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk.  
 
 \subsubsection{Procedure and materials}
 
@@ -130,12 +134,40 @@ Participants saw a prevalence statement and a context. A context here was either
 \begin{figure}
 \centering
     \includegraphics[width=\columnwidth]{fig1_replication}
-    \caption{Replication of CBG Exp. 1, generics condition}
+    \caption{Replication of CBG \emph{truth conditions}, generics condition}
   \label{fig:replication}
 \end{figure}
 
 
 Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts (Figure \ref{fig:replication})\red{[insert stats here]}. There was also an interaction between prevalence level and context such that the DD context was endorsed more particularly at lower prevalence levels. \red{[insert stats here]}. 
+
+\subsection{Experiment 1b: \emph{implied prevalence}}
+
+\subsubsection{Participants}
+
+We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Turk.  
+
+\subsubsection{Procedure and materials}
+
+Our procedure was very similar to CBG \emph{implied prevalence} task. Our instructions were elaborated to improve interest and motivation\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-12.html}}. 
+
+The materials and context conditions were the same as in Exp. 1a. 
+
+On each trial, participants saw a generic statement and a context. A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. Participants were then asked ``What percentage of \emph{the kind} do you think have \emph{the property?}'' (e.g. ``What percentage of lorches do you think have  purple feathers?''). The dependent measure was a free response of a number between 0-100. 
+
+\subsubsection{Data analysis and results}
+
+%\begin{figure}
+%\centering
+%    \includegraphics[width=\columnwidth]{fig1_replication}
+%    \caption{Replication of CBG \emph{asymmetry}, generics condition}
+%  \label{fig:replication}
+%\end{figure}
+%
+
+Our results replicated the finding of CBG that the generic statement was interpreted as having a higher prevalence than its truth conditions would imply. 
+
+
 
 \section{Bayesian analysis of fixed-threshold semantics}
 
@@ -197,11 +229,27 @@ The problem with this approach is that we are assuming there is some threshold f
 
 %\end{itemize}
 
+\section{Rational Speech-Act and dependent measures}
+
+%CBG showed how contexts affects the endorsement for generic statements. An additional concern of their experiments surrounded the relation between two dependent measures for understanding generics. One dependent measure was the ``truth conditions'', or \emph{sentence verification} measure that we've been considering up to this point. The other was an ``implied prevalence'', or \emph{sentence interpretation} dependent measure. The latter was collected by giving participants the generic statement (plus, any additional contextual information), and asking the participant ``What percentage of lorches have purple feathers?''
+
+These tasks are language understanding tasks. We draw on recent work from probabilistic pragmatics to formalize our intuitions about what is going on in these tasks. In particular, we draw on work from the Rational Speech-Act (RSA) theory of language understanding \cite{Frank2012}. In this framework, a listener infers the meaning of an utterance by a recursive reasoning process, wherein she considers the thought-processes of a speaker whose goal is to be informative. This theory has gained tremendous support for providing computational explanations for a number of linguistic phenomena including scalar implicature, hyperbole, and multiple classes of reasoning paradigms \cite{Goodman2013, Kao2014, Tessler2014, Lassiter2014}. 
+
+
+The results of our experiment replicate the asymmetry between verification and interpretation of the generic. Additionally, CBG  found that the quantifier ``most'' did not show this asymmetry between the two dependent measures\footnote{This asymmetry has since been replicated further in adults and observed in children \cite{Brandone2014}}. 
+
+\subsection{Speak and listen}
+
+\citeA{Degen2014} argued that differences between dependent measures in experimental effects of pragmatic inference can be accounted for by formal, probabilistic models of pragmatics. In particular, they suggest the \emph{sentence verification} measure is most closely related to production, while \emph{sentence interpretation} is most likely a measure of comprehension. Therefore, formal models of these tasks should be of a speaker and a listener, respectively. We apply this same logic to the CBG paradigm to show how the asymmetry can come about from these different dependent measures.
+
+
+
+
 \section{Lifted-variable RSA}
 
 The bayesian data analysis above provides evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the inferred value of the guessing parameter \lstinline{phi} suggest, however, that our model of cognition is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, we propose people have uncertainty about the true threshold and actively reason about this meaning from interaction and context. 
 
-To formalize this, we draw on work from the Rational Speech-Act (RSA) theory of language understanding \cite{Frank2012}. In this framework, a listener infers the meaning of an utterance by a recursive reasoning process, wherein she considers the thought-processes of a speaker whose goal is to be informative. This theory has gained tremendous support for providing computational explanations for a number of linguistic phenomena including scalar implicature, hyperbole, and multiple classes of reasoning paradigms \cite{Goodman2013, Kao2014, Tessler2014, Lassiter2014}. 
+
 
 RSA has recently been extended to accommodate words that don't have fixed semantics. \citeA{Lassiter2015} proposed an elaboration of the theory to account for interpreting vague, gradable adjectives like \emph{tall}. They propose the meaning of an adjective like \emph{tall} is a standard truth-functional meaning such that the adjective is true if the object in question has a height greater than the threshold $\theta_{tall}$. The suggestion, though, is that the listener has uncertainty about what $\theta_{tall}$ actually is, and infers that value of $\theta_{tall}$ via the same recursive reasoning process. Here, we borrow the same formalism to try account for the uncertainty in generic meaning.
 
@@ -341,17 +389,7 @@ Experiment 2 recovered the shape of the inferred prior distributions from the li
 \end{figure}
 
 
-\section{Asymmetries in dependent measures}
 
-CBG showed how contexts affects the endorsement for generic statements. An additional concern of their experiments surrounded the relation between two dependent measures for understanding generics. One dependent measure was the ``truth conditions'', or \emph{sentence verification} measure that we've been considering up to this point. The other was an ``implied prevalence'', or \emph{sentence interpretation} dependent measure. The latter was collected by giving participants the generic statement (plus, any additional contextual information), and asking the participant ``What percentage of lorches have purple feathers?''
-
-In their analysis, they found that the quantifier ``most'' expressed a symmetry between the two dependent measures, while the generic had an asymmetry\footnote{This asymmetry has since been replicated in adults and observed in children \cite{Brandone2014}}. In this section, we show how you can recover an asymmetry between these dependent measures by considering communicative roles and Questions Under Discussion (QUDs).
-
-\subsection{Speak and listen}
-
-\citeA{Degen2014} argued that differences between dependent measures in experimental effects of pragmatic inference can be accounted for by formal, probabilistic models of pragmatics. In particular, they suggest the \emph{sentence verification} measure is most closely related to production, and should therefore be modeled as a speaker. Additionally, \emph{sentence interpretation} was shown to be best accounted for by a model of a listener. We apply this same logic to the CBG paradigm to show how the asymmetry can come about from these different dependent measures.
-
-Figure \ref{fig:asymmetry} \red{doesn't show what we want it to show... yet}.
 
 
 
