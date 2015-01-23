@@ -1,0 +1,86 @@
+(load '/Users/mht/Documents/research/tools/church-helpers/beta-score.js)
+
+
+(define args (regexp_split argstring ","))
+
+(define mh_samples (first args))
+(define mh_lag (second args))
+
+(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
+(define data-file (string-append data-path 'cbgR-exp11-trials-tidy.csv))
+(define all-data (read-csv data-file))
+
+(define all-contexts (unique (map fourth (rest all-data))))
+
+
+(define context? (lambda (x context) (equal? (fourth x) context)))
+
+(display all-contexts)
+
+(define data-by-context 
+    (map
+      (lambda (c)
+        (filter 
+          (lambda (x) (context? x c))
+          all-data))
+      all-contexts))
+
+
+(define prevalence-data 
+      (map (lambda (y) (map (lambda (x) (/ (string->number (last x)) 100)) y)) data-by-context))
+
+(define smooth-edges
+	(lambda (x)
+		(case x 
+			((0) 0.00001)
+			((1) 0.99999)
+			(else x))))
+
+
+(define data-analysis
+	(mh-query 
+     (string->number mh_samples)
+     (string->number mh_lag)
+
+     (define gamma (mem (lambda (context) (uniform 0 1))))
+	;	(uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
+
+	(define delta (mem (lambda (context) (uniform 0 3))))
+
+	;	(uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
+
+	;(define phi (uniform 0 1))
+
+	(define (pseudocount_alpha c) (* (gamma c) (delta c)))
+	(define (pseudocount_beta c) (* (- 1 (gamma c)) (delta c)))
+
+	;; multiplied by 10 so i can use floor to bin
+	;(define (beta-rv c) (beta (pseudocount_alpha c) (pseudocount_beta c)))
+
+	;(define sampled-coin-weights (map beta-rv all-contexts))
+	;(define sampled-coin-weights (beta-rv 'c))
+
+	(define scores 
+		(map
+			(lambda (c prevalence-data-by-context)
+				(map 
+					(lambda (x)
+						(betaScore (list (pseudocount_alpha c) (pseudocount_beta c)) (smooth-edges x)))
+					prevalence-data-by-context))
+		all-contexts prevalence-data))
+
+	(define dummy-factor (factor (sum (flatten scores))))
+
+	(map (lambda (c) (list (gamma c) (delta c))) all-contexts)
+
+	true))
+
+(define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/analysis/)
+(define output-filename (string-append  output-path 'exp11_cts_betaHyperparams '_mh mh_samples '_ mh_lag '.csv))
+
+(write-csv data-analysis output-filename)
+
+(define complete? 'complete)
+complete?
+
+
