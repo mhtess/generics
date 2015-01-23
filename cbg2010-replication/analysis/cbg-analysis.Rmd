@@ -1397,7 +1397,9 @@ d$truth_conditions <- factor(as.logical(levels(d$response)[d$response]),
                               levels=c("TRUE","FALSE"))
 
 d$truth_num <- bool.tonum(d$truth_conditions)
+tc.bs<-bootstrap.ci.tc(d)
 
+tc.bs$stim_type<-factor(tc.bs$stim_type,levels=c('danger-distinct','nondistinctive','bare'))
 # ggplot(d,aes(x=factor(truth_num),fill=stim_type))+
 #   geom_histogram()+
 #   facet_wrap(~item)+
@@ -1406,9 +1408,7 @@ d$truth_num <- bool.tonum(d$truth_conditions)
 #split by first half/second half to look at order effects
 #tc.bs<-bootstrap.ci.tc(d[d$trialNum>15,])
 
-tc.bs<-bootstrap.ci.tc(d)
 
-tc.bs$stim_type<-factor(tc.bs$stim_type,levels=c('danger-distinct','nondistinctive','bare'))
 
 ggplot(tc.bs, aes(x=stim_prevalence,y=truth_num,
                   colour=stim_type, group=stim_type))+
@@ -1477,7 +1477,7 @@ grid.arrange(a,b,nrow=1)
 
 Posterior predictive for fixed threshold
 
-```{r}
+```{r post.pred.fixed.theta}
 d.tidy <- d %>%
   select(V6,V11,V16, V21, V26,
          V32, V37, V42, V47, V52,
@@ -1696,9 +1696,10 @@ ggplot(data=m, aes(x=mean, y=pr.true,color=context))+
 setwd('../models/bayesian_analysis/')
 # d<-read.csv(paste('listen_betaHyper_exp9all_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=T)
 
-d<-read.csv(paste('speak_listenDifAlt_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh100_50_alpha10.csv',sep=''),header=F)
+d<-read.csv(paste('speak_listenDifAlt_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh1000_50_alpha1.csv',sep=''),header=F)
 
-d<-read.csv(paste('speak_listen_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F)
+d<-read.csv('speak_listenDifAlt_condition2tasksChain2_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh1000_50_alpha1.csv',header=F)
+#d<-read.csv(paste('speak_listen_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F)
 
 
 # 
@@ -1738,19 +1739,21 @@ sample.beta<-function(n,gamma,delta){
   return(rbeta(n,shape1,shape2))
 }
 
-sb<-melt(data.frame(dangerdistinct=sample.beta(1000,0.1347,1.2723),
-               nondistinctive=sample.beta(1000,0.2992,1.4554),
-               bare=sample.beta(1000,0.2040,1.4770)
+sb<-melt(data.frame(
+  dangerdistinct=sample.beta(1000,params.stats[1,3],params.stats[2,3]),
+  nondistinctive=sample.beta(1000,params.stats[3,3],params.stats[4,3]),
+  bare=sample.beta(1000,params.stats[5,3],params.stats[6,3])
                ))
 
 
 p<-ggplot(sb,aes(x=100*value,fill=variable))+
-  geom_density()+
+  #geom_density()+
+  geom_histogram()+
   xlim(0,100)+
   facet_wrap(~variable)+
   guides(fill=F)+
   scale_fill_brewer(type='qual',palette=6)+
-  xlab("mean inferred prior distribution, from RSA and exp1")
+  xlab("mean inferred prior distribution, from RSA and exp1 & imp-prev exp")
 grid.arrange(exp2,p)
 
 
@@ -1895,6 +1898,12 @@ pp.stats<-ddply(pp.tidy, .(context,prevalence), summarise,
       CIlow = quantile(value,probs=0.025),
       CIhigh = quantile(value,probs=0.975))
 
+#tc.bs<-rename(tc.bs, prevalence=stim_prevalence, context=stim_type)  
+#tc.bs$context<-factor(tc.bs$context, labels=c("dangerdistinct","nondistinct","bare"))
+
+m<-merge(pp.stats,tc.bs, by=c("context", "prevalence"))
+with(m, cor(truth_num,mean))
+
 
 pp.stats$context<-factor(pp.stats$context,levels=c('danger','nondistinct','bare'), labels=c('danger-distinct','nondistinctive','bare'))
 pp.stats$prevalence<-as.numeric(pp.stats$prevalence)
@@ -1969,15 +1978,17 @@ ggplot(data=pp.stats,aes(x=context,y=median,fill=qud,group=qud))+
 
 ```{r tfbt.asymmetry}
 #setwd('../models/bayesian_analysis/')
-d<-read.csv(paste('speak_listenDifAlt_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh100_10_alpha3.csv',sep=''),header=F)
+# d<-read.csv(paste('listen_betaHyper_exp9all_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=T)
+
+#d<-read.csv(paste('speak_listenDifAlt_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh1000_50_alpha1.csv',sep=''),header=F)
 
 pp.tidy<- d %>%
   select(V15,V22,V29,V36,V43,
          V51,V58,V65,V72,V79,
          V87,V94,V101,V108,V115,
-         V131,V132,V133,V134,V135,V136,V137,V138,V139,
-         V152,V153,V154,V155,V156,V157,V158,V159,V160,
-         V173,V174,V175,V176,V177,V178,V179,V180,V181) %>%
+         V132,V133,V134,V135,V136,V137,V138,V139,V140,V141,
+         V155,V156,V157,V158,V159,V160,V161,V162,V163,V164,
+         V178,V179,V180,V181,V182,V183,V184,V185,V186,V187) %>%
   rename(danger_truth_10= V15,
          danger_truth_30= V22,
          danger_truth_50 = V29,
@@ -1993,33 +2004,37 @@ pp.tidy<- d %>%
          bare_truth_50 = V101,
          bare_truth_70 = V108,
          bare_truth_90 = V115,
-         danger_implied_10=V131,
-         danger_implied_20=V132,
-         danger_implied_30=V133,
-         danger_implied_40=V134,
-         danger_implied_50=V135,
-         danger_implied_60=V136,
-         danger_implied_70=V137,
-         danger_implied_80=V138,
-         danger_implied_90=V139,         
-         nondistinct_implied_10 = V152,
-         nondistinct_implied_20 = V153,
-         nondistinct_implied_30 = V154,
-         nondistinct_implied_40 = V155,
-         nondistinct_implied_50 = V156,
-         nondistinct_implied_60 = V157,
-         nondistinct_implied_70 = V158,
-         nondistinct_implied_80 = V159,
-         nondistinct_implied_90 = V160,
-         bare_implied_10 = V173,
-         bare_implied_20 = V174,
-        bare_implied_30 = V175,
-        bare_implied_40 = V176,
-        bare_implied_50 = V177,
-        bare_implied_60 = V178,
-        bare_implied_70 = V179,
-        bare_implied_80 = V180,
-        bare_implied_90 = V181)
+         danger_implied_10=V132,
+         danger_implied_20=V133,
+         danger_implied_30=V134,
+         danger_implied_40=V135,
+         danger_implied_50=V136,
+         danger_implied_60=V137,
+         danger_implied_70=V138,
+         danger_implied_80=V139,
+         danger_implied_90=V140,
+         danger_implied_100=V141,         
+         nondistinct_implied_10 = V155,
+         nondistinct_implied_20 = V156,
+         nondistinct_implied_30 = V157,
+         nondistinct_implied_40 = V158,
+         nondistinct_implied_50 = V159,
+         nondistinct_implied_60 = V160,
+         nondistinct_implied_70 = V161,
+         nondistinct_implied_80 = V162,
+         nondistinct_implied_90 = V163,
+         nondistinct_implied_100 = V164,
+         bare_implied_10 = V178,
+         bare_implied_20 = V179,
+        bare_implied_30 = V180,
+        bare_implied_40 = V181,
+        bare_implied_50 = V182,
+        bare_implied_60 = V183,
+        bare_implied_70 = V184,
+        bare_implied_80 = V185,
+        bare_implied_90 = V186,
+        bare_implied_100 = V187        
+        )
 
 
 
@@ -2064,8 +2079,62 @@ ggplot(data=pp.stats,aes(x=context,y=median,fill=qud,group=qud))+
 #  xlab("XX% of lorches have purple feathers")+
 #  ylab('proportion of "true" responses')+
  # coord_fixed(100)
+```
+
+### Listener only for asymmetry
+
+```{r tfbt.asymmetry.listen}
+#setwd('../models/bayesian_analysis/')
+d<-read.csv(paste('listen_betaHyper_discreteHyper_exp3distinct_generic_implied_prevalence_mh1000_50_alpha3.csv',sep=''),header=F)
+
+pp.tidy<- d %>%
+  select(V1,V2,V3) %>%
+  rename(phi=V1, 
+         gamma=V2,
+         delta=V3) 
+
+qplot(data=gather(pp.tidy,variable,value),
+      x=value,geom='histogram')+facet_wrap(~variable)
+
+qplot(data=pp.tidy,x=gamma,y=delta,geom='point')+
+  geom_jitter()
 
 ```
+
+Posterior predictive for listener only
+```{r tfbt.asymmetry.listener.postpred}
+
+
+pp.tidy<- d %>%
+  select(V16,V17,V18,V19,V20,V21,V22,V23,V24,V25) %>%
+  rename(p_10=V16,
+         p_20=V17,
+         p_30=V18,
+         p_40=V19,
+         p_50=V20,
+         p_60=V21,
+         p_70=V22,
+         p_80=V23,
+         p_90=V24,
+         p_100=V25)
+
+pp.tidy$no<-row.names(pp.tidy)
+f<-melt(pp.tidy)
+f<-f%>%separate(variable,into=c('blank','prevalence'), sep="_")
+
+f$expval <- f$value*as.numeric(f$prevalence)
+
+f.stats<-ddply(f, .(no), summarise,
+      prevalence_score = sum(expval))
+
+g<- data.frame(mean=mean(f.stats$prevalence_score),
+                CIlow = quantile(f.stats$prevalence_score,probs=0.025),
+                CIlow = quantile(f.stats$prevalence_score,probs=0.025))
+
+
+
+```
+
 
 # Experiment 10
 
@@ -2116,4 +2185,63 @@ ggplot(tc.bs, aes(x=stim_prevalence,y=truth_num,
   xlab("XX% of lorches have purple feathers")+
   ylab('proportion of "true" responses')+
   coord_fixed(100)
+```
+
+
+
+# Experiment 11: prior again
+
+```{r exp11}
+
+setwd("~/Documents/research/generics/cbg2010-replication/data")
+d<-read.table('cbgR-exp11-trials.tsv',header=T)
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+table(d$stim_type,d$item)
+table(d$stim_type,d$stim_part)
+
+
+d.tidy<-d%>%   select(workerid,rt,
+              response0,response1,response2,response3,response4,
+              stim_type) %>%
+  rename(context=stim_type) %>%
+  gather(option,value,-workerid,-rt,-context)
+
+#write.csv(d.tidy,'cbgR-exp11-trials-tidy.csv')
+
+d.tidy$context<-factor(d.tidy$context,levels=c("danger-distinct","nondistinctive","bare"))
+
+ggplot(d.tidy,aes(x=value,fill=context))+
+  geom_histogram()+
+  facet_wrap(~context)+
+  guides(fill=F)+
+  scale_fill_brewer(type='qual',palette=6)
+
+#d0<-subset(d.tidy,rt<50000)
+#ggplot(d.tidy,aes(x=rt))+geom_histogram()
+
+```
+
+
+TFBT on Experiment 11
+
+```{r exp11.tfbt}
+setwd("~/Documents/research/generics/cbg2010-replication/analysis/")
+d<-read.csv('exp11_cts_betaHyperparams_mh100_50.csv',header=F)
+m.tidy<-d %>% 
+  select(V1,V2,V4,V5,V7,V8)%>%
+  rename(bare_gamma=V1,
+         bare_delta=V2,
+         dangerdistinct_gamma=V4,
+         dangerdistinct_delta=V5,
+         nondistinctive_gamma=V7,
+         nondistinctive_delta=V8)%>%
+  gather(variable,value)%>%
+  separate(variable,into=c("context","parameter"),by="_")
+
+ggplot(subset(m.tidy,parameter=='gamma'),aes(x=value))+
+  geom_histogram()+
+  facet_grid(context~.)
+
+
+
 ```
