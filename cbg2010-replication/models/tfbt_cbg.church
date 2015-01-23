@@ -1,34 +1,6 @@
 ; example call
-;; church -a 'implied_prevalence,most,bare,100,10,3' tfbt_cbg.church
 
-; church -a 'implied_prevalence,most,danger,10000,100,3' tfbt_cbg.church &
-; church -a 'implied_prevalence,most,distinct,10000,100,3' tfbt_cbg.church &
-; church -a 'implied_prevalence,most,irrelevant,10000,100,3' tfbt_cbg.church &
-; church -a 'implied_prevalence,some,danger,10000,100,3' tfbt_cbg.church &
-; church -a 'implied_prevalence,some,distinct,10000,100,3' tfbt_cbg.church &
-; church -a 'implied_prevalence,some,irrelevant,10000,100,3' tfbt_cbg.church &
-
-; time church -a 'truth_conditions,generic,bare,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,distinct,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,danger,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,irrelevant,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,some,bare,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,some,distinct,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,some,danger,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,some,irrelevant,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,most,bare,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,most,distinct,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,most,danger,1000,100,3' tfbt_cbg.church &
-; time church -a 'truth_conditions,most,irrelevant,1000,100,3' tfbt_cbg.church &
-
-; time church -a 'truth_conditions,generic,dangerdistinct,1000,3,3,5' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,nondistinctive,1000,3,3,5' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,bare,1000,3,3,4' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,distinct,1000,3,3,4' tfbt_cbg.church &
-; time church -a 'truth_conditions,generic,irrelevant,1000,3,3,4' tfbt_cbg.church &
-
-
-; time church -a 'truth_conditions,generic,all,100,50,1,9' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,all,100,50,3,9' tfbt_cbg.church &
 
 
 (define args (regexp_split argstring ","))
@@ -352,7 +324,7 @@
      ;(define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
 
      ; (define gamma (mem (lambda (context) (uniform 0 1))))
-     ; (define delta (mem (lambda (context) (uniform 0 5))))
+     ; (define delta (mem (lambda (context) (uniform 0 3))))
 
      (define gamma (mem (lambda (context) (uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
      (define delta (mem (lambda (context) (uniform-draw '(0.01 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
@@ -538,7 +510,7 @@
 (define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
 
 
-(define output-file-name (string-append  output-path 'speak_listenDifAlt_condition2tasksChain2_betaHyper_discreteHyper_exp expnum context '_ quantifier '_ task 
+(define output-file-name (string-append  output-path 'speak_listenDifAlt_condition2tasksChain3_betaHyper_Hyper_exp expnum context '_ quantifier '_ task 
      '_mh mh_samples '_ mh_lag '_alpha speaker-optimality '.csv))
 
  (write-csv samples output-file-name)

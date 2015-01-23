@@ -7,35 +7,58 @@
 
  \begin{document}
 
-\title{Generics can be vague}
+\title{Generics might be vague}
 \author{MHT, NDG\\CogSci 2015 Outline} \maketitle
  
 \begin{outline}
-  \0 The semantic puzzle of generics. Use examples to show how the truth conditions can have wide variability. 
-  	\0 Cimpian, Brandone and Gelman (2010) found evidence for 2 phenomena 
-		\1 Interpretation 1: Context can change the truth conditions for a generic
-			\2 Replicate CBG Exp 1. 
-			\2 Assume generic had a fixed-threshold, that varied by context alone.
-				\3 What is that threshold? \emph{Bayesian Data Analysis}
+  \0 The semantic puzzle of generics. Use examples to show how the truth conditions can have wide variability. Explain logic of the approach: formal models, using bayesian data analysis to mutually constrain experiments; asymmetry could be from dependent measures
+  
+		\1 Experiment 1 a \& b: Replicate CBG \emph{truth conditions} \& \emph{implied prevalence}
+			\2 standard freq. stats
+		\1 Bayesian Data Analysis of fixed-threshold semantics
+			\2  Assume generic had a fixed-threshold, that varied by context alone. What is that threshold? 
+				\3 \emph{truth conditions} would be S1 model
+				\3 \emph{implied prevalence} would be L0 model?
+			\2 \emph{Bayesian Data Analysis}, conditioning on both data sets
 				\3 Posterior predictive of fixed-threshold model
-			\2 Posterior predictive should be pretty bad.
-			\2 Guessing $\phi$ parameter pretty high
-		\1 Interpretation2: The meaning is inferred from context (Lassiter and Goodman, 2014)
-			\2 Bayesian-Language-Understanding Model: lifted-variable model of generics	
-			\2 Some sort of bayesian analysis
+				\3 Posterior predictive pretty bad.
+				\3 Guessing $\phi$ parameter pretty high.
+				\3 Asymmetry?
+		\1 BDA of Lifted-variable RSA
+			\2 Bayesian Language-Understanding Model: lifted-variable model of generics
+			\2 Context inferred in language model... what differs is the prior
+				\3 \emph{truth conditions} would be S2
+				\3 \emph{implied prevalence} would be L1
+			\2 Condition on Exp 1 data to infer hyperprior parameters: $\gamma$ and $\delta$ 
+				\3 Posterior predictive of lvRSA super good
+				\3 Guessing $\phi$ parameter reasonable
+				\3 Asymmetry
+			\2  strong predictions about what priors should look like
+		\1 Experiment 2: Prior elicitation
+			\2 Show qualitative fit 
+		\1 Further simulations using empirical or inferred priors
+			\2 Symmetry / asymmetry with quantifiers most and some
+			\2 Reduced asymmetry with alternative priors (e.g. accidental / disease states)
+				
+							
+\0 Highlight differences between bayesian cognition and bayesian science.
+ \end{outline}
+
+
+\vspace{2cm}
+A slight alternative could be to go through explaining lvRSA and then do Experiment 2. If this model is the correct model, then priors should vary. So elicit prior. Then do TFBT with just $\phi$, and posterior predictives and asymmetry as before.
 	
 	
- 		\2 Evidence required for accepting a generic is different from that which the generic implies
-			\3 \emph{Bayesian Language-Understanding Model: RSA with QUDs and roles in communication}
-			\3 This asymmetry was not present for the quantifier ``most''
-			\3 Degen and Goodman (2014 cogsci) found evidence that different dependent measures may map onto different communicative roles, formalized by speakers and listeners in RSA
-			\3 Q: Can the asymmetry of the generic (and the symmetry of ``most'') be explained by speaker and listener in RSA?
-			\3 Experiment: replicate CBG experiments 1 \& 2 (and be explicit about the analysis of ``some'', which CBG was not)
-			\3 Model: RSA with QUDs and speaker/listener for the 2 tasks
-				\4 \emph{Truth conditions} task $\rightarrow$ QUD = ``quantifier is true?'', task is Speaker (S1 or S2)
-				\4 \emph{Implied prevalence} task $\rightarrow$ QUD = ``how many?'', task is Listener (L1)
-			\3 Include prior elicitation experiment?
+% 		\2 Evidence required for accepting a generic is different from that which the generic implies
+%	\3 \emph{Bayesian Language-Understanding Model: RSA with QUDs and roles in communication}
+%	\3 This asymmetry was not present for the quantifier ``most''
+%	\3 Degen and Goodman (2014 cogsci) found evidence that different dependent measures may map onto different communicative roles, formalized by speakers and listeners in RSA
+%	\3 Q: Can the asymmetry of the generic (and the symmetry of ``most'') be explained by speaker and listener in RSA?
+%	\3 Experiment: replicate CBG experiments 1 \& 2 (and be explicit about the analysis of ``some'', which CBG was not)
+%	\3 Model: RSA with QUDs and speaker/listener for the 2 tasks
+%		\4 \emph{Truth conditions} task $\rightarrow$ QUD = ``quantifier is true?'', task is Speaker (S1 or S2)
+%		\4 \emph{Implied prevalence} task $\rightarrow$ QUD = ``how many?'', task is Listener (L1)
+%	\3 Include prior elicitation experiment?
 
 			
- \end{outline}
  \end{document}

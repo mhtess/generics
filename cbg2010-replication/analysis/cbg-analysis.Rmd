@@ -1699,6 +1699,7 @@ setwd('../models/bayesian_analysis/')
 d<-read.csv(paste('speak_listenDifAlt_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh1000_50_alpha1.csv',sep=''),header=F)
 
 d<-read.csv('speak_listenDifAlt_condition2tasksChain2_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh1000_50_alpha1.csv',header=F)
+d<-read.csv('speak_listenDifAlt_condition2tasksChain3_betaHyper_Hyper_exp9all_generic_truth_conditions_mh100_25_alpha3.csv',header=F)
 #d<-read.csv(paste('speak_listen_betaHyper_discreteHyper_exp9all_generic_truth_conditions_mh1000_100_alpha3.csv',sep=''),header=F)
 
 
@@ -2210,12 +2211,16 @@ d.tidy<-d%>%   select(workerid,rt,
 
 d.tidy$context<-factor(d.tidy$context,levels=c("danger-distinct","nondistinctive","bare"))
 
-ggplot(d.tidy,aes(x=value,fill=context))+
+exp11<-ggplot(d.tidy,aes(x=value,fill=context))+
   geom_histogram()+
   facet_wrap(~context)+
   guides(fill=F)+
-  scale_fill_brewer(type='qual',palette=6)
+  scale_fill_brewer(type='qual',palette=6)+
+  xlab('prevalence')+
+  ggtitle('human elicited prior distribution')
 
+p<-p+ggtitle("inferred prior distribution, from RSA & Exp1&2 data")+xlab('')
+grid.arrange(p,exp11)
 #d0<-subset(d.tidy,rt<50000)
 #ggplot(d.tidy,aes(x=rt))+geom_histogram()
 
@@ -2226,7 +2231,7 @@ TFBT on Experiment 11
 
 ```{r exp11.tfbt}
 setwd("~/Documents/research/generics/cbg2010-replication/analysis/")
-d<-read.csv('exp11_cts_betaHyperparams_mh100_50.csv',header=F)
+d<-read.csv('exp11_cts_betaHyperparams_mh1000_50.csv',header=F)
 m.tidy<-d %>% 
   select(V1,V2,V4,V5,V7,V8)%>%
   rename(bare_gamma=V1,
@@ -2241,6 +2246,10 @@ m.tidy<-d %>%
 ggplot(subset(m.tidy,parameter=='gamma'),aes(x=value))+
   geom_histogram()+
   facet_grid(context~.)
+
+ggplot(m.tidy,aes(x=value))+
+  geom_histogram()+
+  facet_grid(context~parameter)
 
 
 
