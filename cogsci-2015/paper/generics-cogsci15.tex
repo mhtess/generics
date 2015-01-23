@@ -94,7 +94,7 @@ Generic statements are puzzling because they accommodate a range of quantificati
 
 \citeA{Cimpian2010} (henceforth, CBG) carried out a series of controlled studies designed to examine the truth conditions and implications of generic statements. They found consistent evidence that the generic is interpreted more strongly than one would expect based on its truth conditions. The authors also found evidence for the influence of context on participants' willingness to accept the relevant generics (i.e. context modified the truth conditions). 
 
-In their \emph{truth conditions} task, participants were given an evidence statement in terms of the percentage of a category that had a property (e.g. ``30\% of lorches have purple feathers.''). Participants were asked whether the associated generic statement (i.e. ``Lorches have purple feathers'') was true or false. The authors manipulated context within-subjects by adding additional statements about the property. Three contexts will focus on in this paper are \emph{dangerous and distinct} (DD), \emph{extraneous and not distinct} (EN), and \emph{plain} (P). The authors found that DD increased the overall proportion of ``true'' responses of the generic propositions. That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. when 10\% or 30\% of lorches had purple feathers) to assert that the generic statement was true.
+In their \emph{truth conditions} task, participants were given an evidence statement in terms of the percentage of a category that had a property (e.g. ``30\% of lorches have purple feathers.''). Participants were asked whether the associated generic statement (i.e. ``Lorches have purple feathers'') was true or false. The authors manipulated context within-subjects by adding additional statements about the property. Three contexts will focus on in this paper are \emph{dangerous and distinct} (DD), \emph{not distinct and irrelevant} (NI), and \emph{plain} (P). The authors found that DD increased the overall proportion of ``true'' responses of the generic propositions. That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. when 10\% or 30\% of lorches had purple feathers) to assert that the generic statement was true.
 
 In their \emph{implied prevalence} task, participants were supplied with the generic (still, with context as a within-subjects variable) and asked ``What percentage of lorches do you think have purple feathers?''. The authors consistently found that the generic was interpreted as referring to nearly all lorches. 
 
@@ -106,14 +106,8 @@ This contextual effects on truth conditions and the asymmetry between verificati
 
 %How are we to understand these data? One interpretation is that context changes the truth-conditions for a generic statement, but that within a context, the truth-conditions are stable. A different sort of explanation is that context changes the nature of world somehow, and that generic meanings are inferred rationally from context. We draw on recent advances in probabilistic pragmatics and Bayesian data analysis to mediate between these two alternatives.
 
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{fig1_replication}
-    \caption{Replication of CBG Exp. 1, generics condition}
-  \label{fig:replication}
-\end{figure}
 
-\section{Experiment 1 --- CBG (Exp. 1) replication}
+\section{Experiment 1: CBG (Exp. 1) replication}
 
 Experiment 1 attempted to replicate the finding of CBG Exp. 1 that context affects the proportion of ``true'' responses to a generic statement. 
 
@@ -125,49 +119,56 @@ We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Tu
 
 \subsubsection{Procedure and materials}
 
-Our procedure was identical to CBG ``truth conditions'' task, except in that our instructions were elaborated to improve interest and motivation\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-9.html}}. 
+Our procedure was very similar to CBG \emph{truth conditions} task. Our instructions were elaborated to improve interest and motivation\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-9.html}}. 
 
-We used the same materials as CBG (available in their Appendix). The materials used were 30 novel animals (e.g. lorches, morseths, blins) each paired with a unique property. Properties were color---body-part pairs (e.g. purple feathers, orange tails). Each participant saw 10 animal-property pairs per context. Those 10 items were randomly paired with 1 of 5 ``prevalence levels'': \{10, 30, 50, 70, 90\} \%; each prevalence level appeared 2 times per context. 
+We used the same materials as CBG (available in their Appendix). The materials used were 30 novel animals (e.g. lorches, morseths, blins) each paired with a unique property. Properties were pairs of colors and body-parts (e.g. purple feathers, orange tails). Each participant saw unique 10 animal-property pairs in each of 3 contexts \{\emph{plain}, \emph{DD}, \emph{NI}\}. Those 10 items were randomly paired with 1 of 5 ``prevalence levels'': \{10, 30, 50, 70, 90\}\%; each prevalence level appeared 2 times per context. 
 
-Participants saw a prevalence statement and either (1) dangerous \& distinct statements, (2) control \& irrelevant statements, or (3) nothing else. Participants were then asked ``Is the following sentence true or false?'', below which was presented the associated generic statement and 2 radio buttons. 
+Participants saw a prevalence statement and a context. A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. Participants were then asked ``Is the following sentence true or false?'', below which was presented the associated generic (e.g. ``Lorches have purple feathers'') and 2 radio buttons. 
 
 \subsubsection{Results}
 
-Our results replicated the findings of the CBG, inso far as the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts (Figure \ref{fig:replication}) \red{[insert some stats here]}. 
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{fig1_replication}
+    \caption{Replication of CBG Exp. 1, generics condition}
+  \label{fig:replication}
+\end{figure}
 
-\section{Bayesian data analysis of CBG}
 
-These statistics tell us that there were significantly more ``true'' responses in one context vs. another, and that these relative proportions of ``true'' responses were most different at the lower prevalence levels (via the interaction term of the regression). What we'd really like to know, however, is how the truth-functional threshold of the generic behaves across these three contexts. To do this, we have to move beyond NHST to do Bayesian inference over the unknown threshold of generic. The data analysis model can be written very simply in Church.
+Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts (Figure \ref{fig:replication})\red{[insert stats here]}. There was also an interaction between prevalence level and context such that the DD context was endorsed more particularly at lower prevalence levels. \red{[insert stats here]}. 
+
+\section{Bayesian analysis of fixed-threshold semantics}
+
+These statistics tell us that there were significantly more ``true'' responses in one context vs. another, and that these relative proportions of ``true'' responses were most different at the lower prevalence levels (via the interaction term of the regression). What we'd really like to know, however, is how the truth-functional threshold of the generic behaves across these three contexts. To do this, we have to move beyond Null Hypothesis Significance Teseting to do Bayesian inference over the unknown threshold of generic. The data analysis model can be written very simply in Church \cite{probmods}.
 
 \begin{lstlisting}
 (define bayesian-data-analysis 
 	(query
-	
+		; we don't know the generic threshold but we feel it might be a function of context
 		(define generic-threshold 
 			(lambda (context) (uniform 0 1)))
-	
+		; a generic statement is true if the prevalence of the property is greater than threshold
 		(define generic 
 			(lambda (prevalence context) 
 				(> prevalence (generic-threshold context))))
 		
-		(define phi (uniform 0 1))
+		(define phi (uniform 0 1)); guessing parameter
 				
-		generic-threshold
+		generic-threshold ; return generic-threshold	
 		
-		(= experiment1-data 
-			(if (flip phi)
-				   (flip 0.5)
-				   (generic prevalence context)))))
+		(= experiment1-data 	; condition on exp.1 data 
+			(if (flip phi) ; IF participant is guessing
+				   (flip 0.5) ; then they guess
+				   (generic prevalence context))))) ;otherwise, they evaluate the generic
 \end{lstlisting}
 
-The model above says that we, as scientists, have perfect uncertainty about what the generic might mean \emph{a priori}. Thus, the generic-threshold follows a uniform prior distribution between 0 and 1\footnote{If the true threshold turns out to be 0, the generic ``Lorches have purple feathers'' would mean essentially, ``Some lorches have purple feathers''. If the threshold turned out to be very close to 1, the generic would mean essentially: ``All lorches have purple feathers''.}. The generic, here, is assumed to have a truth-functional meaning such that it is \lstinline{true} when the prevalence is over \lstinline{generic-threshold}, and false when it is not. We include the data-analytic parameter \lstinline{phi} to account for data points that deviate strongly from our theory; it is a guessing parameter. We assume there is some proportion of responses where the participant is responding randomly, and we estimate this quantity by way of \lstinline{phi}\footnote{Ideally, we would have \lstinline{phi} be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). As a first pass, we assume there is some global quantity of guessing.}.
+The model above is a data analysis model to try to infer the threshold of the generic, with the built-in flexibility that it might vary by context. There is an implicit cognitive model here (hidden in \lstinline{generic} function). It says the generic is like an alien quantifier. This quantifier behaves like other quantifiers in that it has a fixed-threshold semantics. The only thing special about the generic is that the threshold might be different for different contexts. 
 
-The \lstinline{query} function is written to return \lstinline{generic-threshold}, which is the parameter we are interested in inferring. Finally, the last line is our condition statement: we condition on the data we collected in Experiment 1, which could either be generated from our theory (that \lstinline{prevalence} is greater than \lstinline{generic-threshold}) or by guessing. 
+We don't know what the generic might mean \emph{a priori}. Thus, the generic-threshold\footnote{If the generic threshold turns out to be 0, the generic ``Lorches have purple feathers'' would mean essentially, ``Some lorches have purple feathers''. If the threshold turned out to be very close to 1, the generic would mean essentially: ``All lorches have purple feathers''.} follows a uniform prior distribution between 0 and 1. The generic, here, is assumed to have a truth-functional meaning such that it is \lstinline{true} when the prevalence is over \lstinline{generic-threshold}, and false when it is not. We include the data-analytic parameter \lstinline{phi} to account for data points that deviate strongly from our theory; it is a guessing parameter. We assume there is some proportion of responses\footnote{Ideally, we would have \lstinline{phi} be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). As a first pass, we assume there is some global quantity of guessing.} where the participant is responding randomly, and we estimate this quantity by way of \lstinline{phi}.
+
+The \lstinline{query} function is written to return \lstinline{generic-threshold}, which is the parameter we are interested in inferring. Finally, the last line is our condition statement: we condition on the data we collected in Experiment 1, which could either be generated from our theory (that \lstinline{prevalence} is greater than \lstinline{generic-threshold}) or by guessing (via \lstinline{phi}). 
 
 \subsection{Results}
-
-The results can be seen in Figure \ref{fig:bda1a}. In the ``bare'' condition, the analysis suggests the threshold is somewhere between 0 and 30\%, but it's unclear where exactly in that range the threshold should be. Critically, in the ``dangerous and distinctive'' context, the analysis infers a lower threshold, less than 10\%. This matches with intuition and the empirical results, that a dangerous and distinctive context allows for the generic to be more permissive (e.g. ``Mosquitos carry West Nile Virus'' is true, even though very few mosquitoes actually do). Finally, and most intriguingly, the analysis infers a third distinct threshold profile for the nondistinctive context.  For this, it says that threshold is greater than 10\%, but could be as high as 50\%. This is an overall higher inferred threshold for the nondistinctive category and an aspect of analysis totally obscured by standard NHST. 
-
 \begin{figure}
 \centering
     \includegraphics[width=\columnwidth]{fig2_bda1_combined}
@@ -175,7 +176,9 @@ The results can be seen in Figure \ref{fig:bda1a}. In the ``bare'' condition, th
   \label{fig:bda1a}
 \end{figure}
 
-There is something fundamentally wrong about this analysis, however. Specifically, there is a problem with the cognitive model posited here. The model is a simple model of truth-functional semantics, stating that any situation with a prevalence greater than threshold will return \lstinline{true}, and anything less, will return \lstinline{false}. We see the consequences of these assumptions in the data analysis parameter \lstinline{phi}. \lstinline{phi} represents the percentage of responses that the data analysis model wants to attribute to guessing. With this cognitive model, the percentage of guesses is somewhere between 40 and 50\%. The amount of guessing is so high because our computational model is inflexible.
+The results can be seen in Figure \ref{fig:bda1a}. In the \emph{plain} condition, the analysis suggests the threshold is somewhere between 0\% and 30\%, but it's unclear where exactly in that range the threshold should be\footnote{This uncertainty results from the sparseness of our sampling (see Procedures and Materials). Participants were queried only at prevalence levels 10, 30, 50, 70, and 90}. Critically, in the \emph{dangerous and distinctive} context, the analysis infers a lower threshold, less than 10\%. This matches with intuition and the empirical results, that a dangerous and distinctive context allows for the generic to be more permissive (e.g. ``Mosquitos carry West Nile Virus'' is true, even though very few mosquitoes actually do). Finally, and most intriguingly, the analysis infers a third distinct threshold profile for the \emph{nondistinct and irrelevant} context.  For this, it says that threshold is greater than 10\%, but could be as high as 50\%. This is an overall higher inferred threshold for the nondistinctive category and an aspect of analysis totally obscured by standard frequentist estimation. 
+
+This model is too a simple model, however. We see this in part by the posterior distribution of the data analysis parameter \lstinline{phi}. This parameter is one measure of fit because it represents the percentage of responses that the data analysis model wants to attribute to guessing. With this cognitive model, the percentage of guesses is somewhere between 40\% and 50\%. The amount of guessing is so high because our computational model is inflexible.
 
 This can also be seen in the posterior predictive distribution of responses (Figure \ref{fig:bda1posteriorpred}, left). The model matches the ordering of the truth-conditions by context reasonably well, but is too dichotomous in its predictions. The correlation between the posterior predictive and the data is $r = 0.81$. 
 
@@ -186,15 +189,11 @@ This can also be seen in the posterior predictive distribution of responses (Fig
   \label{fig:bda1posteriorpred}
 \end{figure}
 
-
-
-
-
 %\begin{itemize}
 %\item Inferred value of theta across contexts. 
 %\item $\phi$ parameter. 
 %\item Posterior predictive of fixed threshold model?
-The problem with this approach is that we assuming there is some threshold for the generic, out there in the world, and that we, as scientists, have to do is go out and measure it. An alternative option is to consider that there is indefeasible uncertainty about the threshold, but that listeners try their best and actively infer, from context, probable values of the threshold. To express this type of model, we must consider the pragmatics of language understanding. 
+The problem with this approach is that we are assuming there is some threshold for the generic, out there in the world, and that all there is to do is go out and measure it. An alternative is to consider that there is indefeasible uncertainty about the threshold, but that listeners try their best and actively infer, from context, probable values of the threshold. To express this type of model, we must consider the pragmatics of language understanding. 
 
 %\end{itemize}
 
