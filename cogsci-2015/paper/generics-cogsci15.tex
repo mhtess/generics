@@ -275,7 +275,7 @@ The problem with this approach is that we are assuming there is some threshold f
 
 %\end{itemize}
 
-\section{Rational Speech-Act and dependent measures}
+\section{Rational Speech-Act}
 
 %CBG showed how contexts affects the endorsement for generic statements. An additional concern of their experiments surrounded the relation between two dependent measures for understanding generics. One dependent measure was the ``truth conditions'', or \emph{sentence verification} measure that we've been considering up to this point. The other was an ``implied prevalence'', or \emph{sentence interpretation} dependent measure. The latter was collected by giving participants the generic statement (plus, any additional contextual information), and asking the participant ``What percentage of lorches have purple feathers?''
 
@@ -283,11 +283,11 @@ These tasks are language understanding tasks. We draw on recent work from probab
 
 The results of Exp. 1 replicate the asymmetry between verification and interpretation of the generic. Additionally, CBG  found that the quantifier ``most'' did not show this asymmetry between the two dependent measures\footnote{This asymmetry has since been replicated further in adults and observed in children \cite{Brandone2014}}. 
 
-\subsection{Speak and listen}
+\subsection{The puzzle of dependent measures}
 
 \citeA{Degen2014} argued that differences between dependent measures in experimental effects of pragmatic inference can be accounted for by formal, probabilistic models of pragmatics. In particular, they suggest the \emph{sentence verification} measure is most closely related to production, while \emph{sentence interpretation} is most likely a measure of comprehension. Therefore, formal models of these tasks should be of a speaker and a listener, respectively. We apply this same logic to the CBG paradigm to show how the asymmetry can come about from these different dependent measures.
 
-\section{Lifted-variable RSA}
+\subsection{Lifted-variable RSA}
 
 The bayesian data analysis above provides evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the high inferred value of the guessing parameter \lstinline{phi} suggest, however, that our model of cognition is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, we propose people have uncertainty about the true threshold and actively reason about this meaning from interaction and context. 
 
@@ -300,84 +300,82 @@ In Church, the model looks like:
 \begin{lstlisting}
 (define pragmatic-listener (lambda (utterance)
 	(query
-		(define state (state-prior))
-		(define theta (theta-prior))
+		(define prevalence (prevalence-prior))
+		; listener doesn't know the threshold
+		(define generic-threshold (threshold-prior))
 			
-		state
+		prevalence
 			
-		(equal? utterance (speaker state theta)))))
+		(equal? utterance 
+		; listener imagines the speaker does know the threshold
+			(speaker prevalence generic-threshold)))))
 			
-(define speaker (lambda (state theta)
+(define speaker (lambda (prevalence generic-threshold)
 	(query
 		(define utterance (utterance-prior))
 			
 		utterance
 			
-		(equal? state (literal-listener utterance theta)))))
+		; speaker conditions on a literal-listener inferring the right prevalence
+		(equal? prevalence 
+			(literal-listener utterance generic-threshold)))))
 			
-(define literal-listener (lambda (utterance theta)
+(define literal-listener (lambda (utterance generic-threshold)
 	(query
-		(define state (state-prior))
+		(define prevalence (prevalence-prior))
 			
-		state
-			
-		(utterance state theta))))
+		prevalence
+		; literal listener conditions on the words being true
+		(utterance prevalence generic-threshold))))
 \end{lstlisting}
 
-This is a model of a listener who has been told a generic statement. The listener is pragmatic, insofar as she doesn't know what the world is like, or even what the generic means in the sense of its semantic content. She assumes, however, that the speaker was trying to be informative and that his goal was to communicate the true state of the world. From this, the listener jointly infers both the \lstinline{state} and the threshold \lstinline{theta}. We call this type of model a ``lifted variable'' model because \lstinline{theta}, traditionally thought to be part of the semantic content of the utterance and thus perfectly transparent to all in the conversation, has been ``lifted'' to the pragmatic level and must be inferred like \lstinline{state}.
+This is a model of a listener who has been told a generic statement. She assumes that, whatever the speaker meant to communicate, the speaker was trying to be informative and that his goal was to communicate the \lstinline{prevalence}. From this, the listener jointly infers both the \lstinline{prevalence} and the \lstinline{generic-threshold}. We call this type of model a ``lifted variable'' model because \lstinline{generic-threshold}, traditionally thought to be part of the semantic content of the utterance and thus perfectly transparent to all in the conversation, has been ``lifted'' to the pragmatic level and must be inferred like \lstinline{prevalence}. Following the advice of \citeA{Degen2014}, we will model the \emph{implied prevalence} task as a pragmatic listener task.  
 
-The CBG truth conditions task is not a task for a listener, however, but for a speaker \footnote{See \citeA{Degen2014} for an exposition on how dependent measures map onto different roles in communication.}. Thus, we must say that the there is a speaker, who reasons about the pragmatic-listener, who is trying to infer the state and theta and so on. Our final piece to the cognitive model looks like:
+The CBG \emph{truth conditions} task is not a task for a listener, however, but for a speaker. Thus, we must say that the there is a speaker, who reasons about the pragmatic-listener, who is trying to infer \lstinline{prevalence} and \lstinline{generic-threshold} and so on. Our final piece to the cognitive model looks like:
 
 \begin{lstlisting}
-(define rational-speech-act
-
-	(define lifted-speaker (lambda (state)
-		(query
-			(define utterance (utterance-prior))
+(define lifted-speaker (lambda (prevalence)
+	(query
+		(define utterance (utterance-prior))
 			
-			utterance
+		utterance
 			
-			(equal? state (pragmatic-listener state)))))	
-			
-	(define pragmatic-listener (lambda (utterance)
-		...)))
+		(equal? prevalence (pragmatic-listener utterance)))))	
 \end{lstlisting}
 
-The speaker here, doesn't even consider what the threshold might be, but knows that the pragmatic listener is thinking about it, and so will tailor his utterance appropriate.
-
-\subsection{Inferring a threshold}
+The speaker here, doesn't even consider what the threshold might be, but knows that the pragmatic listener is thinking about it, and so will tailor his utterance appropriately.
 
 
+\subsection{Bayesian analysis to infer priors}
 
-We propose that in this paradigm, the threshold is influenced via the contextual information given. In CBG, this contextual information amounts to the 3 experimental conditions: \emph{dangerous and distinct}, \emph{nondistinct}, and \emph{bare}. In this simple model, the contextual information could provide different \lstinline{state-prior} distributions. \lstinline{state-prior} represents the  prior probability that some percentage of the kind has the property. Naively, this would be \lstinline{(uniform 0 1)}, or equivalently \lstinline{(beta 1 1)}. However, we propose that the participant has different prior distribution in mind, depending on relevance of the properties under discussion (given, again, but the experimental conditions).
+We propose that in this paradigm, the threshold is influenced via the prior distribution over prevalence, which in turn is influenced by the contextual information provided. In CBG, this contextual information amounts to the 3 experimental conditions: \emph{DD}, \emph{NI}, and \emph{plain}. In this simple model, the contextual information could provide different \lstinline{prevalence-prior} distributions. \lstinline{prevalence-prior} represents the  prior probability that some percentage of the kind has the property. Naively, this distribution would be \lstinline{(uniform 0 1)}, or equivalently \lstinline{(beta 1 1)}. However, we propose that the participant has different prior distributions in mind, depending on relevance of the properties under discussion (given, again, but the experimental conditions).
 
-\subsection{Inferring a prior}
-We, as scientists, don't know what these prior distributions look like (although we might have some intuitions). Thus, we put uncertainty over the parameters of this beta distribution, \lstinline{(beta gamma delta)}\footnote{For ease of interpretation, we are parametrizing the \lstinline{beta} distribution by its mean and some measure of its variability ... \lstinline{(beta (* gamma delta) (* (- 1 gamma) delta))}}, outside of the RSA model but inside of the data analysis model. 
+We scientists don't know what these prior distributions look like (although we might have some intuitions). Thus, we put uncertainty over the parameters of this beta distribution, \lstinline{(beta gamma delta)}\footnote{For ease of interpretation, we are parametrizing the \lstinline{beta} distribution by its mean and concrentation... \lstinline{(beta (* gamma delta) (* (- 1 gamma) delta))}}, outside of the RSA model but inside of the data analysis model. 
 
 Thus, we put a bayesian data analysis model on top of a Rational Speech-Act model of language understanding, to see how context might influence the prior distribution given the data we've observed. We keep the data-analytic guessing parameter \lstinline{phi} as a gross estimate of the proportion of responses our model of cognition captures. In Church, this looks like:
 
 \begin{lstlisting}
-(define the-full-bayesian-thing
+(define bayesian-data-analysis
 	(query
 	
-		(define gamma
+		(define gamma ; mean prevalence
 			(lambda (context) (uniform 0 1)))
 			
-		(define delta
+		(define delta ; concentration of our distribution around the mean
 			(lambda (context) (uniform 0 5)))
 			
-		(define phi (uniform 0 1))
+		(define phi (uniform 0 1)) ; guessing parameter
 	
-		(define rational-speech-act
-			(lambda ((gamma context) (delta context)) 
-				...))
+		(define lifted-speaker ...) ; lvRSA model
+		(define pragmatic-listener ...)
+		(define speaker ...)
+		(define literal-listener ...)
 				
-		(list (gamma context) (delta context))
+		'(gamma delta)
 				
-		(= experiment1-data 
-			(if (flip phi)
-				   (flip 0.5)
-				   (rational-speech-act (gamma context) (delta context))))))
+		(and 
+			(= experiment1a-data lifted-speaker)
+			(= experiment1b-data pragmatic-listener))))
 \end{lstlisting}
 
 %\begin{figure}
@@ -387,11 +385,17 @@ Thus, we put a bayesian data analysis model on top of a Rational Speech-Act mode
 %  \label{fig:bda2hyperparams}
 %\end{figure}
 
-We use this data analysis model to infer the hyperprior parameter values for the Lifted-variable RSA model. Figure \ref{fig:modeldatapriors} (bottom) shows prior distributions from the posterior mean inferred values of the hyperprior parameters. This makes the prediction that, if this were the correct model of human cognition, the prior distribution of the \emph{dangerous \& distinctive} condition would be heavily skewed towards lower prevalence levels. This makes sense insofar as a distinctive feature is one that is relatively rare. Our intuitions are again confirmed in the inferred distribution of the \emph{nondistinctive} context. A nondistinctive feature is one that is very common. The prior distribution of the \emph{bare} context lies somewhere in between these two extremes: neither distinctive nor nondistinctive.
+\subsection{Results}
 
-The posterior predictions for the lifted variable RSA model are in Figure \ref{fig:bda1posteriorpred} (right). We can see here that model predicts intermediate endorsement rates for the generic at lower prevalence levels. In a sense, the model has some persistent uncertainty about the true value of the threshold, a feature that people share. We reconstruct the curves of Figure \ref{fig:replication} well; the model--data correlation is $r = 0.97$.
+\subsubsection{Inferred parameters}
+We use this data analysis model to infer the hyperprior parameter values (\lstinline{gamma} and \lstinline{delta}) for lvRSA. Figure \ref{fig:modeldatapriors} (bottom) shows prior distributions from the posterior mean inferred values of the hyperprior parameters. This makes the prediction that, if this were the correct model of human cognition, the prior distribution of the \emph{dangerous \& distinctive} condition would be heavily skewed towards lower prevalence levels. This makes sense insofar as a distinctive feature is one that is relatively rare. Our intuitions are again confirmed in the inferred distribution of the \emph{nondistinctive} context. A nondistinctive feature is one that is very common. The prior distribution of the \emph{bare} context lies somewhere in between these two extremes: neither distinctive nor nondistinctive.
 
 It should also be noted that the mean inferred value of  \lstinline{phi} is about 0.2, a seemingly reasonable estimation of ``guessing'' probability for participants on Amazon's Mechanical Turk.
+
+\subsubsection{Posterior predictives}
+The posterior predictions for the lifted variable RSA model are in Figure \ref{fig:bda1posteriorpred} (right). We can see here that model predicts intermediate endorsement rates for the generic at lower prevalence levels. In a sense, the model has some persistent uncertainty about the true value of the threshold, a feature that people share. We reconstruct the curves of Figure \ref{fig:replication} well; the model--data correlation is $r = 0.97$.
+
+
 
 %\begin{figure}
 %\centering
@@ -414,14 +418,13 @@ We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Tu
 
 \subsubsection{Procedure and materials}
 
-Our procedure was identical to Experiment 1 in all aspects except the question that was asked of the participant\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-8.html}}. 
+Our procedure was similar to Exp. 1b\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-11.html}}. On each trial, participants either read contextual information (\emph{DD} or \emph{NI}) or nothing (\emph{plain}). 
 
-In addition to the prevalence and contextual information, participants were presented with the following additional piece of information ``The island has 100,000 other animals on it.'' and asked the following question: ``How many other animals do you think have purple feathers?''
+In addition to thecontextual information, participants were presented with the following: ``Listed below are 5 kinds of animals, recently discovered.'' and asked the following question: ``What percentage of each kind of animal do you think has [property]?'' The experiment consisted of 6 trials, 2 from each context. 
 
 \subsubsection{Results}
 
-Experiment 2 recovered the shape of the inferred prior distributions from the lifted variable RSA (Figure \ref{fig:modeldatapriors}).
-
+Experiment 2 recovered the shape of the inferred prior distributions from the lvRSA model (Figure \ref{fig:modeldatapriors}).
 
 \begin{figure}
 \centering
@@ -431,9 +434,10 @@ Experiment 2 recovered the shape of the inferred prior distributions from the li
 \end{figure}
 
 
+\section{Further simulations}
 
-
-
+Our model makes the prediction that if the shape of the prior distribution was not bimodal, the asymmetry between verification and interpretation would change. Indeed, this is a similar prediction to \citeA{Cimpian2010}, who posited that accidental or disease states (e.g. ``muddy feathers'', ``infected ears'') would weaken the asymmetry. We would expect accidental or disease states to not follow a bimodal distribution. 
+ 
 
 \section{Discussion}
 
