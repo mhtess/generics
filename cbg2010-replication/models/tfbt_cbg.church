@@ -1,6 +1,6 @@
 ; example call
 
-; time church -u -a 'home,generic,9,12,1000,10' tfbt_cbg.church
+; time church -a 'truth_conditions,generic,all,100,25,3,9' tfbt_cbg.church &
 
 
 (define args (regexp_split argstring ","))
@@ -11,6 +11,7 @@
 (define exp2num (fourth args))
 (define mh_samples (fifth args))
 (define mh_lag (sixth args))
+
 
 (define speaker-optimality 1)
 (define context 'all)
@@ -61,7 +62,6 @@
                                                   target)))
 
 (define all-contexts (unique (map fifth (rest alldata))))
-(display all-contexts)
 (define implied-contexts (unique (map fifth (rest implieddata))))
 
 
@@ -195,7 +195,7 @@
 (define cognitive-model 
   (mem 
   ; (lambda (generic-theta most-theta some-theta QUD evidence) ;; fixed treshold model (obviously wrong)
-   (lambda (state-prior-probs QUD evidence)
+   (lambda (gamma delta QUD evidence)
      ;; input could be utterance (for listener / implied_prevalence)
      ;; or state (for speaker / truth_conditions)
 
@@ -212,22 +212,26 @@
      (define (theta words)
        (theta-meaning (string-append words '-theta)))
 
-    ; ;; can't enumerate over continuous state-prior, so bin 
-    ; (define pseudocount_alpha (* gamma delta))
-    ; (define pseudocount_beta (* (- 1 gamma) delta))
-    ; (define (beta-rv) (* 10 (beta pseudocount_alpha pseudocount_beta))) ;; multiplied by 10 so i can use floor to bin
-    ; (define beta-samples (repeat 1000 beta-rv))
-    ; (define bins '(0 1 2 3 4 5 6 7 8 9 10))
-    ; (define quintile-hist (lambda (x bins nsamp)
-    ;                         (map (lambda (n) (/ (length (filter (lambda (i) 
-    ;                           (= (floor i) n)) x)) nsamp)) bins)))
 
-    ; (define quintile-probs (map (lambda (x) (+ 0.0001 x)) (quintile-hist beta-samples bins 1000)))
-    ; ; multiply by 10 to be consistent with other state prior above
-    ; (define (state-prior) (* (multinomial bins quintile-probs) 10))
+    ;; can't enumerate over continuous state-prior, so bin 
+    (define pseudocount_alpha (* gamma delta))
+    (define pseudocount_beta (* (- 1 gamma) delta))
 
-      (define prevalence-bins '(0 10 20 30 40 50 60 70 80 90 100))
-      (define (state-prior) (multinomial prevalence-bins state-prior-probs))
+    ; (display gamma)
+    ; (display delta)
+
+    (define (beta-rv) (* 10 (beta pseudocount_alpha pseudocount_beta))) ;; multiplied by 10 so i can use floor to bin
+    (define beta-samples (repeat 1000 beta-rv))
+    (define bins '(0 1 2 3 4 5 6 7 8 9 10))
+    (define quintile-hist (lambda (x bins nsamp)
+                            (map (lambda (n) (/ (length (filter (lambda (i) 
+                              (= (floor i) n)) x)) nsamp)) bins)))
+
+    (define quintile-probs (map (lambda (x) (+ 0.0001 x)) (quintile-hist beta-samples bins 1000)))
+
+   ; (define blah (display quintile-probs))
+    ; multiply by 10 to be consistent with other state prior above
+    (define (state-prior) (* (multinomial bins quintile-probs) 10))
 
     (define speaker2
       (mem (lambda (state)
@@ -316,9 +320,8 @@
 
      (define query-statement (lambda (context) (list (gamma context) (delta context))))
 
+
      (define phi (uniform 0 1)) ;; guessing parameter
-     ;(define phi-tc (uniform 0 1)) ;; guessing parameter
-     ;(define phi-ip (uniform 0 1)) ;; guessing parameter
 
      ;(define speaker-optimality (uniform 0 5))  
 
@@ -332,33 +335,7 @@
      ;(define gamma (mem (lambda (context) (uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
      ;(define delta (mem (lambda (context) (uniform-draw '(0.01 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
 
-     (define state-prior-probs 
-      (mem (lambda (g d)
-          (rejection-query
-            (define pseudocount_alpha (* g d))
-            (define pseudocount_beta (* (- 1 g) d))
-            (define (beta-rv) (* 10 (beta pseudocount_alpha pseudocount_beta))) ;; multiplied by 10 so i can use floor to bin
-            (define beta-samples (repeat 1000 beta-rv))
-            (define bins '(0 1 2 3 4 5 6 7 8 9 10))
-            (define quintile-hist (lambda (x bins nsamp)
-                                    (map (lambda (n) (/ (length (filter (lambda (i) 
-                                      (= (floor i) n)) x)) nsamp)) bins)))
-          
-            (define quin-probs (map (lambda (x) (+ 0.0001 x)) 
-              (quintile-hist beta-samples bins 1000)))
 
-            quin-probs
-
-            true
-        ))))
-
-     (define (quintile-probs context)
-        (state-prior-probs (gamma context) (delta context)))
-
-    ; multiply by 10 to be consistent with other state prior above
-    
-    ; multiply by 10 to be consistent with other state prior above
-    ;(define (state-prior c) (* (multinomial bins (quintile-probs c)) 10))
 
      (define alt-words
        (case QUD
@@ -378,7 +355,7 @@
           (lambda (unique-evidence-data-for-one-context context)
             (map 
               (lambda (evidence) 
-              (cognitive-model (quintile-probs context) QUD evidence))
+              (cognitive-model (gamma context) (delta context) QUD evidence))
             unique-evidence-data-for-one-context))
         unique-evidence-data all-contexts)
        (map 
@@ -419,9 +396,9 @@
         (if (equal? context 'all)
           (map 
             (lambda (context)
-              (cognitive-model (quintile-probs context) 'how-many 'generic))
+              (cognitive-model (gamma context) (delta context) 'how-many 'generic))
           all-contexts)
-            (cognitive-model (quintile-probs context) 'how-many 'generic)))
+            (cognitive-model (gamma context) (delta context) 'how-many 'generic)))
 
      (define scores-for-implied
        (lambda (data modelpred)
@@ -452,7 +429,7 @@
           (lambda (unique-evidence-data-for-one-context context)
             (map 
               (lambda (evidence) 
-              (cognitive-model (quintile-probs context) 'truth evidence))
+              (cognitive-model (gamma context) (delta context) 'truth evidence))
             unique-evidence-data-for-one-context))
         unique-evidence-data all-contexts)
        (map 
@@ -464,7 +441,7 @@
       (if (equal? context 'all)
         (map 
           (lambda (context)
-            (cognitive-model (quintile-probs context) 'how-many 'generic))
+            (cognitive-model (gamma context) (delta context) 'how-many 'generic))
         all-contexts)))
 
      ;;; for listener model
@@ -547,7 +524,7 @@
    '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
 
 (define output-file-name (string-append  output-path 
-  'lvRSA_condition2_cnts_new2_expts 
+  'lvRSA_condition2_cnts_expts 
   expnum '_ exp2num
   '_ quantifier 
   '_mh mh_samples 
