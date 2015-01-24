@@ -36,7 +36,7 @@ all.experiments<-rbind(d1,d3)
 
 ```{r exp1}
 # library(ggplot2)
-# library(plyr)
+library(plyr)
 # library(reshape2)
 library(ggthemes)
 # library(gridExtra)
@@ -2231,7 +2231,7 @@ TFBT on Experiment 11
 
 ```{r exp11.tfbt}
 setwd("~/Documents/research/generics/cbg2010-replication/analysis/")
-d<-read.csv('exp11_cts_betaHyperparams_mh1000_50.csv',header=F)
+d<-read.csv('exp11_betaHyperparams_wPhi_mh100_50.csv',header=F)
 m.tidy<-d %>% 
   select(V1,V2,V4,V5,V7,V8)%>%
   rename(bare_gamma=V1,
@@ -2243,14 +2243,41 @@ m.tidy<-d %>%
   gather(variable,value)%>%
   separate(variable,into=c("context","parameter"),by="_")
 
+m.phi<- d%>%select(V11)%>%rename(phi=V11)
+
+qplot(data=m.phi,x=phi,geom='histogram')
+
 ggplot(subset(m.tidy,parameter=='gamma'),aes(x=value))+
   geom_histogram()+
   facet_grid(context~.)
 
-ggplot(m.tidy,aes(x=value))+
-  geom_histogram()+
-  facet_grid(context~parameter)
+#ggplot(m.tidy,aes(x=value))+
+#  geom_histogram()+
+#  facet_grid(context~parameter)
+```
 
+
+
+# Experiment 12: implied prevalence with proper randomization
+
+```{r exp12}
+setwd("~/Documents/research/generics/cbg2010-replication/data/")
+d<-read.table('cbgR-exp12-trials.tsv',header=T)
+
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+table(d$stim_type,d$item)
+table(d$stim_type,d$stim_part)
+
+d$stim_type<-factor(d$stim_type,levels=c("danger-distinct","nondistinctive","bare"))
+
+qplot(data=d,x=response,fill=stim_type,geom='histogram')+
+  facet_wrap(~stim_type)+
+    guides(fill=F)+
+  scale_fill_brewer(type='qual',palette=6)
 
 
 ```
+
+
+Check to see if same turkers did Exp 9 and Exp 12
+

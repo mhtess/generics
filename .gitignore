@@ -3,7 +3,7 @@
 *.gz
 *.sty
 *.RData
-*.Rhistory	
+*.Rhistory
 cogsci-2015/paper/CogSci_Template.bib
 cogsci-2015/paper/apacite.bst
 cogsci-2015/paper/cogsci_template.aux
@@ -18,5 +18,5 @@ cogsci-2015/paper/outline.aux
 cogsci-2015/paper/outline.log
 cogsci-2015/paper/outline.pdf
 cogsci-2015/presentation/
-
+cbg2010-replication/turk/
 cbg2010-replication/analysis/plots/

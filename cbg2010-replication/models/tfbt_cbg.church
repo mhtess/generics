@@ -1,6 +1,6 @@
 ; example call
 
-; time church -a 'truth_conditions,generic,all,100,50,3,9' tfbt_cbg.church &
+; time church -a 'truth_conditions,generic,all,100,25,3,9' tfbt_cbg.church &
 
 
 (define args (regexp_split argstring ","))
@@ -400,7 +400,11 @@
                 [prob  (lambda (x) (if (= (match x) -1) 0
                                       (list-ref (second modelpred) (match x))))]
                 [score-marginalized-phi 
-                  (lambda (x) (log (+ (* phi (/ 1 (length (first modelpred)))) (* (- 1 phi) (prob x)))))])
+                  (lambda (x) (log (+ 
+                                    (* phi 
+                                      (/ 1 (length (first modelpred)))) 
+                                    (* (- 1 phi) 
+                                      (prob x)))))])
 
            (sum (map score-marginalized-phi data)))))
      
