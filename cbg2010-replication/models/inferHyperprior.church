@@ -42,14 +42,15 @@
      (string->number mh_samples)
      (string->number mh_lag)
 
-     (define gamma (mem (lambda (context) (uniform 0 1))))
-	;	(uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
+    ; (define gamma (mem (lambda (context) (uniform 0 1))))
+      (define gamma (mem (lambda (context) 
+		(uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
 
-	(define delta (mem (lambda (context) (uniform 0 3))))
+	;(define delta (mem (lambda (context) (uniform 0 3))))
+	(define delta (mem (lambda (context) 
+		(uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
 
-	;	(uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
-
-	;(define phi (uniform 0 1))
+	(define phi (uniform 0 1))
 
 	(define (pseudocount_alpha c) (* (gamma c) (delta c)))
 	(define (pseudocount_beta c) (* (- 1 (gamma c)) (delta c)))
@@ -65,18 +66,24 @@
 			(lambda (c prevalence-data-by-context)
 				(map 
 					(lambda (x)
-						(betaScore (list (pseudocount_alpha c) (pseudocount_beta c)) (smooth-edges x)))
+						(log (+ 
+								(* phi (/ 1 100)) 
+								(* (- 1 phi) 
+									(exp (betaScore 
+											(list (pseudocount_alpha c) 
+													(pseudocount_beta c)) 
+											(smooth-edges x)))))))
 					prevalence-data-by-context))
 		all-contexts prevalence-data))
 
 	(define dummy-factor (factor (sum (flatten scores))))
 
-	(map (lambda (c) (list (gamma c) (delta c))) all-contexts)
+	(list (map (lambda (c) (list (gamma c) (delta c))) all-contexts) phi)
 
 	true))
 
 (define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/analysis/)
-(define output-filename (string-append  output-path 'exp11_cts_betaHyperparams '_mh mh_samples '_ mh_lag '.csv))
+(define output-filename (string-append  output-path 'exp11_betaHyperparams_wPhi '_mh mh_samples '_ mh_lag '.csv))
 
 (write-csv data-analysis output-filename)
 
