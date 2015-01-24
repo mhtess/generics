@@ -5,13 +5,17 @@
 
 (define args (regexp_split argstring ","))
 
-(define task (first args))
+(define serv (first args))
 (define quantifier (second args))
-(define context (third args))
-(define mh_samples (fourth args))
-(define mh_lag (fifth args))
-(define speaker-optimality (sixth args))
-(define expnum (seventh args))
+(define expnum (third args))
+(define exp2num (fourth args))
+(define mh_samples (fifth args))
+(define mh_lag (sixth args))
+
+
+(define speaker-optimality 1)
+(define context 'all)
+(define task 'truth_conditions) ;;; depracated, but still need this
 
 (define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
 
@@ -28,8 +32,10 @@
 (define string->boolean (lambda (str)
                           (equal? str 'True)))
 
-(define data-path '/Users/mht/Documents/research/generics/cbg2010-replication/data/)
-;(define data-path '/home/mht/generics/cbg2010-replication/data/)
+(define data-path
+  (if (equal? serv 'home)
+     '/Users/mht/Documents/research/generics/cbg2010-replication/data/
+     '/home/mht/research/generics/cbg2010-replication/data/))
 
 ;(define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
 ;(define data-file (string-append data-path 'cbgR-exp4_anonymized-trials.csv))
@@ -37,7 +43,7 @@
 
 (define data-file (string-append data-path (string-append 'cbgR-exp expnum '-trials.csv)))
 
-(define implied-data-file (string-append data-path 'cbgR-exp3_anonymized-trials_noContext.csv))
+(define implied-data-file (string-append data-path (string-append 'cbgR-exp exp2num '-trials.csv)))
 
 
 (define alldata (read-csv data-file))
@@ -251,7 +257,7 @@
 
                (equal? words 
                 (apply multinomial (raise-to-power (speaker1 state generic-theta) 
-                  (string->number speaker-optimality))))))))
+                   speaker-optimality)))))))
 
      (define speaker1
        (mem (lambda (state generic-theta)
@@ -323,11 +329,11 @@
      ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
      ;(define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
 
-     ; (define gamma (mem (lambda (context) (uniform 0 1))))
-     ; (define delta (mem (lambda (context) (uniform 0 3))))
+      (define gamma (mem (lambda (context) (uniform 0 1))))
+      (define delta (mem (lambda (context) (uniform 0 3))))
 
-     (define gamma (mem (lambda (context) (uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
-     (define delta (mem (lambda (context) (uniform-draw '(0.01 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
+     ;(define gamma (mem (lambda (context) (uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
+     ;(define delta (mem (lambda (context) (uniform-draw '(0.01 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
 
 
 
@@ -511,11 +517,19 @@
 ;(cognitive-model 0.3 1 'truth 30)
 
 (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
-(define output-path '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/)
 
+(define output-path
+  (if (equal? serv 'home)
+   '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/
+   '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
 
-(define output-file-name (string-append  output-path 'speak_listenDifAlt_condition2tasksChain3_betaHyper_Hyper_exp expnum context '_ quantifier '_ task 
-     '_mh mh_samples '_ mh_lag '_alpha speaker-optimality '.csv))
+(define output-file-name (string-append  output-path 
+  'lvRSA_condition2_cnts_expts 
+  expnum '_ exp2num
+  '_ quantifier 
+  '_mh mh_samples 
+  '_ mh_lag 
+  '_alpha (number->string speaker-optimality) '.csv))
 
  (write-csv samples output-file-name)
  (define complete? 'complete)
