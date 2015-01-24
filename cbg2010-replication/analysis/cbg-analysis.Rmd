@@ -2263,7 +2263,7 @@ ggplot(subset(m.tidy,parameter=='gamma'),aes(x=value))+
 ```{r exp12}
 setwd("~/Documents/research/generics/cbg2010-replication/data/")
 d<-read.table('cbgR-exp12-trials.tsv',header=T)
-
+#write.csv(d,'cbgR-exp12-trials.csv')
 d$item <- paste(d$stim_color,d$stim_part,sep="_")
 table(d$stim_type,d$item)
 table(d$stim_type,d$stim_part)
@@ -2279,5 +2279,36 @@ qplot(data=d,x=response,fill=stim_type,geom='histogram')+
 ```
 
 
-Check to see if same turkers did Exp 9 and Exp 12
+Check to see if same turkers did Exp 9 and Exp 12? Nope.
 
+
+# TFBT on fixed-threshold, 2 ways
+
+
+```{r tfbt.ft.paper}
+d<-read.csv('ft_condition2_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+
+
+ft.phi <- d %>% select(V1) %>% rename(phi=V1)
+qplot(data=ft.phi,x=phi,geom='density')
+
+
+  d.tidy <- d %>%
+  select(V2,V3,V4) %>%
+  rename(danger_distinct = V2,
+         nondistinct = V3,
+         bare = V4) %>%
+  gather(variable,value)
+
+ggplot(d.tidy,aes(x=value,fill=variable))+
+  geom_density(alpha=0.8)+
+  theme_paper()+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  scale_fill_brewer(type='qual',palette=6)+
+  theme(strip.text.x = element_text(size=14,color='black'),
+        legend.position='bottom',
+        legend.direction='horizontal')+
+  guides(fill=guide_legend(title="Context"))+
+  xlab("generic threshold")
+
+```
