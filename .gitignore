@@ -20,3 +20,14 @@ cogsci-2015/paper/outline.pdf
 cogsci-2015/presentation/
 cbg2010-replication/turk/
 cbg2010-replication/analysis/plots/
+cbg2010-replication/analysis/cbg-analysis.html
+cbg2010-replication/cbg-analysis.knit.md
+cbg2010-replication/models/bayesian_analysis/cbg-analysis.knit.md
+cbg2010-replication/models/cbg_speaker2.church
+cbg2010-replication/models/experimenter.church
+cbg2010-replication/models/listenter-test.church
+cbg2010-replication/models/scalarimplicature.church
+cbg2010-replication/models/scratch.church
+cbg2010-replication/models/tfbt_cbg_asymmetry.church
+cbg2010-replication/models/tfbt_cbg_asymmetry2.church
+cbg2010-replication/models/tfbt_kinds.church
