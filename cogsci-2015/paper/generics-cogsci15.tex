@@ -189,9 +189,12 @@ Participants were then asked ``What percentage of \emph{the kind} do you think h
 Our results replicated the finding of CBG that the generic statement was interpreted as having a higher prevalence than its truth conditions would imply. 
 \red{say something about how this analysis was done...}
 
-\section{Bayesian analysis of CBG}
-
-The results from Exp. 1a tell us that there were significantly more ``true'' responses in one context vs. another, and that these relative proportions of ``true'' responses were most different at the lower prevalence levels (via the interaction term of the regression). We formalize the notion of ``truth conditions'' by saying the generic is a function from states of the world to truth-values. We operationalize \emph{states of the world} here as the prevalence of some property within a kind. This mapping is then determined by some threshold such that the generic is true when the prevalence is above threshold. In Church \cite{probmods}, this would be written:
+\section{Bayesian data analysis of truth conditions}
+The above results, replicated from CBG, indirectly constrain the truth conditions that participants are effectively using for generic statements within these experimental conditions. In this section we explore these truth conditions more directly by using bayesian data analysis techniques.
+We assume that the conditions for truth of the generic can be usefully represented by a threshold on prevalence: the generic is true when the prevalence of some property within a kind exceeds a given threshold (See \cite{cohen} for a similar assumption).
+We can then ask, how must the threshold vary across tasks and conditions to account for the data?
+%We formalize the notion of ``effective truth conditions'' by saying the generic is a function from states of the world to truth-values. We operationalize \emph{states of the world} here as the prevalence of some property within a kind. This mapping is then determined by some threshold such that the generic is true when the prevalence is above threshold. 
+Using the Church probabilistic programming language to represent this model \cite{probmods}, this would be written:
 
 \begin{lstlisting}
 (define generic 
@@ -200,6 +203,7 @@ The results from Exp. 1a tell us that there were significantly more ``true'' res
 
 To handle the inference problem the participant is faced with, we express the subject's uncertainty about whether the generic is true or false.
 
+\red{NDG: the rest of this section is too long and doesn't make sense to me...}
  \begin{lstlisting}
 (define truth-conditions (lambda (prevalence)
 	(query  
