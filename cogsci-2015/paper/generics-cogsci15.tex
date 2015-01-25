@@ -1,22 +1,11 @@
-% 
-% Annual Cognitive Science Conference
-% Sample LaTeX Paper -- Proceedings Format
-% 
 
-% Original : Ashwin Ram (ashwin@cc.gatech.edu)       04/01/1994
-% Modified : Johanna Moore (jmoore@cs.pitt.edu)      03/17/1995
-% Modified : David Noelle (noelle@ucsd.edu)          03/15/1996
-% Modified : Pat Langley (langley@cs.stanford.edu)   01/26/1997
-% Latex2e corrections by Ramin Charles Nakisa        01/28/1997 
-% Modified : Tina Eliassi-Rad (eliassi@cs.wisc.edu)  01/31/1998
-% Modified : Trisha Yannuzzi (trisha@ircs.upenn.edu) 12/28/1999 (in process)
-% Modified : Mary Ellen Foster (M.E.Foster@ed.ac.uk) 12/11/2000
-% Modified : Ken Forbus                              01/23/2004
-% Modified : Eli M. Silk (esilk@pitt.edu)            05/24/2005
-% Modified : Niels Taatgen (taatgen@cmu.edu)         10/24/2006
-% Modified : David Noelle (dnoelle@ucmerced.edu)     11/19/2014
-
-%% Change "letterpaper" in the following line to "a4paper" if you must.
+%todo:
+%-try an S2 model of prevalence judgement task, too. does it reduce to the L1 model?
+%
+%todo after cogsci:
+%-run additional contexts. e.g. separate dangerous and distinct.
+%-think about the weird cases of generics in the literature. e.g. ``robins lay eggs''.
+%
 
 \documentclass[10pt,letterpaper]{article}
 
@@ -66,7 +55,7 @@
 \newcommand{\red}[1]{\textcolor{Red}{#1}}  
 
 
-\title{Generic meanings are vague but rationally inferred from context}
+\title{Generics are vague: formalizing the scalar semantics of generic language}
  
  \author{{\large \bf Michael Henry Tessler, Noah D. Goodman } \\
 	\{mhtessler, ngoodman\}@stanford.edu \\
@@ -89,19 +78,20 @@ New sanctions passed by this Congress, at this moment in time, will all but guar
 \end{aquote}
 
 
-Generic meanings are hard to pin down.  Consider President Obama's remark during the State of the Union Address. The sentence is a generic statement about \emph{new sanctions} in that it conveys a generalization about the members of a kind \cite{Carlson1977, Leslie2008}. It invites the question: ``Exactly how many of these new sanctions will guarantee diplomacy fails?'' President Obama's statement is conceivably true for a range of possible values. At the same time, he is not a man to waste words, and so why does he go through the trouble of saying such a statement? In this paper, we will see that both the context in which his words are uttered and his effort in producing this statement contribute to the meaning we derive. % 
+Generic meanings are hard to pin down.  Consider President Obama's remark during the State of the Union Address. The sentence is a generic statement about \emph{new sanctions} in that it conveys a generalization about the members of a kind \cite{Carlson1977, Leslie2008}. It invites the question: ``Exactly how many of these new sanctions will guarantee diplomacy fails?'' President Obama's statement is conceivably true if most or only a few new sanctions will be problematic. At the same time, he is not a man to waste words---why does he go through the trouble of saying such a vague statement? In this paper, we will see that both the context in which his words are uttered and his effort in producing this statement contribute to the meaning we derive. We will propose that these aspects of generic statements follow from pragmatic reasoning about an uncertain threshold for meaning; an idea which we formalize in a Bayesian Rational Speech Acts computational model.
 
-Generic statements are puzzling because they accommodate a range of quantification. On one hand, generics would seem to suggest an almost universal quantification, as in ``Dogs bark''. Others, like ``Mosquitos carry West Nile virus'', express a relation that applies only to a small subset of the kind. It is perhaps this inherent uncertainty that leads generics to be so widespread in natural language. 
+Generic statements are puzzling because their meaning is so flexible. On one hand, generics would seem to suggest an almost universal quantification, as in ``Dogs bark''. Others, like ``Mosquitos carry West Nile virus'', involve a property that applies only to a small subset of the kind. 
+%It is perhaps this inherent uncertainty that leads generics to be so widespread in natural language. 
+\citeA{Cimpian2010} (henceforth, CBG) carried out a series of controlled studies designed to examine the truth conditions and implications of generic statements. 
+They found evidence for the influence of context, in the form of additional knowledge about a target property, on participants' willingness to accept generic statements (i.e. context modified the truth conditions). CBG also found an asymmetry between verification and interpretation: participants interpreted a generic (e.g.~``lorches have purple fur'') as nearly universal, but would endorse the same generic as true if given a much lower prevalence level (``50\% of lorches have purple fur'').
 
-\citeA{Cimpian2010} (henceforth, CBG) carried out a series of controlled studies designed to examine the truth conditions and implications of generic statements. They found consistent evidence that the generic is interpreted more strongly than one would expect based on its truth conditions. The authors also found evidence for the influence of context on participants' willingness to accept the relevant generics (i.e. context modified the truth conditions). 
+Both context and asymmetry effects pose a puzzle for formal semantics. 
+In this paper, we seek to explain both of these phenomena as the effects of pragmatic inference filling in a meaning that is underspecified in the semantics. 
+In particular, we posit a scalar semantics for generics in which they express that prevalence---the probability of the property given the kind---is above a threshold (Cf. \cite{cohen}). Following \citeA{lassiter} we treat this threshold as a free variable that is reasoned about by a pragmatic listener: what is the threshold likely to be, given that a speaker bothered to utter the generic? Context effects follow from differences in prior beliefs about the distribution of the property across categories. Asymmetry effects follow directly by modeling differences in the language understanding and production task faced by participants in the different experiments (Cf. \citeA{Degen2014}).  %suggested that different dependent measures in experimental pragmatics paradigms map onto different communicative roles, and thus should be modeled accordingly. 
 
-In their \emph{truth conditions} task, participants were given an evidence statement in terms of the percentage of a category that had a property (e.g. ``30\% of lorches have purple feathers.''). Participants were asked whether the associated generic statement (i.e. ``Lorches have purple feathers'') was true or false. The authors manipulated context within-subjects by adding additional statements about the property. Three contexts will focus on in this paper are \emph{dangerous and distinct} (DD), \emph{not distinct and irrelevant} (NI), and \emph{plain} (P). The authors found that DD increased the overall proportion of ``true'' responses of the generic propositions. That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. when 10\% or 30\% of lorches had purple feathers) to assert that the generic statement was true.
+%We draw on new advances in probabilistic pragmatics to formalize two possible theories of the generic. Further, we harness the power of Bayesian data analysis to mediate between these formal theories and draw inferences about cognitively interesting model parameters. 
 
-In their \emph{implied prevalence} task, participants were supplied with the generic (still, with context as a within-subjects variable) and asked ``What percentage of lorches do you think have purple feathers?''. The authors consistently found that the generic was interpreted as referring to nearly all lorches. 
-
-This contextual effects on truth conditions and the asymmetry between verification and interpretation pose a puzzle for formal semantics. In this paper, we seek to explain both of these phenomena in terms of pragmatic inference arising from a vague statement. \citeA{Degen2014} suggested that different dependent measures in experimental pragmatics paradigms map onto different communicative roles, and thus should be modeled accordingly. 
-
-We draw on new advances in probabilistic pragmatics to formalize two possible theories of the generic. Further, we harness the power of Bayesian data analysis to mediate between these formal theories and draw inferences about cognitively interesting model parameters. 
+In what follows, we first replicate the main effects reported by CBG, using Bayesian data analysis techniques to further examine the effective truth-conditions of generic statements. We then introduce a model of generic comprehension, within the probabilistic Rational Speech Acts framework \cite{frank12,goodman13}. We show that this model predicts both context and asymmetry effects, given appropriate prevalence priors. Finally we experimentally elicit the prevalence priors in CBG's experimental contexts, verifying the predictions of the model.
 
 
 %(e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers'')
@@ -111,6 +101,11 @@ We draw on new advances in probabilistic pragmatics to formalize two possible th
 
 
 \section{Experiment 1: CBG replication}
+
+In CBG's \emph{truth conditions} task, participants were given an evidence statement in terms of the percentage of a category that had a property (e.g. ``30\% of lorches have purple feathers.''). Participants were asked whether the associated generic statement (i.e. ``Lorches have purple feathers'') was true or false. The authors manipulated context within-subjects by adding additional statements about the property. Three contexts we will focus on in this paper are \emph{dangerous and distinct} (DD), \emph{not distinct and irrelevant} (NI), and \emph{plain} (P). The authors found that DD increased the overall proportion of ``true'' responses of the generic propositions. That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. 10\% of lorches had purple feathers) to assert that the generic statement was true.
+
+In their \emph{implied prevalence} task, participants were supplied with the generic (still, with context as a within-subjects variable) and asked ``What percentage of lorches do you think have purple feathers?''. The authors consistently found that the generic was interpreted strongly---nearly all lorches have purple feathers. 
+
 
 Experiment 1 attempted to replicate the main findings of CBG: that context affects the proportion of ``true'' responses to a generic statement (Exp. 1a) and that there is an asymmetry between interpretation and verification of the truth conditions of the generic (Exp. 1b). 
 
