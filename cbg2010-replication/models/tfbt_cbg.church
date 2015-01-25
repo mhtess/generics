@@ -321,7 +321,8 @@
      (define query-statement (lambda (context) (list (gamma context) (delta context))))
 
 
-     (define phi (uniform 0 1)) ;; guessing parameter
+     (define phi-tc (uniform 0 1)) ;; guessing parameter for truth cond task
+     (define phi-ip (uniform 0 1)) ;; guessing parameter for implied prevalence task
 
      ;(define speaker-optimality (uniform 0 5))  
 
@@ -329,11 +330,13 @@
      ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
      ;(define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
 
-      (define gamma (mem (lambda (context) (uniform 0 1))))
-      (define delta (mem (lambda (context) (uniform 0 3))))
+     ; (define gamma (mem (lambda (context) (uniform 0 1))))
+     ; (define delta (mem (lambda (context) (uniform 0 3))))
 
-     ;(define gamma (mem (lambda (context) (uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
-     ;(define delta (mem (lambda (context) (uniform-draw '(0.01 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
+     (define gamma (mem (lambda (context) (uniform-draw '(0.01 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 
+              0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95)))))
+     (define delta (mem (lambda (context) (uniform-draw '(0.01 0.05 0.1 0.15 0.2 0.4 0.6 0.8 1 1.2 
+      1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
 
 
 
@@ -369,7 +372,7 @@
                 [match (lambda (x) (position (first modelpred-byprev) x))]
                 [prob (lambda (x) (if (= (match x) -1) 0
                                       (list-ref (second modelpred-byprev) (match x))))]
-                [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
+                [score-marginalized-phi (lambda (x) (log (+ (* phi-tc 0.5) (* (- 1 phi-tc) (prob x)))))])
            (sum (map score-marginalized-phi data-as-quantifier)))))
 
      ;; for speaker model 
@@ -407,9 +410,9 @@
                                       (list-ref (second modelpred) (match x))))]
                 [score-marginalized-phi 
                   (lambda (x) (log (+ 
-                                    (* phi 
-                                      (/ 1 (length (first modelpred)))) 
-                                    (* (- 1 phi) 
+                                    (* phi-ip
+                                      (/ 1 10)) 
+                                    (* (- 1 phi-ip) 
                                       (prob x)))))])
 
            (sum (map score-marginalized-phi data)))))
@@ -495,12 +498,13 @@
 
 
 
-    (list phi
+    (list phi-tc
      (if (equal? context 'all)
       (map (lambda (c) (query-statement c)) all-contexts))
      speaker-predictive
      listener-predictive
      speaker-optimality
+     phi-ip
      )
 ;; for fixed threshold model
      ; (if (equal? context 'all)
@@ -524,7 +528,7 @@
    '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
 
 (define output-file-name (string-append  output-path 
-  'lvRSA_condition2_cnts_expts 
+  'lvRSA_condition2_dscFine_2phis_expts 
   expnum '_ exp2num
   '_ quantifier 
   '_mh mh_samples 
