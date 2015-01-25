@@ -26,6 +26,7 @@
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{caption}
+\usepackage{subcaption}
 \usepackage{listings}
 \usepackage{color}
 \usepackage{textcomp}
@@ -131,15 +132,37 @@ Participants saw a prevalence statement and a context. A context here was either
 
 \subsubsection{Results}
 
+
 \begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{fig1_replication}
-    \caption{Replication of CBG \emph{truth conditions}, generics condition}
-  \label{fig:replication}
+        \centering
+        \begin{subfigure}[b]{0.55\columnwidth}
+                \includegraphics[width=\columnwidth]{data_truthconditions1}
+                \caption{Truth conditions of the generic vary across contexts}
+                \label{fig:datatc}
+        \end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+          %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.45\columnwidth}
+                \includegraphics[width=\columnwidth]{data_asymmetry1}
+                \caption{Asymmetry between verification and interpretation}
+                \label{fig:datasym}
+        \end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+          %(or a blank line to force the subfigure onto a new line)
+        \caption{Replication of CBG}\label{fig:exp1}
 \end{figure}
 
 
-Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts (Figure \ref{fig:replication})\red{[insert stats here]}. There was also an interaction between prevalence level and context such that the DD context was endorsed more particularly at lower prevalence levels. \red{[insert stats here]}. 
+
+%\begin{figure}
+%\centering
+%    \includegraphics[width=\columnwidth]{fig1_replication}
+%    \caption{Replication of CBG \emph{truth conditions}, generics condition}
+%  \label{fig:replication}
+%\end{figure}
+
+
+Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts (Figure \ref{fig:datatc})\red{[insert stats here]}. There was also an interaction between prevalence level and context such that the DD context was endorsed more particularly at lower prevalence levels. \red{[insert stats here]}. 
 
 \subsection{Experiment 1b: \emph{implied prevalence}}
 
