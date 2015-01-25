@@ -2528,6 +2528,13 @@ d$truth_conditions <- factor(as.logical(levels(d$response)[d$response]),
                               levels=c("TRUE","FALSE"))
 
 d$truth_num <- bool.tonum(d$truth_conditions)
+
+
+rs<-glmer(truth_num ~ stim_prevalence*stim_type + (1 | workerid) + (1 | item), data=d, family = 'binomial')
+summary(rs)
+
+
+
 tc.bs<-bootstrap.ci.tc(d)
 
 tc.bs$context<-factor(tc.bs$stim_type,
@@ -2565,7 +2572,7 @@ fig1a<-ggplot(tc.bs, aes(x=stim_prevalence,y=truth_num,
 
 Experiment 1b: asymmetry
 
-```{r}
+```{r cogsci.fig1b}
 
 setwd("~/Documents/research/generics/cbg2010-replication/data/")
 f<-read.table('cbgR-exp12-trials.tsv',header=T)
@@ -2611,7 +2618,7 @@ m$task <- factor(m$task,
                  levels=c("truthconditions","impliedprevalence"),
                  labels=c("truth conditions", "implied prevalence"))
 
-asym<-ggplot(m, aes(x=context,y=imp_subj,fill=context,alpha=task, group=task))+
+ggplot(m, aes(x=context,y=imp_subj,fill=context,alpha=task, group=task))+
   geom_bar(stat='identity',position=position_dodge(0.5), width=0.5,color='black')+
   geom_errorbar(aes(ymin=YMin,ymax=YMax),
                 width=0.2,
@@ -2623,7 +2630,10 @@ asym<-ggplot(m, aes(x=context,y=imp_subj,fill=context,alpha=task, group=task))+
   scale_alpha_manual(values=c(0.4,1))+
  # scale_fill_manual(values=c("#999999","#ef8a62"))+
   xlab("")+
-  guides(fill=F)
+  guides(fill=F)+
+  theme(legend.position='bottom',
+        legend.direction='horizontal',
+        axis.text.x=element_blank())
 
 
 #grid.arrange(fig1a,asym,nrow=1)
@@ -2639,14 +2649,14 @@ asym<-ggplot(m, aes(x=context,y=imp_subj,fill=context,alpha=task, group=task))+
 ```{r tfbt.ft.paper}
 
 setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
-d<-read.csv('ft_condition2_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+d<-read.csv('ft_conditionIP_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
 
 
 ft.phi <- d %>% select(V1) %>% rename(phi=V1)
-qplot(data=ft.phi,x=phi,geom='density')
+qplot(data=ft.phi,x=phi,geom='density')+xlim(0,1)
 
 
-  d.tidy <- d %>%
+d.tidy <- d %>%
   select(V2,V3,V4) %>%
   rename(danger_distinct = V2,
          nondistinct = V3,
@@ -2663,6 +2673,169 @@ ggplot(d.tidy,aes(x=value,fill=variable))+
         legend.direction='horizontal')+
   guides(fill=guide_legend(title="Context"))+
   xlab("generic threshold")
+
+```
+
+Posterior predictive for truth conditions
+
+```{r postpred.truthcond.ft.paper}
+
+d.tidy <- d %>%
+  select(V6,V7,V8, V9, V10,
+         V12, V13, V14, V15, V16,
+         V18, V19, V20, V21, V22
+         ) %>%
+  rename(dangerdistinct_10 = V6,
+         dangerdistinct_30 = V7,
+         dangerdistinct_50 = V8,
+         dangerdistinct_70 = V9,
+         dangerdistinct_90 = V10,
+         nondistinct_10 = V12,
+         nondistinct_30 = V13,
+         nondistinct_50 = V14,
+         nondistinct_70 = V15,
+         nondistinct_90 = V16,
+         bare_10 = V18,
+         bare_30 = V19,
+         bare_50 = V20,
+         bare_70 = V21,
+         bare_90 = V22) %>% 
+  gather(evidence, response)%>%
+  separate(evidence, into = c("context","prevalence"), sep="_")
+
+
+d.stats<-ddply(d.tidy, .(context,prevalence), summarise,
+      mean = mean(response),
+      CIlow=quantile(response,probs=0.025),
+      CIhigh=quantile(response,probs=0.975))
+
+
+
+d.stats$context<-factor(d.stats$context,
+                        levels=c('dangerdistinct','nondistinct','bare'), 
+                        labels=c("dangerous &\n distinctive", 
+                                 "irrelevant &\n nondistinctive",
+                                 "plain"))
+d.stats$prevalence<-as.numeric(d.stats$prevalence)
+
+#d.stats[12,4:5]<-c(0.03,0.97)
+
+ggplot(data=d.stats,aes(x=prevalence,y=mean,color=context,group=context))+
+  geom_point(size=3, position=position_dodge(4))+
+  geom_line(size=1,position=position_dodge(4))+
+    geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
+               width=10,
+               size=0.5,
+               position=position_dodge(4))+
+  scale_colour_brewer(type='qual',palette=6)+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))+
+  xlab("prevalence (in %)")+
+  ylab('proportion of "true" responses to generic')+
+  coord_fixed(100)+
+  theme(legend.key.size=unit(2, "lines"),
+        legend.text.align=NULL)
+
+```
+
+Posterior predictive for asymmetry
+
+```{r postpred.asymmetry.ft.paper}
+
+pp.tc <- d %>%
+  select(V6,V7,V8, V9, V10,
+         V12, V13, V14, V15, V16,
+         V18, V19, V20, V21, V22
+         ) %>%
+  rename(dangerdistinct_10 = V6,
+         dangerdistinct_30 = V7,
+         dangerdistinct_50 = V8,
+         dangerdistinct_70 = V9,
+         dangerdistinct_90 = V10,
+         nondistinct_10 = V12,
+         nondistinct_30 = V13,
+         nondistinct_50 = V14,
+         nondistinct_70 = V15,
+         nondistinct_90 = V16,
+         bare_10 = V18,
+         bare_30 = V19,
+         bare_50 = V20,
+         bare_70 = V21,
+         bare_90 = V22) 
+
+
+pp.tc$no<-row.names(pp.tc)
+
+pp.tc<- pp.tc %>%
+  gather(variable,value, -no) %>%
+  separate(variable,into=c('context','prevalence') ,sep="_") 
+
+check.zero <- function(prev,val){
+  if (sum(val)==0){
+    v = 100
+  } else {
+    v = sum(prev*val)/sum(val)
+  }
+  return(v)
+}
+pp.stats<-ddply(pp.tc, .(no,context), summarise,
+                value.tc = check.zero(as.numeric(prevalence),value))
+                  
+
+tc.stats<-ddply(pp.stats, .(context), summarise,
+      mean = mean(value.tc),
+      CIlow = quantile(value.tc,probs=0.025),
+      CIhigh = quantile(value.tc,probs=0.975))
+
+tc.stats$task<-'truth'
+
+
+pp.ip <- d %>%
+  select(V25,V26,V27) %>%
+  rename(dangerdistinct_implied = V25,
+         nondistinct_implied=V26,
+         bare_implied=V27 )%>%
+  gather(variable,value) %>%
+  separate(variable,into=c('context','task') ,sep="_")
+
+ip.stats<-ddply(pp.ip, .(context,task), summarise,
+      mean = mean(value),
+      CIlow = quantile(value,probs=0.025),
+      CIhigh = quantile(value,probs=0.975))
+
+c.tidy<-rbind(tc.stats,ip.stats)
+
+c.tidy$context<-factor(c.tidy$context,
+                        levels=c('dangerdistinct','nondistinct','bare'),
+                        labels=c("dangerous \n& distinctive", 
+                                 "irrelevant \n& nondistinctive",
+                                 "plain"))
+c.tidy$task <- factor(c.tidy$task,
+                 levels=c("truth","implied"),
+                 labels=c("truth conditions", "implied prevalence"))
+# 
+
+
+ggplot(c.tidy, aes(x=context,y=mean,fill=context,alpha=task, group=task))+
+  geom_bar(stat='identity',position=position_dodge(0.5), width=0.5,color='black')+
+  geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
+                width=0.2,
+                size=1,
+                position=position_dodge(0.5))+
+  theme_paper()+
+  ylab("average prevalence")+
+  ylim(0,100)+
+  scale_fill_brewer(type='qual',palette=6)+
+  scale_alpha_manual(values=c(0.4,1))+
+ # scale_fill_manual(values=c("#999999","#ef8a62"))+
+  xlab("")+
+  guides(fill=F)+
+  theme(legend.position='bottom',
+        legend.direction='horizontal',
+        axis.text.x=element_blank())
 
 ```
 
@@ -2863,9 +3036,6 @@ pp.tidy<- d %>%
         bare_implied_90 = V186,
         bare_implied_100 = V187        
         )
-
-
-
 
 
 pp.tidy$no<-row.names(pp.tidy)
