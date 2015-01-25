@@ -2221,6 +2221,20 @@ exp11<-ggplot(d.tidy,aes(x=value,fill=context))+
 
 p<-p+ggtitle("inferred prior distribution, from RSA & Exp1&2 data")+xlab('')
 grid.arrange(p,exp11)
+
+d.tidy$roundval<-round(d.tidy$value/10)*10
+table(d.tidy[,c("context","roundval")])
+
+ggplot(d.tidy,aes(x=roundval,fill=context))+
+  geom_histogram()+
+  facet_wrap(~context)+
+  guides(fill=F)+
+  scale_fill_brewer(type='qual',palette=6)+
+  xlab('prevalence')+
+  ggtitle('human elicited prior distribution')
+
+
+
 #d0<-subset(d.tidy,rt<50000)
 #ggplot(d.tidy,aes(x=rt))+geom_histogram()
 
@@ -2231,7 +2245,7 @@ TFBT on Experiment 11
 
 ```{r exp11.tfbt}
 setwd("~/Documents/research/generics/cbg2010-replication/analysis/")
-d<-read.csv('exp11_betaHyperparams_wPhi_mh100_50.csv',header=F)
+d<-read.csv('exp11_betaHyperparamsCnts_wPhi_mh1000_10.csv',header=F)
 m.tidy<-d %>% 
   select(V1,V2,V4,V5,V7,V8)%>%
   rename(bare_gamma=V1,
@@ -2251,10 +2265,198 @@ ggplot(subset(m.tidy,parameter=='gamma'),aes(x=value))+
   geom_histogram()+
   facet_grid(context~.)
 
-#ggplot(m.tidy,aes(x=value))+
-#  geom_histogram()+
-#  facet_grid(context~parameter)
+ggplot(m.tidy,aes(x=value))+
+  geom_histogram()+
+  facet_grid(context~parameter)
+
+ddply(m.tidy,.(context,parameter),summarise,mean(value))
 ```
+
+
+#Using experiment 11 as an empirical prior
+
+```{r tfbt.exp11prior}
+#setwd('../models/bayesian_analysis/')
+d<-read.csv(paste('lvRSAemp_2phis_condition2_expts9_12_generic_mh1000_10_alpha1.csv',sep=''),header=F)
+
+m.phi<- d%>%select(V1,V182)%>%rename(phi_truthconditions=V1,
+                                     phi_impliedprevalence=V182)%>%
+  gather(variable,value)%>%separate(variable,into=c("parameter","task"))
+
+
+guessing<-ggplot(data=m.phi,aes(x=value,fill=task))+
+  facet_wrap(~task,scales='fixed')+
+  geom_density()+
+  guides(fill=F)+
+  scale_fill_brewer(type='qual',palette=1)+
+  xlab("phi")+
+  scale_x_continuous(limits=c(0,1),breaks=c(0,0.25,0.50,0.75))
+
+pp.tidy<- d %>%
+  select(V5,V12,V19,V26,V33,
+         V41,V48,V55,V62,V69,
+         V77,V84,V91,V98,V105) %>%
+  rename(danger_truth_10= V5,
+         danger_truth_30= V12,
+         danger_truth_50 = V19,
+         danger_truth_70 = V26,
+         danger_truth_90 = V33,
+         nondistinct_truth_10 = V41,
+         nondistinct_truth_30 = V48,
+         nondistinct_truth_50 = V55,
+         nondistinct_truth_70 = V62,
+         nondistinct_truth_90 = V69,
+         bare_truth_10 = V77,
+         bare_truth_30= V84,
+         bare_truth_50 = V91,
+         bare_truth_70 = V98,
+         bare_truth_90 = V105) %>%
+    gather(variable,value) %>%
+   separate(variable,into=c('context','qud','prevalence') ,sep="_")
+
+
+
+
+pp.stats<-ddply(pp.tidy, .(context,prevalence), summarise,
+      mean = mean(value),
+      CIlow = quantile(value,probs=0.025),
+      CIhigh = quantile(value,probs=0.975))
+
+# m<-merge(pp.stats,tc.bs, by=c("context", "prevalence"))
+# with(m, cor(truth_num,mean))
+pp.stats$context<-factor(pp.stats$context,
+                         levels=c('danger','nondistinct','bare'), 
+                         labels=c('danger-distinct','nondistinctive','bare'))
+pp.stats$prevalence<-as.numeric(pp.stats$prevalence)
+
+truthcond<-ggplot(data=pp.stats,aes(x=prevalence,y=mean,
+                                    color=context,group=context))+
+  geom_point(size=3, position=position_dodge(4))+
+  geom_line(size=0.5,position=position_dodge(4))+
+  geom_errorbar(aes(ymin=CIlow,ymax=CIhigh,colour=context),
+              width=5,
+              size=0.8,
+              position=position_dodge(4))+
+  scale_colour_brewer(type='qual',palette=6)+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))+
+  xlab("prevalence")+
+  ylab('proportion of "true" responses')+
+  coord_fixed(100)+
+  ggtitle("lifted variable RSA model using empirical priors")
+
+```
+
+### posterior predictive for asymmetry, using empirical priors
+
+```{r tfbt.empPrior.asymmetry}
+
+pp.tidy<- d %>%
+  select(V5,V12,V19,V26,V33,
+         V41,V48,V55,V62,V69,
+         V77,V84,V91,V98,V105,
+         V122,V123,V124,V125,V126,V127,V128,V129,V130,V131,
+         V145,V146,V147,V148,V149,V150,V151,V152,V153,V154,
+         V168,V169,V170,V171,V172,V173,V174,V175,V176,V177) %>%
+  rename(danger_truth_10= V5,
+         danger_truth_30= V12,
+         danger_truth_50 = V19,
+         danger_truth_70 = V26,
+         danger_truth_90 = V33,
+         nondistinct_truth_10 = V41,
+         nondistinct_truth_30 = V48,
+         nondistinct_truth_50 = V55,
+         nondistinct_truth_70 = V62,
+         nondistinct_truth_90 = V69,
+         bare_truth_10 = V77,
+         bare_truth_30= V84,
+         bare_truth_50 = V91,
+         bare_truth_70 = V98,
+         bare_truth_90 = V105,
+         danger_implied_10=V122,
+         danger_implied_20=V123,
+         danger_implied_30=V124,
+         danger_implied_40=V125,
+         danger_implied_50=V126,
+         danger_implied_60=V127,
+         danger_implied_70=V128,
+         danger_implied_80=V129,
+         danger_implied_90=V130,
+         danger_implied_100=V131,         
+         nondistinct_implied_10 = V145,
+         nondistinct_implied_20 = V146,
+         nondistinct_implied_30 = V147,
+         nondistinct_implied_40 = V148,
+         nondistinct_implied_50 = V149,
+         nondistinct_implied_60 = V150,
+         nondistinct_implied_70 = V151,
+         nondistinct_implied_80 = V152,
+         nondistinct_implied_90 = V153,
+         nondistinct_implied_100 = V154,
+         bare_implied_10 = V168,
+         bare_implied_20 = V169,
+        bare_implied_30 = V170,
+        bare_implied_40 = V171,
+        bare_implied_50 = V172,
+        bare_implied_60 = V173,
+        bare_implied_70 = V174,
+        bare_implied_80 = V175,
+        bare_implied_90 = V176,
+        bare_implied_100 = V177        
+        )
+
+
+
+
+
+pp.tidy$no<-row.names(pp.tidy)
+
+pp.tidy<- pp.tidy %>%
+  gather(variable,value, -no) %>%
+  separate(variable,into=c('context','qud','prevalence') ,sep="_") 
+
+
+pp.stats<-ddply(pp.tidy, .(no,context,qud), summarise,sum(value))
+
+pp.tidy<-merge(pp.stats,pp.tidy, by=c("no",'context','qud'))
+pp.tidy$prob<- pp.tidy$value/pp.tidy$sum
+pp.tidy$expval <- pp.tidy$prob*as.numeric(pp.tidy$prevalence)
+
+pp.stats<-ddply(pp.tidy, .(no,context,qud), summarise,
+      prevalence_score = sum(expval))
+
+pp.stats<-ddply(pp.stats, .(context,qud), summarise,
+      mean = mean(prevalence_score),
+      CIlow = quantile(prevalence_score,probs=0.025),
+      CIhigh = quantile(prevalence_score,probs=0.975))
+
+
+pp.stats$context<-factor(pp.stats$context,levels=c('danger','nondistinct','bare'), 
+                         labels=c('danger-distinct','nondistinctive','bare'))
+
+asym<-ggplot(data=pp.stats,aes(x=context,y=mean,fill=qud,group=qud))+
+  geom_bar(stat='identity',position=position_dodge(0.5),width=0.5)+
+  geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
+              position=position_dodge(0.5),
+              width=.2)+
+  scale_fill_brewer(type='qual',palette=1)+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,25,50,75,100),limits=c(0,100))+
+  #scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))
+#  xlab("XX% of lorches have purple feathers")+
+#  ylab('proportion of "true" responses')+
+ # coord_fixed(100)
+
+
+grid.arrange(asym,guessing,truthcond,nrow=2)
+grid.arrange(arrangeGrob(truthcond,guessing, heights=c(3/4, 1/4), ncol=1),asym, ncol=2)
+```
+
+
 
 
 
@@ -2275,17 +2477,168 @@ qplot(data=d,x=response,fill=stim_type,geom='histogram')+
     guides(fill=F)+
   scale_fill_brewer(type='qual',palette=6)
 
-
 ```
+
+
 
 
 Check to see if same turkers did Exp 9 and Exp 12? Nope.
 
 
+
+
+# Begin stuff for cogsci paper
+
+```{r cogsci.helpers}
+bool.tonum<-function(bool){abs(as.numeric(bool)*1-2)}
+
+bootstrap.ci.ip <- function(x){
+  agr = aggregate(imp_subj ~ context, data=x, FUN=mean)
+  agr$CILow = aggregate(imp_subj ~ context, data=x, FUN=ci.low)$imp_subj
+  agr$CIHigh = aggregate(imp_subj ~ context, data=x, FUN=ci.high)$imp_subj
+  agr$YMin = agr$imp_subj - agr$CILow
+  agr$YMax = agr$imp_subj + agr$CIHigh
+  return(agr)
+}
+
+bootstrap.ci.tc <- function(x){
+  
+  agr = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=mean)
+  agr$CILow = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.low)$truth_num
+  agr$CIHigh = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.high)$truth_num
+  agr$YMin = agr$truth_num - agr$CILow
+  agr$YMax = agr$truth_num + agr$CIHigh
+  return(agr)
+}
+```
+
+## Experiment 1 a & 1 b results
+
+```{r cogsci.fig1}
+setwd("~/Documents/research/generics/cbg2010-replication/data")
+d<-read.table('cbgR-exp9-trials.tsv',header=T)
+
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+table(d$stim_type,d$item)
+table(d$stim_type,d$stim_part)
+
+
+d$rt <- d$rt/1000
+d$truth_conditions <- factor(as.logical(levels(d$response)[d$response]), 
+                              levels=c("TRUE","FALSE"))
+
+d$truth_num <- bool.tonum(d$truth_conditions)
+tc.bs<-bootstrap.ci.tc(d)
+
+tc.bs$context<-factor(tc.bs$stim_type,
+                        levels=c('danger-distinct','nondistinctive','bare'),
+                        labels=c("dangerous &\n distinctive", 
+                                 "irrelevant &\n nondistinctive",
+                                 "plain"))
+
+
+
+fig1a<-ggplot(tc.bs, aes(x=stim_prevalence,y=truth_num,
+                  colour=context, group=context))+
+  geom_point(size=3, position=position_dodge(5))+
+  geom_line(size=0.5,position=position_dodge(5))+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=context),
+              width=5,
+              size=0.9,
+              position=position_dodge(5))+
+  scale_colour_brewer(type='qual',palette=6)+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))+
+  xlab("prevalence (in %)")+
+  ylab('proportion of "true" responses to generic')+
+  coord_fixed(100)+
+  theme(legend.key.size=unit(2, "lines"),
+        legend.text.align=NULL)
+
+
+
+
+```
+
+Experiment 1b: asymmetry
+
+```{r}
+
+setwd("~/Documents/research/generics/cbg2010-replication/data/")
+f<-read.table('cbgR-exp12-trials.tsv',header=T)
+f$item <- paste(f$stim_color,f$stim_part,sep="_")
+table(f$stim_type,f$item)
+table(f$stim_type,f$stim_part)
+
+f.tidy <- f %>%
+  select(workerid,rt,stim_type,response)%>%
+  rename(context=stim_type)
+
+f.stats<-ddply(f.tidy, 
+       .(workerid,context), summarise, 
+       imp_subj = mean(response),
+       context=context[1])
+
+
+d.tidy <- d %>%
+  select(workerid,rt,stim_type,stim_prevalence,truth_num)%>%
+  rename(context=stim_type,
+         prevalence=stim_prevalence,
+         response=truth_num)
+
+d.stats<-ddply(d.tidy,
+      .(workerid,context), summarise,
+      imp_subj = sum(prevalence*response)/sum(response),
+      context=context[1])
+
+
+f.bs<-bootstrap.ci.ip(f.stats)
+f.bs$task<-'impliedprevalence'
+d.bs<-bootstrap.ci.ip(d.stats)
+d.bs$task<-'truthconditions'
+
+m<-rbind(f.bs,d.bs)
+
+m$context<-factor(m$context,
+                        levels=c('danger-distinct','nondistinctive','bare'),
+                        labels=c("dangerous \n& distinctive", 
+                                 "irrelevant \n& nondistinctive",
+                                 "plain"))
+m$task <- factor(m$task,
+                 levels=c("truthconditions","impliedprevalence"),
+                 labels=c("truth conditions", "implied prevalence"))
+
+asym<-ggplot(m, aes(x=context,y=imp_subj,fill=context,alpha=task, group=task))+
+  geom_bar(stat='identity',position=position_dodge(0.5), width=0.5,color='black')+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),
+                width=0.2,
+                size=1,
+                position=position_dodge(0.5))+
+  theme_paper()+
+  ylab("average prevalence")+
+    scale_fill_brewer(type='qual',palette=6)+
+  scale_alpha_manual(values=c(0.4,1))+
+ # scale_fill_manual(values=c("#999999","#ef8a62"))+
+  xlab("")+
+  guides(fill=F)
+
+
+#grid.arrange(fig1a,asym,nrow=1)
+
+#arrangeGrob(fig1a,asym, widths=c(3/4, 1/4), nrow=1)
+```
+
+
+
+
 # TFBT on fixed-threshold, 2 ways
 
-
 ```{r tfbt.ft.paper}
+
+setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
 d<-read.csv('ft_condition2_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
 
 
@@ -2312,3 +2665,246 @@ ggplot(d.tidy,aes(x=value,fill=variable))+
   xlab("generic threshold")
 
 ```
+
+
+# TFBT on lvRSA, 2 ways
+
+```{r tfbt.lvRSA.paper}
+setwd('../models/bayesian_analysis/')
+
+d<-read.csv('lvRSA_condition2_dscFine_2phis_expts9_12_generic_mh1000_10_alpha1.csv',
+  header=F)
+
+phi.tidy <- d %>% select(V1,V192) %>% 
+  rename(phi_truthconditions=V1,
+         phi_impliedprevalence=V192) %>%
+      gather(variable,value) %>%
+    separate(variable,into=c("parameter","task"),sep="_")
+
+
+ggplot(phi.tidy,aes(x=value,fill=task))+
+  geom_density(alpha=0.8)+
+  theme_paper()+
+  facet_wrap(~task)+
+  xlab("phi")+
+  xlim(0,1)
+
+params.tidy <- d %>%
+  select(V2,V3,V5,V6,V8,V9) %>%
+  rename(dangerdistinct_gamma = V2,
+         dangerdistinct_delta = V3,
+         nondistinct_gamma = V5,
+         nondistinct_delta = V6,
+         bare_gamma=V8,
+         bare_delta=V9) %>%
+  gather(variable,value) %>%
+  separate(variable,into=c('context','variable') ,sep="_")
+
+params.tidy$variable<-factor(params.tidy$variable,levels=c("gamma","delta"))
+params.tidy$context<-factor(params.tidy$context,
+                            levels=c("dangerdistinct","nondistinct","bare"))
+
+ggplot(params.tidy,aes(x=value,fill=context))+
+   geom_histogram(alpha=0.8)+
+  facet_grid(context~variable,scale='free')+
+  theme_paper()+
+  guides(fill=F)+
+  xlab("inferred parameter value")+
+  scale_fill_brewer(type='qual',palette=6)
+
+
+
+
+params.stats<-ddply(params.tidy, .(context,variable), summarise,
+      mean = mean(value),
+      CIlow = quantile(value,probs=0.025),
+      CIhigh = quantile(value,probs=0.975))
+
+
+
+sample.beta<-function(n,gamma,delta){
+  shape1 <- gamma*delta
+  shape2 <- (1-gamma)*delta
+  return(rbeta(n,shape1,shape2))
+}
+
+sb<-melt(data.frame(
+  dangerdistinct=sample.beta(1000,params.stats[1,3],params.stats[2,3]),
+  nondistinctive=sample.beta(1000,params.stats[3,3],params.stats[4,3]),
+  bare=sample.beta(1000,params.stats[5,3],params.stats[6,3])
+               ))
+
+
+ggplot(sb,aes(x=100*value,fill=variable))+
+  #geom_density()+
+  geom_histogram()+
+  xlim(0,100)+
+  facet_wrap(~variable)+
+  guides(fill=F)+
+  scale_fill_brewer(type='qual',palette=6)+
+  xlab("mean inferred prior distribution, from RSA and exp1 & imp-prev exp")
+
+```
+
+
+Posterior predictives
+```{r pp.lvrsa.paper}
+pp.tidy<- d %>%
+  select(V15,V22,V29,V36,V43,
+         V51,V58,V65,V72,V79,
+         V87,V94,V101,V108,V115) %>%
+  rename(danger_truth_10= V15,
+         danger_truth_30= V22,
+         danger_truth_50 = V29,
+         danger_truth_70 = V36,
+         danger_truth_90 = V43,
+         nondistinct_truth_10 = V51,
+         nondistinct_truth_30 = V58,
+         nondistinct_truth_50 = V65,
+         nondistinct_truth_70 = V72,
+         nondistinct_truth_90 = V79,
+         bare_truth_10 = V87,
+         bare_truth_30= V94,
+         bare_truth_50 = V101,
+         bare_truth_70 = V108,
+         bare_truth_90 = V115) %>%
+    gather(variable,value) %>%
+   separate(variable,into=c('context','qud','prevalence') ,sep="_")
+
+
+pp.stats<-ddply(pp.tidy, .(context,prevalence), summarise,
+      mean = mean(value),
+      CIlow = quantile(value,probs=0.025),
+      CIhigh = quantile(value,probs=0.975))
+
+
+#m<-merge(pp.stats,tc.bs, by=c("context", "prevalence"))
+#with(m, cor(truth_num,mean))
+pp.stats$context<-factor(pp.stats$context,
+                         levels=c('danger','nondistinct','bare'), 
+                         labels=c('danger-distinct','nondistinctive','bare'))
+pp.stats$prevalence<-as.numeric(pp.stats$prevalence)
+
+ggplot(data=pp.stats,aes(x=prevalence,y=mean,color=context,group=context))+
+  geom_point(size=3, position=position_dodge(4))+
+  geom_line(size=0.5,position=position_dodge(4))+
+  geom_errorbar(aes(ymin=CIlow,ymax=CIhigh,colour=context),
+              width=5,
+              size=0.8,
+              position=position_dodge(4))+
+  scale_colour_brewer(type='qual',palette=6)+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))+
+  xlab("prevalence")+
+  ylab('proportion of "true" responses')+
+  coord_fixed(100)+
+  ggtitle("lifted variable RSA model")
+```
+
+
+Asymmetry
+
+```{r pp.asym.lvrsa}
+
+
+pp.tidy<- d %>%
+  select(V15,V22,V29,V36,V43,
+         V51,V58,V65,V72,V79,
+         V87,V94,V101,V108,V115,
+         V132,V133,V134,V135,V136,V137,V138,V139,V140,V141,
+         V155,V156,V157,V158,V159,V160,V161,V162,V163,V164,
+         V178,V179,V180,V181,V182,V183,V184,V185,V186,V187) %>%
+  rename(danger_truth_10= V15,
+         danger_truth_30= V22,
+         danger_truth_50 = V29,
+         danger_truth_70 = V36,
+         danger_truth_90 = V43,
+         nondistinct_truth_10 = V51,
+         nondistinct_truth_30 = V58,
+         nondistinct_truth_50 = V65,
+         nondistinct_truth_70 = V72,
+         nondistinct_truth_90 = V79,
+         bare_truth_10 = V87,
+         bare_truth_30= V94,
+         bare_truth_50 = V101,
+         bare_truth_70 = V108,
+         bare_truth_90 = V115,
+         danger_implied_10=V132,
+         danger_implied_20=V133,
+         danger_implied_30=V134,
+         danger_implied_40=V135,
+         danger_implied_50=V136,
+         danger_implied_60=V137,
+         danger_implied_70=V138,
+         danger_implied_80=V139,
+         danger_implied_90=V140,
+         danger_implied_100=V141,         
+         nondistinct_implied_10 = V155,
+         nondistinct_implied_20 = V156,
+         nondistinct_implied_30 = V157,
+         nondistinct_implied_40 = V158,
+         nondistinct_implied_50 = V159,
+         nondistinct_implied_60 = V160,
+         nondistinct_implied_70 = V161,
+         nondistinct_implied_80 = V162,
+         nondistinct_implied_90 = V163,
+         nondistinct_implied_100 = V164,
+         bare_implied_10 = V178,
+         bare_implied_20 = V179,
+        bare_implied_30 = V180,
+        bare_implied_40 = V181,
+        bare_implied_50 = V182,
+        bare_implied_60 = V183,
+        bare_implied_70 = V184,
+        bare_implied_80 = V185,
+        bare_implied_90 = V186,
+        bare_implied_100 = V187        
+        )
+
+
+
+
+
+pp.tidy$no<-row.names(pp.tidy)
+
+pp.tidy<- pp.tidy %>%
+  gather(variable,value, -no) %>%
+  separate(variable,into=c('context','qud','prevalence') ,sep="_") 
+
+
+pp.stats<-ddply(pp.tidy, .(no,context,qud), summarise,sum(value))
+
+pp.tidy<-merge(pp.stats,pp.tidy, by=c("no",'context','qud'))
+pp.tidy$prob<- pp.tidy$value/pp.tidy$sum
+pp.tidy$expval <- pp.tidy$prob*as.numeric(pp.tidy$prevalence)
+
+pp.stats<-ddply(pp.tidy, .(no,context,qud), summarise,
+      prevalence_score = sum(expval))
+
+pp.stats<-ddply(pp.stats, .(context,qud), summarise,
+      median = median(prevalence_score),
+      CIlow = quantile(prevalence_score,probs=0.025),
+      CIhigh = quantile(prevalence_score,probs=0.975))
+
+
+pp.stats$context<-factor(pp.stats$context,levels=c('danger','nondistinct','bare'), 
+                         labels=c('danger-distinct','nondistinctive','bare'))
+
+ggplot(data=pp.stats,aes(x=context,y=median,fill=qud,group=qud))+
+  geom_bar(stat='identity',position=position_dodge(0.5),width=0.5)+
+  geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
+              position=position_dodge(0.5),
+              width=.2)+
+  scale_fill_brewer(type='qual',palette=6)+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+ ## scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  #scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))
+
+```
+
+
