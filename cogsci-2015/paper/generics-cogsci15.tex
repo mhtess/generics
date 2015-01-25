@@ -4,6 +4,7 @@
 %
 %todo after cogsci:
 %-run additional contexts. e.g. separate dangerous and distinct.
+%-look again at finer-grained truth judgement task?
 %-think about the weird cases of generics in the literature. e.g. ``robins lay eggs''.
 %
 
@@ -102,13 +103,11 @@ In what follows, we first replicate the main effects reported by CBG, using Baye
 
 \section{Experiment 1: CBG replication}
 
-In CBG's \emph{truth conditions} task, participants were given an evidence statement in terms of the percentage of a category that had a property (e.g. ``30\% of lorches have purple feathers.''). Participants were asked whether the associated generic statement (i.e. ``Lorches have purple feathers'') was true or false. The authors manipulated context within-subjects by adding additional statements about the property. Three contexts we will focus on in this paper are \emph{dangerous and distinct} (DD), \emph{not distinct and irrelevant} (NI), and \emph{plain} (P). The authors found that DD increased the overall proportion of ``true'' responses of the generic propositions. That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. 10\% of lorches had purple feathers) to assert that the generic statement was true.
-
-In their \emph{implied prevalence} task, participants were supplied with the generic (still, with context as a within-subjects variable) and asked ``What percentage of lorches do you think have purple feathers?''. The authors consistently found that the generic was interpreted strongly---nearly all lorches have purple feathers. 
-
+In CBG's \emph{truth conditions} task, participants were given an evidence statement consisting of the percentage of a category that had a property (e.g. ``30\% of lorches have purple feathers.''). Participants were asked whether the associated generic statement (i.e. ``Lorches have purple feathers'') was true or false. The authors manipulated context within-subjects by adding additional statements about the property. Three contexts we will focus on in this paper are \emph{dangerous and distinct} (DD, e.g.~``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers''), \emph{not distinct and irrelevant} (NI, e.g.~``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.''), and \emph{plain} (P, no additional statements). The authors found that DD increased the overall proportion of ``true'' responses of the generic propositions. 
+%That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. 10\% of lorches had purple feathers) to assert that the generic statement was true.
+In their \emph{implied prevalence} task, participants were supplied with the generic (again with context as a within-subjects variable) and asked to judge prevalence: ``What percentage of lorches do you think have purple feathers?''. The authors consistently found that the generic was interpreted strongly---nearly all lorches have purple feathers. 
 
 Experiment 1 attempted to replicate the main findings of CBG: that context affects the proportion of ``true'' responses to a generic statement (Exp. 1a) and that there is an asymmetry between interpretation and verification of the truth conditions of the generic (Exp. 1b). 
-
 Exp. 1a and 1b were conducted on separate sessions, one week apart. None of the participants completed both experiments.
 
 \subsection{Experiment 1a: \emph{truth conditions}}
@@ -116,14 +115,17 @@ Exp. 1a and 1b were conducted on separate sessions, one week apart. None of the 
 \subsubsection{Participants}
 
 We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk.  
+%NDG: restrictions on IP address or native language?
 
 \subsubsection{Procedure and materials}
 
 Our procedure was very similar to CBG \emph{truth conditions} task. Our instructions were elaborated to improve interest and motivation\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-9.html}}. 
 
-We used the same materials as CBG (available in their Appendix). The materials used were 30 novel animals (e.g. lorches, morseths, blins) each paired with a unique property. Properties were pairs of colors and body-parts (e.g. purple feathers, orange tails). Each participant saw unique 10 animal-property pairs in each of 3 contexts \{\emph{plain}, \emph{DD}, \emph{NI}\}. Those 10 items were randomly paired with 1 of 5 ``prevalence levels'': \{10, 30, 50, 70, 90\}\%; each prevalence level appeared 2 times per context. 
+We used the same materials as CBG (available in their Appendix). The materials used were 30 novel animals (e.g. lorches, morseths, blins) each paired with a unique property. Properties were pairs of colors and body-parts (e.g. purple feathers, orange tails). Each participant saw 30 unique animal-property pairs: 10 in each of 3 contexts \{\emph{plain}, \emph{DD}, \emph{NI}\}. The 10 items in each context were randomly paired with 1 of 5 ``prevalence levels'': \{10, 30, 50, 70, 90\}\%; each prevalence level appeared 2 times per context. 
 
-Participants saw a prevalence statement and a context. A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. Participants were then asked ``Is the following sentence true or false?'', below which was presented the associated generic (e.g. ``Lorches have purple feathers'') and 2 radio buttons. 
+Participants saw a prevalence statement and a context statement (\emph{plain}, \emph{DD}, \emph{NI}, as illustrated above). 
+%A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. 
+Participants were then asked ``Is the following sentence true or false?'', below which was presented the associated generic (e.g. ``Lorches have purple feathers'') and 2 radio buttons. 
 
 \subsubsection{Results}
 
@@ -157,7 +159,7 @@ Participants saw a prevalence statement and a context. A context here was either
 %\end{figure}
 
 
-Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts (Figure \ref{fig:datatc})\red{[insert stats here]}. There was also an interaction between prevalence level and context such that the DD context was endorsed more particularly at lower prevalence levels. \red{[insert stats here]}. 
+Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts (Figure \ref{fig:datatc})\red{[insert stats here]}. There was also an interaction between prevalence level and context such that the DD context was endorsed more at lower prevalence levels. \red{[insert stats here]}. 
 
 \subsection{Experiment 1b: \emph{implied prevalence}}
 
@@ -170,8 +172,9 @@ We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Tu
 Our procedure was very similar to CBG \emph{implied prevalence} task. Our instructions were elaborated to improve interest and motivation\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-12.html}}. 
 
 The materials and context conditions were the same as in Exp. 1a. 
-
-On each trial, participants saw a generic statement and a context. A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. Participants were then asked ``What percentage of \emph{the kind} do you think have \emph{the property?}'' (e.g. ``What percentage of lorches do you think have  purple feathers?''). The dependent measure was a free response of a number between 0-100. 
+On each trial, participants saw a generic statement (instead of a prevalence statement) and a context. 
+%A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. 
+Participants were then asked ``What percentage of \emph{the kind} do you think have \emph{the property?}'' (e.g. ``What percentage of lorches do you think have  purple feathers?''). The dependent measure was a free response required to be an integer, $0-100$. 
 
 \subsubsection{Data analysis and results}
 
@@ -184,6 +187,7 @@ On each trial, participants saw a generic statement and a context. A context her
 %
 
 Our results replicated the finding of CBG that the generic statement was interpreted as having a higher prevalence than its truth conditions would imply. 
+\red{say something about how this analysis was done...}
 
 \section{Bayesian analysis of CBG}
 
