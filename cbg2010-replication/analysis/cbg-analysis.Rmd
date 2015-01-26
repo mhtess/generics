@@ -2643,29 +2643,118 @@ ggplot(m, aes(x=context,y=imp_subj,fill=context,alpha=task, group=task))+
 
 
 
+# TFBT on totally-fixed-threshold, two tasks at once
+```{r tfbt.totally.ft.paper}
 
-# TFBT on fixed-threshold, 2 ways
+setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
+#d<-read.csv('ft_conditionIP_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+#d<-read.csv('ft_conditionBoth_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+#d<-read.csv('ft_conditionBoth_2phis_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+d<-read.csv('ft_totallyFixed_conditionIndependenly_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+
+#ft.phi <- d %>% select(V1) %>% rename(phi=V1)
+ft.phi <- d %>% 
+  select(V1,V2) %>% 
+  rename(phi_tc=V1,phi_ip=V2) %>%
+  gather(variable,value) %>% 
+  separate(variable,into=c("parameter","task"),by="_")
+
+#qplot(data=ft.phi,x=phi,geom='density')+xlim(0,1)
+ggplot(ft.phi,aes(x=value,alpha=task))+
+  geom_density(fill='black')+
+  theme_paper()+
+  scale_alpha_manual(values=c(0.4,1))+
+  scale_x_continuous(breaks=c(0.25,.5,0.75),limits=c(0,1))+
+  scale_fill_brewer(type='qual',palette=1)+
+  theme(strip.text.x = element_text(size=14,color='black'),
+        legend.position='bottom',
+        legend.direction='horizontal')+
+  guides(fill=guide_legend(title="Context"))+
+  xlab("phi")
+
+d.tidy <- d %>%
+  select(V3,V4) %>%
+  rename(theta_tc = V3,
+         theta_ip = V4) %>%
+  gather(variable,value) %>%
+  separate(variable, into=c("parameter","task"))
+#qplot(data=d.tidy,x=theta,geom='density')+xlim(0,100)
+
+ggplot(d.tidy,aes(x=value,alpha=task))+
+  geom_density(fill='black')+
+  theme_paper()+
+  scale_alpha_manual(values=c(0.4,1))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  scale_fill_brewer(type='qual',palette=1)+
+  theme(strip.text.x = element_text(size=14,color='black'),
+        legend.position='bottom',
+        legend.direction='horizontal')+
+  guides(fill=guide_legend(title="Context"))+
+  xlab("generic threshold")
+
+```
+
+# TFBT on relaxed but fixed-threshold, two tasks at once
 
 ```{r tfbt.ft.paper}
 
 setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
-d<-read.csv('ft_conditionIP_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+#d<-read.csv('ft_conditionIP_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+#d<-read.csv('ft_conditionBoth_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+d<-read.csv('ft_conditionTC_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+f<-read.csv('ft_conditionIP_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
 
 
-ft.phi <- d %>% select(V1) %>% rename(phi=V1)
-qplot(data=ft.phi,x=phi,geom='density')+xlim(0,1)
+ft.phi <- d %>% select(V1) %>% rename(phi_tc=V1)
+ft.phi2 <- f %>% select(V2) %>% rename(phi_ip=V2)
+ft.phi<-cbind(ft.phi,ft.phi2)
 
+phi.tidy <- ft.phi %>%
+  gather(variable,value) %>%
+  separate(variable, into=c('parameter','task'), by='_')
+
+ggplot(phi.tidy,aes(x=value,alpha=task))+
+  geom_density(fill='black')+
+  theme_paper()+
+  scale_alpha_manual(values=c(0.4,1))+
+  scale_x_continuous(breaks=c(0.25,.5,0.75),limits=c(0,1))+
+  scale_fill_brewer(type='qual',palette=1)+
+  theme(strip.text.x = element_text(size=14,color='black'),
+        legend.position='bottom',
+        legend.direction='horizontal')+
+  guides(fill=guide_legend(title="Context"))+
+  xlab("phi")
+
+#ft.phi <- d %>% select(V1,V29) %>% rename(phi_tc=V1,phi_ip=V29) %>%
+#  gather(variable,value) %>% separate(variable,into=c("parameter","task"),
+#                                      by="_")
+
+#qplot(data=ft.phi,x=phi,geom='density')+xlim(0,1)
+#qplot(data=ft.phi,x=value,geom='histogram',fill=task)+xlim(0,1)+facet_wrap(~task)
 
 d.tidy <- d %>%
-  select(V2,V3,V4) %>%
-  rename(danger_distinct = V2,
-         nondistinct = V3,
-         bare = V4) %>%
+  select(V3,V4,V5) %>%
+  rename(dd_tc = V3,
+         ni_tc = V4,
+         pl_tc = V5) %>%
   gather(variable,value)
 
-ggplot(d.tidy,aes(x=value,fill=variable))+
-  geom_density(alpha=0.8)+
+f.tidy <- f %>%
+  select(V3,V4,V5) %>%
+  rename(dd_ip = V3,
+         ni_ip = V4,
+         pl_ip = V5) %>%
+  gather(variable,value)
+
+theta.tidy<-rbind(d.tidy,f.tidy)
+
+theta.tidy<- theta.tidy %>% 
+  separate(variable, into=c("context","task"), by="_")
+
+ggplot(theta.tidy,aes(x=value,fill=context,alpha=task))+
+  geom_density()+
   theme_paper()+
+    scale_alpha_manual(values=c(0.4,1))+
   scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
   scale_fill_brewer(type='qual',palette=6)+
   theme(strip.text.x = element_text(size=14,color='black'),
@@ -2840,12 +2929,121 @@ ggplot(c.tidy, aes(x=context,y=mean,fill=context,alpha=task, group=task))+
 ```
 
 
+# TFBT on lvRSA, streamlined
+
+```{r tfbt.lvRSA.paper}
+
+setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
+#d<-read.csv('ft_conditionIP_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+#d<-read.csv('ft_conditionBoth_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+d<-read.csv('lvRSA_condition2_dscFine_2phis_expts9_12_generic_mh10000_10_alpha1.csv',header=F)
+
+#ft.phi <- d %>% select(V1) %>% rename(phi=V1)
+ft.phi <- d %>% select(V1,V2) %>% rename(phi_tc=V1,phi_ip=V2) %>%
+  gather(variable,value) %>% separate(variable,into=c("parameter","task"),
+                                      by="_")
+
+#qplot(data=ft.phi,x=phi,geom='density')+xlim(0,1)
+qplot(data=ft.phi,x=value,geom='histogram',fill=task)+xlim(0,1)+facet_wrap(~task)
+
+d.tidy <- d %>%
+  select(V3,V4, V6, V7, V9, V10) %>%
+  rename(dd_gamma = V3,
+         dd_delta = V4,
+         ni_gamma = V6,
+         ni_delta = V7,
+         pl_gamma = V9,
+         pl_delta = V10) %>%
+  gather(variable,value) %>%
+  separate(variable, into=c("context","parameter"), by="_")
+
+ggplot(d.tidy,aes(x=value,fill=context))+
+  #geom_density(alpha=0.8)+
+  geom_histogram(binwidth=0.03)+
+  theme_paper()+
+ # scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  scale_fill_brewer(type='qual',palette=6)+
+  facet_grid(context~parameter,scales='free')+
+  theme(strip.text.x = element_text(size=14,color='black'),
+        legend.position='bottom',
+        legend.direction='horizontal')+
+  guides(fill=guide_legend(title="Context"))+
+  xlab("generic threshold")
+
+```
+
+
+Posterior predictive for truth conditions
+
+```{r postpred.truthcond.lvRSA.paper}
+
+d.tidy <- d %>%
+  select(V13, V14, V15, V16, V17,
+         V19, V20, V21, V22, V23,
+         V25, V26, V27, V28, V29) %>%
+  rename(dd_10 = V13,
+         dd_30 = V14,
+         dd_50 = V15,
+         dd_70 = V16,
+         dd_90 = V17,
+         ni_10 = V19,
+         ni_30 = V20,
+         ni_50 = V21,
+         ni_70 = V22,
+         ni_90 = V23,
+         pl_10 = V25,
+         pl_30 = V26,
+         pl_50 = V27,
+         pl_70 = V28,
+         pl_90 = V29) %>% 
+  gather(evidence, response)%>%
+  separate(evidence, into = c("context","prevalence"), sep="_")
+
+
+d.stats<-ddply(d.tidy, .(context,prevalence), summarise,
+      mean = mean(response),
+      CIlow=quantile(response,probs=0.025),
+      CIhigh=quantile(response,probs=0.975))
+
+
+
+d.stats$context<-factor(d.stats$context,
+                        levels=c('dd','ni','pl'), 
+                        labels=c("dangerous &\n distinctive", 
+                                 "irrelevant &\n nondistinctive",
+                                 "plain"))
+d.stats$prevalence<-as.numeric(d.stats$prevalence)
+
+#d.stats[12,4:5]<-c(0.03,0.97)
+
+ggplot(data=d.stats,aes(x=prevalence,y=mean,color=context,group=context))+
+  geom_point(size=3, position=position_dodge(4))+
+  geom_line(size=1,position=position_dodge(4))+
+    geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
+               width=10,
+               size=0.5,
+               position=position_dodge(4))+
+  scale_colour_brewer(type='qual',palette=6)+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))+
+  xlab("prevalence (in %)")+
+  ylab('proportion of "true" responses to generic')+
+  coord_fixed(100)+
+  theme(legend.key.size=unit(2, "lines"),
+        legend.text.align=NULL)
+
+```
+
+
 # TFBT on lvRSA, 2 ways
 
 ```{r tfbt.lvRSA.paper}
-setwd('../models/bayesian_analysis/')
+#setwd('../models/bayesian_analysis/')
 
-d<-read.csv('lvRSA_condition2_dscFine_2phis_expts9_12_generic_mh1000_10_alpha1.csv',
+d<-read.csv('lvRSAemp_condition2_expts9_12_generic_mh1000_100_alpha1.csv',
   header=F)
 
 phi.tidy <- d %>% select(V1,V192) %>% 
