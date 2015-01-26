@@ -431,8 +431,14 @@
         (map 
           (lambda (unique-evidence-data-for-one-context context)
             (map 
+             ; (lambda (evidence) 
+             ; (cognitive-model (gamma context) (delta context) 'truth evidence))
               (lambda (evidence) 
-              (cognitive-model (gamma context) (delta context) 'truth evidence))
+               (let* 
+                ([posterior (cognitive-model (gamma context) (delta context) 'truth evidence)]
+                [match (lambda (x) (position (first posterior) x))])
+                (if (= (match 'generic) -1) 0
+                              (list-ref (second posterior) (match 'generic)))))
             unique-evidence-data-for-one-context))
         unique-evidence-data all-contexts)
        (map 
@@ -443,8 +449,15 @@
      (define listener-predictive
       (if (equal? context 'all)
         (map 
+          ;(lambda (context)
+          ;  (cognitive-model (gamma context) (delta context) 'how-many 'generic))
           (lambda (context)
-            (cognitive-model (gamma context) (delta context) 'how-many 'generic))
+            (let* 
+              ([posterior (cognitive-model (gamma context) (delta context) 'how-many 'generic)])
+              (sum (map 
+                    (lambda (a b) (* a b)) 
+                    (first posterior) 
+                    (second posterior)))))
         all-contexts)))
 
      ;;; for listener model
@@ -496,22 +509,18 @@
      ;    unique-evidence-data all-contexts)))
 
 
-
-
     (list phi-tc
-     (if (equal? context 'all)
-      (map (lambda (c) (query-statement c)) all-contexts))
+          phi-ip
+      (if (equal? context 'all) (map (lambda (c) (query-statement c)) all-contexts))
      speaker-predictive
      listener-predictive
      speaker-optimality
-     phi-ip
      )
 ;; for fixed threshold model
      ; (if (equal? context 'all)
      ;  (map (lambda (c) (query-statement utterance c))
      ;    all-contexts)
      ;  (query-statement utterance context))
-
 
 
      true)))
