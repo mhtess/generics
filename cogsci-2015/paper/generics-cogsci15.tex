@@ -1,12 +1,24 @@
 
 %todo:
 %-try an S2 model of prevalence judgement task, too. does it reduce to the L1 model?
-%
+%- figure out which plots to use for fixed-threshold and lvRSA  (both TFBT stuff and posterior predictives)
+% - do we really want posterior predictives that include the guessing parameter? (the guessing parameter is part of the analysis model, not the cognitive model...)
+%- what kind of evidence do we want to use at the end to relate inferred priors to elicited? 
+%	- is eye-balling the elicited prior and the mean inferred priors sufficient?
+%	- i tried TFBT on the elicited priors to back out gamma & deltas, but gammas don't seem to come apart for DD vs. plain (as they do in the inferred priors from Exp 1 &2)
+%	- one possible way to get this sort of "ordered gammas" evidence would be to repeat the prior elicitation with more items per trial
+%		- the thought is that in our prior elicitation, i used 5 animals per slide (and 6 trials)
+%			- probably there was not enough dynamic range for Plain vs DD to come apart 
+%		- i think with 10 items, it would be better (but does that mean just 3 trials, one in each context, per subj?) [there are only 30 animals]
+%		
 %todo after cogsci:
 %-run additional contexts. e.g. separate dangerous and distinct.
 %-look again at finer-grained truth judgement task?
 %-think about the weird cases of generics in the literature. e.g. ``robins lay eggs''.
 %
+
+
+
 
 \documentclass[10pt,letterpaper]{article}
 
@@ -20,6 +32,8 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amssymb}
 
 \graphicspath{{figures/}}
 
@@ -63,17 +77,6 @@
   Department of Psychology, Stanford University}
  
 \begin{document}
-%
-%todo
-%1. figure out which plots to use for fixed-threshold and lvRSA  (both TFBT stuff and posterior predictives)
-%2. what kind of evidence do we want to use at the end to relate inferred priors to elicited? 
-%	- is eye-balling the elicited prior and the mean inferred priors sufficient?
-%	- i tried TFBT on the elicited priors to back out gamma & deltas, but gammas don't seem to come apart for DD vs. plain (as they do in the inferred priors from Exp 1 &2)
-%	- one possible way to get this sort of "ordered gammas" evidence would be to repeat the prior elicitation with more items per trial
-%		- the thought is that in our prior elicitation, i used 5 animals per slide (and 6 trials)
-%			- probably there was not enough dynamic range for Plain vs DD to come apart 
-%		- i think with 10 items, it would be better (but does that mean just 3 trials, one in each context, per subj?) [there are only 30 animals]
-%		
 \maketitle
 
 
@@ -199,79 +202,129 @@ Participants were then asked ``What percentage of \emph{the kind} do you think h
 Our results replicated the finding of CBG that the generic statement was interpreted as having a higher prevalence than its truth conditions would imply. 
 \red{say something about how this analysis was done...}
 
-\section{Bayesian data analysis of truth conditions}
+\section{Fixed-threshold semantics}
 The above results, replicated from CBG, indirectly constrain the truth conditions that participants are effectively using for generic statements within these experimental conditions. In this section we explore these truth conditions more directly by using bayesian data analysis techniques.
 We assume that the conditions for truth of the generic can be usefully represented by a threshold on prevalence: the generic is true when the prevalence of some property within a kind exceeds a given threshold (See \cite{cohen} for a similar assumption).
-We can then ask, how must the threshold vary across tasks and conditions to account for the data?
+
+
+\subsection{A truly fixed semantics}
+We first examine what this threshold would look like, if it were a truly fixed-threshold. 
+
+
+\[
+ g(x) =
+  \begin{cases}
+   1 & \text{if } x > \theta \\
+   0       & \text{if } x \leq \theta
+  \end{cases}
+\]
+
+Here, x is some proportion of a kind with a property. We can then ask, how must the threshold be set to account for the data observed? We assume a uniform prior distribution over possible values of $\theta$. Following standard practice in Bayesian data analysis \cite{LW2014}, we include the data-analytic parameter $\phi$ to account for data points that deviate strongly from our theory; it is a guessing parameter. We assume there is some proportion of responses\footnote{Ideally, we would have $\phi$ be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). As a first pass, we assume there is some global quantity of guessing.} where the participant is responding randomly, and we estimate this quantity by way of $\phi$.
+
+\begin{align}
+\theta_{generic} \thicksim U(0,1) \\
+\phi_{t} \thicksim U(0,1) %\mid  t \in \{exp1a, exp1b\}
+\end{align}
 %We formalize the notion of ``effective truth conditions'' by saying the generic is a function from states of the world to truth-values. We operationalize \emph{states of the world} here as the prevalence of some property within a kind. This mapping is then determined by some threshold such that the generic is true when the prevalence is above threshold. 
-Using the Church probabilistic programming language to represent this model \cite{probmods}, this would be written:
 
-\begin{lstlisting}
-(define generic 
-	(lambda (prevalence) (> prevalence generic-threshold)))
-\end{lstlisting}
+%Using the Church probabilistic programming language to represent this model \cite{probmods}, this would be written:
+%
+%\begin{lstlisting}
+%(define generic 
+%	(lambda (prevalence) (> prevalence generic-threshold)))
+%\end{lstlisting}
 
-To handle the inference problem the participant is faced with, we express the subject's uncertainty about whether the generic is true or false.
+%To handle the inference problem the participant is faced with, we express the subject's uncertainty about whether the generic is true or false.
+%
+%\red{NDG: the rest of this section is too long and doesn't make sense to me...}
+% \begin{lstlisting}
+%(define truth-conditions (lambda (prevalence)
+%	(query  
+%	
+%		(define generic ...) ;defined as above
+%		(define generic-is-true? (flip 0.5))
+%		
+%		generic-is-true?
+%			
+%		(generic prevalence))))
+%\end{lstlisting}
 
-\red{NDG: the rest of this section is too long and doesn't make sense to me...}
- \begin{lstlisting}
-(define truth-conditions (lambda (prevalence)
-	(query  
-	
-		(define generic ...) ;defined as above
-		(define generic-is-true? (flip 0.5))
-		
-		generic-is-true?
-			
-		(generic prevalence))))
-\end{lstlisting}
+\subsubsection{Results}
 
-A \lstinline{query} is a special function in Church. The first arguments to a query function are a generative model: definitions or the background knowledge with which a reasoning agent is endowed. Definitions for which a random choice is stipulated (e.g. \lstinline{(define generic-is-true? (flip 0.5))}) denote aspects of the world over which the agent has uncertainty. The second argument, called the \emph{query expression}, is the aspect of the computation that the model should return. The final argument, called the \emph{conditioner}, is the information with which the agent updates beliefs. 
+The results are shown in Figure \ref{fig:totallyfixed}. 
 
-This is the simplest model of the truth conditions of the generic. It says the subject has maximal uncertainty as to whether or not the generic is true (expressed by \lstinline{(flip 0.5)}, a Bernoulli random variable). The subject uses the prevalence given to her to determine if the generic is true. 
 
-At the same time, we want to take into account the results of Exp. 1b: the interpretation of the generic. Here, we are concerned with the interpretation of the utterance, so we put uncertainty over the prevalence. We condition on the fact that the generic must be true of the prevalence, whatever it may turn out to be.
+From this model, we get the idea that the generic could be true for anywhere between 10\% and 30\%, but this can account for no data that would vary by context.
 
- \begin{lstlisting}
-(define implied-prevalence (lambda (utterance)
-	(query  
-		
-		(define generic ...) ;defined as above
-		(define prevalence (uniform 0 1))
-		
-		prevalence
-			
-		(generic prevalence))))
-\end{lstlisting}
+\subsection{A relaxed but fixed semantics}
 
-We are now in a position to ask how the truth-functional threshold of the generic behaves across these three contexts. To do this, put each of these models inside of a Bayesian data analysis model. The data analysis model posits that \lstinline{generic-threshold} might be a function of context.
+ In Exp. 1a, we found evidence that the generic truth conditions did vary by context. Thus, we reexamine our fixed-semantics model, now allowing for the possibility that $\theta$ could vary by context.
 
-The data analysis model can be written very simply in Church.
 
-\begin{lstlisting}
-(define bayesian-data-analysis 
-	(query
-		; we don't know the generic threshold but we feel it might be a function of context
-		(define generic-threshold 
-			(mem (lambda (context) (uniform 0 1))))
-		(define truth-conditions ...) ; defined as above
-		(define implied-prevalence ...)
-		
-		(define phi (uniform 0 1)); guessing parameter
-				
-		generic-threshold ; return generic-threshold	
-		
-		(and 
-			(= experiment1a-data truth-conditions)
-			(= experiment1b-data implied-prevalence))))
+\[
+ g(x, c) =
+  \begin{cases}
+   1 & \text{if } x > \theta_{c} \\
+   0       & \text{if } x \leq \theta_{c}
+  \end{cases}
+\]
 
-\end{lstlisting}
+Again, we put uniform priors over each of the $\theta_{c}$'s. We are now in a position to ask how the truth-functional threshold of the generic behaves across these three contexts. 
 
-The model above is a data analysis model to try to infer the threshold of the generic, with the built-in flexibility that it might vary by context. The functions \lstinline{truth-conditions} and \lstinline{implied-prevalence} jointly form our cognitive theory\footnote{This could be made more explicit by moving the function \lstinline{generic} outside of either \lstinline{query}, since it is the same function. This function is the core of this cognitive theory.}. It says the generic is like an alien quantifier. This quantifier behaves like other quantifiers in that it has a fixed-threshold semantics. The only thing special about the generic is that the threshold might be different for different contexts. 
+\subsubsection{Results}
 
-We don't know what the generic might mean \emph{a priori}. Thus, the generic-threshold\footnote{If the generic threshold turns out to be 0, the generic ``Lorches have purple feathers'' would mean essentially, ``Some lorches have purple feathers''. If the threshold turned out to be very close to 1, the generic would mean essentially: ``All lorches have purple feathers''.} follows a uniform prior distribution between 0 and 1. Following standard practice in Bayesian data analysis \cite{LW2014}, we include the data-analytic parameter \lstinline{phi} to account for data points that deviate strongly from our theory; it is a guessing parameter. We assume there is some proportion of responses\footnote{Ideally, we would have \lstinline{phi} be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). As a first pass, we assume there is some global quantity of guessing.} where the participant is responding randomly, and we estimate this quantity by way of \lstinline{phi}.
+The results can be seen in Figure \ref{fig:bda1a}. In the \emph{plain} condition, the analysis suggests the threshold is somewhere between 0\% and 30\%, but it's unclear where exactly in that range the threshold should be\footnote{This uncertainty results from the sparseness of our sampling (see Procedures and Materials). Participants were queried only at prevalence levels 10, 30, 50, 70, and 90}. Critically, in the \emph{dangerous and distinctive} context, the analysis infers a lower threshold, less than 10\%. This matches with intuition and the empirical results, that a dangerous and distinctive context allows for the generic to be more permissive (e.g. ``Mosquitos carry West Nile Virus'' is true, even though very few mosquitoes actually do). Finally, and most intriguingly, the analysis infers a third distinct threshold profile for the \emph{nondistinct and irrelevant} context.  For this, it says that threshold is greater than 10\%, but could be as high as 50\%. This is an overall higher inferred threshold for the nondistinctive category and an aspect of analysis totally obscured by standard frequentist estimation. 
 
-The \lstinline{query} function is written to return \lstinline{generic-threshold}, which is the parameter we are interested in inferring. Finally, the last line is our condition statement: we condition on the data we collected in Exp. 1a being explained by the \lstinline{truth-conditions} model and Exp. 1b to be explained by \lstinline{implied-prevalence}. For clarity, we have omitted the impact of \lstinline{phi}, but it comes into play in the condition statement. In reality, each response could have been generated by our theory (via \lstinline{truth-conditions} or \lstinline{implied-prevalence}) or by guessing (via \lstinline{phi}).  
+This model is too a simple model, however. We see this in part by the posterior distribution of the data analysis parameter \lstinline{phi}. This parameter is one measure of fit because it represents the percentage of responses that the data analysis model wants to attribute to guessing. With this cognitive model, the percentage of guesses is somewhere between 40\% and 50\%. The amount of guessing is so high because our computational model is inflexible.
+
+
+
+%A \lstinline{query} is a special function in Church. The first arguments to a query function are a generative model: definitions or the background knowledge with which a reasoning agent is endowed. Definitions for which a random choice is stipulated (e.g. \lstinline{(define generic-is-true? (flip 0.5))}) denote aspects of the world over which the agent has uncertainty. The second argument, called the \emph{query expression}, is the aspect of the computation that the model should return. The final argument, called the \emph{conditioner}, is the information with which the agent updates beliefs. 
+%
+%This is the simplest model of the truth conditions of the generic. It says the subject has maximal uncertainty as to whether or not the generic is true (expressed by \lstinline{(flip 0.5)}, a Bernoulli random variable). The subject uses the prevalence given to her to determine if the generic is true. 
+%
+%At the same time, we want to take into account the results of Exp. 1b: the interpretation of the generic. Here, we are concerned with the interpretation of the utterance, so we put uncertainty over the prevalence. We condition on the fact that the generic must be true of the prevalence, whatever it may turn out to be.
+%
+% \begin{lstlisting}
+%(define implied-prevalence (lambda (utterance)
+%	(query  
+%		
+%		(define generic ...) ;defined as above
+%		(define prevalence (uniform 0 1))
+%		
+%		prevalence
+%			
+%		(generic prevalence))))
+%\end{lstlisting}
+%
+%We are now in a position to ask how the truth-functional threshold of the generic behaves across these three contexts. To do this, put each of these models inside of a Bayesian data analysis model. The data analysis model posits that \lstinline{generic-threshold} might be a function of context.
+%
+%The data analysis model can be written very simply in Church.
+%
+%\begin{lstlisting}
+%(define bayesian-data-analysis 
+%	(query
+%		; we don't know the generic threshold but we feel it might be a function of context
+%		(define generic-threshold 
+%			(mem (lambda (context) (uniform 0 1))))
+%		(define truth-conditions ...) ; defined as above
+%		(define implied-prevalence ...)
+%		
+%		(define phi (uniform 0 1)); guessing parameter
+%				
+%		generic-threshold ; return generic-threshold	
+%		
+%		(and 
+%			(= experiment1a-data truth-conditions)
+%			(= experiment1b-data implied-prevalence))))
+%
+%\end{lstlisting}
+%
+%The model above is a data analysis model to try to infer the threshold of the generic, with the built-in flexibility that it might vary by context. The functions \lstinline{truth-conditions} and \lstinline{implied-prevalence} jointly form our cognitive theory\footnote{This could be made more explicit by moving the function \lstinline{generic} outside of either \lstinline{query}, since it is the same function. This function is the core of this cognitive theory.}. It says the generic is like an alien quantifier. This quantifier behaves like other quantifiers in that it has a fixed-threshold semantics. The only thing special about the generic is that the threshold might be different for different contexts. 
+%
+%We don't know what the generic might mean \emph{a priori}. Thus, the generic-threshold\footnote{If the generic threshold turns out to be 0, the generic ``Lorches have purple feathers'' would mean essentially, ``Some lorches have purple feathers''. If the threshold turned out to be very close to 1, the generic would mean essentially: ``All lorches have purple feathers''.} follows a uniform prior distribution between 0 and 1. 
+%
+%The \lstinline{query} function is written to return \lstinline{generic-threshold}, which is the parameter we are interested in inferring. Finally, the last line is our condition statement: we condition on the data we collected in Exp. 1a being explained by the \lstinline{truth-conditions} model and Exp. 1b to be explained by \lstinline{implied-prevalence}. For clarity, we have omitted the impact of \lstinline{phi}, but it comes into play in the condition statement. In reality, each response could have been generated by our theory (via \lstinline{truth-conditions} or \lstinline{implied-prevalence}) or by guessing (via \lstinline{phi}).  
 
 \subsection{Results}
 
@@ -284,9 +337,6 @@ The \lstinline{query} function is written to return \lstinline{generic-threshold
   \label{fig:bda1a}
 \end{figure}
 
-The results can be seen in Figure \ref{fig:bda1a}. In the \emph{plain} condition, the analysis suggests the threshold is somewhere between 0\% and 30\%, but it's unclear where exactly in that range the threshold should be\footnote{This uncertainty results from the sparseness of our sampling (see Procedures and Materials). Participants were queried only at prevalence levels 10, 30, 50, 70, and 90}. Critically, in the \emph{dangerous and distinctive} context, the analysis infers a lower threshold, less than 10\%. This matches with intuition and the empirical results, that a dangerous and distinctive context allows for the generic to be more permissive (e.g. ``Mosquitos carry West Nile Virus'' is true, even though very few mosquitoes actually do). Finally, and most intriguingly, the analysis infers a third distinct threshold profile for the \emph{nondistinct and irrelevant} context.  For this, it says that threshold is greater than 10\%, but could be as high as 50\%. This is an overall higher inferred threshold for the nondistinctive category and an aspect of analysis totally obscured by standard frequentist estimation. 
-
-This model is too a simple model, however. We see this in part by the posterior distribution of the data analysis parameter \lstinline{phi}. This parameter is one measure of fit because it represents the percentage of responses that the data analysis model wants to attribute to guessing. With this cognitive model, the percentage of guesses is somewhere between 40\% and 50\%. The amount of guessing is so high because our computational model is inflexible.
 
 \subsubsection{Posterior predictives}
 
