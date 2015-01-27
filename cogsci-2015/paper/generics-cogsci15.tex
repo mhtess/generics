@@ -223,10 +223,10 @@ We first examine what this threshold would look like if it were invariant to con
 
 Here, x is some proportion of a kind with a property. How must $\theta$ be set to account for the data observed? We assume a uniform prior distribution over possible values of $\theta$. Following standard practice in Bayesian data analysis \cite{LW2014}, we include the data-analytic parameter $\phi$ to account for data points that deviate strongly from our theory; it is a guessing parameter. We assume there is some proportion of responses\footnote{Ideally, we would have $\phi$ be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). As a first pass, we assume there is some global quantity of guessing.} where the participant is responding randomly, and we estimate this quantity by way of $\phi$.
 
-\begin{align}
+\begin{align*}
 \theta \thicksim U(0,1) \\
 \phi \thicksim U(0,1) %\mid  t \in \{exp1a, exp1b\}
-\end{align}
+\end{align*}
 %We formalize the notion of ``effective truth conditions'' by saying the generic is a function from states of the world to truth-values. We operationalize \emph{states of the world} here as the prevalence of some property within a kind. This mapping is then determined by some threshold such that the generic is true when the prevalence is above threshold. 
 
 %Using the Church probabilistic programming language to represent this model \cite{probmods}, this would be written:
@@ -298,7 +298,7 @@ The posterior distribution for $\phi$ shows a marginal improvement over the cont
 
 \subsubsection{Posterior predictives}
 
-The inflexibility of the model can also be seen in the posterior predictive distribution of responses (Figure \ref{blah}, left). 
+The inflexibility of the model can also be seen in the posterior predictive distribution of responses (Figure \red{figure}, left). 
 
 The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the cognitive model and the inferred data. This is an important step in model validation as it shows what the model actually predicts the data should look like \footnote{As a thought experiment, consider 2 coins assumed to come from a single coin-making machine (all the coins from this machine have the same weight). You flip each coin 100 times. The first one returns 100 heads, and the second one returns 100 tails. The posterior mean of the inferred coin weight will be 0.5. Comparing the posterior predictive distribution (based on this inferred coin-weight) to the observed data, however, will highlight the fact that your theory about the ``single coin-making machine'' is seriously flawed.}.
 
@@ -389,7 +389,6 @@ $$ P_{S_{1}}(u \mid x, \theta) \propto P_{L_{0}}(x \mid u, \theta) e^{-C(u)} $$
 
 $$ P_{L_{1}}(x , \theta \mid u) \propto P_{S_{1}}(u \mid x, \theta) P(x) $$
 
-$$ P_{S_{2}}(u \mid x) \propto P_{L_{1}}(x , \theta \mid u) P(u) P(\theta) $$
 
 
 %In Church, the model looks like:
@@ -426,9 +425,11 @@ $$ P_{S_{2}}(u \mid x) \propto P_{L_{1}}(x , \theta \mid u) P(u) P(\theta) $$
 %		(utterance prevalence generic-threshold))))
 %\end{lstlisting}
 
-This is a model of a listener who has been told a generic statement. She assumes that, whatever the speaker meant to communicate, the speaker was trying to be informative and that his goal was to communicate the \lstinline{prevalence}. From this, the listener jointly infers both the \lstinline{prevalence} and the \lstinline{generic-threshold}. We call this type of model a ``lifted variable'' model because \lstinline{generic-threshold}, traditionally thought to be part of the semantic content of the utterance and thus perfectly transparent to all in the conversation, has been ``lifted'' to the pragmatic level and must be inferred like \lstinline{prevalence}. Following the advice of \citeA{Degen2014}, we will model the \emph{implied prevalence} task as a pragmatic listener task.  
+This is a model of a listener who has been told a generic statement. She assumes that, whatever the speaker meant to communicate, the speaker was trying to be informative and that his goal was to communicate the prevalence $x$. She assumes the speaker knows the threshold, because without this knowledge, the utterance would be vacuous\footnote{Speaking words you don't know does not imply communicative intent.}.  From this, the listener jointly infers both $x$ and $\theta$. We call this type of model a ``lifted variable'' model because $\theta$, traditionally thought to be part of the semantic content of the utterance (and thus perfectly transparent to all in the conversation), has been underspecified in the semantics. It is thus ``lifted'' to the pragmatic level and inferred. Following the advice of \citeA{Degen2014}, we will model the \emph{implied prevalence} task as a pragmatic listener ($L_{1}$) task .  
 
-The CBG \emph{truth conditions} task is not a task for a listener, however, but for a speaker. Thus, we must say that the there is a speaker, who reasons about the pragmatic-listener, who is trying to infer \lstinline{prevalence} and \lstinline{generic-threshold} and so on. Our final piece to the cognitive model looks like:
+The CBG \emph{truth conditions} task is modeled slightly differently. It is best understood as a production task, and as such, we model it with a speaker $S_{2}$. Then there is a speaker, who reasons about the pragmatic-listener, who is trying to infer prevalence and $\theta$ and so on. Our final piece to the cognitive model looks like:
+
+$$ P_{S_{2}}(u \mid x, \theta) P(\theta) \propto P_{L_{1}}(x , \theta \mid u) P(u)  $$
 
 %\begin{lstlisting}
 %(define lifted-speaker (lambda (prevalence)
@@ -440,23 +441,23 @@ The CBG \emph{truth conditions} task is not a task for a listener, however, but 
 %		(equal? prevalence (pragmatic-listener utterance)))))	
 %\end{lstlisting}
 
-The speaker here, doesn't even consider what the threshold might be, but knows that the pragmatic listener is thinking about it, and so will tailor his utterance appropriately.
-
-The results of Exp. 1 replicate the asymmetry between verification and interpretation of the generic. Additionally, CBG  found that the quantifier ``most'' did not show this asymmetry between the two dependent measures\footnote{This asymmetry has since been replicated further in adults and observed in children \cite{Brandone2014}}. 
-
-\subsection{The puzzle of dependent measures}
-
-\citeA{Degen2014} argued that differences between dependent measures in experimental effects of pragmatic inference can be accounted for by formal, probabilistic models of pragmatics. In particular, they suggest the \emph{sentence verification} measure is most closely related to production, while \emph{sentence interpretation} is most likely a measure of comprehension. Therefore, formal models of these tasks should be of a speaker and a listener, respectively. We apply this same logic to the CBG paradigm to show how the asymmetry can come about from these different dependent measures.
-
+The speaker here, like $L_{1}$, doesn't know the threshold, but knows that $L_{1}$ is thinking about it, and so will tailor his utterance appropriately.
 
 \subsection{Bayesian analysis to infer priors}
 
-We propose that in this paradigm, the threshold is influenced via the prior distribution over prevalence, which in turn is influenced by the contextual information provided. In CBG, this contextual information amounts to the 3 experimental conditions: \emph{DD}, \emph{NI}, and \emph{plain}. In this simple model, the contextual information could provide different \lstinline{prevalence-prior} distributions. \lstinline{prevalence-prior} represents the  prior probability that some percentage of the kind has the property. Naively, this distribution would be \lstinline{(uniform 0 1)}, or equivalently \lstinline{(beta 1 1)}. However, we propose that the participant has different prior distributions in mind, depending on relevance of the properties under discussion (given, again, but the experimental conditions).
+We propose that, in this paradigm, nobody knows $\theta$.  $\theta$ is influenced by the prior distribution over prevalence, which in turn is influenced by the contextual information provided (\emph{DD}, \emph{NI}, or \emph{P}). This contextual information could imply different $P(x)$, prior probability distributions over the prevalence of a property. 
 
-We scientists don't know what these prior distributions look like (although we might have some intuitions). Thus, we put uncertainty over the parameters of this beta distribution, \lstinline{(beta gamma delta)}\footnote{For ease of interpretation, we are parametrizing the \lstinline{beta} distribution by its mean and concrentation... \lstinline{(beta (* gamma delta) (* (- 1 gamma) delta))}}, outside of the RSA model but inside of the data analysis model. 
+Naively, this distribution would be $U(0,1)$, or equivalently, $\beta(1,1)$. However, we propose that people have different prior distributions in mind, depending on features of the properties under discussion (e.g. distinctiveness).
 
-Thus, we put a bayesian data analysis model on top of a Rational Speech-Act model of language understanding, to see how context might influence the prior distribution given the data we've observed. We keep the data-analytic guessing parameter \lstinline{phi} as a gross estimate of the proportion of responses our model of cognition captures. In Church, this looks like:
+Although we might have some intuitions what these prior distributions might look like, we put uncertainty over the parameters\footnote{For ease of interpretation, we are parametrizing the $\beta$ distribution by its mean and concentration. To recover the canonical shape parametrization, use $(\gamma \delta), (1-\gamma)\delta$)} of this Beta distribution $\beta(\gamma,\delta)$, outside of the RSA model but inside of the data analysis model. 
 
+\begin{align*}
+\gamma \thicksim U(0,1) \\
+\delta \thicksim U(0,5) \\
+\phi \thicksim U(0,1) 
+\end{align*}
+
+Thus, we put a Bayesian data analysis model on top of a Rational Speech-Act model of language understanding, to see how context might influence the prior distribution given the data we've observed. We keep the data-analytic guessing parameter $\phi$ as a gross estimate of the proportion of responses our model of cognition doesn't capture. 
 %\begin{lstlisting}
 %(define bayesian-data-analysis
 %	(query
