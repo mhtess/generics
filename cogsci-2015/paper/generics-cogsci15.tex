@@ -1,5 +1,7 @@
 
 %todo:
+% - try rationality parameter in tfbt model
+% - look at "order effect" in prior elicitation (taboo sampling hypothesis... first sample is 0, second is 100, third - fifth are meh)
 %-try an S2 model of prevalence judgement task, too. does it reduce to the L1 model?
 %- figure out which plots to use for fixed-threshold and lvRSA  (both TFBT stuff and posterior predictives)
 % - do we really want posterior predictives that include the guessing parameter? (the guessing parameter is part of the analysis model, not the cognitive model...)
@@ -10,6 +12,7 @@
 %		- the thought is that in our prior elicitation, i used 5 animals per slide (and 6 trials)
 %			- probably there was not enough dynamic range for Plain vs DD to come apart 
 %		- i think with 10 items, it would be better (but does that mean just 3 trials, one in each context, per subj?) [there are only 30 animals]
+
 %		
 %todo after cogsci:
 %-run additional contexts. e.g. separate dangerous and distinct.
@@ -210,22 +213,24 @@ The above results, replicated from CBG, indirectly constrain the truth condition
 We assume that the conditions for truth of the generic can be usefully represented by a threshold on prevalence: the generic is true when the prevalence of some property within a kind exceeds a given threshold (See \citeA{Cohen1999} for a similar assumption).
 
 
-\subsection{A truly fixed semantics}
+\subsection{A context-invariant fixed-semantics}
 We first examine what this threshold would look like if it were invariant to context. 
 
 \[
- g(x) =
+ g(x; \theta) =
   \begin{cases}
    1 & \text{if } x > \theta \\
    0       & \text{if } x \leq \theta
   \end{cases}
 \]
 
-Here, x is some proportion of a kind with a property. How must $\theta$ be set to account for the data observed? We assume a uniform prior distribution over possible values of $\theta$. Following standard practice in Bayesian data analysis \cite{LW2014}, we include the data-analytic parameter $\phi$ to account for data points that deviate strongly from our theory; it is a guessing parameter. We assume there is some proportion of responses\footnote{Ideally, we would have $\phi$ be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). As a first pass, we assume there is some global quantity of guessing.} where the participant is responding randomly, and we estimate this quantity by way of $\phi$.
+Here, $x$ is the proportion of a kind with a property (i.e. $x \in [0,1]$). How must $\theta$ be set to account for the data observed? \citeA{Cohen1999} began his analysis by positing $\theta = 0.5$. A glance at the replication data in Figure \ref{fig:exp1} makes obvious that this proposal is untenable. There doesn't seem to be anything magical about 50\%. 
+
+To begin our analysis, we assume a uniform prior distribution over possible values of $\theta$. Following standard practice in Bayesian data analysis \cite{LW2014}, we include the data-analytic parameter $\phi$ to account for data points that deviate strongly from our theory; it is a guessing parameter. We assume there is some proportion of responses\footnote{Ideally, we would have $\phi$ be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). As a first pass, we assume there is some global quantity of guessing.} where the participant is responding randomly, and we estimate this quantity by way of $\phi$. We model two such $\phi$ parameters, one for each task\footnote{What exactly \emph{random guessing} would mean in the case of the \emph{implied prevalence} task is unclear. For practical purposes, we considered there to be ten salient numbers between 0 and 100 (the tens), and thus guessing was selecting a response with a $\frac{1}{10}$ probability.}.
 
 \begin{align*}
 \theta \thicksim U(0,1) \\
-\phi \thicksim U(0,1) %\mid  t \in \{exp1a, exp1b\}
+\phi_{t} \thicksim U(0,1) %\mid  t \in \{exp1a, exp1b\}
 \end{align*}
 %We formalize the notion of ``effective truth conditions'' by saying the generic is a function from states of the world to truth-values. We operationalize \emph{states of the world} here as the prevalence of some property within a kind. This mapping is then determined by some threshold such that the generic is true when the prevalence is above threshold. 
 
@@ -251,41 +256,46 @@ Here, x is some proportion of a kind with a property. How must $\theta$ be set t
 %		(generic prevalence))))
 %\end{lstlisting}
 
-We analyze the data independently for Exp. 1a and 1b.
+We analyze the data from Exp. 1a and 1b jointly as well as independently.
 
 \subsubsection{Inferred parameters}
 
-The results are shown in Figure \ref{fig:trulyfixed}. The implied threshold $\theta$ of the generic is completely different for the two tasks. For implied prevalence task, the threshold is at least 90 and may be as high as 99. For the truth conditions task, the threshold is probably greater than 10\% and less than 30\%\footnote{This uncertainty results from the sparseness of our sampling (see Procedures and Materials). Participants were queried only at prevalence levels 10, 30, 50, 70, and 90}, however there is some non-zero probability that the threshold is in fact 0\%. 
+The inferred ``guessing'' parameter $\phi$ is the amount of data that would have to be attributed to random guessing in order for the fixed-threshold model of the generic to apply to the experimental data. In this sense, $\phi$ is a gross of fit. 
 
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{trulyFixed_phis_thetas}
-    \caption{Fixed and context-invariant semantics of a generic. Inferred ``guessing'' parameter (left) and threshold (right) for each experiment.}
-  \label{fig:trulyfixed}
-\end{figure}
+The joint analysis using a context-invariant semantics produces almost meaningless results. The inferred $\phi_{1a}$ is near 1 and the inferred $\theta$ is also near 1 (the $\phi_{1b}$ has a more reasonable posterior mean of 0.3). The joint analysis discounts the \emph{truth conditions} data entirely and uses only the \emph{implied prevalence} data to set the threshold, which results in a very high inferred threshold. (Recall that the \emph{implied prevalence} task alone suggests the generic is interpreted as a universal quantifier.)
 
-Finally, the inferred ``guessing'' parameter $\phi$, i.e. the amount of data that would have to be attributed to random guessing\footnote{What exactly \emph{random guessing} would mean in the case of the \emph{implied prevalence} task is unclear. For practical purposes, we considered there to be ten salient numbers between 0 and 100 (the tens), and thus guessing was selecting a response with a $\frac{1}{10}$ probability.} in order for the fixed-threshold model of the generic  to apply to the experimental data. In this sense, t is a gross of fit. The amount of guessing for the \emph{truth conditions} is quite high, around 50\%. Additionally, we already know there is an effect of context on the generic meaning, and there is no way for this model to account for such data.
+The separate analysis produces more interpretable results consistent with the overall theme of CBG. The implied threshold $\theta$ of the generic is completely different for the two tasks. For implied prevalence task, the threshold is at least 90 and may be as high as 99. For the truth conditions task, the threshold is probably greater than 10\% and less than 30\%\footnote{This uncertainty results from the sparseness of our sampling (see Procedures and Materials). Participants were queried only at prevalence levels 10, 30, 50, 70, and 90}, however there is some non-zero probability that the threshold is in fact 0\%. 
 
-\subsection{A relaxed but fixed semantics}
+The amount of guessing for the \emph{truth conditions} task ($\phi_{1a}$) is no longer near 1, but is still quite high, around 0.5. Though this analysis shows an asymmetry between the two tasks, we already know there is an effect of context on the generic meaning. There is no way for this model to account for such data.
 
-In Exp. 1a, we replicated CBG's evidence that the generic truth conditions vary by context. We reexamine our fixed-semantics model, now allowing for the possibility that $\theta$ could vary by context.
+%\begin{figure}
+%\centering
+%    \includegraphics[width=\columnwidth]{trulyFixed_phis_thetas}
+%    \caption{Fixed and context-invariant semantics of a generic. Inferred ``guessing'' parameter (left) and threshold (right) for each experiment.}
+%  \label{fig:trulyfixed}
+%\end{figure}
 
 
-\[
- g(x, c) =
-  \begin{cases}
-   1 & \text{if } x > \theta_{c} \\
-   0       & \text{if } x \leq \theta_{c}
-  \end{cases}
-\]
+\subsection{A context-sensitive fixed-semantics}
+
+In Exp. 1a, we replicated CBG's evidence that the generic truth conditions vary by context. We reexamine our fixed-semantics model, now allowing for the possibility that $\theta$ could vary by context: $g(x,\theta_{c})$.
+
+
+%\[
+% g(x, c) =
+%  \begin{cases}
+%   1 & \text{if } x > \theta_{c} \\
+%   0       & \text{if } x \leq \theta_{c}
+%  \end{cases}
+%\]
 
 Again, we put uniform priors over each of the $\theta_{c}$'s. We are now in a position to ask how the truth-functional threshold of the generic behaves across these three contexts. 
 
 \subsubsection{Inferred parameters}
 
-The results can be seen in Figure \ref{fig:justFixed}. The first observation is that there is indeed variability in the generic threshold, at least in the \emph{truth conditions} task. In the \emph{plain} condition, the analysis suggests the threshold is somewhere between 0\% and 30\%, but it's unclear where exactly in that range the threshold should be. Critically, in the \emph{dangerous and distinctive} context, the analysis infers a lower threshold, less than 10\%. This matches with the empirical results. Finally, and most intriguingly, the analysis infers a third distinct threshold profile for the \emph{nondistinct and irrelevant} context.  For this, it says that threshold is greater than 10\%, but could be as high as 50\%. This is an overall higher inferred threshold for the nondistinctive category and an aspect of analysis obscured by standard frequentist estimation. 
+The results can be seen in Figure \ref{fig:justFixed}. The first observation is that there is indeed variability in the generic threshold, at least in the \emph{truth conditions} task. In the \emph{plain} condition, the analysis suggests the threshold is somewhere between 0\% and 30\%, but it's unclear where exactly in that range the threshold should be. Critically, in the \emph{dangerous and distinctive} context, the analysis infers a lower threshold, less than 10\%. This matches with the empirical results. Finally, and most intriguingly, the analysis infers a third distinct threshold profile for the \emph{nondistinct and irrelevant} context.  For this, it says that threshold is greater than 10\%, but could be as high as 50\%. This is an overall higher inferred threshold for the nondistinctive category; however, the data is inconclusive as to whether or not this threshold is different from \emph{plain} context.
 
-The posterior distribution for $\phi$ shows a marginal improvement over the context-invariant semantics for the \emph{truth conditions} task. Still, however, the amount of data that must be attributed to guessing to be consistent with this model of generics is quite high.
+The posterior distribution for $\phi_{t}$'s shows a marginal improvement over the context-invariant semantics for the \emph{truth conditions} task (posterior mean $\thicksim 0.45$). Still, however, the amount of data that must be attributed to guessing to be consistent with this model of generics is quite high.
 
 
 \begin{figure}
@@ -300,7 +310,7 @@ The posterior distribution for $\phi$ shows a marginal improvement over the cont
 
 The inflexibility of the model can also be seen in the posterior predictive distribution of responses (Figure \red{figure}, left). 
 
-The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the cognitive model and the inferred data. This is an important step in model validation as it shows what the model actually predicts the data should look like \footnote{As a thought experiment, consider 2 coins assumed to come from a single coin-making machine (all the coins from this machine have the same weight). You flip each coin 100 times. The first one returns 100 heads, and the second one returns 100 tails. The posterior mean of the inferred coin weight will be 0.5. Comparing the posterior predictive distribution (based on this inferred coin-weight) to the observed data, however, will highlight the fact that your theory about the ``single coin-making machine'' is seriously flawed.}.
+The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the cognitive model and the inferred data. This is an important step in model validation as it shows what data the model actually predicts\footnote{As a thought experiment, consider 2 coins assumed to come from a single coin-making machine (all the coins from this machine have the same weight). You flip each coin 100 times. The first one returns 100 heads, and the second one returns 100 tails. The posterior mean of the inferred coin weight will be 0.5. Comparing the posterior predictive distribution (based on this inferred coin-weight) to the observed data, however, will highlight the fact that your theory about the ``single coin-making machine'' is seriously flawed.}.
 
 The model matches the ordering of the truth-conditions by context reasonably well, but is too dichotomous in its predictions. The correlation between the posterior predictive and the data is $r = 0.81$. 
 
