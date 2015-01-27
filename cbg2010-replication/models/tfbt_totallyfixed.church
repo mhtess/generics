@@ -1,0 +1,408 @@
+; example call
+
+;church -u -a 'home,generic,9,12,10000,10' tfbt_fixed.church
+
+(define args (regexp_split argstring ","))
+
+(define serv (first args))
+(define quantifier (second args))
+(define expnum (third args))
+(define exp2num (fourth args))
+(define mh_samples (fifth args))
+(define mh_lag (sixth args))
+
+
+(define speaker-optimality 1)
+(define context 'all)
+(define task 'truth_conditions) ;;; depracated, but still need this
+
+(define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
+
+(define QUD (lambda (task quantifier)
+              (case task
+                    (('implied_prevalence) 'how-many)
+                    (('truth_conditions) 'truth))))
+
+(define uniform-score (lambda (lowerbound upperbound)
+                        (- 0 (log (- upperbound lowerbound))))) ;;assuming values are in the range
+
+(define all-true (lambda (lst) (apply and lst)))
+
+(define string->boolean (lambda (str)
+                          (equal? str 'True)))
+
+(define data-path
+  (if (equal? serv 'home)
+     '/Users/mht/Documents/research/generics/cbg2010-replication/data/
+     '/home/mht/research/generics/cbg2010-replication/data/))
+
+;(define data-file (string-append data-path 'cbgR-exp1_exp3_anonymized-trials.csv))
+;(define data-file (string-append data-path 'cbgR-exp4_anonymized-trials.csv))
+;(define data-file (string-append data-path (string-append 'cbgR-exp expnum '_anonymized-trials.csv)))
+
+(define data-file (string-append data-path (string-append 'cbgR-exp expnum '-trials.csv)))
+
+(define implied-data-file (string-append data-path (string-append 'cbgR-exp exp2num '-trials.csv)))
+
+
+(define alldata (read-csv data-file))
+(define implieddata (read-csv implied-data-file))
+
+
+(define task? (lambda (x) (equal? (fourth x) task)))
+(define quantifier? (lambda (x) (equal? (seventh x) quantifier)))
+(define context? (lambda (x context) (equal? (fifth x) context)))
+; (define stimulus-prevlevel? (lambda (lst target) (equal? 
+;                                                   (string->number (last (but-last (but-last (but-last lst)))))
+;                                                   target)))
+
+(define stimulus-prevlevel? (lambda (lst target) (equal? 
+                                                  (string->number (last (but-last (but-last lst))))
+                                                  target)))
+
+(define all-contexts (unique (map fifth (rest alldata))))
+(define implied-contexts (unique (map fifth (rest implieddata))))
+
+
+(define data-subset 
+  (if (equal? context 'all)
+    (map
+      (lambda (c)
+        (filter 
+          (lambda (x) (and (task? x) (quantifier? x) (context? x c)))
+          alldata))
+      all-contexts)
+    (filter 
+      (lambda (x) (and (task? x) (quantifier? x) (context? x context))) 
+      alldata)))
+
+(define implied-subset 
+  (if (equal? context 'all)
+    (map
+      (lambda (c)
+        (filter 
+          (lambda (x) (and (equal? (fourth x) 'implied_prevalence) (quantifier? x) (context? x c)))
+          implieddata))
+      all-contexts)
+    (filter 
+      (lambda (x) (and (task? x) (quantifier? x) (context? x context))) 
+      alldata)))
+
+
+
+(define query-data 
+    (if (equal? context 'all)
+      (map (lambda (y) (map (lambda (x) (last (but-last x))) y)) data-subset)
+      (map (lambda (x) (last (but-last x))) data-subset)))
+
+(define nearest-ten (lambda (x) (* 10 (round (/ (string->number x) 10)))))
+
+(define implied-query-data 
+    (if (equal? context 'all)
+      (map (lambda (y) (map (lambda (x) (nearest-ten (last (but-last x)))) y)) implied-subset)
+      (map (lambda (x) (nearest-ten (last (but-last x)))) implied-subset)))
+
+;(display implied-query-data)
+;(define evidence-data (map (lambda (x) (string->number (last (but-last (but-last (but-last x)))))) data-subset))
+(define evidence-data 
+    (if (equal? context 'all)
+        (map (lambda (y) (map (lambda (x) (string->number (last (but-last (but-last x))))) y)) data-subset)
+        (map (lambda (x) (string->number (last (but-last (but-last x))))) data-subset)))
+
+(define unique-evidence-data
+  (if (equal? context 'all)
+    (map (lambda (evidence-data-for-one-context) 
+      (sort (unique evidence-data-for-one-context)))
+    evidence-data)
+    (sort (unique evidence-data))))
+
+(define sorted-truthcond-data
+  (if (equal? context 'all) ; resulting data is 3(contexts) x 5 (levels) x N (trials)
+    (map (lambda (data-for-one-context unique-evidence-data-for-one-context)
+      (map (lambda (evidence) 
+       (map (lambda (z) 
+        (string->boolean (last (but-last z))))
+       (filter (lambda (one-trial) 
+        (stimulus-prevlevel? one-trial evidence))
+       data-for-one-context)))
+      unique-evidence-data-for-one-context))
+    data-subset
+    unique-evidence-data)
+  (map 
+   (lambda (y) 
+     (map 
+      (lambda (z) (string->boolean (last (but-last z))))
+          (filter 
+            (lambda (x) (stimulus-prevlevel? x y))
+            data-subset)))
+    (sort (unique evidence-data)))))
+
+; (define simplified-data ;;; obsolete
+;   (case task
+;         (('implied_prevalence) (map (lambda (x) (string->number x)) query-data))
+;         (('truth_conditions) (map (lambda (x) (string->boolean x)) query-data))))
+
+;  (map (lambda (x) (string->number x)) query-data))
+;  (map (lambda (x) (round (/ (string->number x) 10))) prevalence-data)) ; round for conditioning on discrete data
+
+; (define super-simplified-data
+;   (repeat 20 (lambda () (uniform-draw simplified-data))))
+
+;; background
+(define (state-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
+;(define (theta-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90)))
+;(define (state-prior) (uniform-draw '(0 5 10 15 20 25 30 35 40 45 50)))
+(define (qud-prior) (uniform-draw (list 'is-lorch 'who-is-it)))
+
+(define (all state threshold) (= 100 state))
+(define (relaxed-all state threshold) (<= 90 state))
+
+(define (some state some-threshold) (< some-threshold state))
+(define (none state some-threshold) (>= some-threshold state))
+
+(define (most state most-threshold) (< most-threshold state))
+(define (anti-most state most-threshold) (>= most-threshold state))
+
+(define (generic state generic-threshold) (< generic-threshold state))
+(define (anti-generic state generic-threshold) (>= generic-threshold state))
+
+(define (mu state dummy) true)
+(define (how-many state dummy) state)
+
+(define who-is-it? (lambda (state theta) (flip state)))
+
+(define (raise-to-power dist alph)
+  (list (first dist) (map (lambda (x) (pow x alph)) (second dist))))
+
+
+
+(define (meaning word)
+  (case word
+        (('all) all)
+        (('some) some)
+        (('none) none)
+        (('most) most)
+        (('anti-most) anti-most)
+        (('how-many) how-many)
+        (('generic) generic)
+        (('anti-generic) anti-generic)
+        (('mu) mu)
+        (('is-lorch) generic?)
+        (('who-is-it) who-is-it?)))
+
+
+(define cognitive-model 
+  (mem 
+  ; (lambda (generic-theta most-theta some-theta QUD evidence) ;; fixed treshold model (obviously wrong)
+   (lambda (generic-theta QUD evidence)
+     ;; input could be utterance (for listener / implied_prevalence)
+     ;; or state (for speaker / truth_conditions)
+
+     (define (theta-meaning word)
+       (case word
+             (('most-theta) most-theta)
+             (('some-theta) some-theta)
+             (('generic-theta) generic-theta)
+             (('how-many-theta) 'null)
+             (('anti-generic-theta) generic-theta)
+             (('none-theta) some-theta)
+             (('anti-most-theta) anti-most)))
+     
+     (define (theta words)
+       (theta-meaning (string-append words '-theta)))
+
+
+     (define speaker1
+       (mem (lambda (state generic-theta)
+              (enumeration-query
+               
+              (define words (if (equal? QUD 'truth)
+                              (uniform-draw (list 'generic 'anti-generic))
+                              (uniform-draw (list 'generic 'mu))))
+               words
+
+               (equal? state
+                       (apply multinomial (listener0 words generic-theta)))))))
+
+     (define listener0
+       (mem (lambda (words generic-theta) 
+              (enumeration-query
+               (define state (state-prior))
+
+               state
+
+               (case words
+                (('generic) ((meaning words) state generic-theta))
+                (('most) ((meaning words) state 50))
+                (('some) ((meaning words) state 1))
+                (('anti-generic) ((meaning words) state generic-theta))
+                (('mu) ((meaning words) state null)))))))
+
+
+     (if (equal? QUD 'truth)
+          (speaker1 evidence generic-theta)
+          (listener0 'generic generic-theta)))))
+
+(define tfbt-model
+  ; (lambda (QUD utterance context)
+  (lambda (QUD utterance)
+    (mh-query 
+     (string->number mh_samples)
+     (string->number mh_lag)
+
+
+
+  ;   (define phi (uniform 0 1)) ;; guessing parameter
+  ;   (define generic-theta (mem (lambda (context) (uniform 0 100))))
+     (define generic-theta (mem (lambda (task) (uniform 0 100))))
+
+     (define phi (mem (lambda (task) (uniform 0 1))))
+
+     ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
+     ;(define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
+
+     ; (define gamma (mem (lambda (context) (uniform 0 1))))
+     ; (define delta (mem (lambda (context) (uniform 0 3))))
+     ;(define gamma (mem (lambda (context) (uniform-draw '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))))
+     ;(define delta (mem (lambda (context) (uniform-draw '(0.01 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
+
+
+
+     (define alt-words
+       (case QUD
+             (('truth)  (list 'generic 'anti-generic))
+             (('some) (list 'some 'none))
+             (('most) (list 'most 'anti-most))
+             (('how-many) (list 'most 'some 'generic))))
+
+
+
+     ;;; for speaker model
+     ;;; condition on truth_conditions (exp 9) data
+     (define model-predictions
+      (if (equal? context 'all)
+        (map 
+          (lambda (unique-evidence-data-for-one-context context)
+            (map 
+              (lambda (evidence) 
+              (cognitive-model (generic-theta 'tc) QUD evidence))
+            unique-evidence-data-for-one-context))
+        unique-evidence-data all-contexts)
+       (map 
+        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
+        unique-evidence-data)))
+
+     (define scores
+       (lambda (truthcond-byprev modelpred-byprev)
+         (let* ([data-as-quantifier (map (lambda (x) (if x (first alt-words)
+                                                         (second alt-words))) truthcond-byprev)]
+                [match (lambda (x) (position (first modelpred-byprev) x))]
+                [prob (lambda (x) (if (= (match x) -1) 0
+                                      (list-ref (second modelpred-byprev) (match x))))]
+                [score-marginalized-phi (lambda (x) (log (+ (* (phi 'tc) 0.5) (* (- 1 (phi 'tc)) (prob x)))))])
+           (sum (map score-marginalized-phi data-as-quantifier)))))
+
+     (define dummyvar-for-factoring
+      (if (equal? context 'all)
+       (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
+       (factor (sum (map scores sorted-truthcond-data model-predictions)))))
+
+
+
+
+     ;;; condition on exp12 (implied prevalence) data
+      (define implied_prev-predictions
+        (if (equal? context 'all)
+          (map 
+            (lambda (context)
+              (cognitive-model (generic-theta 'ip) how-many 'generic))
+          all-contexts)
+            (cognitive-model (generic-theta 'ip) 'how-many 'generic)))
+
+     (define scores-for-implied
+       (lambda (data modelpred)
+          (let* ([match (lambda (x) (position (first modelpred) x))]
+                [prob  (lambda (x) (if (= (match x) -1) 0
+                                      (list-ref (second modelpred) (match x))))]
+                [score-marginalized-phi 
+                  (lambda (x) (log (+ 
+                                    (* (phi 'ip)
+                                      (/ 1 10)) 
+                                    (* (- 1 (phi 'ip)) 
+                                      (prob x)))))])
+
+           (sum (map score-marginalized-phi data)))))
+
+     
+     (define factoring-implied_prev
+      (if (equal? context 'all)
+        (factor (sum (flatten (map (lambda (y x) (scores-for-implied y x)) implied-query-data implied_prev-predictions))))
+        (factor (scores-for-implied implied-query-data implied_prev-predictions))))
+
+
+
+
+     (define speaker-predictive
+        (map 
+          (lambda (unique-evidence-data-for-one-context context)
+            (map 
+              (lambda (evidence) 
+               (let* 
+                ([posterior (cognitive-model (generic-theta 'tc) 'truth evidence)]
+                [match (lambda (x) (position (first posterior) x))])
+                (if (= (match 'generic) -1) 0
+                              (list-ref (second posterior) (match 'generic)))))
+            unique-evidence-data-for-one-context))
+        unique-evidence-data all-contexts))
+
+
+     (define listener-predictive
+      (if (equal? context 'all)
+        (map 
+          (lambda (context)
+            (let* 
+              ([posterior (cognitive-model (generic-theta 'ip) 'how-many 'generic)])
+              (sum (map 
+                    (lambda (a b) (* a b)) 
+                    (first posterior) 
+                    (second posterior)))))
+        all-contexts)))
+
+
+
+    (list (phi 'tc) (phi 'ip)
+      (generic-theta 'tc) (generic-theta 'ip)
+     speaker-predictive
+     listener-predictive)
+
+
+     true)))
+
+
+
+
+
+;   (sum (map (lambda (a b) (* a b)) (first posterior) (second posterior))))
+;(cognitive-model 0.3 1 'truth 30)
+;(position 'anti-generic (cognitive-model 30 'truth 10))
+
+(define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
+
+(define output-path
+  (if (equal? serv 'home)
+   '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/
+   '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
+
+(define output-file-name (string-append  output-path 
+  'ft_totallyFixed_conditionIndependenly_cnts_expts 
+  expnum '_ exp2num
+  '_ quantifier 
+  '_mh mh_samples 
+  '_ mh_lag 
+  '_alpha (number->string speaker-optimality) '.csv))
+
+ (write-csv samples output-file-name)
+ (define complete? 'complete)
+ complete?
+
+
