@@ -92,16 +92,16 @@ New sanctions passed by this Congress, at this moment in time, will all but guar
 \end{aquote}
 
 
-Generic meanings are hard to pin down.  Consider President Obama's remark during the State of the Union Address. The sentence is a generic statement about \emph{new sanctions} in that it conveys a generalization about the members of a kind \cite{Carlson1977, Leslie2008}. It invites the question: ``Exactly how many of these new sanctions will guarantee diplomacy fails?'' President Obama's statement is conceivably true if most or only a few new sanctions will be problematic. At the same time, he is not a man to waste words---why does he go through the trouble of saying such a vague statement? In this paper, we will see that both the context in which his words are uttered and his effort in producing this statement contribute to the meaning we derive. We will propose that these aspects of generic statements follow from pragmatic reasoning about an uncertain threshold for meaning; an idea which we formalize in a Bayesian Rational Speech Acts computational model.
+Generic meanings are hard to pin down.  Consider President Obama's remark during the State of the Union Address. The sentence is a generic statement about \emph{new sanctions} in that it conveys a generalization about the members of a kind \cite{Carlson1977, Leslie2008}. It invites the question: ``Exactly how many of these new sanctions will guarantee diplomacy fails?'' President Obama's statement is conceivably true if most or only a few new sanctions will be problematic. At the same time, he is not a man to waste words---why does he go through the trouble of saying such a vague statement? In this paper, we will see that both the context in which his words are uttered and his effort in producing this statement contribute to the meaning we derive. We propose that these aspects of generic statements follow from pragmatic reasoning about an uncertain threshold for meaning; an idea which we formalize in a Bayesian Rational Speech Acts computational model.
 
 Generic statements are puzzling because their meaning is so flexible. On one hand, generics would seem to suggest an almost universal quantification, as in ``Dogs bark''. Others, like ``Mosquitos carry West Nile virus'', involve a property that applies only to a small subset of the kind. 
 %It is perhaps this inherent uncertainty that leads generics to be so widespread in natural language. 
-\citeA{Cimpian2010} (henceforth, CBG) carried out a series of controlled studies designed to examine the truth conditions and implications of generic statements. 
-They found evidence for the influence of context, in the form of additional knowledge about a target property, on participants' willingness to accept generic statements (i.e. context modified the truth conditions). CBG also found an asymmetry between verification and interpretation: participants interpreted a generic (e.g.~``lorches have purple fur'') as nearly universal, but would endorse the same generic as true if given a much lower prevalence level (``50\% of lorches have purple fur'').
+\citeA{Cimpian2010} (henceforth, CBG) carried out a series of experiments designed to examine the truth conditions and implications of generic statements. 
+They found evidence for the influence of context, in the form of additional knowledge about a target property, on participants' willingness to accept generic statements (i.e. context modified the truth conditions). CBG also found an asymmetry between verification and interpretation: participants interpreted a generic (e.g.~``lorches have purple feathers'') as nearly universal, but would endorse the same generic as true if given a much lower prevalence level (``50\% of lorches have purple feathers'').
 
 Both context and asymmetry effects pose a puzzle for formal semantics. 
 In this paper, we seek to explain both of these phenomena as the effects of pragmatic inference filling in a meaning that is underspecified in the semantics. 
-In particular, we posit a scalar semantics for generics in which they express that prevalence---the probability of the property given the kind---is above a threshold (Cf. \cite{cohen}). Following \citeA{lassiter} we treat this threshold as a free variable that is reasoned about by a pragmatic listener: what is the threshold likely to be, given that a speaker bothered to utter the generic? Context effects follow from differences in prior beliefs about the distribution of the property across categories. Asymmetry effects follow directly by modeling differences in the language understanding and production task faced by participants in the different experiments (Cf. \citeA{Degen2014}).  %suggested that different dependent measures in experimental pragmatics paradigms map onto different communicative roles, and thus should be modeled accordingly. 
+In particular, we posit a scalar semantics for generics in which they express that prevalence---the probability of the property given the kind---is above a threshold (Cf. \citeA{Cohen1999}). Following \citeA{Lassiter2015} we treat this threshold as a free variable that is reasoned about by a pragmatic listener: what is the threshold likely to be, given that a speaker bothered to utter the generic? Context effects follow from differences in prior beliefs about the distribution of the property across categories. Asymmetry effects follow directly by modeling differences in the language understanding and production task faced by participants in the different experiments (Cf. \citeA{Degen2014}).  %suggested that different dependent measures in experimental pragmatics paradigms map onto different communicative roles, and thus should be modeled accordingly. 
 
 %We draw on new advances in probabilistic pragmatics to formalize two possible theories of the generic. Further, we harness the power of Bayesian data analysis to mediate between these formal theories and draw inferences about cognitively interesting model parameters. 
 
@@ -116,8 +116,11 @@ In what follows, we first replicate the main effects reported by CBG, using Baye
 
 \section{Experiment 1: CBG replication}
 
-In CBG's \emph{truth conditions} task, participants were given an evidence statement consisting of the percentage of a category that had a property (e.g. ``30\% of lorches have purple feathers.''). Participants were asked whether the associated generic statement (i.e. ``Lorches have purple feathers'') was true or false. The authors manipulated context within-subjects by adding additional statements about the property. Three contexts we will focus on in this paper are \emph{dangerous and distinct} (DD, e.g.~``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers''), \emph{not distinct and irrelevant} (NI, e.g.~``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.''), and \emph{plain} (P, no additional statements). The authors found that DD increased the overall proportion of ``true'' responses of the generic propositions. 
+In CBG's \emph{truth conditions} task, participants were given an evidence statement consisting of the percentage of a category that had a property (e.g. ``30\% of lorches have purple feathers.''). Participants were asked whether the associated generic statement (i.e. ``Lorches have purple feathers'') was true or false. 
+
+The authors manipulated context within-subjects by adding additional statements about the property. Three contexts we will focus on in this paper are \emph{dangerous and distinct} (DD, e.g.~``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers''), \emph{not distinct and irrelevant} (NI, e.g.~``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.''), and \emph{plain} (P, no additional statements). The authors found that DD increased the overall proportion of ``true'' responses of the generic propositions. 
 %That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. 10\% of lorches had purple feathers) to assert that the generic statement was true.
+
 In their \emph{implied prevalence} task, participants were supplied with the generic (again with context as a within-subjects variable) and asked to judge prevalence: ``What percentage of lorches do you think have purple feathers?''. The authors consistently found that the generic was interpreted strongly---nearly all lorches have purple feathers. 
 
 Experiment 1 attempted to replicate the main findings of CBG: that context affects the proportion of ``true'' responses to a generic statement (Exp. 1a) and that there is an asymmetry between interpretation and verification of the truth conditions of the generic (Exp. 1b). 
@@ -138,7 +141,7 @@ We used the same materials as CBG (available in their Appendix). The materials u
 
 Participants saw a prevalence statement and a context statement (\emph{plain}, \emph{DD}, \emph{NI}, as illustrated above). 
 %A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. 
-Participants were then asked ``Is the following sentence true or false?'', below which was presented the associated generic (e.g. ``Lorches have purple feathers'') and 2 radio buttons. 
+Participants were then asked ``Is the following sentence true or false?'', below which was presented the associated generic (e.g. ``Lorches have purple feathers'') and true and false radio buttons. 
 
 \subsubsection{Results}
 
@@ -171,8 +174,7 @@ Participants were then asked ``Is the following sentence true or false?'', below
 %  \label{fig:replication}
 %\end{figure}
 
-
-Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive context than in the other two contexts (Figure \ref{fig:datatc})\red{[insert stats here]}. There was also an interaction between prevalence level and context such that the DD context was endorsed more at lower prevalence levels. \red{[insert stats here]}. 
+We entered participant's truth judgments into a generalized linear mixed model with random effects of intercept for participant and item.  Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive (DD) context than in the plain (P) condition (Figure \ref{fig:datatc}) $z = 5.52; p < 0.001$. There was also an interaction between prevalence level and context such that the DD context was endorsed more than P at lower prevalence levels $z=-2.353; p = 0.019$. There was a trending effect for the nondistinctive and irrelevant (NI) context to be endorsed \emph{less} than the plain context $z=-1.91; p = 0.056$.
 
 \subsection{Experiment 1b: \emph{implied prevalence}}
 
@@ -198,18 +200,18 @@ Participants were then asked ``What percentage of \emph{the kind} do you think h
 %  \label{fig:replication}
 %\end{figure}
 %
+We followed the data analysis strategy of CBG. Using the data from Exp. 1a, we computed, for each subject, an \emph{average prevalence level} that led to ``true'' responses (e.g. if a participant said ``true'' whenever the prevalence was 70\% or 90\% and ``false'' to everything else, that participant received an \emph{average prevalence score} of 80\%). This score was compared against the implied prevalence dependent measure of Exp. 1b. 
 
-Our results replicated the finding of CBG that the generic statement was interpreted as having a higher prevalence than its truth conditions would imply. 
-\red{say something about how this analysis was done...}
+The prevalence scores were entered into a linear mixed model with a random effect of participant. Our results replicated the finding of CBG that the generic statement was interpreted as having a higher prevalence than its truth conditions would imply ($t = 6.632$). 
 
 \section{Fixed-threshold semantics}
-The above results, replicated from CBG, indirectly constrain the truth conditions that participants are effectively using for generic statements within these experimental conditions. In this section we explore these truth conditions more directly by using bayesian data analysis techniques.
-We assume that the conditions for truth of the generic can be usefully represented by a threshold on prevalence: the generic is true when the prevalence of some property within a kind exceeds a given threshold (See \cite{cohen} for a similar assumption).
+The above results, replicated from CBG, indirectly constrain the truth conditions that participants are effectively using for generic statements within these experimental conditions. In this section we explore these truth conditions more directly by using Bayesian data analytic techniques.
+
+We assume that the conditions for truth of the generic can be usefully represented by a threshold on prevalence: the generic is true when the prevalence of some property within a kind exceeds a given threshold (See \citeA{Cohen1999} for a similar assumption).
 
 
 \subsection{A truly fixed semantics}
-We first examine what this threshold would look like, if it were a truly fixed-threshold. 
-
+We first examine what this threshold would look like if it were invariant to context. 
 
 \[
  g(x) =
@@ -219,11 +221,11 @@ We first examine what this threshold would look like, if it were a truly fixed-t
   \end{cases}
 \]
 
-Here, x is some proportion of a kind with a property. We can then ask, how must the threshold be set to account for the data observed? We assume a uniform prior distribution over possible values of $\theta$. Following standard practice in Bayesian data analysis \cite{LW2014}, we include the data-analytic parameter $\phi$ to account for data points that deviate strongly from our theory; it is a guessing parameter. We assume there is some proportion of responses\footnote{Ideally, we would have $\phi$ be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). As a first pass, we assume there is some global quantity of guessing.} where the participant is responding randomly, and we estimate this quantity by way of $\phi$.
+Here, x is some proportion of a kind with a property. How must $\theta$ be set to account for the data observed? We assume a uniform prior distribution over possible values of $\theta$. Following standard practice in Bayesian data analysis \cite{LW2014}, we include the data-analytic parameter $\phi$ to account for data points that deviate strongly from our theory; it is a guessing parameter. We assume there is some proportion of responses\footnote{Ideally, we would have $\phi$ be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). As a first pass, we assume there is some global quantity of guessing.} where the participant is responding randomly, and we estimate this quantity by way of $\phi$.
 
 \begin{align}
-\theta_{generic} \thicksim U(0,1) \\
-\phi_{t} \thicksim U(0,1) %\mid  t \in \{exp1a, exp1b\}
+\theta \thicksim U(0,1) \\
+\phi \thicksim U(0,1) %\mid  t \in \{exp1a, exp1b\}
 \end{align}
 %We formalize the notion of ``effective truth conditions'' by saying the generic is a function from states of the world to truth-values. We operationalize \emph{states of the world} here as the prevalence of some property within a kind. This mapping is then determined by some threshold such that the generic is true when the prevalence is above threshold. 
 
@@ -249,7 +251,9 @@ Here, x is some proportion of a kind with a property. We can then ask, how must 
 %		(generic prevalence))))
 %\end{lstlisting}
 
-\subsubsection{Results}
+We analyze the data independently for Exp. 1a and 1b.
+
+\subsubsection{Inferred parameters}
 
 The results are shown in Figure \ref{fig:totallyfixed}. 
 
@@ -271,12 +275,40 @@ From this model, we get the idea that the generic could be true for anywhere bet
 
 Again, we put uniform priors over each of the $\theta_{c}$'s. We are now in a position to ask how the truth-functional threshold of the generic behaves across these three contexts. 
 
-\subsubsection{Results}
+\subsubsection{Inferred parameters}
 
 The results can be seen in Figure \ref{fig:bda1a}. In the \emph{plain} condition, the analysis suggests the threshold is somewhere between 0\% and 30\%, but it's unclear where exactly in that range the threshold should be\footnote{This uncertainty results from the sparseness of our sampling (see Procedures and Materials). Participants were queried only at prevalence levels 10, 30, 50, 70, and 90}. Critically, in the \emph{dangerous and distinctive} context, the analysis infers a lower threshold, less than 10\%. This matches with intuition and the empirical results, that a dangerous and distinctive context allows for the generic to be more permissive (e.g. ``Mosquitos carry West Nile Virus'' is true, even though very few mosquitoes actually do). Finally, and most intriguingly, the analysis infers a third distinct threshold profile for the \emph{nondistinct and irrelevant} context.  For this, it says that threshold is greater than 10\%, but could be as high as 50\%. This is an overall higher inferred threshold for the nondistinctive category and an aspect of analysis totally obscured by standard frequentist estimation. 
 
-This model is too a simple model, however. We see this in part by the posterior distribution of the data analysis parameter \lstinline{phi}. This parameter is one measure of fit because it represents the percentage of responses that the data analysis model wants to attribute to guessing. With this cognitive model, the percentage of guesses is somewhere between 40\% and 50\%. The amount of guessing is so high because our computational model is inflexible.
+This model is too a simple model, however. We see this in part by the posterior distribution of the data analysis parameter $\phi$. This parameter is one measure of fit because it represents the percentage of responses that the data analysis model wants to attribute to guessing. With this cognitive model, the percentage of guesses is somewhere between 40\% and 50\%. The amount of guessing is so high because our computational model is inflexible.
 
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{fig2_bda1_combined}
+    \caption{Inferred threshold for the generic across contexts}
+  \label{fig:bda1a}
+\end{figure}
+
+
+\subsubsection{Posterior predictives}
+
+This can also be seen in the posterior predictive distribution of responses (Figure \ref{fig:bda1posteriorpred}, left). 
+
+The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the cognitive model and the inferred data. This is an important step in model validation as it shows what the model actually predicts the data should look like \footnote{As a thought experiment, consider 2 coins assumed to come from a single coin-making machine (all the coins of this machine have the same weight). You flip each 100 times. The first one returns 100 heads, and the second one returns 100 tails. The posterior mean of the inferred coin weight will be 0.5. Comparing the posterior predictive distribution (based on this inferred coin-weight) to the observed data will highlight the fact that your theory about the ``single coin-making machine'' is seriously flawed.}.
+
+The model matches the ordering of the truth-conditions by context reasonably well, but is too dichotomous in its predictions. The correlation between the posterior predictive and the data is $r = 0.81$. 
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{fig3_2pps}
+    \caption{Posterior predictive using fixed-threshold semantics (left) and lifted-variable (RSA) right.}
+  \label{fig:bda1posteriorpred}
+\end{figure}
+
+%\begin{itemize}
+%\item Inferred value of theta across contexts. 
+%\item $\phi$ parameter. 
+%\item Posterior predictive of fixed threshold model?
+The problem with this approach is that we are assuming there is some threshold for the generic, out there in the world, and that all there is to do is go out and measure it. An alternative is to consider that there is indefeasible uncertainty about the threshold, but that listeners try their best and actively infer, from context, probable values of the threshold. To express this type of model, we must consider the pragmatics of language understanding. 
 
 
 %A \lstinline{query} is a special function in Church. The first arguments to a query function are a generative model: definitions or the background knowledge with which a reasoning agent is endowed. Definitions for which a random choice is stipulated (e.g. \lstinline{(define generic-is-true? (flip 0.5))}) denote aspects of the world over which the agent has uncertainty. The second argument, called the \emph{query expression}, is the aspect of the computation that the model should return. The final argument, called the \emph{conditioner}, is the information with which the agent updates beliefs. 
@@ -326,38 +358,6 @@ This model is too a simple model, however. We see this in part by the posterior 
 %
 %The \lstinline{query} function is written to return \lstinline{generic-threshold}, which is the parameter we are interested in inferring. Finally, the last line is our condition statement: we condition on the data we collected in Exp. 1a being explained by the \lstinline{truth-conditions} model and Exp. 1b to be explained by \lstinline{implied-prevalence}. For clarity, we have omitted the impact of \lstinline{phi}, but it comes into play in the condition statement. In reality, each response could have been generated by our theory (via \lstinline{truth-conditions} or \lstinline{implied-prevalence}) or by guessing (via \lstinline{phi}).  
 
-\subsection{Results}
-
-\subsubsection{Inferred parameters}
-
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{fig2_bda1_combined}
-    \caption{Inferred threshold for the generic across contexts}
-  \label{fig:bda1a}
-\end{figure}
-
-
-\subsubsection{Posterior predictives}
-
-This can also be seen in the posterior predictive distribution of responses (Figure \ref{fig:bda1posteriorpred}, left). 
-
-The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the cognitive model and the inferred data. This is an important step in model validation as it shows what the model actually predicts the data should look like \footnote{As a thought experiment, consider 2 coins assumed to come from a single coin-making machine (all the coins of this machine have the same weight). You flip each 100 times. The first one returns 100 heads, and the second one returns 100 tails. The posterior mean of the inferred coin weight will be 0.5. Comparing the posterior predictive distribution (based on this inferred coin-weight) to the observed data will highlight the fact that your theory about the ``single coin-making machine'' is seriously flawed.}.
-
-The model matches the ordering of the truth-conditions by context reasonably well, but is too dichotomous in its predictions. The correlation between the posterior predictive and the data is $r = 0.81$. 
-
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{fig3_2pps}
-    \caption{Posterior predictive using fixed-threshold semantics (left) and lifted-variable (RSA) right.}
-  \label{fig:bda1posteriorpred}
-\end{figure}
-
-%\begin{itemize}
-%\item Inferred value of theta across contexts. 
-%\item $\phi$ parameter. 
-%\item Posterior predictive of fixed threshold model?
-The problem with this approach is that we are assuming there is some threshold for the generic, out there in the world, and that all there is to do is go out and measure it. An alternative is to consider that there is indefeasible uncertainty about the threshold, but that listeners try their best and actively infer, from context, probable values of the threshold. To express this type of model, we must consider the pragmatics of language understanding. 
 
 %\end{itemize}
 
@@ -367,19 +367,25 @@ The problem with this approach is that we are assuming there is some threshold f
 
 These tasks are language understanding tasks. We draw on recent work from probabilistic pragmatics to formalize our intuitions about what is going on in these tasks. In particular, we draw on work from the Rational Speech-Act (RSA) theory of language understanding \cite{Frank2012}. In this framework, a listener infers the meaning of an utterance by a recursive reasoning process, wherein she considers the thought-processes of a speaker whose goal is to be informative. This theory has gained tremendous support for providing computational explanations for a number of linguistic phenomena including scalar implicature, hyperbole, and multiple classes of reasoning paradigms \cite{Goodman2013, Kao2014, Tessler2014, Lassiter2014}. 
 
-The results of Exp. 1 replicate the asymmetry between verification and interpretation of the generic. Additionally, CBG  found that the quantifier ``most'' did not show this asymmetry between the two dependent measures\footnote{This asymmetry has since been replicated further in adults and observed in children \cite{Brandone2014}}. 
 
-\subsection{The puzzle of dependent measures}
 
-\citeA{Degen2014} argued that differences between dependent measures in experimental effects of pragmatic inference can be accounted for by formal, probabilistic models of pragmatics. In particular, they suggest the \emph{sentence verification} measure is most closely related to production, while \emph{sentence interpretation} is most likely a measure of comprehension. Therefore, formal models of these tasks should be of a speaker and a listener, respectively. We apply this same logic to the CBG paradigm to show how the asymmetry can come about from these different dependent measures.
+%\subsection{Lifted-variable RSA}
 
-\subsection{Lifted-variable RSA}
+The bayesian data analysis above provides evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the high inferred value of the guessing parameter $\phi$ suggest, however, that our model of cognition is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, we propose people have uncertainty about the true threshold and actively reason about this meaning from interaction and context. 
 
-The bayesian data analysis above provides evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the high inferred value of the guessing parameter \lstinline{phi} suggest, however, that our model of cognition is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, we propose people have uncertainty about the true threshold and actively reason about this meaning from interaction and context. 
+This proposal has recently gained some traction in explaining gradable adjectives like \emph{tall}. \citeA{Lassiter2015}  propose the meaning of an adjective like \emph{tall} is a standard truth-functional meaning such that the adjective is true if the object in question has a height greater than the threshold $\theta_{tall}$. The suggestion, though, is that the listener has uncertainty about what $\theta_{tall}$ actually is, and infers that value of $\theta_{tall}$ via the same recursive reasoning process through which she infers the intended meaning of the utterance.
 
-This proposal has recently gained some traction in explaining gradable adjectives like \emph{tall}. \citeA{Lassiter2015}  propose the meaning of an adjective like \emph{tall} is a standard truth-functional meaning such that the adjective is true if the object in question has a height greater than the threshold \lstinline{tall-threshold}. The suggestion, though, is that the listener has uncertainty about what \lstinline{tall-threshold} actually is, and infers that value of \lstinline{tall-threshold} via the same recursive reasoning process through which she infers the intended meaning of the utterance.
+How is a listener supposed to reason about $\theta_{tall}$? In the case of adjectives, reasonable thresholds are inferred by the prior in question. If we say ``John is tall'' and the ``Empire State Building is tall'', then the inferred $\theta_{tall}$ for these two statements will be appropriately accommodated by the prior distribution over heights. Since buildings and people follow different prior distributions over heights, an adjective will only be informative (and truthful) with respect to the appropriate prior distribution. 
 
-How is a listener supposed to reason about \lstinline{tall-threshold}? In the case of adjectives, reasonable thresholds are inferred by the prior in question. If we say ``John is tall'' and the ``Empire State Building is tall'', then the inferred \lstinline{tall-threshold} for these two statements will be appropriately accommodated by the prior distribution over heights. Since buildings and people follow different prior distributions over heights, an adjective will only be informative (and truthful) with respect to the appropriate prior distribution. 
+
+$$ P_{L_{0}}(x \mid u, \theta)= $$
+
+$$ P_{S_{1}}(u \mid x, \theta) \propto P_{L_{0}}(x \mid u, \theta) e^{-C(u)} $$
+
+$$ P_{L_{1}}(x , \theta \mid u) \propto P_{S_{1}}(u \mid x, \theta) P(x) $$
+
+$$ P_{S_{2}}(u \mid x) \propto P_{L_{1}}(x , \theta \mid u) P(u) P(\theta) $$
+
 
 In Church, the model looks like:
 
@@ -430,6 +436,12 @@ The CBG \emph{truth conditions} task is not a task for a listener, however, but 
 \end{lstlisting}
 
 The speaker here, doesn't even consider what the threshold might be, but knows that the pragmatic listener is thinking about it, and so will tailor his utterance appropriately.
+
+The results of Exp. 1 replicate the asymmetry between verification and interpretation of the generic. Additionally, CBG  found that the quantifier ``most'' did not show this asymmetry between the two dependent measures\footnote{This asymmetry has since been replicated further in adults and observed in children \cite{Brandone2014}}. 
+
+\subsection{The puzzle of dependent measures}
+
+\citeA{Degen2014} argued that differences between dependent measures in experimental effects of pragmatic inference can be accounted for by formal, probabilistic models of pragmatics. In particular, they suggest the \emph{sentence verification} measure is most closely related to production, while \emph{sentence interpretation} is most likely a measure of comprehension. Therefore, formal models of these tasks should be of a speaker and a listener, respectively. We apply this same logic to the CBG paradigm to show how the asymmetry can come about from these different dependent measures.
 
 
 \subsection{Bayesian analysis to infer priors}
