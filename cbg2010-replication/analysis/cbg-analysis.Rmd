@@ -2529,8 +2529,16 @@ d$truth_conditions <- factor(as.logical(levels(d$response)[d$response]),
 
 d$truth_num <- bool.tonum(d$truth_conditions)
 
+d$prev_centered <- scale(d$stim_prevalence, scale=F)
+contrasts(d$stim_type) = cbind(quad = c(-1,2,-1), lin = c(-1, 0, 1))
+contrasts(d$stim_type) = cbind(dd = c(0,1,0), ni = c(0, 0, 1))
 
-rs<-glmer(truth_num ~ stim_prevalence*stim_type + (1 | workerid) + (1 | item), data=d, family = 'binomial')
+
+rs<-glmer(truth_num ~ prev_centered*stim_type + 
+            (1 | workerid) + 
+            (1 | item), 
+          data=d, family = 'binomial')
+
 summary(rs)
 
 
@@ -2588,6 +2596,7 @@ f.stats<-ddply(f.tidy,
        .(workerid,context), summarise, 
        imp_subj = mean(response),
        context=context[1])
+f.stats$task<-'implied'
 
 
 d.tidy <- d %>%
@@ -2600,6 +2609,16 @@ d.stats<-ddply(d.tidy,
       .(workerid,context), summarise,
       imp_subj = sum(prevalence*response)/sum(response),
       context=context[1])
+d.stats$workerid <- d.stats$workerid+30
+d.stats$task<-'truth'
+
+
+both.stats<-rbind(f.stats,d.stats)
+contrasts(both.stats$context)
+both.stats$task<-factor(both.stats$task)
+contrasts(both.stats$task)
+rs<-lmer(imp_subj ~ context * task + (1 | workerid), data=both.stats)
+summary(rs)
 
 
 f.bs<-bootstrap.ci.ip(f.stats)
@@ -2645,12 +2664,12 @@ ggplot(m, aes(x=context,y=imp_subj,fill=context,alpha=task, group=task))+
 
 # TFBT on totally-fixed-threshold, two tasks at once
 ```{r tfbt.totally.ft.paper}
-
+plotpath = "~/Documents/research/generics/cogsci-2015//paper/figures/"
 setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
 #d<-read.csv('ft_conditionIP_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
 #d<-read.csv('ft_conditionBoth_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
 #d<-read.csv('ft_conditionBoth_2phis_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
-d<-read.csv('ft_totallyFixed_conditionIndependenly_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+d<-read.csv('ft_totallyFixed_conditionIndependenly_cnts_expts9_12_generic_mh10000_10_alpha1.csv',header=F)
 
 #ft.phi <- d %>% select(V1) %>% rename(phi=V1)
 ft.phi <- d %>% 
@@ -2659,18 +2678,24 @@ ft.phi <- d %>%
   gather(variable,value) %>% 
   separate(variable,into=c("parameter","task"),by="_")
 
+ft.phi$task<-factor(ft.phi$task,
+                    levels=c('tc','ip'),
+                    labels=c("truth conditions","implied prevalence"))
+
 #qplot(data=ft.phi,x=phi,geom='density')+xlim(0,1)
-ggplot(ft.phi,aes(x=value,alpha=task))+
+a<-ggplot(ft.phi,aes(x=value,alpha=task))+
   geom_density(fill='black')+
   theme_paper()+
   scale_alpha_manual(values=c(0.4,1))+
-  scale_x_continuous(breaks=c(0.25,.5,0.75),limits=c(0,1))+
+  scale_x_continuous(breaks=c(0,0.25,.5,0.75,1),limits=c(0,1))+
   scale_fill_brewer(type='qual',palette=1)+
   theme(strip.text.x = element_text(size=14,color='black'),
         legend.position='bottom',
         legend.direction='horizontal')+
   guides(fill=guide_legend(title="Context"))+
   xlab("phi")
+
+
 
 d.tidy <- d %>%
   select(V3,V4) %>%
@@ -2680,7 +2705,13 @@ d.tidy <- d %>%
   separate(variable, into=c("parameter","task"))
 #qplot(data=d.tidy,x=theta,geom='density')+xlim(0,100)
 
-ggplot(d.tidy,aes(x=value,alpha=task))+
+d.tidy$task<-factor(d.tidy$task,
+                    levels=c('tc','ip'),
+                    labels=c("truth conditions","implied prevalence"))
+
+
+
+b<-ggplot(d.tidy,aes(x=value,alpha=task))+
   geom_density(fill='black')+
   theme_paper()+
   scale_alpha_manual(values=c(0.4,1))+
@@ -2691,6 +2722,26 @@ ggplot(d.tidy,aes(x=value,alpha=task))+
         legend.direction='horizontal')+
   guides(fill=guide_legend(title="Context"))+
   xlab("generic threshold")
+
+g_legend<-function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
+
+mylegend<-g_legend(b)
+
+p3 <- arrangeGrob(arrangeGrob(a + theme(legend.position="none"),
+                         b + theme(legend.position="none"),
+                         nrow=1),
+             mylegend, nrow=2,heights=c(10, 1))
+
+ggsave(filename=paste(plotpath,'trulyFixed_phis_thetas.png',sep=''),
+       plot=p3,
+       width=12,
+       height=4.5)
+
+
 
 ```
 
@@ -2713,17 +2764,22 @@ phi.tidy <- ft.phi %>%
   gather(variable,value) %>%
   separate(variable, into=c('parameter','task'), by='_')
 
-ggplot(phi.tidy,aes(x=value,alpha=task))+
+phi.tidy$task<-factor(phi.tidy$task,
+                    levels=c('tc','ip'),
+                    labels=c("truth conditions","implied prevalence"))
+
+a<-ggplot(phi.tidy,aes(x=value,alpha=task))+
   geom_density(fill='black')+
   theme_paper()+
   scale_alpha_manual(values=c(0.4,1))+
-  scale_x_continuous(breaks=c(0.25,.5,0.75),limits=c(0,1))+
+  scale_x_continuous(breaks=c(0,0.25,.5,0.75,1),limits=c(0,1))+
   scale_fill_brewer(type='qual',palette=1)+
   theme(strip.text.x = element_text(size=14,color='black'),
         legend.position='bottom',
         legend.direction='horizontal')+
   guides(fill=guide_legend(title="Context"))+
-  xlab("phi")
+  xlab(expression(phi))+
+  ylab("posterior density")
 
 #ft.phi <- d %>% select(V1,V29) %>% rename(phi_tc=V1,phi_ip=V29) %>%
 #  gather(variable,value) %>% separate(variable,into=c("parameter","task"),
@@ -2751,7 +2807,17 @@ theta.tidy<-rbind(d.tidy,f.tidy)
 theta.tidy<- theta.tidy %>% 
   separate(variable, into=c("context","task"), by="_")
 
-ggplot(theta.tidy,aes(x=value,fill=context,alpha=task))+
+theta.tidy$task<-factor(theta.tidy$task,
+                    levels=c('tc','ip'),
+                    labels=c("truth conditions","implied prevalence"))
+
+theta.tidy$context<-factor(theta.tidy$context,
+                        levels=c('dd','ni','pl'), 
+                        labels=c("dangerous &\n distinctive", 
+                                 "irrelevant &\n nondistinctive",
+                                 "plain"))
+
+b<-ggplot(theta.tidy,aes(x=value,fill=context,alpha=task))+
   geom_density()+
   theme_paper()+
     scale_alpha_manual(values=c(0.4,1))+
@@ -2759,9 +2825,25 @@ ggplot(theta.tidy,aes(x=value,fill=context,alpha=task))+
   scale_fill_brewer(type='qual',palette=6)+
   theme(strip.text.x = element_text(size=14,color='black'),
         legend.position='bottom',
-        legend.direction='horizontal')+
+        legend.direction='horizontal',
+        axis.title.x =       element_text(vjust = -0.5,size=30))+
   guides(fill=guide_legend(title="Context"))+
-  xlab("generic threshold")
+  xlab(expression(theta))+
+  ylab("posterior density")+
+  guides(alpha=F)
+
+mylegend<-g_legend(a)
+
+p3 <- arrangeGrob(arrangeGrob(a + theme(legend.position="none"),
+                         b,
+                         nrow=1),
+             mylegend, nrow=2,heights=c(10, 1))
+
+ggsave(filename=paste(plotpath,'fixed_phis_thetas.png',sep=''),
+       plot=p3,
+       width=12,
+       height=4.5)
+
 
 ```
 
@@ -2770,25 +2852,25 @@ Posterior predictive for truth conditions
 ```{r postpred.truthcond.ft.paper}
 
 d.tidy <- d %>%
-  select(V6,V7,V8, V9, V10,
-         V12, V13, V14, V15, V16,
-         V18, V19, V20, V21, V22
+  select(V7,V8, V9, V10,V11,
+         V13, V14, V15, V16,V17,
+         V19, V20, V21, V22, V23
          ) %>%
-  rename(dangerdistinct_10 = V6,
-         dangerdistinct_30 = V7,
-         dangerdistinct_50 = V8,
-         dangerdistinct_70 = V9,
-         dangerdistinct_90 = V10,
-         nondistinct_10 = V12,
-         nondistinct_30 = V13,
-         nondistinct_50 = V14,
-         nondistinct_70 = V15,
-         nondistinct_90 = V16,
-         bare_10 = V18,
-         bare_30 = V19,
-         bare_50 = V20,
-         bare_70 = V21,
-         bare_90 = V22) %>% 
+  rename(dangerdistinct_10 = V7,
+         dangerdistinct_30 = V8,
+         dangerdistinct_50 = V9,
+         dangerdistinct_70 = V10,
+         dangerdistinct_90 = V11,
+         nondistinct_10 = V13,
+         nondistinct_30 = V14,
+         nondistinct_50 = V15,
+         nondistinct_70 = V16,
+         nondistinct_90 = V17,
+         bare_10 = V19,
+         bare_30 = V20,
+         bare_50 = V21,
+         bare_70 = V22,
+         bare_90 = V23) %>% 
   gather(evidence, response)%>%
   separate(evidence, into = c("context","prevalence"), sep="_")
 
@@ -2933,15 +3015,20 @@ ggplot(c.tidy, aes(x=context,y=mean,fill=context,alpha=task, group=task))+
 
 ```{r tfbt.lvRSA.paper}
 
-setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
+#setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
 #d<-read.csv('ft_conditionIP_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
 #d<-read.csv('ft_conditionBoth_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
-d<-read.csv('lvRSA_condition2_dscFine_2phis_expts9_12_generic_mh10000_10_alpha1.csv',header=F)
+#d<-read.csv('lvRSA_condition2_dscFine_2phis_expts9_12_generic_mh10000_10_alpha1.csv',header=F)
 
+d<-read.csv('lvRSA_condition2_dscFine_2phis_expts9_12_generic_mh10000_10_alpha1.csv',header=F)
+#f<-read.csv('lvRSA_condition2_c2_dscFine_2phis_expts9_12_generic_mh10000_10_alpha1.csv',header=F)
+#d<-rbind(d,f)
+#d<-f
 #ft.phi <- d %>% select(V1) %>% rename(phi=V1)
-ft.phi <- d %>% select(V1,V2) %>% rename(phi_tc=V1,phi_ip=V2) %>%
-  gather(variable,value) %>% separate(variable,into=c("parameter","task"),
-                                      by="_")
+ft.phi <- d %>% select(V1,V2) %>% 
+  rename(phi_tc=V1,phi_ip=V2) %>%
+  gather(variable,value) %>% 
+  separate(variable,into=c("parameter","task"), by="_")
 
 #qplot(data=ft.phi,x=phi,geom='density')+xlim(0,1)
 qplot(data=ft.phi,x=value,geom='histogram',fill=task)+xlim(0,1)+facet_wrap(~task)
@@ -3036,6 +3123,105 @@ ggplot(data=d.stats,aes(x=prevalence,y=mean,color=context,group=context))+
         legend.text.align=NULL)
 
 ```
+
+lvRSA Post pred on asymmetry (clean)
+
+```{r postpred.asym.lvrsa}
+
+d.tidy <- d %>%
+  select(V13, V14, V15, V16, V17,
+         V19, V20, V21, V22, V23,
+         V25, V26, V27, V28, V29) %>%
+  rename(dd_10 = V13,
+         dd_30 = V14,
+         dd_50 = V15,
+         dd_70 = V16,
+         dd_90 = V17,
+         ni_10 = V19,
+         ni_30 = V20,
+         ni_50 = V21,
+         ni_70 = V22,
+         ni_90 = V23,
+         pl_10 = V25,
+         pl_30 = V26,
+         pl_50 = V27,
+         pl_70 = V28,
+         pl_90 = V29) 
+
+d.tidy$no<-row.names(d.tidy)
+
+d.tidy <- d.tidy %>%
+  gather(variable,value, -no) %>%
+  separate(variable,into=c('context','prevalence') ,sep="_") 
+
+check.zero <- function(prev,val){
+  if (sum(val)==0){
+    v = 100
+  } else {
+    v = sum(prev*val)/sum(val)
+  }
+  return(v)
+}
+
+pp.stats<-ddply(d.tidy, .(no,context), summarise,
+                value.tc = check.zero(as.numeric(prevalence),value))
+                  
+
+tc.stats<-ddply(pp.stats, .(context), summarise,
+      mean = mean(value.tc),
+      CIlow = quantile(value.tc,probs=0.025),
+      CIhigh = quantile(value.tc,probs=0.975))
+
+tc.stats$task<-'truth'
+
+
+pp.ip <- d %>%
+  select(V32,V33,V34) %>%
+  rename(dd_implied = V32,
+         ni_implied=V33,
+         pl_implied=V34 )%>%
+  gather(variable,value) %>%
+  separate(variable,into=c('context','task') ,sep="_")
+
+ip.stats<-ddply(pp.ip, .(context,task), summarise,
+      mean = mean(value),
+      CIlow = quantile(value,probs=0.025),
+      CIhigh = quantile(value,probs=0.975))
+
+c.tidy<-rbind(tc.stats,ip.stats)
+
+c.tidy$context<-factor(c.tidy$context,
+                        levels=c('dd','ni','pl'),
+                        labels=c("dangerous \n& distinctive", 
+                                 "irrelevant \n& nondistinctive",
+                                 "plain"))
+c.tidy$task <- factor(c.tidy$task,
+                 levels=c("truth","implied"),
+                 labels=c("truth conditions", "implied prevalence"))
+# 
+
+
+ggplot(c.tidy, aes(x=context,y=mean,fill=context,alpha=task, group=task))+
+  geom_bar(stat='identity',position=position_dodge(0.5), width=0.5,color='black')+
+  geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
+                width=0.2,
+                size=1,
+                position=position_dodge(0.5))+
+  theme_paper()+
+  ylab("average prevalence")+
+  ylim(0,100)+
+  scale_fill_brewer(type='qual',palette=6)+
+  scale_alpha_manual(values=c(0.4,1))+
+ # scale_fill_manual(values=c("#999999","#ef8a62"))+
+  xlab("")+
+  guides(fill=F)+
+  theme(legend.position='bottom',
+        legend.direction='horizontal',
+        axis.text.x=element_blank())
+
+```
+
+
 
 
 # TFBT on lvRSA, 2 ways
