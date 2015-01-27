@@ -452,10 +452,13 @@ Naively, this distribution would be $U(0,1)$, or equivalently, $\beta(1,1)$. How
 Although we might have some intuitions what these prior distributions might look like, we put uncertainty over the parameters\footnote{For ease of interpretation, we are parametrizing the $\beta$ distribution by its mean and concentration. To recover the canonical shape parametrization, use $(\gamma \delta), (1-\gamma)\delta$)} of this Beta distribution $\beta(\gamma,\delta)$, outside of the RSA model but inside of the data analysis model. 
 
 \begin{align*}
-\gamma \thicksim U(0,1) \\
-\delta \thicksim U(0,5) \\
-\phi \thicksim U(0,1) 
+x_{c} \thicksim \beta(\gamma_{c},\delta_{c}) \\
+\gamma_{c} \thicksim U(0,1) \\
+\delta_{c} \thicksim U(0,5) \\
+\phi_{t} \thicksim U(0,1) 
 \end{align*}
+
+Here, $c \in \{DD,NI,P\}$ and $t \in \{$truth conditions, implied prevalence$\}$.
 
 Thus, we put a Bayesian data analysis model on top of a Rational Speech-Act model of language understanding, to see how context might influence the prior distribution given the data we've observed. We keep the data-analytic guessing parameter $\phi$ as a gross estimate of the proportion of responses our model of cognition doesn't capture. 
 %\begin{lstlisting}
@@ -492,7 +495,9 @@ Thus, we put a Bayesian data analysis model on top of a Rational Speech-Act mode
 \subsection{Results}
 
 \subsubsection{Inferred parameters}
-We use this data analysis model to infer the hyperprior parameter values (\lstinline{gamma} and \lstinline{delta}) for lvRSA. Figure \ref{fig:modeldatapriors} (bottom) shows prior distributions from the posterior mean inferred values of the hyperprior parameters. This makes the prediction that, if this were the correct model of human cognition, the prior distribution of the \emph{dangerous \& distinctive} condition would be heavily skewed towards lower prevalence levels. This makes sense insofar as a distinctive feature is one that is relatively rare. Our intuitions are again confirmed in the inferred distribution of the \emph{nondistinctive} context. A nondistinctive feature is one that is very common. The prior distribution of the \emph{bare} context lies somewhere in between these two extremes: neither distinctive nor nondistinctive.
+We use this Bayesian data analysis model to infer the hyperprior parameter values $\gamma$ and $\delta$ for the Bayesian lvRSA model. For visualization purposes, we take the posterior mean of the hyperprior parameters and use those reconstruct the prior distribution over prevalence. Figure \ref{fig:modeldatapriors} (top) these prior distributions inferred from the data via the lvRSA model. 
+
+
 
 It should also be noted that the mean inferred value of  \lstinline{phi} is about 0.2, a seemingly reasonable estimation of ``guessing'' probability for participants on Amazon's Mechanical Turk.
 
@@ -510,7 +515,19 @@ The posterior predictions for the lifted variable RSA model are in Figure \ref{f
 
 In addition to making predictions about the proportion of ``true'' responses to generic statement under different prevalence levels, the combination of the RSA model of language understanding and the bayesian data analysis model gives rise to predictions about the shape of the prior distribution of prevalence levels under different contexts. We take these predictions seriously and test these in a second experiment. 
 
+Often in Bayesian data analysis, the posterior distribution over parameters is hard to interpret in terms of actually observable phenomena. These parameters, however, in concert with the Rational Speech Act theory makes the prediction that, if lvRSA were the correct model in this task, the prior distributions of prevalence for the three contexts would like like they do in Figure \ref{fig:modeldatapriors} (top). 
+
+In particular, all three types of properties should have bimodal prior prevalence distributions, with a high probability than 0\% of the kind have the property. Further, this left skew should be more pronounced for the \emph{DD} properties relative to the \emph{P} properties. Also, this combination of analysis and cognitive model predict that the \emph{NI} properties would have a small left skew than the \emph{P} properties.
+
+
 \section{Experiment 2}
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{exp3hist_inferredMeanPriorExp1_2}
+    \caption{Prior distributions over prevalence. Inferred from Bayesian model (top). Elicited from subjects (bottom).}
+  \label{fig:modeldatapriors}
+\end{figure}
 
 Exp. 2 sought to test the prediction that the prior distribution of prevalence levels would vary by context, as predicted by the $\gamma$ and $\delta$ data analysis parameters from the previous section.
 
@@ -524,28 +541,16 @@ We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Tu
 
 Our procedure was similar to Exp. 1b\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-11.html}}. On each trial, participants either read contextual information (\emph{DD} or \emph{NI}) or nothing (\emph{plain}). 
 
-In addition to thecontextual information, participants were presented with the following: ``Listed below are 5 kinds of animals, recently discovered.'' and asked the following question: ``What percentage of each kind of animal do you think has [property]?'' The experiment consisted of 6 trials, 2 from each context. 
+In addition to the contextual information, participants were presented with the following: ``Listed below are 5 kinds of animals, recently discovered.'' and asked the following question: ``What percentage of each kind of animal do you think has [property]?'' The experiment consisted of 6 trials, 2 from each context. 
 
 \subsubsection{Results}
 
 Experiment 2 recovered the shape of the inferred prior distributions from the lvRSA model (Figure \ref{fig:modeldatapriors}).
 
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{exp3hist_inferredMeanPriorExp1_2}
-    \caption{Prior distributions over prevalence. Inferred from Bayesian model (top). Elicited from subjects (bottom).}
-  \label{fig:modeldatapriors}
-\end{figure}
-
-
-\section{Further simulations}
-
-Our model makes the prediction that if the shape of the prior distribution was not bimodal, the asymmetry between verification and interpretation would change. Indeed, this is a similar prediction to \citeA{Cimpian2010}, who posited that accidental or disease states (e.g. ``muddy feathers'', ``infected ears'') would weaken the asymmetry. We would expect accidental or disease states to not follow a bimodal distribution. 
- 
 
 \section{Discussion}
 
-We have shown how a Bayesian model of language understanding, motivated by contextual variation of the effective threshold of the generic statement, can explain the data. We have used technique in Bayesian data analysis to help arbitrate between two cognitive theories. The first was a simple theory that proposed that a generic was akin to some alien quantifier. This quantifier behaves like other quantifiers in that it has a fixed-threshold semantics. The only thing special about the generic is that the threshold is different for different contexts. We believe this is a tacit assumption of many approaches, but that this assumption lay hidden behind NHST of semantic content.
+We have shown how a Bayesian model of language understanding, motivated by contextual variation of the effective threshold of the generic statement, can explain the data. We have used techniques in Bayesian data analysis to help arbitrate between two cognitive theories. The first was a simple theory that proposed that a generic was akin to some alien quantifier. In this theory, the generic behaves like other quantifiers in that it has a fixed-threshold semantics. We explored one elaboration of this in allowing the generic to have a threshold that differed across contexts. 
 
 \begin{figure}
 \centering
@@ -556,10 +561,21 @@ We have shown how a Bayesian model of language understanding, motivated by conte
 
 The alternative theory was that there is no known generic-threshold, even within a given context. There is only uncertainty, and though that uncertainty may be reduced by further contextual information, it never completely evaporates. Instead, we are only left with a posterior belief distribution over possible thresholds as well as a posterior belief distribution over possible worlds. 
 
-In this paper, we used techniques of both Bayesian Cognitive Science and Bayesian Data Analysis. The former helped us develop a rich, formal theory of language understanding. These sorts of theories have implications for psychology and linguistics. The latter helped us make inferences about our theories. Bayesian Data Analysis is crucial to make assumptions explicit (e.g. about fixed-threshold semantics) and clean up our data (e.g. discounting behavior that can conceivably be attributed to guessing). Together, they embody a manifestation of a more general philosophy of science: making assumptions explicit and beginning our science by announcing our uncertainty.
+The posterior predictive distributions of the lvRSA model account for the contextual variation in the generic endorsements, both quantitatively and qualitiative. It further accounts for the asymmetry between verification and interpretation by considering different Questions Under Discussion (QUDs) and communicative roles (speaker / listener) in the two tasks. Finally, the Bayesian analytic techniques allowed us to make a new prediction as to the shape of the prior distribution over prevalence levels for different contexts. Exp. 2 found confirmatory evidence that this is indeed how people think these properties are distributed.
 
-What we're left is an explanation that not all pieces of language need definite semantic content. Mr. Obama's proclamation and the very fact that he went through the trouble to say it suggests that perhaps many members of Congress are able to talk to each other. From another angle, though, 
-we can use our knowledge of the world---and the Union---to determine that ``Members of both parties'' supporting Mr. Obama is probably a pretty rare feature; perhaps it would be distinctive of our time (relative to the past). By this logic, the threshold for validly producing the generic could be quite low.  But maybe we shouldn't spend so much energy inferring the threshold, and instead, listen to hear what his other words may suggest.
+%\section{Further simulations}
+%
+%Our model makes the prediction that if the shape of the prior distribution was not bimodal, the asymmetry between verification and interpretation would change. Indeed, this is a similar prediction to \citeA{Cimpian2010}, who posited that accidental or disease states (e.g. ``muddy feathers'', ``infected ears'') would weaken the asymmetry. We would expect accidental or disease states to not follow a bimodal distribution. 
+ 
+
+These models make further predictions based on the shape of the prior distribution. For example, if the prior distribution was unimodal, as is the case with incidental properties (e.g. broken legs), then the asymmetry between verification and interpretation would be dramatically reduced (see Figure \red{no asymmetry figure with schematic prior}). Indeed, CBG explored this possibility in one of their experiment using ``accidental and disease states''; they too found no asymmetry. 
+
+Another instance of a differently shaped prior that is of theoretical interest is a bimodal prior with a second peak at some low prevalence level (as opposed to a bimodal prior with a second peak at a high prevalence level, which we've focused on in this paper). This prior could conceivable map onto rare properties that are not only rare \emph{across kinds} but even \emph{within kinds}. A canonical example of this is ``West Nile Virus'' in the generic ``Mosquitos carry West Nile Virus''. For a prior like this, the truth conditions for the generic would be heavily inflated, relative to the more common bimodal priors, at low prevalence levels. We see this behavior using a schematic prior (Figure \red{truth conditions with mosquito prior}). 
+
+
+Begin stirring conclusion...
+%In this paper, we used techniques of both Bayesian Cognitive Science and Bayesian Data Analysis. The former helped us develop a rich, formal theory of language understanding. These sorts of theories have implications for psychology and linguistics. The latter helped us make inferences about our theories. Bayesian Data Analysis is crucial to make assumptions explicit (e.g. about fixed-threshold semantics) and clean up our data (e.g. discounting behavior that can conceivably be attributed to guessing). Together, they embody a manifestation of a more general philosophy of science: making assumptions explicit and beginning our science by announcing our uncertainty.
+
 
 %\begin{itemize}
 %
