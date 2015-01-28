@@ -382,24 +382,22 @@ The fixed-threshold semantics model is not flexible enough to explain the observ
 
 %CBG showed how contexts affects the endorsement for generic statements. An additional concern of their experiments surrounded the relation between two dependent measures for understanding generics. One dependent measure was the ``truth conditions'', or \emph{sentence verification} measure that we've been considering up to this point. The other was an ``implied prevalence'', or \emph{sentence interpretation} dependent measure. The latter was collected by giving participants the generic statement (plus, any additional contextual information), and asking the participant ``What percentage of lorches have purple feathers?''
 
-These tasks are, fundamentally, language understanding tasks. We draw on recent work from probabilistic pragmatics to formalize our intuitions about what is going on in these tasks. In particular, we draw on work from the Rational Speech Act (RSA) theory of language understanding \cite{Frank2012,Goodman2013}. In this framework, a listener infers the meaning of an utterance by a recursive reasoning process, wherein the listener considers the thought-processes of a speaker whose goal is to be informative. This theory has gained tremendous support for providing computational explanations for a number of linguistic phenomena including scalar implicature, hyperbole, and multiple classes of reasoning paradigms \cite{Kao2014, Tessler2014, Lassiter2014}. 
+These tasks in Exp.~1 are, fundamentally, language understanding tasks. We draw on recent work from probabilistic pragmatics to formalize our intuitions about what is going on in these tasks. In particular, we draw on work from the Rational Speech Act (RSA) theory of language understanding \cite{Frank2012,Goodman2013}. In this framework, a listener infers the meaning of an utterance by a recursive reasoning process, wherein the listener considers the thought-processes of a speaker whose goal is to be informative. Variants of this theory have provided computational explanations for a number of linguistic phenomena including scalar implicature, hyperbole, and multiple classes of reasoning paradigms \cite{Kao2014, Tessler2014, Lassiter2014}. 
 
 %\subsection{Lifted-variable RSA}
 
-The Bayesian data analysis above provides compelling evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the high inferred value of the guessing parameter $\phi$ suggest, however, that our language model is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, we propose people don't know the true threshold but actively reason about it from context and interaction. 
+%The Bayesian data analysis above provides compelling evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the high inferred value of the guessing parameter $\phi$ suggest, however, that our language model is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, 
 
-A similar proposal has been made to explain gradable adjectives like \emph{tall}. \citeA{Lassiter2015}  propose the meaning of an adjective like \emph{tall} is a standard truth-functional meaning such that something \emph{is tall} if the object in question has a height greater than the threshold $\theta_{tall}$. The key insight, though, is that the listener has uncertainty about what $\theta_{tall}$ actually is, and infers that value of $\theta_{tall}$ via the same recursive reasoning process through which she infers the intended meaning of the utterance.
+We propose that the literal semantics of a generic sentence is in fact a threshold on prevalence, but people don't know the appropriate threshold and actively reason about it in each situation. 
+A similar proposal has been made to explain gradable adjectives like \emph{tall}. 
+\citeA{Lassiter2015}  propose the meaning of an adjective like \emph{tall} is a standard truth-functional meaning such that something \emph{is tall} if the object in question has a height greater than the threshold $\theta_{tall}$. 
+The vagueness and context-sensitivity of scalar adjectives are accounted for by treating $\theta_{tall}$ as an unknown property of the language, and modeling the pragmatic listener as inferring this threshold.
+ 
+%The key insight, though, is that the listener has uncertainty about what $\theta_{tall}$ actually is, and infers that value of $\theta_{tall}$ via the same recursive reasoning process through which she infers the intended meaning of the utterance.
 
-How is a listener supposed to reason about $\theta_{tall}$? In the case of adjectives, reasonable thresholds are inferred by way of the prior distribution of the property in question. ``John is tall'' and the ``Empire State Building is tall'' imply different heights for John and the ESB because the prior distributions of heights for people and buildings are different. An adjective will only be informative (and truthful) with respect to the appropriate prior distribution. 
-
-For the generic utterances in these tasks, the prior distribution in question is over the \emph{prevalence} of a particular property \emph{within} a kind. The literal content of the generic in \eqref{eq:L0} is very similar to the fixed-threshold model in \eqref{eq:ftsem}.
+%How is a listener supposed to reason about $\theta_{tall}$? In the case of adjectives, reasonable thresholds are inferred by way of the prior distribution of the property in question. ``John is tall'' and the ``Empire State Building is tall'' imply different heights for John and the ESB because the prior distributions of heights for people and buildings are different. An adjective will only be informative (and truthful) with respect to the appropriate prior distribution. 
 
 
-\begin{flalign}
-& P_{L_{0}}(x \mid g, \theta) \propto g(x, \theta) P(x) \label{eq:L0} \\
-& P_{S_{1}}(g \mid x, \theta) \propto \exp{(\alpha \ln{P_{L_{0}}(x \mid g, \theta)})} \label{eq:S1}\\
-& P_{L_{1}}(x , \theta \mid g) \propto P_{S_{1}}(g \mid x, \theta) P(x) \label{eq:L1}
-\end{flalign}
 
 %In Church, the model looks like:
 %
@@ -435,18 +433,29 @@ For the generic utterances in these tasks, the prior distribution in question is
 %		(utterance prevalence generic-threshold))))
 %\end{lstlisting}
 
-\eqref{eq:L1} is a model of a listener who has been told a generic statement. She assumes that, whatever the speaker meant to communicate, the speaker was trying to be informative and that his goal was to communicate the prevalence $x$ (in addition to communicating $\theta$). She assumes the speaker in \eqref{eq:S1} knows $\theta$, because without this knowledge, the utterance would be vacuous\footnote{Speaking words you don't know does not imply communicative intent.}.  From this, the listener jointly infers both $x$ and $\theta$. We call this type of model a ``lifted variable'' model (lvRSA) because $\theta$, traditionally thought to be part of the semantic content of the utterance (and thus perfectly transparent to all in the conversation), has been underspecified in the semantics. It is thus ``lifted'' to the pragmatic level and inferred. Following the advice of \citeA{Degen2014}, we will model the \emph{implied prevalence} task as a pragmatic listener ($L_{1}$) task .  
+The RSA model for generic interpretation, with the prevalence threshold as a variable ``lifted'' to pragmatic reasoning is specified by:
+\begin{flalign}
+& P_{L_{0}}(x \mid g, \theta) \propto g(x, \theta) P(x) \label{eq:L0} \\
+& P_{S_{1}}(g \mid x, \theta) \propto \exp{(\alpha \ln{P_{L_{0}}(x \mid g, \theta)})} \label{eq:S1}\\
+& P_{L_{1}}(x , \theta \mid g) \propto P_{S_{1}}(g \mid x, \theta) P(x) \label{eq:L1}
+\end{flalign}
+The literal content of the generic in Eq.~\eqref{eq:L0} is identical to the fixed-threshold model in Eq.~\eqref{eq:ftsem}, however it interacts with the prior distribution $P(x)$ over prevalence levels---the prior distribution of prevalence of a particular property across kinds.
 
-The CBG \emph{truth conditions} task is modeled slightly differently. It is best understood as a production task, and as such, we model it with a speaker $S_{2}$. Then there is a speaker, who reasons about the pragmatic-listener, who is trying to infer prevalence and $\theta$ and so on. Our final piece to the cognitive model looks like:
+Eq.~\eqref{eq:L1} is a model of a listener who has been told a generic statement. She assumes that, whatever the speaker meant to communicate, the speaker was trying to be informative and that his goal was to communicate the prevalence $x$. She assumes the speaker in Eq.~\eqref{eq:S1} knows $\theta$ and chooses an utterance to be informative to the literal listener ($L_{0}$).  From this, the listener jointly infers both $x$ and $\theta$. We call this type of model a ``lifted variable'' model (lvRSA) because $\theta$, traditionally thought to be part of the semantic content of the utterance (and thus perfectly transparent to all in the conversation), has been underspecified in the semantics but fixed in by pragmatic reasoning.
 
+The prevalence prior $P(x)$ has a critical effect on the interpretation of the generic in this model. As a simplification, we posit a family of possible priors $x \thicksim \beta(\gamma,\delta)$\footnote{For ease of interpretation, we are parametrizing the $\beta$ distribution by its mean and concentration. To recover the canonical shape parametrization, use $\gamma \delta$ and $(1-\gamma)\delta$.}. We hypothesize that the details of this prior (i.e.~$\gamma$ and $\delta$) may differ according to the context in which a generic is used. For instance, when you know that a particular property is rare, you posit a different distribution over categories, and hence a different meaning for the generic, than if the property is common. Below we infer appropriate prior parameters for each context from the behavioral data.
+
+Following the advice of \citeA{Degen2014}, we will model the \emph{implied prevalence} task as a pragmatic listener ($L_{1}$) task.
+\red{possibly change last sentence if we switch to speaker model...}  
+The CBG \emph{truth conditions} task is modeled slightly differently. It is best understood as a production task, and as such, we model it with a speaker $S_{2}$ who is trying to convey the prevalence to a pragmatic listener, but can only say the generic or its negation (i.e.~yes or no to the generics truth):
 \begin{equation} 
 P_{S_{2}}(g \mid x) \propto \exp{(\alpha \ln{P_{L_{1}}(x \mid g) P(g)})}
 \label{eq:S2}
 \end{equation}
-
 where: 
+$ P_{L_{1}}(x \mid g) = \sum_{\theta} P_{L_{1}}(x , \theta \mid g) $.
+The speaker in \eqref{eq:S2}, like $L_{1}$, doesn't know the threshold, but knows that $L_{1}$ is thinking about it, and marginalizes over possible $\theta$'s.
 
-$$ P_{L_{1}}(x \mid g) = \sum_{\theta} P_{L_{1}}(x , \theta \mid g) $$
 
 %\begin{lstlisting}
 %(define lifted-speaker (lambda (prevalence)
@@ -458,26 +467,10 @@ $$ P_{L_{1}}(x \mid g) = \sum_{\theta} P_{L_{1}}(x , \theta \mid g) $$
 %		(equal? prevalence (pragmatic-listener utterance)))))	
 %\end{lstlisting}
 
-The speaker in \eqref{eq:S2}, like $L_{1}$, doesn't know the threshold, but knows that $L_{1}$ is thinking about it, and marginalizes over all possible $\theta$'s.
 
-\subsection{Bayesian analysis to infer priors}
+%\subsection{Bayesian analysis to infer priors}
 
-We propose that, in this paradigm, nobody knows $\theta$.  $\theta$ is influenced by the prior distribution over prevalence, which in turn is influenced by the contextual information provided (\emph{DD}, \emph{NI}, or \emph{P}). This contextual information could imply different $P(x)$, prior probability distributions over the prevalence of a property. 
 
-Naively, this distribution would be $U(0,1)$, or equivalently, $\beta(1,1)$. However, we propose that people have different prior distributions in mind, depending on features of the properties under discussion (e.g. distinctiveness).
-
-Although we might have some intuitions what these prior distributions might look like, we put uncertainty over the parameters\footnote{For ease of interpretation, we are parametrizing the $\beta$ distribution by its mean and concentration. To recover the canonical shape parametrization, use $\gamma \delta$ and $(1-\gamma)\delta$.} of this Beta distribution $\beta(\gamma,\delta)$, outside of the RSA model but inside of the data analysis model. 
-
-\begin{align*}
-x_{c} \thicksim \beta(\gamma_{c},\delta_{c}) \\
-\gamma_{c} \thicksim U(0,1) \\
-\delta_{c} \thicksim U(0,5) \\
-\phi_{t} \thicksim U(0,1) 
-\end{align*}
-
-Here, $c \in \{DD,NI,P\}$ and $t \in \{$truth conditions, implied prevalence$\}$.
-
-Thus, we do Bayesian data analysis on a Bayesian Rational Speech-Act model of language understanding, to see how context might influence the prior distribution given the data we've observed. We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of the proportion of responses our model of cognition doesn't capture. 
 %\begin{lstlisting}
 %(define bayesian-data-analysis
 %	(query
@@ -511,9 +504,40 @@ Thus, we do Bayesian data analysis on a Bayesian Rational Speech-Act model of la
 
 \subsection{Results}
 
-\subsubsection{Inferred parameters}
-We use Bayesian data analysis to infer the values of the hyperprior parameters $\gamma$ and $\delta$ for the Bayesian lvRSA model. Table \ref{table:postmeans} shows the posterior means of the hyperprior parameters for the lvRSA model.
+We again do a Bayesian data analysis to evaluate this more sophisticated cognitive model.
+We put uncertainty over the parameters of the prevalence prior, $\beta(\gamma,\delta)$, outside of the RSA cognitive model (but inside of the data analysis model). 
+\begin{align*}
+\gamma_{c} \thicksim U(0,1) \\
+\delta_{c} \thicksim U(0,5) \\
+\phi_{t} \thicksim U(0,1) 
+\end{align*}
+Here, $c \in \{DD,NI,P\}$ and $t \in \{$truth conditions, implied prevalence$\}$.
+We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of the proportion of responses our model of cognition doesn't capture. 
 
+
+
+%We propose that, in this paradigm, nobody knows $\theta$.  $\theta$ is influenced by the prior distribution over prevalence, which in turn is influenced by the contextual information provided (\emph{DD}, \emph{NI}, or \emph{P}). This contextual information could imply different $P(x)$, prior probability distributions over the prevalence of a property. 
+%
+%Naively, this distribution would be $U(0,1)$, or equivalently, $\beta(1,1)$. However, we propose that people have different prior distributions in mind, depending on features of the properties under discussion (e.g. distinctiveness).
+%
+%Although we might have some intuitions what these prior distributions might look like, we put uncertainty over the parameters of this Beta distribution $\beta(\gamma,\delta)$, outside of the RSA model but inside of the data analysis model. 
+%
+%\begin{align*}
+%x_{c} \thicksim \beta(\gamma_{c},\delta_{c}) \\
+%\gamma_{c} \thicksim U(0,1) \\
+%\delta_{c} \thicksim U(0,5) \\
+%\phi_{t} \thicksim U(0,1) 
+%\end{align*}
+%
+%Here, $c \in \{DD,NI,P\}$ and $t \in \{$truth conditions, implied prevalence$\}$.
+%
+%Thus, we do Bayesian data analysis on a Bayesian Rational Speech-Act model of language understanding, to see how context might influence the prior distribution given the data we've observed. We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of the proportion of responses our model of cognition doesn't capture. 
+
+\subsubsection{Inferred parameters}
+The mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.08 and 0.05, respectively, a seemingly reasonable estimation of ``guessing'' probability for participants on Amazon's Mechanical Turk, indicating that this cognitive model is doing a much better job of accounting for participants' responses.
+
+%We use Bayesian data analysis to infer the values of the hyperprior parameters $\gamma$ and $\delta$ for the Bayesian lvRSA model. 
+Table \ref{table:postmeans} shows the posterior means of the hyperprior parameters, $\gamma$ and $\delta$, for the lvRSA model. \red{say something about this, once we finalize results.}
 \begin{table}[h]
 \centering
 \begin{tabular}{c | c | c}
@@ -526,11 +550,8 @@ P                   & 0.031  & 0.204
 \caption{Posterior means for hyperprior parameters.}
 \label{table:postmeans}
 \end{table}
+For visualization purposes, we take the posterior mean of the hyperprior parameters and use those reconstruct a schematic prior distribution over prevalence. Figure \ref{fig:inferredpriors} shows these prior distributions inferred from Exp. 1a \& 1b data via the lvRSA model. \red{shouldn't we use the posterior marginal prevalence, instead of the means?}
 
-
-For visualization purposes, we take the posterior mean of the hyperprior parameters and use those reconstruct a schematic prior distribution over prevalence. Figure \ref{fig:inferredpriors} shows these prior distributions inferred from Exp. 1a \& 1b data via the lvRSA model. 
-
-It should also be noted that the mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.08 and 0.05, respectively, a seemingly reasonable estimation of ``guessing'' probability for participants on Amazon's Mechanical Turk.
 
 \subsubsection{Posterior predictives}
 
@@ -542,15 +563,18 @@ It should also be noted that the mean inferred values of  $\phi_{1a}$ and $\phi_
 \end{figure}
 
 
-The posterior predictions by lvRSA for the \emph{truth conditions} task are in Figure \ref{fig:exp1}. We can see here that model predicts intermediate endorsement rates for the generic at lower prevalence levels. In a sense, the model has some persistent uncertainty about the true value of the threshold, a feature that people share. We reconstruct the curves of Figure \ref{fig:exp1} well; the model--data correlation is $r = 0.90$.
+The posterior predictions by lvRSA for the \emph{truth conditions} task are in Figure \ref{fig:exp1}. 
+We can see here that model predicts graded endorsement rates for the generic as a function of prevalence---the model has some persistent uncertainty about the true value of the threshold, a feature that people share.
+With the fit parameter values of the prevalence prior, the model also matches the difference in endorsement rates between context conditions.
+We reconstruct the curves of Figure \ref{fig:exp1} well; the model--data correlation is $r = 0.90$.
 
-lvRSA models the \emph{truth conditions} task as a speaker --- $S_{2}$ using \eqref{eq:S2}--- faced with the task of evaluating whether or not the generic applies to a given prevalence of a property. This utterance is intended for a pragmatic listener, $L_{1}$ using \eqref{eq:L1}, who given the utterance, will try to reconstruct the prevalence that $S_{2}$ has observed. Here, we have modeled the \emph{implied prevalence} task as this listener, $L_{1}$, given the utterance, tasked with reconstructing the prevalence. 
+%lvRSA models the \emph{truth conditions} task as a speaker---$S_{2}$ using Eq.~\eqref{eq:S2}---faced with the task of saying whether or not the generic applies to a given prevalence of a property. This utterance is intended for a pragmatic listener---$L_{1}$ using Eq.~\eqref{eq:L1}---who will try to reconstruct the prevalence that $S_{2}$ has observed. Here, we have modeled the \emph{implied prevalence} task as this listener, $L_{1}$, given the utterance, tasked with reconstructing the prevalence. 
 
-We use a similar data analysis strategy as we did for Exp. 1b to compare ``average prevalence'' between verification and interpretation. For the \emph{truth conditions} data, we took the model's posterior probability of saying ``true'' at each prevalence level. We normalized these posterior probabilities so they added to 1. We then took the inner product of these probabilities and the prevalence levels to compute an ``average prevalence'' score for the model. Since $L1$ returns a posterior distribution over prevalences, we could use the \emph{implied prevalence} data directly. We find the model is consistent with an asymmetry between interpretation and verification of the generic (see Figure \ref{fig:lvRSAposteriorpred}, right).
+We use a similar data analysis strategy as we did for Exp. 1b to compare ``average prevalence'' between verification and interpretation. For the \emph{truth conditions} data, we took the model's posterior probability of saying ``true'' at each prevalence level. We normalized these posterior probabilities so they added to 1. We then took the inner product of these probabilities and the prevalence levels to compute an ``average prevalence'' score for the model. Since $L1$ returns a posterior distribution over prevalences, we could use the \emph{implied prevalence} data directly. We find the model predicts the asymmetry between interpretation and verification of the generic (see Figure \ref{fig:lvRSAposteriorpred}, right).
 
-\subsubsection{Discussion}
+%\subsubsection{Discussion}
 
-To see how this asymmetry is possible, consider again the inferred prevalence priors in Figure \ref{fig:inferredpriors}. They are bimodal with peaks at 0\% and 100\%. This is consistent with the intuition that biological properties like the ones used in CBG are properties either held by all of a category or none of category. Now, since the semantics of the generic is underspecified (i.e. $\theta$ is unknown), if $\theta$ happens to fall anywhere in the range between 10\%-90\%, the most likely prevalence is 100\%. Hence, in the \emph{implied prevalence task}, the most likely inferred prevalence could be appreciably higher than in the \emph{truth conditions} task. 
+To see how this asymmetry is possible, consider again the inferred prevalence priors in Figure \ref{fig:inferredpriors}. They are bimodal with peaks around 0\% and 100\%. This is consistent with the intuition that biological properties like the ones used by CBG are properties either held by all of a category or none of category. Now, since the semantics of the generic is underspecified (i.e. $\theta$ is unknown), if $\theta$---the threshold of endorsement for truth judgement---happens to fall anywhere in the range between 10\%-90\%, the most likely prevalence is near 100\%. Hence, in the \emph{implied prevalence task}, the most likely inferred prevalence could be appreciably higher than one would expect from the \emph{truth conditions} task. 
 
 
 
@@ -561,8 +585,7 @@ To see how this asymmetry is possible, consider again the inferred prevalence pr
 %  \label{fig:postpred2}
 %\end{figure}
 
-Often in Bayesian data analysis, the posterior distribution over parameters is hard to interpret in terms of actually observable phenomena. The hyperprior parameters, however, in concert with the Rational Speech Act theory make the prediction that, if lvRSA were the correct model in this task, the prior distributions of prevalence for the three contexts would like like they do in Figure \ref{fig:inferredpriors}. 
-
+Often in Bayesian data analysis, the posterior distribution over parameters is hard to interpret in terms of observable phenomena. This case is more transparent: if lvRSA were the correct model in this task, the prior distributions of prevalence for the three contexts should look like they do in Figure \ref{fig:inferredpriors}. 
 In particular, all three types of properties should have bimodal prior prevalence distributions, with a high probability that 0\% of the kind have the property. Further, this left skew should be more pronounced for the \emph{DD} properties relative to the \emph{P} properties. 
 
 \section{Experiment 2}
