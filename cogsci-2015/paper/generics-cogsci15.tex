@@ -322,13 +322,6 @@ The posterior predictive distribution marginalizes over the inferred parameter v
 
 The model matches the ordering of the truth-conditions by context reasonably well, but is too dichotomous in its predictions. The correlation between the posterior predictive and the data is $r = 0.81$. 
 
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{fig3_2pps}
-    \caption{Posterior predictive using fixed-threshold semantics (left) and lifted-variable (RSA) right.}
-  \label{fig:bda1posteriorpred}
-\end{figure}
-
 %\begin{itemize}
 %\item Inferred value of theta across contexts. 
 %\item $\phi$ parameter. 
@@ -485,7 +478,7 @@ x_{c} \thicksim \beta(\gamma_{c},\delta_{c}) \\
 
 Here, $c \in \{DD,NI,P\}$ and $t \in \{$truth conditions, implied prevalence$\}$.
 
-Thus, we put a Bayesian data analysis model on top of a Rational Speech-Act model of language understanding, to see how context might influence the prior distribution given the data we've observed. We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of the proportion of responses our model of cognition doesn't capture. 
+Thus, we do Bayesian data analysis on a Bayesian Rational Speech-Act model of language understanding, to see how context might influence the prior distribution given the data we've observed. We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of the proportion of responses our model of cognition doesn't capture. 
 %\begin{lstlisting}
 %(define bayesian-data-analysis
 %	(query
@@ -520,27 +513,45 @@ Thus, we put a Bayesian data analysis model on top of a Rational Speech-Act mode
 \subsection{Results}
 
 \subsubsection{Inferred parameters}
-We use this Bayesian data analysis model to infer the values of the hyperprior parameters $\gamma$ and $\delta$ for the Bayesian lvRSA model. Table \ref{table:postman} shows the posterior means of the hyperprior parameters for the lvRSA model.
+We use Bayesian data analysis to infer the values of the hyperprior parameters $\gamma$ and $\delta$ for the Bayesian lvRSA model. Table \ref{table:postmeans} shows the posterior means of the hyperprior parameters for the lvRSA model.
 
 \begin{table}[h]
-\begin{tabular}{l | c | c}
+\centering
+\begin{tabular}{c | c | c}
 context / parameter & $\gamma$ & $\delta$ \\
 \hline
-DD                  & 0.05  & 0.01  \\
-NI                  & 0.21  & 0.01  \\
-P                   & 0.20  & 0.01 
+DD                  & 0.016  & 0.321  \\
+NI                  & 0.054  & 0.245  \\
+P                   & 0.031  & 0.204 
 \end{tabular}
 \caption{Posterior means for hyperprior parameters.}
 \label{table:postmeans}
 \end{table}
 
 
-For visualization purposes, we take the posterior mean of the hyperprior parameters and use those reconstruct the prior distribution over prevalence. Figure \ref{fig:modeldatapriors} (top) shows these prior distributions inferred from Exp. 1 a\&b data via the lvRSA model. 
+For visualization purposes, we take the posterior mean of the hyperprior parameters and use those reconstruct a schematic prior distribution over prevalence. Figure \ref{fig:inferredpriors} shows these prior distributions inferred from Exp. 1a \& 1b data via the lvRSA model. 
 
-It should also be noted that the mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.11 and 0.21, respectively, a seemingly reasonable estimation of ``guessing'' probability for participants on Amazon's Mechanical Turk.
+It should also be noted that the mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.08 and 0.05, respectively, a seemingly reasonable estimation of ``guessing'' probability for participants on Amazon's Mechanical Turk.
 
 \subsubsection{Posterior predictives}
-The posterior predictions by lvRSA for the \emph{truth conditions} task are in Figure \ref{fig:bda1posteriorpred} (right). We can see here that model predicts intermediate endorsement rates for the generic at lower prevalence levels. In a sense, the model has some persistent uncertainty about the true value of the threshold, a feature that people share. We reconstruct the curves of Figure \ref{fig:replication} well; the model--data correlation is $r = 0.97$.
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{lvRSA_postpreds}
+    \caption{Posterior predictives of lvRSA for truth conditions (left) and asymmetry between dependent measures (right).}
+  \label{fig:lvRSAposteriorpred}
+\end{figure}
+
+
+The posterior predictions by lvRSA for the \emph{truth conditions} task are in Figure \ref{fig:exp1}. We can see here that model predicts intermediate endorsement rates for the generic at lower prevalence levels. In a sense, the model has some persistent uncertainty about the true value of the threshold, a feature that people share. We reconstruct the curves of Figure \ref{fig:exp1} well; the model--data correlation is $r = 0.90$.
+
+lvRSA models the \emph{truth conditions} task as a speaker --- $S_{2}$ using \eqref{eq:S2}--- faced with the task of evaluating whether or not the generic applies to a given prevalence of a property. This utterance is intended for a pragmatic listener, $L_{1}$ using \eqref{eq:L1}, who given the utterance, will try to reconstruct the prevalence that $S_{2}$ has observed. Here, we have modeled the \emph{implied prevalence} task as this listener, $L_{1}$, given the utterance, tasked with reconstructing the prevalence. 
+
+We use a similar data analysis strategy as we did for Exp. 1b to compare ``average prevalence'' between verification and interpretation. For the \emph{truth conditions} data, we took the model's posterior probability of saying ``true'' at each prevalence level. We normalized these posterior probabilities so they added to 1. We then took the inner product of these probabilities and the prevalence levels to compute an ``average prevalence'' score for the model. Since $L1$ returns a posterior distribution over prevalences, we could use the \emph{implied prevalence} data directly. We find the model is consistent with an asymmetry between interpretation and verification of the generic (see Figure \ref{fig:lvRSAposteriorpred}, right).
+
+\subsubsection{Discussion}
+
+To see how this asymmetry is possible, consider again the inferred prevalence priors in Figure \ref{fig:inferredpriors}. They are bimodal with peaks at 0\% and 100\%. This is consistent with the intuition that biological properties like the ones used in CBG are properties either held by all of a category or none of category. Now, since the semantics of the generic is underspecified (i.e. $\theta$ is unknown), if $\theta$ happens to fall anywhere in the range between 10\%-90\%, the most likely prevalence is 100\%. Hence, in the \emph{implied prevalence task}, the most likely inferred prevalence could be appreciably higher than in the \emph{truth conditions} task. 
 
 
 
@@ -551,21 +562,33 @@ The posterior predictions by lvRSA for the \emph{truth conditions} task are in F
 %  \label{fig:postpred2}
 %\end{figure}
 
-In addition to making predictions about the proportion of ``true'' responses to generic statement under different prevalence levels, the combination of the RSA model of language understanding and the bayesian data analysis model gives rise to predictions about the shape of the prior distribution of prevalence levels under different contexts. We take these predictions seriously and test these in a second experiment. 
+Often in Bayesian data analysis, the posterior distribution over parameters is hard to interpret in terms of actually observable phenomena. The hyperprior parameters, however, in concert with the Rational Speech Act theory make the prediction that, if lvRSA were the correct model in this task, the prior distributions of prevalence for the three contexts would like like they do in Figure \ref{fig:inferredpriors}. 
 
-Often in Bayesian data analysis, the posterior distribution over parameters is hard to interpret in terms of actually observable phenomena. These parameters, however, in concert with the Rational Speech Act theory makes the prediction that, if lvRSA were the correct model in this task, the prior distributions of prevalence for the three contexts would like like they do in Figure \ref{fig:modeldatapriors} (top). 
-
-In particular, all three types of properties should have bimodal prior prevalence distributions, with a high probability than 0\% of the kind have the property. Further, this left skew should be more pronounced for the \emph{DD} properties relative to the \emph{P} properties. Also, this combination of analysis and cognitive model predict that the \emph{NI} properties would have a small left skew than the \emph{P} properties.
-
+In particular, all three types of properties should have bimodal prior prevalence distributions, with a high probability that 0\% of the kind have the property. Further, this left skew should be more pronounced for the \emph{DD} properties relative to the \emph{P} properties. 
 
 \section{Experiment 2}
 
 \begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{exp3hist_inferredMeanPriorExp1_2}
-    \caption{Prior distributions over prevalence. Inferred from Bayesian model (top). Elicited from subjects (bottom).}
-  \label{fig:modeldatapriors}
+        \centering
+        \begin{subfigure}[b]{\columnwidth}
+    			\includegraphics[width=\columnwidth]{inferred_mean_priors}
+                \caption{Reconstructed priors from mean inferred $\gamma$ and $\delta$, for each context.}
+                \label{fig:inferredpriors}
+        \end{subfigure}%
+        
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+          %(or a blank line to force the subfigure onto a new line)
+        
+        \begin{subfigure}[b]{\columnwidth}
+                \includegraphics[width=\columnwidth]{elicited_priors}
+                \caption{Priors elicited in Experiment 2.}
+                \label{fig:elicitedpriors}
+        \end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+          %(or a blank line to force the subfigure onto a new line)
+        \caption{Prior distributions over prevalence.}\label{fig:priors}
 \end{figure}
+
 
 Exp. 2 sought to test the prediction that the prior distribution of prevalence levels would vary by context, as predicted by the $\gamma$ and $\delta$ data analysis parameters from the previous section.
 
@@ -577,41 +600,35 @@ We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Tu
 
 \subsubsection{Procedure and materials}
 
-Our procedure was similar to Exp. 1b\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-11.html}}. On each trial, participants either read contextual information (\emph{DD} or \emph{NI}) or nothing (\emph{plain}). 
+Our procedure\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-11.html}} was similar to Exp. 1b. On each trial, participants either read contextual information (\emph{DD} or \emph{NI}) or nothing (\emph{plain}). 
 
 In addition to the contextual information, participants were presented with the following: ``Listed below are 5 kinds of animals, recently discovered.'' and asked the following question: ``What percentage of each kind of animal do you think has [property]?'' The experiment consisted of 6 trials, 2 from each context. 
 
 \subsubsection{Results}
 
-Experiment 2 recovered the shape of the inferred prior distributions from the lvRSA model (Figure \ref{fig:modeldatapriors}).
+Experiment 2 recovered the shape of the inferred prior distributions from the lvRSA model (Figure \ref{fig:elicitedpriors}). The correlation between these probabilities is $r = 0.90$.
 
 
 \section{Discussion}
 
-We have shown how a Bayesian model of language understanding, motivated by contextual variation of the effective threshold of the generic statement, can explain the data. We have used techniques in Bayesian data analysis to help arbitrate between two cognitive theories. The first was a simple theory that proposed that a generic was akin to some alien quantifier. In this theory, the generic behaves like other quantifiers in that it has a fixed-threshold semantics. We explored one elaboration of this in allowing the generic to have a threshold that differed across contexts. 
+We have shown how a Bayesian model of language understanding, motivated by contextual variation of the effective threshold of the generic statement, can explain the puzzling truth conditions and asymmetrical meanings of generic language. We have used techniques in Bayesian data analysis to help arbitrate between two cognitive theories. The first was a simple theory that proposed that a generic was akin to some alien quantifier. In this theory, the generic behaves like other quantifiers in that it has a fixed-threshold semantics. We explored one elaboration of this in allowing the generic to have a threshold that differed across contexts. 
 
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{asymmetry_byContext_condTwice}
-    \caption{Symmetries and asymmetries among dependent measures and quantifiers.}
-  \label{fig:asymmetry}
-\end{figure}
 
-The alternative theory was that there is no known generic-threshold, even within a given context. There is only uncertainty, and though that uncertainty may be reduced by further contextual information, it never completely evaporates. Instead, we are only left with a posterior belief distribution over possible thresholds as well as a posterior belief distribution over possible worlds. 
-
-The posterior predictive distributions of the lvRSA model account for the contextual variation in the generic endorsements, both quantitatively and qualitiative. It further accounts for the asymmetry between verification and interpretation by considering different Questions Under Discussion (QUDs) and communicative roles (speaker / listener) in the two tasks. Finally, the Bayesian analytic techniques allowed us to make a new prediction as to the shape of the prior distribution over prevalence levels for different contexts. Exp. 2 found confirmatory evidence that this is indeed how people think these properties are distributed.
+The alternative theory is that there is no generic threshold out there in the world to observe. Instead, listeners infer the threshold (and thus, the semantic content) of the words from context. The posterior predictive distributions of the lvRSA model account for the contextual variation in the generic endorsements, both quantitatively and qualitiative. It further accounts for the asymmetry between verification and interpretation by considering different Questions Under Discussion (QUDs) and communicative roles (speaker / listener) in the two tasks. Finally, the Bayesian analytic techniques allowed us to make a new prediction as to the shape of the prior distribution over prevalence levels for different contexts. Exp. 2 found confirmatory evidence that this is indeed how people think these properties are distributed.
 
 %\section{Further simulations}
 %
 %Our model makes the prediction that if the shape of the prior distribution was not bimodal, the asymmetry between verification and interpretation would change. Indeed, this is a similar prediction to \citeA{Cimpian2010}, who posited that accidental or disease states (e.g. ``muddy feathers'', ``infected ears'') would weaken the asymmetry. We would expect accidental or disease states to not follow a bimodal distribution. 
  
 
-These models make further predictions based on the shape of the prior distribution. For example, if the prior distribution was unimodal, as is the case with incidental properties (e.g. broken legs), then the asymmetry between verification and interpretation would be dramatically reduced (see Figure \red{no asymmetry figure with schematic prior}). Indeed, CBG explored this possibility in one of their experiment using ``accidental and disease states''; they too found no asymmetry. 
+These models make further predictions based on the shape of the prior distribution. For example, if the prior distribution was unimodal, as is the case with incidental properties (e.g. broken legs), then the asymmetry between verification and interpretation would be dramatically reduced (see Figure \red{weakened-asymmetry figure with schematic prior}). Indeed, CBG explored this possibility in one of their experiment using ``accidental and disease states''; they too found no asymmetry. 
 
 Another instance of a differently shaped prior that is of theoretical interest is a bimodal prior with a second peak at some low prevalence level (as opposed to a bimodal prior with a second peak at a high prevalence level, which we've focused on in this paper). This prior could conceivable map onto rare properties that are not only rare \emph{across kinds} but even \emph{within kinds}. A canonical example of this is ``West Nile Virus'' in the generic ``Mosquitos carry West Nile Virus''. For a prior like this, the truth conditions for the generic would be heavily inflated, relative to the more common bimodal priors, at low prevalence levels. We see this behavior using a schematic prior (Figure \red{truth conditions with mosquito prior}). 
 
 
-Begin stirring conclusion...
+Generic language is ubiquitous in natural language. It might seem paradoxical, then, that the semantics of generic statements are underspecified. Why should vague language get so much usage? One possibility is apparent in the lvRSA model. Speakers and listeners do a lot to infer the meaning of words. Humans use structured, background knowledge to organize and navigate the world. Generic language provides interlocutors with the flexibility to convey rich, context sensitive meanings. 
+
+
 %In this paper, we used techniques of both Bayesian Cognitive Science and Bayesian Data Analysis. The former helped us develop a rich, formal theory of language understanding. These sorts of theories have implications for psychology and linguistics. The latter helped us make inferences about our theories. Bayesian Data Analysis is crucial to make assumptions explicit (e.g. about fixed-threshold semantics) and clean up our data (e.g. discounting behavior that can conceivably be attributed to guessing). Together, they embody a manifestation of a more general philosophy of science: making assumptions explicit and beginning our science by announcing our uncertainty.
 
 
