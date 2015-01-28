@@ -2223,15 +2223,42 @@ p<-p+ggtitle("inferred prior distribution, from RSA & Exp1&2 data")+xlab('')
 grid.arrange(p,exp11)
 
 d.tidy$roundval<-round(d.tidy$value/10)*10
-table(d.tidy[,c("context","roundval")])
 
-ggplot(d.tidy,aes(x=roundval,fill=context))+
-  geom_histogram()+
+unnormed<-table(d.tidy[,c("context","roundval")])
+
+normedexp2<-data.frame(dd=unnormed[1,]/sum(unnormed[1,]),
+           ni=unnormed[2,]/sum(unnormed[2,]),
+           pl=unnormed[3,]/sum(unnormed[3,]))
+normedexp2$prevalence = row.names(normedexp2)
+
+d.tidy$context<-factor(d.tidy$context,levels=c("danger-distinct","nondistinctive","bare"), 
+                        labels=c("dangerous & distinctive", 
+                                 "irrelevant & nondistinctive",
+                                 "plain"))
+
+
+
+exp2<-ggplot(d.tidy,aes(x=roundval,fill=context))+
+  geom_histogram(binwidth=10)+
   facet_wrap(~context)+
-  guides(fill=F)+
+ # guides(fill=F)+
   scale_fill_brewer(type='qual',palette=6)+
+  #scale_x_continuous(breaks=c(0,20,40,60,80,100))+
   xlab('prevalence')+
-  ggtitle('human elicited prior distribution')
+    theme(strip.background = element_blank(),
+       strip.text.x = element_blank(),
+        legend.position='bottom',
+        legend.direction='horizontal')
+
+
+plotpath = "~/Documents/research/generics/cogsci-2015//paper/figures/"
+
+
+ggsave(filename=paste(plotpath,'elicited_priors.png',sep=''),
+       plot=exp2,
+       width=12,
+       height=4.5)
+
 
 
 
@@ -2248,12 +2275,12 @@ setwd("~/Documents/research/generics/cbg2010-replication/analysis/")
 d<-read.csv('exp11_betaHyperparamsCnts_wPhi_mh1000_10.csv',header=F)
 m.tidy<-d %>% 
   select(V1,V2,V4,V5,V7,V8)%>%
-  rename(bare_gamma=V1,
-         bare_delta=V2,
-         dangerdistinct_gamma=V4,
-         dangerdistinct_delta=V5,
-         nondistinctive_gamma=V7,
-         nondistinctive_delta=V8)%>%
+  rename(pl_gamma=V1,
+         pl_delta=V2,
+         dd_gamma=V4,
+         dd_delta=V5,
+         ni_gamma=V7,
+         ni_delta=V8)%>%
   gather(variable,value)%>%
   separate(variable,into=c("context","parameter"),by="_")
 
@@ -2265,11 +2292,20 @@ ggplot(subset(m.tidy,parameter=='gamma'),aes(x=value))+
   geom_histogram()+
   facet_grid(context~.)
 
-ggplot(m.tidy,aes(x=value))+
+m.tidy$context<-factor(m.tidy$context,levels=c('dd','ni','pl'))
+
+ggplot(m.tidy,aes(x=value,fill=context))+
   geom_histogram()+
-  facet_grid(context~parameter)
+  facet_grid(context~parameter,scales='free')+
+    scale_fill_brewer(type='qual',palette=6)
+
+
 
 ddply(m.tidy,.(context,parameter),summarise,mean(value))
+
+
+
+
 ```
 
 
@@ -3015,20 +3051,34 @@ ggplot(c.tidy, aes(x=context,y=mean,fill=context,alpha=task, group=task))+
 
 ```{r tfbt.lvRSA.paper}
 
-#setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
+setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
 #d<-read.csv('ft_conditionIP_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
 #d<-read.csv('ft_conditionBoth_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
 #d<-read.csv('lvRSA_condition2_dscFine_2phis_expts9_12_generic_mh10000_10_alpha1.csv',header=F)
 
-d<-read.csv('lvRSA_condition2_dscFine_2phis_expts9_12_generic_mh10000_10_alpha1.csv',header=F)
+#d<-read.csv('lvRSA_c1_expts9_12_generic_mh10000_100_alpha1.csv',header=F)
+#f<-read.csv('lvRSA_c2_expts9_12_generic_mh10000_100_alpha1.csv',header=F)
+#d<- read.csv('lvRSA_c1_rds_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+#d<- read.csv('lvRSA_rds_c2_expts9_12_generic_mh5000_10_alpha1.csv',header=F)
+#d<- read.csv('lvRSA_rds_c3_expts9_12_generic_mh1000_100_alpha1.csv',header=F)
+#d<-read.csv('lvRSA_cnts_expts9_12_generic_mh1000_10_alpha1.csv',header=F)
+d<-read.csv('lvRSA_cnts_c1_expts9_12_generic_mh1000_50_alpha1.csv',header=F)
+f<-read.csv('lvRSA_cnts_c2_expts9_12_generic_mh1000_50_alpha1.csv',header=F)
+g<-read.csv('lvRSA_cnts_c3_expts9_12_generic_mh1000_50_alpha1.csv',header=F)
+#d<-read.csv('lvRSA_condition2_dscFine_2phis_expts9_12_generic_mh10000_10_alpha1.csv',header=F)
 #f<-read.csv('lvRSA_condition2_c2_dscFine_2phis_expts9_12_generic_mh10000_10_alpha1.csv',header=F)
-#d<-rbind(d,f)
+d<-rbind(d,f,g)
 #d<-f
 #ft.phi <- d %>% select(V1) %>% rename(phi=V1)
 ft.phi <- d %>% select(V1,V2) %>% 
   rename(phi_tc=V1,phi_ip=V2) %>%
   gather(variable,value) %>% 
   separate(variable,into=c("parameter","task"), by="_")
+
+ddply(ft.phi, .(parameter, task), summarise,
+      mean=mean(value),
+      CIlow=quantile(value,probs=0.025),
+      CIhigh=quantile(value,probs=0.975))
 
 #qplot(data=ft.phi,x=phi,geom='density')+xlim(0,1)
 qplot(data=ft.phi,x=value,geom='histogram',fill=task)+xlim(0,1)+facet_wrap(~task)
@@ -3044,6 +3094,11 @@ d.tidy <- d %>%
   gather(variable,value) %>%
   separate(variable, into=c("context","parameter"), by="_")
 
+params.stats<-ddply(d.tidy, .(context,parameter), summarise,
+      mean = mean(value),
+      CIlow=quantile(value,probs=0.025),
+      CIhigh=quantile(value,probs=0.975))
+
 ggplot(d.tidy,aes(x=value,fill=context))+
   #geom_density(alpha=0.8)+
   geom_histogram(binwidth=0.03)+
@@ -3056,6 +3111,68 @@ ggplot(d.tidy,aes(x=value,fill=context))+
         legend.direction='horizontal')+
   guides(fill=guide_legend(title="Context"))+
   xlab("generic threshold")
+
+
+discretize_beta<- function(gamma,delta,bins){
+  s_alpha<- gamma*delta
+  s_beta <- (1 - gamma) * delta
+  beta_pdf<- function(x){
+    return((x^(s_alpha-1))*((1-x)^(s_beta-1)))
+  }
+  return(sapply(bins,beta_pdf))
+}
+
+bns<-c(0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99)
+
+discreet_beta<-data.frame( vals = bns,
+  dd=discretize_beta(params.stats[2,3],params.stats[1,3], bns),
+  ni=discretize_beta(params.stats[4,3],params.stats[3,3], bns),
+  pl=discretize_beta(params.stats[6,3],params.stats[5,3],bns))
+
+discreet_beta$dd_n <- discreet_beta$dd / sum(discreet_beta$dd)
+discreet_beta$ni_n <- discreet_beta$ni / sum(discreet_beta$ni)
+discreet_beta$pl_n <- discreet_beta$pl / sum(discreet_beta$pl)
+
+db.tidy<- discreet_beta %>% 
+  select(vals,dd_n,ni_n,pl_n) %>%
+    gather(key,probs, -vals)
+
+db.tidy$context<-factor(db.tidy$key,levels=c('dd_n','ni_n','pl_n'), 
+                        labels=c("dangerous & distinctive", 
+                                 "irrelevant & nondistinctive",
+                                 "plain"))
+experiment2.data<-normedexp2 %>% rename(dd_n=dd,ni_n=ni,pl_n=pl)%>%
+  gather(key,elicited,-prevalence)
+
+experiment2.data[experiment2.data$prevalence==0,"prevalence"]<- 1
+experiment2.data[experiment2.data$prevalence==100,"prevalence"]<- 99
+experiment2.data$vals = as.numeric(experiment2.data$prevalence)/100
+
+exp2.modeldata<-merge(experiment2.data,db.tidy, by=c("key","vals"))
+qplot(data=exp2.modeldata,x=probs,y=elicited,geom='point')
+with(exp2.modeldata,cor(probs,elicited))
+
+a<-ggplot(db.tidy,aes(x=100*vals,y=probs,fill=context))+
+  geom_bar(stat='identity',position=position_dodge())+
+  #xlim(0,100)+
+  facet_wrap(~context)+
+  guides(fill=F)+
+  scale_x_continuous(breaks=c(0,20,40,60,80,100))+
+  scale_fill_brewer(type='qual',palette=6)+
+  xlab("prevalence level")+
+  ylab("inferred prior probability")+
+  theme(strip.background = element_blank(),
+       strip.text.x = element_blank(),
+        legend.position='bottom',
+        legend.direction='horizontal')
+
+plotpath = "~/Documents/research/generics/cogsci-2015//paper/figures/"
+
+
+ggsave(filename=paste(plotpath,'inferred_mean_priors.png',sep=''),
+       plot=a,
+       width=12,
+       height=4.5)
 
 ```
 
@@ -3103,13 +3220,13 @@ d.stats$prevalence<-as.numeric(d.stats$prevalence)
 
 #d.stats[12,4:5]<-c(0.03,0.97)
 
-ggplot(data=d.stats,aes(x=prevalence,y=mean,color=context,group=context))+
-  geom_point(size=3, position=position_dodge(4))+
-  geom_line(size=1,position=position_dodge(4))+
-    geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
-               width=10,
-               size=0.5,
-               position=position_dodge(4))+
+a<-ggplot(data=d.stats,aes(x=prevalence,y=mean,color=context,group=context))+
+    geom_point(size=3, position=position_dodge(4))+
+  geom_line(size=0.5,position=position_dodge(4))+
+  geom_errorbar(aes(ymin=CIlow,ymax=CIhigh,colour=context),
+              width=3,
+              size=0.9,
+              position=position_dodge(4))+
   scale_colour_brewer(type='qual',palette=6)+
   #theme(strip.text.x = element_text(size=14,color='black'))+
   scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
@@ -3121,6 +3238,46 @@ ggplot(data=d.stats,aes(x=prevalence,y=mean,color=context,group=context))+
   coord_fixed(100)+
   theme(legend.key.size=unit(2, "lines"),
         legend.text.align=NULL)
+
+
+# scatterplot
+
+h.tidy<-tc.bs %>% select(stim_prevalence,stim_type,truth_num,YMin,YMax) %>%
+  rename(prevalence=stim_prevalence,
+         context=stim_type,
+         response = truth_num,
+         CIlow=YMin,
+         CIhigh=YMax)
+
+h.tidy$context<-factor(h.tidy$context,
+                        levels=c("danger-distinct", 
+                                 "nondistinctive",
+                                 "bare"),
+                        labels=c("dangerous &\n distinctive", 
+                                 "irrelevant &\n nondistinctive",
+                                 "plain"))
+
+mgd<- merge(h.tidy, d.stats, by=c("context","prevalence"))
+
+with(mgd, cor(response,mean))
+
+ggplot(data=mgd, aes(x=mean,y=response,color=context))+
+  geom_point(size=3)+
+ geom_errorbarh(aes(y=response,xmin=CIlow.y,xmax=CIhigh.y),
+             height=0.04,
+             size=0.5)+
+   geom_errorbar(aes(r=response,ymin=CIlow.x,ymax=CIhigh.x),
+             width=0.04,
+             size=0.5)+
+    geom_abline(intercept=0,slope=1,linetype=3)+
+    scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1.05))+
+    scale_x_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1.05))+
+  guides(color=guide_legend(title="Context"))+
+  xlab("model posterior predictive")+
+  ylab('truth conditions (Exp. 1a) data')+
+  coord_fixed(1)+
+    scale_colour_brewer(type='qual',palette=6)
+
 
 ```
 
@@ -3201,7 +3358,7 @@ c.tidy$task <- factor(c.tidy$task,
 # 
 
 
-ggplot(c.tidy, aes(x=context,y=mean,fill=context,alpha=task, group=task))+
+b<-ggplot(c.tidy, aes(x=context,y=mean,fill=context,alpha=task, group=task))+
   geom_bar(stat='identity',position=position_dodge(0.5), width=0.5,color='black')+
   geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
                 width=0.2,
@@ -3214,10 +3371,29 @@ ggplot(c.tidy, aes(x=context,y=mean,fill=context,alpha=task, group=task))+
   scale_alpha_manual(values=c(0.4,1))+
  # scale_fill_manual(values=c("#999999","#ef8a62"))+
   xlab("")+
-  guides(fill=F)+
+  guides(fill=guide_legend(order=1),
+         alpha=guide_legend(order=2))+
   theme(legend.position='bottom',
         legend.direction='horizontal',
+        legend.box= 'horizontal',
         axis.text.x=element_blank())
+
+mylegend<-g_legend(b)
+
+p3 <- arrangeGrob(arrangeGrob(a + theme(legend.position="none"),
+                         b + theme(legend.position='none'),
+                         nrow=1),
+             mylegend, nrow=2,heights=c(10, 1))
+
+ggsave(filename=paste(plotpath,'lvRSA_postpreds.png',sep=''),
+       plot=p3,
+       width=12,
+       height=6)
+
+
+
+# scatter plot
+
 
 ```
 
@@ -3279,26 +3455,32 @@ params.stats<-ddply(params.tidy, .(context,variable), summarise,
 
 
 
-sample.beta<-function(n,gamma,delta){
-  shape1 <- gamma*delta
-  shape2 <- (1-gamma)*delta
-  return(rbeta(n,shape1,shape2))
+
+discretize_beta<- function(gamma,delta,bins){
+  s_alpha<- gamma*delta
+  s_beta <- (1 - gamma) * delta
+  beta_pdf<- function(x){
+    return((x^(s_alpha-1))*((1-x)^(s_beta-1)))
+  }
+  return(sapply(bins,beta_pdf))
 }
 
-sb<-melt(data.frame(
-  dangerdistinct=sample.beta(1000,params.stats[1,3],params.stats[2,3]),
-  nondistinctive=sample.beta(1000,params.stats[3,3],params.stats[4,3]),
-  bare=sample.beta(1000,params.stats[5,3],params.stats[6,3])
-               ))
+bns<-c(0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99)
 
 
-ggplot(sb,aes(x=100*value,fill=variable))+
+discreet_beta<-data.frame(probs = discretize_beta(0.1,0.01,bns),
+                    vals = bns)
+
+discreet_beta$normed_probs <- discreet_beta$probs / sum(discreet_beta$probs)
+
+ggplot(discreet_beta,aes(x=100*vals,y=normed_probs))+
   #geom_density()+
-  geom_histogram()+
+#  geom_histogram()+
+  geom_bar(stat='identity')+
   xlim(0,100)+
-  facet_wrap(~variable)+
-  guides(fill=F)+
-  scale_fill_brewer(type='qual',palette=6)+
+#  facet_wrap(~variable)+
+#  guides(fill=F)+
+#  scale_fill_brewer(type='qual',palette=6)+
   xlab("mean inferred prior distribution, from RSA and exp1 & imp-prev exp")
 
 ```
