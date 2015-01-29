@@ -1,9 +1,11 @@
 %todo:
-% - write abstract
+% - edit abstract
 % - address and then remove all of Noah's comments in red.
 % - finish expt 2 results: update correlation and report split-half correlation. show that the means differ across contexts.spearman prophecy for prior correlations
 % - replace table 1 with a figure of posteriors?
 % - posterior predictives for prevalence prior
+% - get tiny URLs for experiment links
+% - set up forest page
 
 % - plots of schematic prior and simulation results. accidental and mosquitos prior results for discussion. make a little figure showing prior and truth-judgement predictions for each?
 % - fit into space and proof read.
@@ -55,6 +57,7 @@
 \usepackage{textcomp}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{wrapfig}
 
 \graphicspath{{figures/}}
 
@@ -555,22 +558,42 @@ We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of 
 The mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.08 and 0.05, respectively, a seemingly reasonable\footnote{Without proper control tasks, it's impossible to know what proportion of guessing to expect. Here, we are assuming Turkers are cooperative and so lower values for $\phi_{t}$ are better.} estimation of ``guessing'' probability for participants on Amazon's Mechanical Turk, indicating that this cognitive model is doing a much better job of accounting for participants' responses.
 
 %We use Bayesian data analysis to infer the values of the hyperprior parameters $\gamma$ and $\delta$ for the Bayesian lvRSA model. 
-Table \ref{table:postmeans} shows the posterior means of the hyperprior parameters, $\gamma$ and $\delta$, for the lvRSA model. \red{say something about this, once we finalize results.}
-\begin{table}[h]
-\centering
-\begin{tabular}{c | c | c}
-context / parameter & $\gamma$ & $\delta$ \\
-\hline
-DD                  & 0.016  & 0.321  \\
-NI                  & 0.054  & 0.245  \\
-P                   & 0.031  & 0.204 
-\end{tabular}
-\caption{Posterior means for hyperprior parameters.}
-\label{table:postmeans}
-\end{table}
-\red{if we have space, put in the posterior on gamma and delta plot instead of the table?}
-For visualization purposes, we take the posterior mean of the hyperprior parameters and use those reconstruct a schematic prior distribution over prevalence. Figure \ref{fig:inferredpriors} shows these prior distributions inferred from Exp. 1a \& 1b data via the lvRSA model. \red{shouldn't we use the posterior marginal prevalence, instead of the means?}
+Figure \ref{fig:posthyper} shows the posterior distributions of the hyperprior parameters, $\gamma$ and $\delta$, for the lvRSA model. The posterior means for the $\gamma$'s (the $\beta$ mean parameter) are well-ordered: $DD < P < NI$. This can be directly interpreted as the mean prior prevalence for the three contexts: \emph{dangerous and distinctive} properties are more rare than the other two types of properties. The posterior means for the $\delta$'s (the $\beta$ concentration parameter) are also ordered, suggesting greater uncertainty about the $P$ context than about the other 2. 
 
+
+\begin{wrapfigure}{r}{0.5\columnwidth}
+  \begin{center}
+    \includegraphics[width=0.48\columnwidth]{inferred_hyperpriors}
+  \end{center}
+  \caption{Posterior distributions of the hyperprior parameters used in lvRSA.}
+   \label{fig:posthyper}
+\end{wrapfigure}
+
+
+%\begin{wrapfigure}{r}{0.5\textwidth}
+%%\centering
+%   \begin{center}
+%    \includegraphics[width=0.48\columnwidth]{inferred_hyperpriors}
+%    \end{center}
+%    \caption{Posterior distributions of the hyperprior parameters used in lvRSA.}
+%  \label{fig:posthyper}
+%\end{wrapfigure}
+
+%begin{table}[h]
+%\centering
+%\begin{tabular}{c | c | c}
+%context / parameter & $\gamma$ & $\delta$ \\
+%\hline
+%DD                  & 0.016  & 0.321  \\
+%NI                  & 0.054  & 0.245  \\
+%P                   & 0.031  & 0.204 
+%\end{tabular}
+%\caption{Posterior means for hyperprior parameters.}
+%\label{table:postmeans}
+%\end{table}
+%
+
+For further visualization, we marginalize over the posterior parameter values to reconstruct a canonical prior distribution over prevalence for each context. Figure \ref{fig:inferredpriors} shows these prior distributions inferred from Exp. 1a \& 1b data via the lvRSA model. 
 
 \subsubsection{Posterior predictives}
 
@@ -612,8 +635,8 @@ In particular, all three types of properties should have bimodal prior prevalenc
 \begin{figure}
         \centering
         \begin{subfigure}[b]{\columnwidth}
-    			\includegraphics[width=\columnwidth]{inferred_mean_priors}
-                \caption{Reconstructed priors from mean inferred $\gamma$ and $\delta$, for each context.}
+    			\includegraphics[width=\columnwidth]{inferred_marginalized_priors}
+                \caption{Reconstructed priors from marginalized posterior $\gamma$ and $\delta$, for each context.}
                 \label{fig:inferredpriors}
         \end{subfigure}%
         
