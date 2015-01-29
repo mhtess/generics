@@ -1,9 +1,13 @@
-% questions from Judith that MH wants help on
-%% paragraph1: "... we will see the context and the effort in producing this statement." [technically, we don't consider cost; however, also technically, the speaker models have an alternative set of generic + "mu".] so can we talk about the effort? [i've removed it but we can add it back in]
-%% start of paragraph3 : "why do these effects pose a puzzle for formal semantics"? in response to our "Both context and asymmetry effects pose a puzzle for formal semantics."
-%% 
-%
 %todo:
+% - write abstract
+% - address and then remove all of Noah's comments in red.
+% - finish expt 2 results: update correlation and report split-half correlation. show that the means differ across contexts.
+% - replace table 1 with a figure of posteriors?
+% - accidental and mosquitos prior results for discussion. make a little figure showing prior and truth-judgement predictions for each?
+% - fit into space and proof read.
+% - if time: look at "order effect" in prior elicitation (taboo sampling hypothesis... first sample is 0, second is 100, third - fifth are meh)
+
+%mh (late) todo:
 % - write abstract
 % - posterior over hyperparameter plots
 % - posterior predictives for prevalence prior
@@ -12,11 +16,19 @@
 % - make figures 1 & 2 as pretty as 3 & 4
 
 
+%noah's todo:
+% - questions from Judith that MH wants help on:
+	%% start of paragraph3 : "why do these effects pose a puzzle for formal semantics"? in response to our "Both context and asymmetry effects pose a puzzle for formal semantics."
+% - make it more clear why we do the fully-fixed-semantics model, possibly shorten that section if there's not space.
+% - add a bit more sign-posting as to why we're doing the various fancy BDAs.
+%
+%
+
+
 
 
 % - try rationality parameter in tfbt model
 % - look at "order effect" in prior elicitation (taboo sampling hypothesis... first sample is 0, second is 100, third - fifth are meh)
-% - try an S2 model of prevalence judgement task, too. does it reduce to the L1 model?
 % - do we really want posterior predictives that include the guessing parameter? (the guessing parameter is part of the analysis model, not the cognitive model...)
 %- what kind of evidence do we want to use at the end to relate inferred priors to elicited? 
 %	- is eye-balling the elicited prior and the mean inferred priors sufficient?
@@ -32,6 +44,8 @@
 %-run additional contexts. e.g. separate dangerous and distinct.
 %-look again at finer-grained truth judgement task?
 %-think about the weird cases of generics in the literature. e.g. ``robins lay eggs''.
+% - try an S2 model of prevalence judgement task, too. does it reduce to the L1 model?
+
 %
 
 
@@ -89,9 +103,13 @@
 
 \title{Words are vague: A model of generic language}
  
- \author{{\large \bf Michael Henry Tessler, Noah D. Goodman } \\
-	\{mhtessler, ngoodman\}@stanford.edu \\
+% \author{{\large \bf Michael Henry Tessler, Noah D. Goodman } \\
+%	\{mhtessler, ngoodman\}@stanford.edu \\
+%  Department of Psychology, Stanford University}
+
+\author{{\large \bf Michael Henry Tessler} (mhtessler@stanford.edu), {\large \bf Noah D. Goodman} (ngoodman@stanford.edu) \\
   Department of Psychology, Stanford University}
+
  
 \begin{document}
 \maketitle
@@ -109,14 +127,14 @@ New sanctions passed by this Congress, at this moment in time, will all but guar
 \end{aquote}
 
 
-Generic meanings are hard to pin down.  Consider President Obama's remark during the State of the Union Address. The sentence is a generic statement about \emph{new sanctions} in that it conveys a generalization about the members of a kind \cite{Carlson1977, Leslie2008}. It invites the question: ``Exactly how many of these new sanctions will guarantee diplomatic failure?'' President Obama's statement is conceivably true if most or only a few new sanctions will be problematic. At the same time, he is not a man to waste words---why does he go through the trouble of producing such a vague utterance? In this paper, we will see that the \emph{context} in which his words are uttered contribute to the meaning we derive. We propose that this aspect of generic language follows from pragmatic reasoning about an uncertain threshold for meaning; an idea which we formalize in a probabilistic model within the Rational Speech Acts framework \cite{Frank2012,Goodman2013}.
+Generic meanings are hard to pin down.  Consider President Obama's remark during the State of the Union Address. The sentence is a generic statement about \emph{new sanctions} in that it conveys a generalization about the members of this kind \cite{Carlson1977, Leslie2008}. It invites the question: ``Exactly how many of these new sanctions will guarantee diplomatic failure?'' President Obama's statement is conceivably true if most or only a few new sanctions will be problematic. At the same time, he is not a man to waste words---why does he go through the trouble of producing such a vague utterance? In this paper, we will see that the \emph{context} in which his words are uttered contributes to the meaning we derive. We propose that this aspect of generic language follows from pragmatic reasoning about an uncertain threshold for meaning; an idea which we formalize in a probabilistic model within the Rational Speech Acts framework \cite{Frank2012,Goodman2013}.
 
 Generic statements are puzzling because their meaning is so flexible. On the one hand, generics would seem to suggest an almost universal quantification, as in ``Dogs bark''. Others, like ``Mosquitos carry West Nile virus'', involve a property that applies only to a small subset of the kind. 
 %It is perhaps this inherent uncertainty that leads generics to be so widespread in natural language. 
 \citeA{Cimpian2010} (henceforth, CBG) carried out a series of experiments designed to examine the truth conditions and implications of generic statements. 
-They found evidence for the influence of additional knowledge about a target property (e.g. its \emph{distinctiveness}) on participants' willingness to accept generic statements (i.e. this type of context modified the truth conditions). CBG also found an asymmetry between  interpretation and verification: in one task, participants interpreted a generic (e.g.~``lorches have purple feathers'') as nearly universal; in a different task, they would endorse the same generic as true if given a much lower prevalence level (``50\% of lorches have purple feathers'').
+They found evidence for the influence of additional knowledge about a target property (e.g.~its \emph{distinctiveness}) on participants' willingness to accept generic statements---this type of contextual information modified the truth conditions. CBG also found an asymmetry between  interpretation and verification: in one task, participants interpreted a generic (e.g.~``lorches have purple feathers'') as nearly universal; in a different task, they would endorse the same generic as true at a much lower prevalence (``50\% of lorches have purple feathers'').
 
-Both context and asymmetry effects pose a puzzle for formal semantics. 
+Both context and asymmetry effects pose a puzzle for the semantics of generics: what could be the stable meaning of a generic given this extreme flexibility? 
 In this paper, we seek to explain both of these phenomena as the effects of pragmatic inference filling in a meaning that is underspecified in the semantics. 
 In particular, we posit a scalar semantics for generics in which they express that \emph{prevalence}---the probability of the property given the kind---is above a threshold (cf. \citeA{Cohen1999}). Following \citeA{Lassiter2015}, we treat this threshold as a free variable that is reasoned about by a pragmatic listener: what is the threshold likely to be, given that a speaker bothered to utter the generic? Context effects follow from differences in prior beliefs about the distribution of the property across categories. Asymmetry effects follow by modeling differences in the language understanding and answer-selection task faced by participants in the different experiments (cf. \citeA{Degen2014}).  %suggested that different dependent measures in experimental pragmatics paradigms map onto different communicative roles, and thus should be modeled accordingly. 
 
