@@ -1,12 +1,8 @@
 %todo:
 
 %from noah 1/30 am:
-%-are there ten or eleven values for guess in the prevalence task?
-%-we don't include a cost/prior for the generic utterance for S2, right? i removed P(g).
-%-we ended up fixing alpha to 1, right? i removed it.
 %-is the inner product thing for truth conditions predictions equivalent to the human thing? can we just say we simulate a population of human responses by sampling according to 'yes' probabilities and then do what we did for human data?
-%-i think you should run another 70 people in expt 2 this morning. (there's no reason to settle for noisy data where it matters.) make sure you are restricting to us ip addresses (and ideally collecting native language).
-%-add CIs to expt 2 plot.
+
 %-add some more points to the x axis in figure 6 so the mosquitos prior looks bimodal. perhaps show as curves instead of bars?
 
 
@@ -212,7 +208,11 @@ Participants were then asked ``Is the following sentence true or false?'', below
 %  \label{fig:replication}
 %\end{figure}
 
-Results are shown in Fig~\ref{fig:datatc}. We entered participant's truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and context as well as an interaction term.  Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive (DD) context than in the plain (P) condition (Figure \ref{fig:datatc}; $z = 5.52; p < 0.001$). There was also an interaction between prevalence level and context such that the DD context was endorsed more than P at lower prevalence levels ($z=-2.353; p = 0.019$). There was a trending effect for the nondistinctive and irrelevant (NI) context to be endorsed \emph{less} than the plain context ($z=-1.91; p = 0.056$).
+Results are shown in Fig~\ref{fig:datatc}. We entered participant's truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and context as well as an interaction term\footnote{This was the maximal mixed effect structure supported by the data}.  
+%
+Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive (DD) context than in the plain (P) context (Figure \ref{fig:datatc}; $\beta=1.99; SE = 0.36; z = 5.52; p < 0.001$). 
+%
+There was also an interaction between prevalence level and context such that the DD context was endorsed more than P at lower prevalence levels ($z=-2.353; p = 0.019$). There was a trending effect for the nondistinctive and irrelevant (NI) context to be endorsed \emph{less} than the plain context ($z=-1.91; p = 0.056$).
 
 \subsection{Experiment 1b: \emph{implied prevalence}}
 
@@ -690,9 +690,12 @@ Experiment 2 recovered the shape of the inferred prior distributions predicted f
 %
 Hartigans' Dip Test for Unimodality was highly significant for each of the prior distributions ($D = 0.054, 0.084, 0.0745$ for contexts $DD$, $NI$, $P$, respectively; p $<$ 0.0001 for each), and thus the distributions are at least bimodal. 
 %
-The medians of these three distributions were all significantly different from one another, evidenced by pair-wise Mann-Whitney U tests ($DD$ vs. $P$: $W=417452$; $DD$ vs. $NI$: $W=376180.5$; $NI$ vs. $P$: $W=548994.5$; all $p < 0.00001$; $\mu_{DD} = 18.1\%$, $\mu_{NI} = 25.7\%$, $\mu_{P} = 20.8\%$). 
+The means of these three distributions are well ordered as predicted (bootstrapped 95\% confidence intervals in parentheses): $\mu_{DD} = 18.1\% (16.0, 20.2), \mu_{P} = 20.8\% (19.0, 22.5), \mu_{NI} = 25.7\% (23.7, 27.6)$.
+%
+The medians of these three distributions were all significantly different from one another, evidenced by pair-wise Mann-Whitney U tests ($DD$ vs. $P$: $W=417452$; $DD$ vs. $NI$: $W=376180.5$; $NI$ vs. $P$: $W=548994.5$; all $p < 0.00001$). 
 %
 Finally, the distributions themselves were all significantly different from one another, by Kolmogorov-Smirnov tests ($DD$ vs. $P$: $D = 0.185$; $DD$ vs. $NI$: $D = 0.253$; $NI$ vs. $P$: $D = 0.091$; all $p < 0.001$. In sum, the elicited prior distributions are all at least bimodal, have different central tendencies, and are all distinct.
+
 
 \section{Discussion}
 
