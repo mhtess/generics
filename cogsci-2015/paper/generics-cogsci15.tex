@@ -1,6 +1,4 @@
 %todo:
-% - for exp. 2, plain mean doesn't differ from DD 
-% %%% finish expt 2 results: update correlation and report split-half correlation. show that the means differ across contexts.
 
 %from noah 1/30 am:
 %-are there ten or eleven values for guess in the prevalence task?
@@ -114,7 +112,7 @@
 
 
 \begin{abstract}
-Generic utterances are ubiquitous in natural language. Despite their prevalence, the meanings of generic statements are puzzling to formal approaches. \citeA{Cimpian2010} demonstrated that the endorsement rate of generic statements differs by context and that generic statements can be endorsed based on weak evidence while the same sentences is interpreted strongly. Here, we replicate these effects in Exp.~1 and investigate how well models based on prevalence (the probability of the property given the category) can account for this behavior. 
+Generic utterances are ubiquitous in natural language. Despite their prevalence, the meanings of generic statements are puzzling to formal approaches. \citeA{Cimpian2010} demonstrated that the endorsement rate of generic statements differs by context and that generic statements can be endorsed based on weak evidence while the same sentences are interpreted strongly. Here, we replicate these effects in Exp.~1 and investigate how well models based on prevalence (the probability of the property given the category) can account for this behavior. 
 Using Bayesian data analysis techniques, %to make inferences about the putative threshold used as well as to arbitrate between competing accounts. 
 we show how a simple scalar prevalence semantics is untenable, but that the same semantics within a probabilistic pragmatics framework can account for the data. 
 In this model, the generic has an underspecified meaning, but this uncertainty is resolved by context and interaction. 
@@ -263,7 +261,7 @@ To set the stage for future Bayesian analyses, let us nonetheless explore the qu
 \subsection{A context-invariant fixed-semantics}
 %We first examine what this threshold would look like if it were invariant to context and task. 
 To begin our data analysis, we make no \emph{a priori} assumptions about the (fixed but unknown to us) value of $\theta$, placing on it a uniform prior distribution: $\theta \thicksim U(0,1)$. 
-We account for inattention and other irrelevant factors by including a probability $\phi_{t}\thicksim U(0,1)$ for each task\footnote{Ideally, we would have $\phi$ be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). This is computationally too demanding when coupled with the more complex cognitive model explored later.} that a given response is the result of uniform random guessing\footnote{For the \emph{implied prevalence} task we took random guessing to be choosing among the ten numbers 0, 10, ..., 100 uniformly.} \cite{LW2014}.
+We account for inattention and other irrelevant factors by including a probability $\phi_{t}\thicksim U(0,1)$ for each task\footnote{Ideally, we would have $\phi$ be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). This is computationally too demanding when coupled with the more complex cognitive model explored later.} that a given response is the result of uniform random guessing\cite{LW2014}.
 The inferred ``guessing'' parameter $\phi$ is the amount of data that would have to be attributed to random guessing in order for the fixed-threshold model of the generic to apply to the experimental data. In this sense, $\phi$ gives a coarse notion of model fit. 
 %We analyze the data from Exp. 1a and 1b jointly as well as independently.
 
@@ -678,7 +676,7 @@ Exp. 2 sought to test the prediction that the prior distribution of prevalence l
 
 \subsubsection{Participants}
 
-We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Turk. 
+We recruited 100 participants over Amazon's crowd-sourcing platform Mechanical Turk. 
 
 \subsubsection{Procedure and materials}
 
@@ -688,7 +686,13 @@ In addition to the contextual information, participants were presented with the 
 
 \subsubsection{Results}
 
-Experiment 2 recovered the shape of the inferred prior distributions from the lvRSA model (compare Figure \ref{fig:elicitedpriors} to Figure \ref{fig:inferredpriors}). Hartigans' Dip Test for Unimodality is highly significant for each of the prior distributions ($D = 0.055, 0.0667, 0.045$ for contexts $DD, NI, P$, respectively; p $<$ 0.0001 for each), and thus the distributions are at least bimodal. The correlation between these probabilities is $r = 0.90$. \red{finish me: something about difference between distributions (MannÐWhitney U test), compare means, data reliability...}
+Experiment 2 recovered the shape of the inferred prior distributions predicted from the Bayesian analysis of the lvRSA model (compare Figure \ref{fig:elicitedpriors} to Figure \ref{fig:inferredpriors}). 
+%
+Hartigans' Dip Test for Unimodality was highly significant for each of the prior distributions ($D = 0.054, 0.084, 0.0745$ for contexts $DD$, $NI$, $P$, respectively; p $<$ 0.0001 for each), and thus the distributions are at least bimodal. 
+%
+The medians of these three distributions were all significantly different from one another, evidenced by pair-wise Mann-Whitney U tests ($DD$ vs. $P$: $W=417452$; $DD$ vs. $NI$: $W=376180.5$; $NI$ vs. $P$: $W=548994.5$; all $p < 0.00001$; $\mu_{DD} = 18.1\%$, $\mu_{NI} = 25.7\%$, $\mu_{P} = 20.8\%$). 
+%
+Finally, the distributions themselves were all significantly different from one another, by Kolmogorov-Smirnov tests ($DD$ vs. $P$: $D = 0.185$; $DD$ vs. $NI$: $D = 0.253$; $NI$ vs. $P$: $D = 0.091$; all $p < 0.001$. In sum, the elicited prior distributions are all at least bimodal, have different central tendencies, and are all distinct.
 
 \section{Discussion}
 
@@ -698,7 +702,7 @@ We have demonstrated the viability of a scalar semantics for generics when coupl
 A lower-bound threshold on prevalence---the probability of the property given the category---is inferred as part of pragmatic interpretation, yielding vague and context sensitive meaning. 
 %We first used Bayesian data analysis to show that the effective threshold of a fixed-threshold semantics would need to vary by context, and yet it still not account adequately for the data. 
 We formalized reasoning about the threshold in a lifted-variable Rational Speech Acts (lvRSA) model. This model predicted graded truth judgements and an asymmetry between truth and prevalence judgements. It also accommodated the role of context, explaining these effects as the result of variation in the prevalence prior. 
-In Experiment 2, we \red{verified} that participants' beliefs about the prior on prevalence varied in this way. 
+In Experiment 2, we verified that participants' beliefs about the prior on prevalence varied in this way. 
 This provides evidence that the model we propose can account for many of the empirical phenomena associated with generics.
 
 %We have shown how a Bayesian model of language understanding, motivated by contextual variation of the effective threshold of the generic statement, can explain the puzzling truth conditions and asymmetrical meanings of generic language. We have used techniques in Bayesian data analysis to help arbitrate between two cognitive theories. The first was a simple theory that proposed that a generic was akin to some alien quantifier. In this theory, the generic behaves like other quantifiers in that it has a fixed-threshold semantics. We explored one elaboration of this in allowing the generic to have a threshold that differed across contexts. 
