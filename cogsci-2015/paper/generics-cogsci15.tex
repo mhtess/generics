@@ -1,13 +1,11 @@
 %todo:
 % - edit abstract
-% - address and then remove all of Noah's comments in red.
-% - finish expt 2 results: update correlation and report split-half correlation. show that the means differ across contexts.spearman prophecy for prior correlations
-% - replace table 1 with a figure of posteriors?
-% - posterior predictives for prevalence prior
+% - for exp. 2, plain mean doesn't differ from DD 
+% %%% finish expt 2 results: update correlation and report split-half correlation. show that the means differ across contexts.
+
 % - get tiny URLs for experiment links
 % - set up forest page
 
-% - plots of schematic prior and simulation results. accidental and mosquitos prior results for discussion. make a little figure showing prior and truth-judgement predictions for each?
 % - fit into space and proof read.
 % - if time: look at "order effect" in prior elicitation (taboo sampling hypothesis... first sample is 0, second is 100, third - fifth are meh)
 
@@ -561,7 +559,7 @@ The mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.08 and 0.05
 Figure \ref{fig:posthyper} shows the posterior distributions of the hyperprior parameters, $\gamma$ and $\delta$, for the lvRSA model. The posterior means for the $\gamma$'s (the $\beta$ mean parameter) are well-ordered: $DD < P < NI$. This can be directly interpreted as the mean prior prevalence for the three contexts: \emph{dangerous and distinctive} properties are more rare than the other two types of properties. The posterior means for the $\delta$'s (the $\beta$ concentration parameter) are also ordered, suggesting greater uncertainty about the $P$ context than about the other 2. 
 
 
-\begin{wrapfigure}{r}{0.5\columnwidth}
+\begin{wrapfigure}{l}{0.5\columnwidth}
   \begin{center}
     \includegraphics[width=0.48\columnwidth]{inferred_hyperpriors}
   \end{center}
@@ -597,13 +595,6 @@ For further visualization, we marginalize over the posterior parameter values to
 
 \subsubsection{Posterior predictives}
 
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{lvRSA_postpreds}
-    \caption{Posterior predictives of lvRSA for truth conditions (left) and asymmetry between dependent measures (right).}
-  \label{fig:lvRSAposteriorpred}
-\end{figure}
-
 
 The posterior predictions by lvRSA for the \emph{truth conditions} task are in Figure \ref{fig:lvRSAposteriorpred}. 
 We can see that the model predicts graded endorsement rates for the generic as a function of prevalence---the model has some persistent uncertainty about the true value of the threshold, a feature that people share.
@@ -616,7 +607,16 @@ We use a similar data analysis strategy as we did for Exp. 1b to compare ``avera
 
 %\subsubsection{Discussion}
 
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{lvRSA_postpreds_wSims}
+    \caption{Posterior predictives of lvRSA for truth conditions (left) and asymmetry between dependent measures (right). Mosquitos and Accidental predictions use schematic priors (see text).}
+  \label{fig:lvRSAposteriorpred}
+\end{figure}
+
+
 To see how this asymmetry is possible, consider again the inferred prevalence priors in Figure \ref{fig:inferredpriors}. They are bimodal with peaks around 0\% and 100\%. This is consistent with the intuition that biological properties, such as the ones used by CBG, are properties either held by all of a category or none of category. Since the semantics of the generic is underspecified (i.e. $\theta$ ---the threshold of endorsement for truth judgement--- is unknown), if $\theta$ falls anywhere in the range between 10\%-90\%, the most likely prevalence is going to be near 100\%. Hence, in the \emph{implied prevalence task}, the most likely inferred prevalence could be appreciably higher than one would expect from the \emph{truth conditions} task. 
+
 
 
 
@@ -670,8 +670,7 @@ In addition to the contextual information, participants were presented with the 
 
 \subsubsection{Results}
 
-Experiment 2 recovered the shape of the inferred prior distributions from the lvRSA model (compare Figure \ref{fig:elicitedpriors} to Figure \ref{fig:inferredpriors}). The correlation between these probabilities is $r = 0.90$ \red{how noisy are the priors? what the split-half correlation?}.
-\red{give a bit more detailed analysis... some kind of stats showing that it is bimodal (duh) and that DD has lower mean?}
+Experiment 2 recovered the shape of the inferred prior distributions from the lvRSA model (compare Figure \ref{fig:elicitedpriors} to Figure \ref{fig:inferredpriors}). Hartigans' Dip Test for Unimodality is highly significant for each of the prior distributions ($D = 0.055, 0.0667, 0.045$ for contexts $DD, NI, P$, respectively; p < 0.0001 for each), and thus the distributions are at least bimodal. The correlation between these probabilities is $r = 0.90$.
 
 \section{Discussion}
 
@@ -686,9 +685,16 @@ We have demonstrated the viability of a scalar semantics for generics within an 
 %Our model makes the prediction that if the shape of the prior distribution was not bimodal, the asymmetry between verification and interpretation would change. Indeed, this is a similar prediction to \citeA{Cimpian2010}, who posited that accidental or disease states (e.g. ``muddy feathers'', ``infected ears'') would weaken the asymmetry. We would expect accidental or disease states to not follow a bimodal distribution. 
  
 
-This model of generic interpretation makes further predictions for situations in which the shape of the prevalence prior differed. For example, if the prior distribution was unimodal, as is the case with incidental properties (e.g. broken legs), then the asymmetry between verification and interpretation would be dramatically reduced (see Figure \red{weakened-asymmetry figure with schematic prior}). Indeed, CBG explored this possibility in one of their experiments using ``accidental and disease states''; consistent with lvRSA, they found no asymmetry. 
+This model of generic interpretation makes further predictions for situations in which the shape of the prevalence prior differed. For example, if the prior distribution was unimodal, as is the case with incidental properties (e.g. broken legs), then the asymmetry between verification and interpretation would be dramatically reduced, cease altogether, or reverse (see Figure \ref{fig:lvRSAposteriorpred} for a prediction using the schematic prior in Figure \ref{fig:schematic}). Indeed, CBG explored this possibility in one of their experiments using ``accidental and disease states''; consistent with lvRSA, they found no asymmetry. 
+\begin{wrapfigure}{r}{0.5\columnwidth}
+  \begin{center}
+    \includegraphics[width=0.48\columnwidth]{schematic_priors}
+  \end{center}
+  \caption{Schematic prior distributions over prevalence of accidental properties and ``mosquitos with West Nile Virus''.}
+   \label{fig:schematic}
+\end{wrapfigure}
 %
-Another example is a bimodal prior with a second peak at some low prevalence level (as opposed to a bimodal prior with a second peak at a high prevalence level, which we've focused on in this paper). This prior should describe rare properties that are not only rare \emph{across kinds} but even rare \emph{within kinds}. A canonical example of this is ``West Nile Virus'' in the generic ``Mosquitos carry West Nile Virus''. For a prior like this, the truth conditions for the generic would be relaxed at low prevalence levels, relative to the more common bimodal priors. We see this behavior using a schematic prior (Figure \red{truth conditions with mosquito prior}). 
+Another example is a bimodal prior with a second peak at some low prevalence level (as opposed to a bimodal prior with a second peak at a high prevalence level, which we've focused on in this paper). This prior should describe rare properties that are not only rare \emph{across kinds} but also rare \emph{within kinds}. A canonical example of this is ``West Nile Virus'' in the generic ``Mosquitos carry West Nile Virus''. For a prior like this, the truth conditions for the generic would be relaxed at low prevalence levels, relative to the more common bimodal priors. We see this behavior using a schematic prior (see Figure \ref{fig:lvRSAposteriorpred} for the truth conditions of the mosquito prior shown in Figure \ref{fig:schematic}). 
 
 
 Generics are ubiquitous in natural language. It might seem paradoxical, then, that the semantics of generic statements are underspecified. Why should vague language get so much usage? One possibility is apparent in the lvRSA model: generic language provides interlocutors with the flexibility to convey rich meanings, which are easily understood in context. 
