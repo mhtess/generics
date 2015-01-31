@@ -563,8 +563,7 @@ We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of 
 %Thus, we do Bayesian data analysis on a Bayesian Rational Speech-Act model of language understanding, to see how context might influence the prior distribution given the data we've observed. We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of the proportion of responses our model of cognition doesn't capture. 
 
 \subsubsection{Inferred parameters}
-The mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.08 and 0.05, respectively, a reasonable rate of ``guessing'' for participants on Amazon's Mechanical Turk, indicating that this cognitive model is doing a much better job of accounting for the signal in participants' responses.
-
+The mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.08 and 0.05, respectively, 
 \begin{wrapfigure}{l}{0.5\columnwidth}
   \begin{center}
     \includegraphics[width=0.48\columnwidth]{inferred_hyperpriors}
@@ -572,6 +571,9 @@ The mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.08 and 0.05
   \caption{Posterior distributions of the hyperprior parameters used in lvRSA.}
    \label{fig:posthyper}
 \end{wrapfigure}
+a reasonable rate of ``guessing'' for participants on Amazon's Mechanical Turk, indicating that this cognitive model is doing a much better job of accounting for the signal in participants' responses.
+
+
 
 %We use Bayesian data analysis to infer the values of the hyperprior parameters $\gamma$ and $\delta$ for the Bayesian lvRSA model. 
 Figure \ref{fig:posthyper} shows the posterior distributions of the hyperprior parameters, $\gamma$ and $\delta$, for the lvRSA model. The posterior means for the $\gamma$'s are well-ordered: $DD < P < NI$. This can be directly interpreted as the mean prior prevalence for the three contexts: \emph{dangerous and distinctive} properties are more rare than the other two types of properties. 
@@ -654,7 +656,7 @@ In particular, all three types of properties should have bimodal prior prevalenc
                 \label{fig:inferredpriors}
         \end{subfigure}%
         
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+        %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
           %(or a blank line to force the subfigure onto a new line)
         
         \begin{subfigure}[b]{\columnwidth}
@@ -662,7 +664,7 @@ In particular, all three types of properties should have bimodal prior prevalenc
                 \caption{Priors elicited in Experiment 2.}
                 \label{fig:elicitedpriors}
         \end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+        %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
           %(or a blank line to force the subfigure onto a new line)
         \caption{Prior distributions over prevalence.}\label{fig:priors}
 \end{figure}
@@ -702,6 +704,15 @@ Finally, the distributions themselves were all significantly different from one 
 We have demonstrated the viability of a scalar semantics for generics when coupled with a sophisticated pragmatics. 
 A lower-bound threshold on prevalence---the probability of the property given the category---is inferred as part of pragmatic interpretation, yielding vague and context sensitive meaning. 
 %We first used Bayesian data analysis to show that the effective threshold of a fixed-threshold semantics would need to vary by context, and yet it still not account adequately for the data. 
+%
+\begin{wrapfigure}{r}{0.5\columnwidth}
+  \begin{center}
+    \includegraphics[width=0.48\columnwidth]{schematic_priors}
+  \end{center}
+  \caption{Schematic prior distributions over prevalence of accidental properties and ``mosquitos with West Nile Virus''.}
+   \label{fig:schematic}
+\end{wrapfigure}
+%
 We formalized reasoning about the threshold in a lifted-variable Rational Speech Acts (lvRSA) model. This model predicted graded truth judgements and an asymmetry between truth and prevalence judgements. It also accommodated the role of context, explaining these effects as the result of variation in the prevalence prior. 
 In Experiment 2, we verified that participants' beliefs about the prior on prevalence varied in this way. 
 This provides evidence that the model we propose can account for many of the empirical phenomena associated with generics.
@@ -714,18 +725,8 @@ This provides evidence that the model we propose can account for many of the emp
 %
 %Our model makes the prediction that if the shape of the prior distribution was not bimodal, the asymmetry between verification and interpretation would change. Indeed, this is a similar prediction to \citeA{Cimpian2010}, who posited that accidental or disease states (e.g. ``muddy feathers'', ``infected ears'') would weaken the asymmetry. We would expect accidental or disease states to not follow a bimodal distribution. 
  
-\begin{wrapfigure}{r}{0.5\columnwidth}
-  \begin{center}
-    \includegraphics[width=0.48\columnwidth]{schematic_priors}
-  \end{center}
-  \caption{Schematic prior distributions over prevalence of accidental properties and ``mosquitos with West Nile Virus''.}
-   \label{fig:schematic}
-\end{wrapfigure}
-
 This model of generic interpretation makes further predictions for situations with qualitatively different prevalence priors. For example, if the prior distribution was unimodal, as is the case with incidental properties (e.g. broken legs), then the asymmetry between verification and interpretation would be dramatically reduced, cease altogether, or reverse (see Figure \ref{fig:lvRSAposteriorpred} for a prediction using the schematic prior in Figure \ref{fig:schematic}). Indeed, CBG explored this possibility in one of their experiments using ``accidental and disease states''; consistent with lvRSA, they found no asymmetry. 
-%
 Another example is a bimodal prior with a second peak at some low prevalence level (as opposed to a bimodal prior with a second peak at a high prevalence level, which we've focused on in this paper). This prior should describe rare properties that are not only rare \emph{across kinds} but also rare \emph{within kinds}. A canonical example of this is ``West Nile Virus'' in the generic ``Mosquitos carry West Nile Virus''. For a prior like this, the truth conditions for the generic would be relaxed at low prevalence levels, relative to the more common all-or-none priors. We see this behavior using a schematic prior (see Figure \ref{fig:lvRSAposteriorpred} for the truth conditions of the mosquito prior shown in Figure \ref{fig:schematic}). 
-
 
 Generics are ubiquitous in natural language. It might seem paradoxical, then, that the semantics of generic statements are underspecified. Why should vague language get so much usage? One possibility is apparent in the lvRSA model: generic language provides interlocutors with the flexibility to convey rich meanings, which are easily understood in context. 
 Generics are vague, but principled and useful.
