@@ -1,18 +1,15 @@
 %todo:
 
 %from noah 1/30 am:
-%-is the inner product thing for truth conditions predictions equivalent to the human thing? can we just say we simulate a population of human responses by sampling according to 'yes' probabilities and then do what we did for human data?
-
 %-add some more points to the x axis in figure 6 so the mosquitos prior looks bimodal. perhaps show as curves instead of bars?
-
 
 
 % - get tiny URLs for experiment links
 % - set up forest page
-
 % - fit into space and proof read.
-% - if time: look at "order effect" in prior elicitation (taboo sampling hypothesis... first sample is 0, second is 100, third - fifth are meh)
 
+
+% - if time: look at "order effect" in prior elicitation (taboo sampling hypothesis... first sample is 0, second is 100, third - fifth are meh)
 % - make figures 1 & 2 as pretty as 3 & 4
 
 
@@ -230,6 +227,7 @@ On each trial, participants saw a generic statement (instead of a prevalence sta
 Participants were then asked ``What percentage of [the kind] do you think have [the property]?'' (e.g. ``What percentage of lorches do you think have  purple feathers?''). The dependent measure was a free response required to be an integer, $0-100$. 
 
 \subsubsection{Data analysis and results}
+\label{subsec:cbganalysis}
 
 %\begin{figure}
 %\centering
@@ -619,7 +617,7 @@ We reconstruct the curves of Figure \ref{fig:exp1} reasonably well; the model--d
 
 %lvRSA models the \emph{truth conditions} task as a speaker---$S_{2}$ using Eq.~\eqref{eq:S2}---faced with the task of saying whether or not the generic applies to a given prevalence of a property. This utterance is intended for a pragmatic listener---$L_{1}$ using Eq.~\eqref{eq:L1}---who will try to reconstruct the prevalence that $S_{2}$ has observed. Here, we have modeled the \emph{implied prevalence} task as this listener, $L_{1}$, given the utterance, tasked with reconstructing the prevalence. 
 
-We use a similar data analysis strategy as we did for Exp. 1b to compare ``average prevalence'' between verification and interpretation. For the \emph{truth conditions} task, we took the model's posterior probability of saying ``true'' at each prevalence level. We normalized these posterior probabilities so they added to 1. We then took the inner product of these probabilities and the prevalence levels to compute an ``average prevalence'' score for the model. The model gives a posterior distribution over prevalences, whose expectation we used to model the \emph{implied prevalence} task. We find the model predicts the asymmetry between interpretation and verification of the generic (see Figure \ref{fig:lvRSAposteriorpred}, right).
+We use a similar data analysis strategy as we did for Exp. 1b to compare ``average prevalence'' between verification and interpretation. For the \emph{truth conditions} task, we used the model's posterior probability of saying ``true'' at each prevalence level to simulate trials of the experiment as Bernoulli trials. We simulated 30 trials for each of 1000 subjects in this way. We then followed CBG's data analysis strategy (as recapitulated in Exp. 1b). The model gives a posterior distribution over prevalences, whose expectation we used to model the \emph{implied prevalence} task. We find the model predicts the asymmetry between interpretation and verification of the generic (see Figure \ref{fig:lvRSAposteriorpred}, right).
 
 %\subsubsection{Discussion}
 
