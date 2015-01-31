@@ -54,6 +54,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{wrapfig}
+\usepackage{lipsum}
 
 \graphicspath{{figures/}}
 
@@ -128,11 +129,11 @@ Generic meanings are hard to pin down.  Consider President Obama's remark during
 Generic statements are puzzling because their meaning is so flexible. On the one hand, generics would seem to suggest an almost universal quantification, as in ``Dogs bark''. Others, like ``Mosquitos carry West Nile virus'', involve a property that applies only to a small subset of the kind. 
 %It is perhaps this inherent uncertainty that leads generics to be so widespread in natural language. 
 \citeA{Cimpian2010} (henceforth, CBG) carried out a series of experiments designed to examine the truth conditions and implications of generic statements. 
-They found evidence for the influence of additional knowledge about a target property (e.g.~its \emph{distinctiveness}) on participants' willingness to accept generic statements---this type of contextual information modified the truth conditions. CBG also found an asymmetry between  interpretation and verification: in one task, participants interpreted a generic (e.g.~``lorches have purple feathers'') as nearly universal; in a different task, they would endorse the same generic as true at a much lower prevalence (e.g.~when ``50\% of lorches have purple feathers'').
+They found evidence for the influence of additional knowledge about a target property (e.g.~its \emph{distinctiveness}) on participants' willingness to accept generic statements. This type of contextual information modified the truth conditions. CBG also found an asymmetry between  interpretation and verification: in one task, participants interpreted a generic (e.g.~``lorches have purple feathers'') as nearly universal; in a different task, they would endorse the same generic as true at a much lower prevalence (e.g.~when ``50\% of lorches have purple feathers'').
 
 Both context and asymmetry effects pose a puzzle for the semantics of generics: what could be the stable meaning of a generic given this extreme flexibility? 
 In this paper, we seek to explain both of these phenomena as the effects of pragmatic inference filling in a meaning that is underspecified in the semantics. 
-In particular, we posit a scalar semantics for generics in which they express that \emph{prevalence}---the probability of the property given the kind---is above a threshold (cf. \citeA{Cohen1999}). Following \citeA{Lassiter2015}, we treat this threshold as a free variable that is reasoned about by a pragmatic listener: what is the threshold likely to be, given that a speaker bothered to utter the generic? Context effects follow from differences in prior beliefs about the distribution of the property across categories. Asymmetry effects follow by modeling differences in the language understanding and answer-selection task faced by participants in the different experiments (cf. \citeA{Degen2014}).  %suggested that different dependent measures in experimental pragmatics paradigms map onto different communicative roles, and thus should be modeled accordingly. 
+In particular, we posit a scalar semantics for generics in which they express that the probability of the property given the kind-----which we'll refer to as its \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). Following \citeA{Lassiter2015}, we treat this threshold as a free variable that is reasoned about by a pragmatic listener: what is the threshold likely to be, given that a speaker bothered to utter the generic? Context effects follow from differences in prior beliefs about the distribution of the property across categories. Asymmetry effects fall out of modeling task differences between the language understanding and answer-selection tasks faced by participants in the different experiments (cf. \citeA{Degen2014}).  %suggested that different dependent measures in experimental pragmatics paradigms map onto different communicative roles, and thus should be modeled accordingly. 
 
 %We draw on new advances in probabilistic pragmatics to formalize two possible theories of the generic. Further, we harness the power of Bayesian data analysis to mediate between these formal theories and draw inferences about cognitively interesting model parameters. 
 
@@ -154,7 +155,7 @@ The authors manipulated context within-subjects by adding additional statements 
 
 In their \emph{implied prevalence} task, participants were supplied with the generic (again context was a within-subjects variable) and asked to judge prevalence: ``What percentage of lorches do you think have purple feathers?''. CBG found that the generic was interpreted strongly---nearly all lorches have purple feathers---in all contexts. 
 
-Experiment 1 attempted to replicate the main findings of CBG: that context affects the proportion of ``true'' responses to a generic statement (Exp. 1a) and that there is an asymmetry between interpretation and verification of the truth conditions of the generic (Exp. 1b). 
+Experiment 1 attempted to replicate the main findings of CBG: that context affects the proportion of ``true'' responses to a generic statement (Exp. 1a) and that there is an asymmetry between verification and interpretation of the truth conditions of the generic (Exp. 1b). 
 Exp. 1a and 1b were conducted on separate sessions, one week apart. None of the participants completed both experiments.
 
 \subsection{Experiment 1a: \emph{truth conditions}}
@@ -168,48 +169,46 @@ We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Tu
 
 Our procedure was very similar to CBG's \emph{truth conditions} task. Our instructions were elaborated to improve interest and motivation\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-9.html}}. 
 
-We used the same materials as CBG (available in their Appendix). The materials used were 30 novel animals (e.g. lorches, morseths, blins) each paired with a unique property. Properties were pairs of colors and body-parts (e.g. purple feathers, orange tails). Each participant saw 30 unique animal-property pairs: 10 in each of 3 contexts (\emph{DD}, \emph{NI}, \emph{plain}). The 10 items in each context were randomly paired with 1 of 5 ``prevalence levels'': \{10, 30, 50, 70, 90\}\%; each prevalence level appeared 2 times per context. 
+We used the same materials as CBG (available in their Appendix). The materials used were 30 novel animals (e.g. lorches, morseths, blins) each paired with a unique property. Properties were pairs of colors and body-parts (e.g. purple feathers, orange tails). Each participant saw 30 unique animal-property pairs: 10 in each of 3 contexts (\emph{DD}, \emph{NI}, \emph{P}). The 10 items in each context were randomly paired with 1 of 5 ``prevalence levels'': \{10, 30, 50, 70, 90\}\%; each prevalence level appeared 2 times per context. 
 
-Participants saw a prevalence statement and a context statement (\emph{plain}, \emph{DD}, \emph{NI}, as illustrated above). 
+Participants saw a prevalence statement and a context statement (\emph{DD}, \emph{NI}, \emph{P}; illustrated above). 
 %A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. 
-Participants were then asked ``Is the following sentence true or false?'', below which was presented the associated generic (e.g. ``Lorches have purple feathers'') and true and false radio buttons. 
+Participants were then asked ``Is the following sentence true or false?'', below which was presented the associated generic (e.g. ``Lorches have purple feathers'') and ``True'' and ``False'' radio buttons. 
 
 \subsubsection{Results}
 
 
-\begin{figure}
-        \centering
-        \begin{subfigure}[t]{0.53\columnwidth}
-                \includegraphics[width=\columnwidth]{data_truthconditions1}
-                \caption{Truth conditions of the generic vary across contexts. Error bars denote bootstrapped 95\% confidence intervals.}
-                \label{fig:datatc}
-        \end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-          %(or a blank line to force the subfigure onto a new line)
-        \begin{subfigure}[t]{0.42\columnwidth}
-                \includegraphics[width=\columnwidth]{data_asymmetry1}
-                \caption{Asymmetry between verification and interpretation, see text for details.}
-                \label{fig:datasym}
-        \end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-          %(or a blank line to force the subfigure onto a new line)
-        \caption{Replication of CBG}\label{fig:exp1}
-\end{figure}
-
-
-
 %\begin{figure}
-%\centering
-%    \includegraphics[width=\columnwidth]{fig1_replication}
-%    \caption{Replication of CBG \emph{truth conditions}, generics condition}
-%  \label{fig:replication}
+%        \centering
+%        \begin{subfigure}[t]{0.53\columnwidth}
+%                \includegraphics[width=\columnwidth]{data_truthconditions1}
+%                \caption{Truth conditions of the generic vary across contexts. Error bars denote bootstrapped 95\% confidence intervals.}
+%                \label{fig:datatc}
+%        \end{subfigure}%
+%        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+%          %(or a blank line to force the subfigure onto a new line)
+%        \begin{subfigure}[t]{0.42\columnwidth}
+%                \includegraphics[width=\columnwidth]{data_asymmetry1}
+%                \caption{Asymmetry between verification and interpretation, see text for details.}
+%                \label{fig:datasym}
+%        \end{subfigure}
+%        ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+%          %(or a blank line to force the subfigure onto a new line)
+%        \caption{Replication of CBG}\label{fig:exp1}
 %\end{figure}
 
-Results are shown in Fig~\ref{fig:datatc}. We entered participant's truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and context as well as an interaction term\footnote{This was the maximal mixed effect structure supported by the data}.  
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{exp1data}
+    \caption{Replication of CBG. Left: \emph{truth conditions} vary by context (Exp. 1a). Right: \emph{implied prevalence} of the generic is greater than \emph{truth conditions} (Exp. 1b).}
+  \label{fig:exp1}
+\end{figure}
+
+Results are shown in Fig~\ref{fig:exp1} (left). We entered participant's truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and context as well as an interaction term\footnote{This was the maximal mixed effect structure supported by the data.}.  
 %
-Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive (DD) context than in the plain (P) context (Figure \ref{fig:datatc}; $\beta=1.99; SE = 0.36; z = 5.52; p < 0.001$). 
+Our results replicated the finding of CBG that the generic statement was endorsed more in the dangerous and distinctive (DD) context than in the plain (P) context (Figure \ref{fig:exp1}, left; $\beta=1.99; SE = .36; z = 5.52; p < .001$). 
 %
-There was also an interaction between prevalence level and context such that the DD context was endorsed more than P at lower prevalence levels ($z=-2.353; p = 0.019$). There was a trending effect for the nondistinctive and irrelevant (NI) context to be endorsed \emph{less} than the plain context ($z=-1.91; p = 0.056$).
+There was also an interaction between prevalence level and context such that the generic was endorsed more in \emph{DD} context than in \emph{P} at lower prevalence levels ($\beta=-.03; SE = .01; z=-2.35; p = 0.019$). There was a trending effect for the \emph{NI} context to be endorsed \emph{less} than the plain context ($\beta=-.57; SE = .30; z=-1.91; p = .056$).
 
 \subsection{Experiment 1b: \emph{implied prevalence}}
 
@@ -224,7 +223,7 @@ Our procedure was very similar to CBG's \emph{implied prevalence} task. Our inst
 The materials and context conditions were the same as in Exp. 1a. 
 On each trial, participants saw a generic statement (instead of a prevalence statement) and a context. 
 %A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. 
-Participants were then asked ``What percentage of [the kind] do you think have [the property]?'' (e.g. ``What percentage of lorches do you think have  purple feathers?''). The dependent measure was a free response required to be an integer, $0-100$. 
+Participants were then asked ``What percentage of [the kind] do you think have [the property]?'' (e.g. ``What percentage of lorches do you think have  purple feathers?'') The dependent measure was a free response required to be an integer, $0-100$. 
 
 \subsubsection{Data analysis and results}
 \label{subsec:cbganalysis}
@@ -236,12 +235,12 @@ Participants were then asked ``What percentage of [the kind] do you think have [
 %  \label{fig:replication}
 %\end{figure}
 %
-We followed the data analysis strategy of CBG. Using the data from Exp. 1a, we computed, for each subject, an \emph{average prevalence level} that led to ``true'' responses (e.g. if a participant said ``true'' whenever the prevalence was 70\% or 90\% and ``false'' to everything else, that participant received an \emph{average prevalence score} of 80\%). This score was compared against the implied prevalence dependent measure of Exp. 1b. 
+We followed the data analysis strategy of CBG. Using the data from Exp. 1a, we computed, for each subject, an \emph{average prevalence level} that led to ``True'' responses (e.g. if a participant said ``True'' whenever the prevalence was 70\% or 90\% and ``False'' to everything else, that participant received an \emph{average prevalence score} of 80\%). This score was compared against the implied prevalence dependent measure of Exp. 1b. 
 
-The prevalence scores were entered into a linear mixed model with a by-participant random effect of intercept; the fixed effects were context and task with an interaction term. Our results replicated the asymmetry finding of CBG that the generic statement was interpreted as having a higher prevalence than its truth conditions would imply (i.e. main effect of task; $t(105.8) = 6.632; p < 0.001$; see Fig.~\ref{fig:datasym}).
+The prevalence scores from each task were entered into a linear mixed model with a by-participant random effect of intercept; the fixed effects were context and task with an interaction term. Our results replicated the asymmetry finding of CBG that the generic statement was interpreted as having a higher prevalence than its truth conditions would imply (i.e. main effect of task; $t(105.8) = 6.632; p < 0.001$; see Fig.~\ref{fig:exp1}, right).
 
 \section{Fixed-threshold semantics}
-The above results, replicated from CBG, indirectly constrain the effective truth conditions that participants are using for generic statements within these experimental conditions. In this section we begin the model-based exploration of these truth conditions by positing a simple threshold semantics, and exploring using Bayesian data analysis how well this could account for the data of Exp.~1.
+The above results, replicated from CBG, indirectly constrain the effective truth conditions that participants are using for generic statements within these experimental conditions. In this section we begin the model-based exploration of these truth conditions by positing a simple threshold semantics. We explore  how well this could account for the data of Exp.~1 using Bayesian data analysis.
 
 Assume that the conditions for truth of the generic can be usefully represented by a threshold on prevalence: the generic is true when the prevalence of some property within a kind exceeds a given threshold (see \citeA{Cohen1999} for a similar assumption). If we use $x\in [0,1]$ to denote the prevalence $P(\text{property}|\text{category})$, then the simple threshold meaning is:
 \begin{align}
@@ -252,14 +251,14 @@ Assume that the conditions for truth of the generic can be usefully represented 
 %  \tag{\theequation}
    \label{eq:ftsem}
 \end{align}
-The function $g$ captures a very simple cognitive model in which people evaluate the generic by comparing prevalence to the threshold.
+The function $g$ captures a very simple cognitive model in which people evaluate the generic by comparing observed prevalence to the known threshold.
 It is apparent that if the threshold $\theta$ were completely fixed, this model could account for neither context nor asymmetry effects.
 To set the stage for future Bayesian analyses, let us nonetheless explore the quantitative relation of a context-invariant threshold semantics to the data.
 
 \subsection{A context-invariant fixed-semantics}
 %We first examine what this threshold would look like if it were invariant to context and task. 
 To begin our data analysis, we make no \emph{a priori} assumptions about the (fixed but unknown to us) value of $\theta$, placing on it a uniform prior distribution: $\theta \thicksim U(0,1)$. 
-We account for inattention and other irrelevant factors by including a probability $\phi_{t}\thicksim U(0,1)$ for each task\footnote{Ideally, we would have $\phi$ be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). This is computationally too demanding when coupled with the more complex cognitive model explored later.} that a given response is the result of uniform random guessing\cite{LW2014}.
+We account for inattention and other irrelevant factors by including a probability $\phi_{t}\thicksim U(0,1)$ for each task \footnote{Ideally, we would have $\phi$ be a function of participant (some participants guess more than others) and experimental condition (some conditions are more difficult or less constrained and invite more guessing). This is computationally too demanding when coupled with the more complex cognitive model explored later.} that a given response is the result of uniform random guessing\cite{LW2014}.
 The inferred ``guessing'' parameter $\phi$ is the amount of data that would have to be attributed to random guessing in order for the fixed-threshold model of the generic to apply to the experimental data. In this sense, $\phi$ gives a coarse notion of model fit. 
 %We analyze the data from Exp. 1a and 1b jointly as well as independently.
 
@@ -302,9 +301,9 @@ The inferred ``guessing'' parameter $\phi$ is the amount of data that would have
 
 
 
-A joint analysis of the data from Exp. 1a and 1b, produces the expected extreme results. The inferred $\phi_{1a}$ is near 1, $\phi_{1b}$ has a more reasonable posterior mean of 0.3, and the inferred $\theta$ is near 1. That is, the best interpretation of the data discounts the \emph{truth conditions} data entirely and uses only the \emph{implied prevalence} data to set the threshold, which results in interpreting the generic as a universal quantifier.
+A joint analysis of the data from Exp. 1a and 1b, produces the expected extreme results. The inferred $\phi_{1a}$ is near 1, $\phi_{1b}$ has a more reasonable posterior mean of 0.3, and the inferred $\theta$ is near 100\%. That is, the best interpretation of the data discounts the \emph{truth conditions} data entirely and uses only the \emph{implied prevalence} data to set the threshold, which results in interpreting the generic as a universal quantifier.
 A separate by-experiment analysis produces thresholds that are completely different for the two tasks. 
-For the implied prevalence task, the threshold is again close to 1. 
+For the implied prevalence task, the threshold is again close to 100\%. 
 For the truth conditions task, the threshold is probably greater than 10\% and less than 30\%, however there is some non-zero probability that the threshold is in fact 0\%. 
 (This uncertainty results from the sparseness of our measure: participants were queried only at prevalence levels 10, 30, 50, 70, and 90.)
 
@@ -321,21 +320,21 @@ For the truth conditions task, the threshold is probably greater than 10\% and l
 
 \subsection{A context-dependent fixed-semantics}
 
-In Exp. 1a, we replicated CBG's evidence that the generic truth conditions vary by context. We reexamine our fixed-semantics model, now allowing for the possibility that $\theta$ could vary by context: $g(x,\theta_{c})$.
+In Exp. 1a, we replicated CBG's finding that the generic truth conditions vary by context. We reexamine our fixed-semantics model, now allowing for the possibility that $\theta$ could vary by context: $g(x,\theta_{c})$.
 Again, we put uniform priors over each of the $\theta_{c}$'s. We are now in a position to ask how a truth-functional threshold of the generic would need to behave across these three contexts. 
 
 %\subsubsection{Inferred parameters}
 
 The results can be seen in Figure \ref{fig:justFixed}. 
-The posterior distribution for $\phi_{t}$'s shows that the amount of data that must be attributed to guessing to be consistent with this model of generics is still quite high: around 45\% for the \emph{truth conditions} task.
-Turning to $\theta_{c}$, there is evidence of variability in the generic threshold, at least in the \emph{truth conditions} task. In the \emph{plain} condition, the analysis suggests the threshold is somewhere between 0\% and 30\%, but it's unclear where exactly in that range the threshold should be. Critically, in the \emph{dangerous and distinctive} context, the analysis infers a lower threshold, less than 10\%. This matches with the earlier Null Hypothesis analysis. Finally, and most intriguingly, the analysis infers a third distinct threshold profile for the \emph{irrelevant and nondistinct} context.  The inferred threshold is greater than 10\%, but could be as high as 50\%. This is an overall higher inferred threshold for the nondistinctive category; however, these results are inconclusive as to whether or not this threshold is different from the \emph{plain} context.
+The posterior distribution for $\phi_{t}$'s shows that the amount of data that must be attributed to guessing to be consistent with this model of generics is still quite high: around 45\% for the \emph{truth conditions} task. 
+Turning to $\theta_{c}$, there is evidence for the variability of the generic threshold in the \emph{truth conditions} task. In the \emph{plain} context, the analysis suggests the threshold is somewhere between 0\% and 30\%, but it's unclear where exactly in that range the threshold should be. Critically, in the \emph{dangerous and distinctive} context, the analysis infers a lower threshold, less than 10\%. This matches with the earlier Null Hypothesis analysis. Finally, and most intriguingly, the analysis infers a third distinct threshold profile for the \emph{irrelevant and nondistinct} context.  The inferred threshold is greater than 10\%, but could be as high as 50\%. This is an overall higher inferred threshold for the nondistinctive category; however, these results are inconclusive as to whether or not this threshold is actually different from the \emph{plain} context.
 
 
 
 \begin{figure}
 \centering
     \includegraphics[width=\columnwidth]{fixed_phis_thetas}
-    \caption{Analysis of the context-dependent fixed-semantics of a generic. Inferred ``guessing'' parameter (left) and threshold (right) for each experiment.}
+    \caption{Analysis of the context-dependent fixed-semantics of a generic. Left: Inferred threshold for each experiment and context. Right: ``guessing'' parameter for each experiment.}
   \label{fig:justFixed}
 \end{figure}
 
@@ -345,7 +344,7 @@ Turning to $\theta_{c}$, there is evidence of variability in the generic thresho
 %\subsubsection{Posterior predictives}
 
 The fixed-semantics model can also be evaluated by examining the posterior predictive distribution of responses. 
-The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the cognitive model and the observed data. This is akin to fitting the parameters and is an important step in model validation as it shows what data the model actually predicts.
+The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the cognitive model and the observed data. This is akin to fitting the parameters and is an important step in model validation as it shows what data is actually predicted by the model.
 %\footnote{As a thought experiment, consider 2 coins assumed to come from a single coin-making machine (all the coins from this machine have the same weight). You flip each coin 100 times. The first one returns 100 heads, and the second one returns 100 tails. The posterior mean of the inferred coin weight will be 0.5. Comparing the posterior predictive distribution (based on this inferred coin-weight) to the observed data, however, will highlight the fact that your theory about the ``single coin-making machine'' is seriously flawed.}.
 Following directly from the inferred $\theta_{c}$'s, the model matches the ordering of the truth-conditions by context reasonably well. However, the model predicts an abrupt difference in endorsement rates for prevalences on either side of the threshold; this is too dichotomous to match the human data. The correlation between the posterior predictive and the data is a moderate $r = 0.81$. 
 
@@ -533,7 +532,7 @@ The speaker in \eqref{eq:S2}, like $L_{1}$, doesn't know the threshold, but know
 
 To evaluate this model we perform a Bayesian data analysis similar to that used above.
 %to evaluate this more sophisticated cognitive model. We are interested in how the hyperprior parameters $\gamma$ and $\delta$ might vary across contexts.
-We infer the parameters of the prevalence prior, $\beta(\gamma,\delta)$, outside of the RSA cognitive model (but inside of the data analysis model), using uninformative priors:
+We infer the parameters of the prevalence prior, $\beta(\gamma,\delta)$, outside of the lvRSA cognitive model (but inside of the data analysis model), using uninformative priors:
 $\gamma_{c} \thicksim U(0,1)$,  $\delta_{c} \thicksim U(0,5)$, $\phi_{t} \thicksim U(0,1)$,
 %\begin{align*}
 %\gamma_{c} \thicksim U(0,1) \\
@@ -541,7 +540,7 @@ $\gamma_{c} \thicksim U(0,1)$,  $\delta_{c} \thicksim U(0,5)$, $\phi_{t} \thicks
 %\phi_{t} \thicksim U(0,1) 
 %\end{align*}
 where $c \in \{DD,NI,P\}$ and $t \in \{$truth conditions, implied prevalence$\}$.
-We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of the proportion of responses our model of cognition doesn't capture. 
+We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of the proportion of responses not captured by our model of cognition. 
 
 
 
@@ -561,25 +560,42 @@ We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of 
 %Here, $c \in \{DD,NI,P\}$ and $t \in \{$truth conditions, implied prevalence$\}$.
 %
 %Thus, we do Bayesian data analysis on a Bayesian Rational Speech-Act model of language understanding, to see how context might influence the prior distribution given the data we've observed. We keep the data-analytic guessing parameters $\phi_{t}$ as a gross estimate of the proportion of responses our model of cognition doesn't capture. 
-
-\subsubsection{Inferred parameters}
-The mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.08 and 0.05, respectively, 
 \begin{wrapfigure}{l}{0.5\columnwidth}
+\vspace{-16pt}
   \begin{center}
     \includegraphics[width=0.48\columnwidth]{inferred_hyperpriors}
   \end{center}
   \caption{Posterior distributions of the hyperprior parameters used in lvRSA.}
    \label{fig:posthyper}
 \end{wrapfigure}
-a reasonable rate of ``guessing'' for participants on Amazon's Mechanical Turk, indicating that this cognitive model is doing a much better job of accounting for the signal in participants' responses.
 
 
+%\begin{wrapfigure}{l}{0.5\columnwidth}
+%  \begin{center}
+%    \includegraphics[width=0.48\columnwidth]{inferred_hyperpriors}
+%  \end{center}
+%  \caption{Posterior distributions of the hyperprior parameters used in lvRSA.}
+%   \label{fig:posthyper}
+%\end{wrapfigure}
+
+
+%\begin{figure}
+%\centering
+%    \includegraphics[width=\columnwidth]{inferred_hyperpriors}
+%  \caption{Posterior distributions of the hyperprior parameters used in lvRSA.}
+%   \label{fig:posthyper}
+%\end{figure}
+
+\subsubsection{Inferred parameters}
+The mean inferred values of  $\phi_{1a}$ and $\phi_{1b}$ are about 0.08 and 0.05, respectively, a reasonable rate of ``guessing'' for participants on Amazon's Mechanical Turk, indicating that this cognitive model is doing a much better job of accounting for the signal in participants' responses.
 
 %We use Bayesian data analysis to infer the values of the hyperprior parameters $\gamma$ and $\delta$ for the Bayesian lvRSA model. 
-Figure \ref{fig:posthyper} shows the posterior distributions of the hyperprior parameters, $\gamma$ and $\delta$, for the lvRSA model. The posterior means for the $\gamma$'s are well-ordered: $DD < P < NI$. This can be directly interpreted as the mean prior prevalence for the three contexts: \emph{dangerous and distinctive} properties are more rare than the other two types of properties. 
-The $\delta$'s are much lower that 1 in each case, indicating bi-modal priors peaked at 0 and 1.
-The posterior means for the $\delta$'s are also ordered, suggesting that participants may treat variance of prevalence as higher in the DD context (or simply be more confused).
 
+
+
+Figure \ref{fig:posthyper} shows the posterior distributions of the hyperprior parameters, $\gamma$ and $\delta$, for the lvRSA model. The posterior means for the $\gamma$'s are well-ordered: $DD < P < NI$. This can be directly interpreted as the mean prior prevalence for the three contexts: \emph{dangerous and distinctive} properties are more rare than the other two types of properties. 
+The $\delta$'s are much lower than 1 in each case, indicating bi-modal priors peaked at 0 and 1.
+The posterior means for the $\delta$'s are also ordered, suggesting that participants may treat variance of prevalence as higher in the \emph{DD} context (or simply be more confused).
 
 
 
@@ -608,12 +624,12 @@ The posterior means for the $\delta$'s are also ordered, suggesting that partici
 %
 
 For further visualization, we marginalize over the posterior parameter values to reconstruct a canonical prior distribution over prevalence for each context. Figure \ref{fig:inferredpriors} shows these prior distributions inferred from Exp. 1a \& 1b data via the lvRSA model. 
-Qualitatively, they are each bi-modal and the DD prior has lower mean.
+Qualitatively, they are each bi-modal and the \emph{DD} prior has lower mean.
 
 \subsubsection{Posterior predictives}
 
 The posterior predictions by lvRSA for the \emph{truth conditions} task are shown in Figure \ref{fig:lvRSAposteriorpred}. 
-We can see that the model predicts graded endorsement rates for the generic as a function of prevalence---the model has some persistent uncertainty about the true value of the threshold, a feature that people share.
+We can see that the model predicts graded endorsement rates for the generic as a function of prevalence---the model has some persistent uncertainty about the true value of the threshold. This same uncertainty is evident in the curves of Exp. 1a.
 With the inferred parameter values of the prevalence prior, the model also matches the differences in endorsement rates between context conditions.
 We reconstruct the curves of Figure \ref{fig:exp1} reasonably well; the model--data correlation is $r = 0.90$.
 
@@ -694,7 +710,7 @@ The means of these three distributions are distinct and ordered as predicted (bo
 %
 The medians of these three distributions were all significantly different from one another, evidenced by pair-wise Mann-Whitney U tests ($DD$ vs. $P$: $W=417452$; $DD$ vs. $NI$: $W=376180.5$; $NI$ vs. $P$: $W=548994.5$; all $p < 0.00001$). 
 %
-Finally, the distributions themselves were all significantly different from one another, by Kolmogorov-Smirnov tests ($DD$ vs. $P$: $D = 0.185$; $DD$ vs. $NI$: $D = 0.253$; $NI$ vs. $P$: $D = 0.091$; all $p < 0.001$. In sum, the elicited prior distributions are all at least bimodal, have different central tendencies, and are all distinct.
+Finally, the distributions themselves were all significantly different from one another, by Kolmogorov-Smirnov tests ($DD$ vs. $P$: $D = 0.185$; $DD$ vs. $NI$: $D = 0.253$; $NI$ vs. $P$: $D = 0.091$; all $p < 0.001$). In sum, the elicited prior distributions are all at least bimodal, have different central tendencies, and are all distinct.
 
 
 \section{Discussion}
@@ -705,13 +721,7 @@ We have demonstrated the viability of a scalar semantics for generics when coupl
 A lower-bound threshold on prevalence---the probability of the property given the category---is inferred as part of pragmatic interpretation, yielding vague and context sensitive meaning. 
 %We first used Bayesian data analysis to show that the effective threshold of a fixed-threshold semantics would need to vary by context, and yet it still not account adequately for the data. 
 %
-\begin{wrapfigure}{r}{0.5\columnwidth}
-  \begin{center}
-    \includegraphics[width=0.48\columnwidth]{schematic_priors}
-  \end{center}
-  \caption{Schematic prior distributions over prevalence of accidental properties and ``mosquitos with West Nile Virus''.}
-   \label{fig:schematic}
-\end{wrapfigure}
+
 %
 We formalized reasoning about the threshold in a lifted-variable Rational Speech Acts (lvRSA) model. This model predicted graded truth judgements and an asymmetry between truth and prevalence judgements. It also accommodated the role of context, explaining these effects as the result of variation in the prevalence prior. 
 In Experiment 2, we verified that participants' beliefs about the prior on prevalence varied in this way. 
@@ -725,11 +735,23 @@ This provides evidence that the model we propose can account for many of the emp
 %
 %Our model makes the prediction that if the shape of the prior distribution was not bimodal, the asymmetry between verification and interpretation would change. Indeed, this is a similar prediction to \citeA{Cimpian2010}, who posited that accidental or disease states (e.g. ``muddy feathers'', ``infected ears'') would weaken the asymmetry. We would expect accidental or disease states to not follow a bimodal distribution. 
  
-This model of generic interpretation makes further predictions for situations with qualitatively different prevalence priors. For example, if the prior distribution was unimodal, as is the case with incidental properties (e.g. broken legs), then the asymmetry between verification and interpretation would be dramatically reduced, cease altogether, or reverse (see Figure \ref{fig:lvRSAposteriorpred} for a prediction using the schematic prior in Figure \ref{fig:schematic}). Indeed, CBG explored this possibility in one of their experiments using ``accidental and disease states''; consistent with lvRSA, they found no asymmetry. 
-Another example is a bimodal prior with a second peak at some low prevalence level (as opposed to a bimodal prior with a second peak at a high prevalence level, which we've focused on in this paper). This prior should describe rare properties that are not only rare \emph{across kinds} but also rare \emph{within kinds}. A canonical example of this is ``West Nile Virus'' in the generic ``Mosquitos carry West Nile Virus''. For a prior like this, the truth conditions for the generic would be relaxed at low prevalence levels, relative to the more common all-or-none priors. We see this behavior using a schematic prior (see Figure \ref{fig:lvRSAposteriorpred} for the truth conditions of the mosquito prior shown in Figure \ref{fig:schematic}). 
+This model of generic interpretation makes further predictions for situations with qualitatively different prevalence priors. For example, if the prior distribution was unimodal, as is the case with incidental properties (e.g. broken legs), then the asymmetry between verification and interpretation would be dramatically reduced, cease altogether, or reverse (see Figure \ref{fig:lvRSAposteriorpred} for a prediction using the schematic prior in Figure \ref{fig:schematic}). 
+Indeed, CBG explored this possibility in one of their experiments using ``accidental and disease states''; consistent with lvRSA, they found no asymmetry. 
+Another example is a bimodal prior with a second peak at some low prevalence level (as opposed to a bimodal prior with a second peak at a high prevalence level, which we've focused on in this paper). 
+This prior should describe rare properties that are not only rare \emph{across kinds} but also rare \emph{within kinds}. 
+%
+\begin{wrapfigure}{r}{0.5\columnwidth}
+  \begin{center}
+    \includegraphics[width=0.48\columnwidth]{schematic_priors}
+  \end{center}
+  \caption{Schematic priors over prevalence of accidental properties and ``mosquitos with West Nile Virus''.}
+   \label{fig:schematic}
+\end{wrapfigure}
+%
+A canonical example of this is ``West Nile Virus'' in the generic ``Mosquitos carry West Nile Virus''. For a prior like this, the truth conditions for the generic would be relaxed at low prevalence levels, relative to the more common all-or-none priors. We see this behavior using a schematic prior (see Figure \ref{fig:lvRSAposteriorpred} for the truth conditions of the mosquito prior shown in Figure \ref{fig:schematic}). 
 
 Generics are ubiquitous in natural language. It might seem paradoxical, then, that the semantics of generic statements are underspecified. Why should vague language get so much usage? One possibility is apparent in the lvRSA model: generic language provides interlocutors with the flexibility to convey rich meanings, which are easily understood in context. 
-Generics are vague, but principled and useful.
+Generics are vague, but behaved and useful.
 
 %In this paper, we used techniques of both Bayesian Cognitive Science and Bayesian Data Analysis. The former helped us develop a rich, formal theory of language understanding. These sorts of theories have implications for psychology and linguistics. The latter helped us make inferences about our theories. Bayesian Data Analysis is crucial to make assumptions explicit (e.g. about fixed-threshold semantics) and clean up our data (e.g. discounting behavior that can conceivably be attributed to guessing). Together, they embody a manifestation of a more general philosophy of science: making assumptions explicit and beginning our science by announcing our uncertainty.
 
