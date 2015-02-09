@@ -1,0 +1,89 @@
+<html>
+<body>
+
+<p>Hi!</p>
+
+<table>
+	<tr>
+		<td id='foo'></td>
+		<td id='bar'></td>
+	</tr>
+	<tr>
+		<td id='moo'></td>
+		<td id='zonk'></td>
+	</tr>
+</table>
+
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+
+<script>
+
+   var intermediate = function(from, to, pos) {
+        var fromCurve = Raphael.path2curve(from);
+        var toCurve = Raphael.path2curve(to);
+        var diff = [];
+        var attr = "path";
+        //compute difference between paths and store in diff
+        for (i = 0, ii = fromCurve.length; i < ii; i++) {
+          diff[i] = [0];
+          for (var j = 1, jj = fromCurve[i].length; j < jj; j++) {
+            diff[i][j] = (toCurve[i][j] - fromCurve[i][j]);
+          }
+        }
+        var S = " ";
+        now = [];
+        //compute new path string for intermediate image
+        for (var i = 0, ii = fromCurve.length; i < ii; i++) {
+          now[i] = [fromCurve[i][0]];
+          for (var j = 1, jj = fromCurve[i].length; j < jj; j++) {
+            now[i][j] = +fromCurve[i][j] + pos * diff[i][j];
+          }
+          now[i] = now[i].join(S);
+        }
+        return now.join(S);
+    };
+
+
+ var intermediate2d = function(ends, pathlabel, prop1, prop2) {
+        //interpolate the proper amount along one dimension:
+        var dim2as0 = Ecosystem.intermediate(ends["00"][pathlabel], ends["10"][pathlabel], prop1);
+        var dim2as1 = Ecosystem.intermediate(ends["01"][pathlabel], ends["11"][pathlabel], prop1);
+        //interpolate the proper amount along the other dimension:
+        return Ecosystem.intermediate(dim2as0, dim2as1, prop2);
+    };
+
+function zip(arrays) {
+    return arrays[0].map(function(_,i){
+        return arrays.map(function(array){return array[i]})
+    });
+}
+
+var creaturepath = 'M 440,83.791016 C 195.06164,117.88119 23.501708,122.57355 200,383.79102 30.811952,236.81524 -33.834175,261.86453 205.71484,449.50586 c 146.03686,358.77148 255.57618,65.2968 256.26646,43.32661 89.38111,-17.52646 54.50558,-68.2132 -21.11411,-167.82075 -75.40645,36.35243 -149.30125,28.62724 -55.15235,-66.93555 23.23905,26.83347 134.81316,44.7649 148.56138,62.87429 C 623.3379,278.01503 621.09854,177.65128 440,83.791016 Z M 460,175.21875 342.85742,249.50586 265.71484,378.07617 360,183.79102 Z';
+
+var creature2path = 'M 440,83.791016 C 93.530091,333.12807 23.501708,122.57355 200,383.79102 30.811952,236.81524 -33.834175,261.86453 205.71484,449.50586 c 116.05756,113.4333 255.93274,11.0534 256.26646,43.32661 89.38111,-17.52646 200.71101,-3.23301 125.09132,-102.84056 99.17561,-95.36438 5.02671,0.19841 99.17561,-95.36438 C 701.36475,199.62314 743.8974,160.6969 607.37893,211.29638 460,175.21875 621.09854,177.65128 440,83.791016 Z M 460,175.21875 342.85742,249.50586 265.71484,378.07617 360,183.79102 Z';
+
+var cells = ['foo','bar','moo','zonk'];
+var papers = cells.map(function(x){return Raphael(x,300,300)});
+
+var morphs = [0,0.3,0.7,1]
+
+var creaturepaths = morphs.map(function(morph){return intermediate(creaturepath,creature2path,morph)});
+
+var zipped = zip([papers,creaturepaths]);
+
+//var creatures = papers.map(function(paper){return paper.path(intermediate(creaturepath, creature2path, 0.5))});
+
+var creatures = zipped.map(function(papercreature)
+	{return papercreature[0].path(papercreature[1])});
+
+	//intermediate(creaturepath, creature2path, 0.5))});
+//creatures.map(function(creature){creature.attr("fill","#f00"); creature.transform("s0.3t-800,-400")});
+creatures.map(function(creature){creature.attr("fill","#f00"); creature.transform("s0.2t-800,-400")});
+
+
+
+</script>
+
+<body>
+</html>
