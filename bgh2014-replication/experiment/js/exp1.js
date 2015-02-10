@@ -150,11 +150,12 @@ function make_slides(f) {
 
 
       var cells = ['a1','a2','a3','a4','a5','a6'];
-      var papers = cells.map(function(x){return Raphael(x,300,300)});
+      var papers = cells.map(function(x){return Raphael(x,200,200)});
       var morphs = [0,0,0,0,0,0];
-      var creaturepaths = morphs.map(function(morph){
-        return utils.intermediatePath(creaturepath,creature2path,morph)
-      });
+      var creaturepaths = utils.fillArray(creaturestims["c1"],6)
+      // var creaturepaths = morphs.map(function(morph){
+      //   return utils.intermediatePath(creaturepath,creature2path,morph)
+      // });
 
       var zipped = utils.zip([papers,creaturepaths]);
 
@@ -164,7 +165,9 @@ function make_slides(f) {
 
 
       creatures.map(function(creature){
-        creature.attr("fill","#f00"); creature.transform("s0.2t-800,-400")});
+        creature.attr("fill","#00CC33"); creature.transform("s0.6")});
+      // creatures.map(function(creature){
+      //   creature.attr("fill","#f00");});
 
 
 
@@ -344,8 +347,10 @@ function init() {
    //                      "signpost", exp.condition,
    //                      "signpost", exp.condition,
    //                      'subj_info', 'thanks'];
-   exp.structure=["i0", "instructions", exp.condition, 
-                        'subj_info', 'thanks'];
+   exp.structure = [exp.condition];
+
+   // exp.structure=["i0", "instructions", exp.condition, 
+   //                      'subj_info', 'thanks'];
 
    //exp.structure=['subj_info', 'thanks'];
  
