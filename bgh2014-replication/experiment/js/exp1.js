@@ -132,14 +132,14 @@ function make_slides(f) {
       and for each of these, present_handle will be run.) */
 
     present : _.shuffle([
-                {"prevalence":"0"},
-                {"prevalence":"0"},
-                {"prevalence":"0.33"},
-                {"prevalence":"0.33"},
-                {"prevalence":"0.66"},
-                {"prevalence":"0.66"},
-                {"prevalence":"1"},
-                {"prevalence":"1"}]),
+                {"prevalence":0},
+                {"prevalence":0},
+                {"prevalence":0.33},
+                {"prevalence":0.33},
+                {"prevalence":0.66},
+                {"prevalence":0.66},
+                {"prevalence":1},
+                {"prevalence":1}]),
 
 
     //this gets run only at the beginning of the block
@@ -148,27 +148,28 @@ function make_slides(f) {
       $(".err").hide();
       $('input[name="radio_button"]').prop('checked', false);
 
+      var scale = 0.5;
+      var cells = ['svg0','svg1','svg2','svg3','svg4','svg5'];
 
-      var cells = ['a1','a2','a3','a4','a5','a6'];
-      var papers = cells.map(function(x){return Raphael(x,200,200)});
-      var morphs = [0,0,0,0,0,0];
-      var creaturepaths = utils.fillArray(creaturestims["c1"],6)
-      // var creaturepaths = morphs.map(function(morph){
-      //   return utils.intermediatePath(creaturepath,creature2path,morph)
-      // });
+      var genus = new Ecosystem.Genus("bird", {
+        "col1":{"mean":"#ff0000"},
+        "col2":{"mean":"#ff0000"},
+        "col3":{"mean":"#0000ff"},
+        "tar1":0, // never has a tail
+        "tar2":1, // always has a crest
+        "prop1":{"mean":0, "var":0.05}, //low height variance
+        "prop1":{"mean":0, "var":0.5}, //high fatness variance
+        "var":0.3 //overall variance (overwritten by any specified variances)
+      })
 
-      var zipped = utils.zip([papers,creaturepaths]);
+      var animalsWithProperties = Math.round(stim.prevalence*6)
+      var properties = _.shuffle(utils.fillArray(
+        "yes",animalsWithProperties
+        ).concat(utils.fillArray(
+          "no",6-animalsWithProperties)))
 
 
-      var creatures = zipped.map(function(papercreature)
-        {return papercreature[0].path(papercreature[1])});
-
-
-      creatures.map(function(creature){
-        creature.attr("fill","#00CC33"); creature.transform("s0.6")});
-      // creatures.map(function(creature){
-      //   creature.attr("fill","#f00");});
-
+      cells.map(function(x){return genus.draw(x, {}, scale)});
 
 
       $(".evidence").html(this.evidence_prompt);
@@ -260,9 +261,9 @@ function make_slides(f) {
         "stim_type": this.stimtype,
         "stim_prevalence": this.prevalence,
         "stim_determiner": this.determiner,
-        "stim_category": this.stim.category,
-        "stim_color": this.stim.color,
-        "stim_part":this.stim.part
+   //     "stim_category": this.stim.category,
+   //     "stim_color": this.stim.color,
+   //     "stim_part":this.stim.part
       });
     }
   });
