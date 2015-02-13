@@ -131,45 +131,63 @@ function make_slides(f) {
      (the variable 'stim' will change between each of these values,
       and for each of these, present_handle will be run.) */
 
-    present : _.shuffle([
-                {"prevalence":0},
-                {"prevalence":0},
-                {"prevalence":0.33},
-                {"prevalence":0.33},
-                {"prevalence":0.66},
-                {"prevalence":0.66},
-                {"prevalence":1},
-                {"prevalence":1}]),
+    present : utils.zip([_.shuffle([
+                          {"prevalence":0}, {"prevalence":0},
+                          {"prevalence":0.33},{"prevalence":0.33},
+                          {"prevalence":0.66},{"prevalence":0.66},
+                          {"prevalence":1},{"prevalence":1}]),
+                        _.shuffle([
+                          {"kind":"fish","property":"tar1"},{"kind":"fish","property":"tar2"},
+                          {"kind":"flower","property":"tar1"},{"kind":"flower","property":"tar2"},
+                          {"kind":"bug","property":"tar1"},{"kind":"bug","property":"tar2"},
+                          {"kind":"bird","property":"tar1"},{"kind":"bird","property":"tar2"}])]),
 
 
     //this gets run only at the beginning of the block
-    present_handle : function(stim_num) {
+    present_handle : function(stim) {
       this.startTime = Date.now();
+      this.stim = stim;
+
+      this.stim.prevalence = this.stim[0]["prevalence"]
+      this.stim.category = this.stim[1]["kind"]
+      this.stim.property = this.stim[1]["property"]
+
       $(".err").hide();
+      //cells.map(function(x){}))
       $('input[name="radio_button"]').prop('checked', false);
 
       var scale = 0.5;
       var cells = ['svg0','svg1','svg2','svg3','svg4','svg5'];
+      cells.map(function(cell){$('#'+cell).empty()});
 
-      var genus = new Ecosystem.Genus("bird", {
+
+      var genus = new Ecosystem.Genus(this.stim.category, {
         "col1":{"mean":"#ff0000"},
         "col2":{"mean":"#ff0000"},
         "col3":{"mean":"#0000ff"},
         "tar1":0, // never has a tail
-        "tar2":1, // always has a crest
+        "tar2":0, // always has a crest
         "prop1":{"mean":0, "var":0.05}, //low height variance
         "prop1":{"mean":0, "var":0.5}, //high fatness variance
         "var":0.3 //overall variance (overwritten by any specified variances)
       })
 
-      var animalsWithProperties = Math.round(stim.prevalence*6)
+      console.log(this.stim.property)
+      console.log(this.stim.prevalence)
+
+     var str = this.stim.property;
+
+      var animalsWithProperties = Math.round(this.stim.prevalence*6)
       var properties = _.shuffle(utils.fillArray(
-        "yes",animalsWithProperties
-        ).concat(utils.fillArray(
-          "no",6-animalsWithProperties)))
+                                    this.stim.property,animalsWithProperties
+                                    ).concat(utils.fillArray(
+                                      false,6-animalsWithProperties)))
 
-
-      cells.map(function(x){return genus.draw(x, {}, scale)});
+      _.zip(cells,properties).map(function(x){x[1]=="tar1" ? 
+                                            genus.draw(x[0],{"tar1":1}, scale):
+                                              x[1]=="tar2" ?
+                                             genus.draw(x[0],{"tar2":1}, scale):
+                                    genus.draw(x[0],{}, scale)});
 
 
       $(".evidence").html(this.evidence_prompt);
