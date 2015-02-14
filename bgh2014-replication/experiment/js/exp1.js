@@ -131,16 +131,22 @@ function make_slides(f) {
      (the variable 'stim' will change between each of these values,
       and for each of these, present_handle will be run.) */
 
-    present : utils.zip([_.shuffle([
+    present : _.zip(_.shuffle([
                           {"prevalence":0}, {"prevalence":0},
                           {"prevalence":0.33},{"prevalence":0.33},
                           {"prevalence":0.66},{"prevalence":0.66},
                           {"prevalence":1},{"prevalence":1}]),
-                        _.shuffle([
-                          {"kind":"fish","property":"tar1"},{"kind":"fish","property":"tar2"},
-                          {"kind":"flower","property":"tar1"},{"kind":"flower","property":"tar2"},
-                          {"kind":"bug","property":"tar1"},{"kind":"bug","property":"tar2"},
-                          {"kind":"bird","property":"tar1"},{"kind":"bird","property":"tar2"}])]),
+                    _.shuffle([
+                      {"kind":"fish","property":"tar1"},{"kind":"fish","property":"tar2"},
+                      {"kind":"flower","property":"tar1"},{"kind":"flower","property":"tar2"},
+                      {"kind":"bug","property":"tar1"},{"kind":"bug","property":"tar2"},
+                      {"kind":"bird","property":"tar1"},{"kind":"bird","property":"tar2"}]),
+                    // _.shuffle([
+                    //       {"proptype":"color"}, {"proptype":"color"},
+                    //       {"proptype":"color"},{"proptype":"part"},
+                    //       {"proptype":"part"},{"proptype":"part"},
+                    //       {"proptype":"color-part"},{"proptype":"color-part"}]),
+                    _.shuffle(colors)),
 
 
     //this gets run only at the beginning of the block
@@ -151,6 +157,9 @@ function make_slides(f) {
       this.stim.prevalence = this.stim[0]["prevalence"]
       this.stim.category = this.stim[1]["kind"]
       this.stim.property = this.stim[1]["property"]
+      //this.stim.proptype = this.stim[2]["proptype"]
+      this.stim.proptype = _.sample(["color","part","color-part"])
+
 
       $(".err").hide();
       //cells.map(function(x){}))
@@ -161,21 +170,43 @@ function make_slides(f) {
       cells.map(function(cell){$('#'+cell).empty()});
 
 
-      var genus = new Ecosystem.Genus(this.stim.category, {
-        "col1":{"mean":"#ff0000"},
-        "col2":{"mean":"#ff0000"},
-        "col3":{"mean":"#0000ff"},
+      this.stim.proptype == 'color' ?
+          this.stim.color = this.stim[2] :
+          this.stim.color = "#FFFFFF"
+
+      console.log(this.stim.color)
+      var colorPart;
+
+      if (this.stim.proptype == 'color-part') {
+           colorPart = _.sample(animalColorParts[this.stim.category]);
+           this.stim.colorPart = colorPart[0];
+           this.stim.colorPartLabel = colorPart[1];
+           this.stim.colorPartColor = _.sample(colors);
+         } else {
+          this.stim.colorPart = null
+          this.stim.colorPartLabel = "col1" //just to set it equal to something
+          this.color.colorPartColor = this.stim.color
+      } // no distinguishing color)
+
+
+
+      var genusOptions = {
+        "col1":{"mean":this.stim.color},
+        "col2":{"mean":this.stim.color},
+        "col3":{"mean":this.stim.color},
+        "col4":{"mean":this.stim.color},
+        "col5":{"mean":this.stim.color},
         "tar1":0, // never has a tail
         "tar2":0, // always has a crest
         "prop1":{"mean":0, "var":0.05}, //low height variance
         "prop1":{"mean":0, "var":0.5}, //high fatness variance
-        "var":0.3 //overall variance (overwritten by any specified variances)
-      })
+        "var":0.01, //overall variance (overwritten by any specified variances)
+      };
 
-      console.log(this.stim.property)
-      console.log(this.stim.prevalence)
+      genusOptions[this.stim.colorPartLabel].mean = this.stim.colorPartColor
 
-     var str = this.stim.property;
+      var genus = new Ecosystem.Genus(this.stim.category, genusOptions)
+
 
       var animalsWithProperties = Math.round(this.stim.prevalence*6)
       var properties = _.shuffle(utils.fillArray(

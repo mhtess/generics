@@ -30,6 +30,26 @@ var creaturestims = {
 };
 
 
+
+var colors = {
+    "green":"#85E085",
+    "blue":"#80A8E6",
+    "orange":"#FF9900",
+    "red":"#FF0000",
+    "yellow":"#FFFF00",
+    "purple":"#CC33FF",
+    "brown":"#996633",
+    "black":"#000000"
+}
+
+var categories = ['fish','flower','bird','bug']
+
+var animalColorParts = {
+    "flower":[["stem","col1"],["petals","col3"]],
+    "fish": [["body","col1"],["fins","col2"]],
+    "bug":[["legs","col1"],["heads","col2"]],
+    "bird": [["body","col2"],["wing","col3"]]};
+
 // var cells = ['foo','bar','moo','zonk'];
 // var papers = cells.map(function(x){return Raphael(x,300,300)});
 
