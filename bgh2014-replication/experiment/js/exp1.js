@@ -137,10 +137,10 @@ function make_slides(f) {
                           {"prevalence":0.66},{"prevalence":0.66},
                           {"prevalence":1},{"prevalence":1}]),
                     _.shuffle([
-                      {"kind":"fish","property":"tar1"},{"kind":"fish","property":"tar2"},
-                      {"kind":"flower","property":"tar1"},{"kind":"flower","property":"tar2"},
-                      {"kind":"bug","property":"tar1"},{"kind":"bug","property":"tar2"},
-                      {"kind":"bird","property":"tar1"},{"kind":"bird","property":"tar2"}]),
+                      {"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
+                      {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
+                      {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
+                      {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}]),
                     // _.shuffle([
                     //       {"proptype":"color"}, {"proptype":"color"},
                     //       {"proptype":"color"},{"proptype":"part"},
@@ -157,25 +157,37 @@ function make_slides(f) {
       this.stim.prevalence = this.stim[0]["prevalence"]
       this.stim.category = this.stim[1]["kind"]
       this.stim.property = this.stim[1]["property"]
+      this.stim.propertyName = this.stim[1]["propertyName"]
       //this.stim.proptype = this.stim[2]["proptype"]
       this.stim.proptype = _.sample(["color","part","color-part"])
 
+      var colorPart;
 
       $(".err").hide();
       //cells.map(function(x){}))
       $('input[name="radio_button"]').prop('checked', false);
+
+      this.stim.proptype == 'part' ? 
+        this.utterance = "Crullets have " + this.stim.propertyName:
+        this.utterance = 'dance'
+
+      $("#utterance").html(this.utterance);
 
       var scale = 0.5;
       var cells = ['svg0','svg1','svg2','svg3','svg4','svg5'];
       cells.map(function(cell){$('#'+cell).empty()});
 
 
+      // stim.prototype can be color, color part, or part
+
+      // if its color, set the color to be that color
+
+      // if its color-part,
+      // --> sample an appropriate body part
+      // --> sample a color
       this.stim.proptype == 'color' ?
           this.stim.color = this.stim[2] :
           this.stim.color = "#FFFFFF"
-
-      console.log(this.stim.color)
-      var colorPart;
 
       if (this.stim.proptype == 'color-part') {
            colorPart = _.sample(animalColorParts[this.stim.category]);
@@ -185,9 +197,8 @@ function make_slides(f) {
          } else {
           this.stim.colorPart = null
           this.stim.colorPartLabel = "col1" //just to set it equal to something
-          this.color.colorPartColor = this.stim.color
+          this.stim.colorPartColor = this.stim.color
       } // no distinguishing color)
-
 
 
       var genusOptions = {
@@ -203,26 +214,52 @@ function make_slides(f) {
         "var":0.01, //overall variance (overwritten by any specified variances)
       };
 
-      genusOptions[this.stim.colorPartLabel].mean = this.stim.colorPartColor
+      var negGenusOptions = {
+        "col1":{"mean":"#FFFFFF"},
+        "col2":{"mean":"#FFFFFF"},
+        "col3":{"mean":"#FFFFFF"},
+        "col4":{"mean":"#FFFFFF"},
+        "col5":{"mean":"#FFFFFF"},
+        "tar1":0, // never has a tail
+        "tar2":0, // always has a crest
+        "prop1":{"mean":0, "var":0.05}, //low height variance
+        "prop1":{"mean":0, "var":0.5}, //high fatness variance
+        "var":0.001, //overall variance (overwritten by any specified variances)
+      };
 
+      var negGenus = new Ecosystem.Genus(this.stim.category, negGenusOptions)
+
+      genusOptions[this.stim.colorPartLabel].mean = this.stim.colorPartColor
+      this.stim.proptype == 'part' ? genusOptions[this.stim.property] = 1 : null
       var genus = new Ecosystem.Genus(this.stim.category, genusOptions)
 
 
       var animalsWithProperties = Math.round(this.stim.prevalence*6)
-      var properties = _.shuffle(utils.fillArray(
-                                    this.stim.property,animalsWithProperties
-                                    ).concat(utils.fillArray(
-                                      false,6-animalsWithProperties)))
-
-      _.zip(cells,properties).map(function(x){x[1]=="tar1" ? 
-                                            genus.draw(x[0],{"tar1":1}, scale):
-                                              x[1]=="tar2" ?
-                                             genus.draw(x[0],{"tar2":1}, scale):
-                                    genus.draw(x[0],{}, scale)});
+      var properties = _.shuffle(utils.fillArray(true,animalsWithProperties).concat(
+                                 utils.fillArray(false,6-animalsWithProperties)))
 
 
-      $(".evidence").html(this.evidence_prompt);
-      $(".query").html(this.query_prompt);
+
+
+      // console.log(properties)
+      // console.log(negGenus.propsAndParams)
+      _.zip(cells,properties).map(function(x){x[1] ? 
+                                            genus.draw(x[0], {}, scale):
+                                            negGenus.draw(x[0],{}, scale)});
+
+       console.log(this.stim.prevalence, this.stim.property)
+       console.log(this.stim.proptype)
+       console.log(this.stim.colorPartColor)
+       console.log(this.stim.colorPartLabel)
+
+      // _.zip(cells,properties).map(function(x){x[1]=="tar1" ? 
+      //                                       genus.draw(x[0],{"tar1":1}, scale):
+      //                                         x[1]=="tar2" ?
+      //                                        genus.draw(x[0],{"tar2":1}, scale):
+      //                               genus.draw(x[0],{}, scale)});
+
+
+     // $(".query").html(this.query_prompt);
 
       // this.stim = exp.stims[stim_num]; // allstims should be randomized, or stim_num should be
       // this.trialNum = stim_num;
