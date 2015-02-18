@@ -6,6 +6,16 @@
 // 1 quantifier / block (all, some, most, generic)
 
 
+Object.prototype.getKeyByValue =function( value ) {
+    for( var prop in this ) {
+        if( this.hasOwnProperty( prop ) ) {
+             if( this[ prop ] === value )
+                 return prop;
+        }
+    }
+}
+
+
 function make_slides(f) {
   var slides = {};
 
@@ -160,23 +170,15 @@ function make_slides(f) {
       this.stim.propertyName = this.stim[1]["propertyName"]
       //this.stim.proptype = this.stim[2]["proptype"]
       this.stim.proptype = _.sample(["color","part","color-part"])
+      this.stim.colorword = colors.getKeyByValue(this.stim[2])
 
       var colorPart;
 
       $(".err").hide();
       //cells.map(function(x){}))
-      $('input[name="radio_button"]').prop('checked', false);
+      $("input[name=radio_button]").prop('checked', false); 
 
-      this.stim.proptype == 'part' ? 
-        this.utterance = "Crullets have " + this.stim.propertyName:
-        this.utterance = 'dance'
-
-      $("#utterance").html(this.utterance);
-
-      var scale = 0.5;
-      var cells = ['svg0','svg1','svg2','svg3','svg4','svg5'];
-      cells.map(function(cell){$('#'+cell).empty()});
-
+      //console.log(this.stim.propertyName)
 
       // stim.prototype can be color, color part, or part
 
@@ -199,6 +201,24 @@ function make_slides(f) {
           this.stim.colorPartLabel = "col1" //just to set it equal to something
           this.stim.colorPartColor = this.stim.color
       } // no distinguishing color)
+
+      this.stim.colorpartword = colors.getKeyByValue(this.stim.colorPartColor)
+
+      this.stim.proptype == 'part' ? 
+        this.utterance = "Crullets have " + this.stim.propertyName:
+        this.stim.proptype == 'color' ? 
+          this.utterance = "Crullets are " + this.stim.colorword:
+          this.stim.proptype == 'color-part' ?
+            this.utterance = "Crullets have " + this.stim.colorpartword +" "+ this.stim.colorPart:
+            null
+
+
+      $("#utterance").html(this.utterance);
+
+      var scale = 0.5;
+      var cells = ['svg0','svg1','svg2','svg3','svg4','svg5'];
+      cells.map(function(cell){$('#'+cell).empty()});
+
 
 
       var genusOptions = {
@@ -324,9 +344,8 @@ function make_slides(f) {
        // this.init_radiios();
        // exp.sliderPost = null; //erase current slider value
     },
-
     button : function() {
-      if (!($("input:radio[name=radio_button]").is(":checked"))) {
+      if ($("input[name=radio_button]:checked").val()==undefined) {
         $(".err").show();
       } else {
         this.rt = Date.now() - this.startTime;
@@ -342,7 +361,7 @@ function make_slides(f) {
       exp.data_trials.push({
         "trial_type" : "truth_conditions",
         "trialNum":this.trialNum,
-        "response" : $("input:radio[name=radio_button]:checked").val(),
+        "response" : $("input[name=radio_button]:checked").val(),
         "rt":this.rt,
         "stim_type": this.stimtype,
         "stim_prevalence": this.prevalence,
@@ -402,6 +421,7 @@ function init() {
 //  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
   exp.determiner = _.shuffle(["generic","some","most","all"]);
+  exp.numTrials= 10;
 
   // exp.numTrials = utils.flatten(allstims).length;
 
@@ -434,10 +454,9 @@ function init() {
    //                      "signpost", exp.condition,
    //                      "signpost", exp.condition,
    //                      'subj_info', 'thanks'];
-   exp.structure = [exp.condition];
 
-   // exp.structure=["i0", "instructions", exp.condition, 
-   //                      'subj_info', 'thanks'];
+   exp.structure=["i0", "instructions", exp.condition, 
+                        'subj_info', 'thanks'];
 
    //exp.structure=['subj_info', 'thanks'];
  
