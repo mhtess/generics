@@ -1,6 +1,8 @@
 // webppl generics.wppl --require-js ./simpleCSV 
 
 
+// mht's helper functions
+
 // load experimental data
 
 var dfilepath = "/Users/mht/Documents/research/generics/cbg2010-replication/data/";
@@ -10,6 +12,13 @@ var dfile2 = dfilepath + "cbgR-exp12-trials.csv";
 var tcData = simpleCSV.readCSV(dfile).data;
 var ipData = simpleCSV.readCSV(dfile2).data;
 
+var contextCol = tcData[0].indexOf('stim_type');
+var prevalenceCol = tcData[0].indexOf("stim_prevalence");
+
+var tcContexts = _.uniq(map(function(x){return x[contextCol]},
+							tcData.slice(1)))
+var ipContexts = _.uniq(map(function(x){return x[contextCol]},
+							ipData.slice(1)))
 
 
 var isTask = function(row, desired_task){
@@ -23,72 +32,192 @@ var isQuantifier = function(row, desired_quantifier){
 }
 
 var isContext = function(row, desired_context){
-	var contextCol = tcData[0].indexOf('stim_type');
 	return row[contextCol]==desired_context
 }
 
-//isTask(tcData[1],'truth_conditions')
+var isPrevalence = function(x, desired_prevlev){
+	return x[prevalenceCol] == desired_prevlev
+}
+
 var filterByTaskContextQuantifier = function(dataArray, task, context, quantifier){
 	return filter(function(item){
 			return (isTask(item,task) & isContext(item,context) & isQuantifier(item,quantifier));
 			}, dataArray)
 };
 
-filterByTaskContextQuantifier(tcData, 'truth_conditions', 'bare', 'generic')
+var tcStructured = map(function(context)
+					{return filterByTaskContextQuantifier(tcData, 
+															'truth_conditions', 
+															context, 
+															'generic')},
+					tcContexts);
+
+var ipStructured = map(function(context)
+					{return filterByTaskContextQuantifier(ipData, 
+															'truth_conditions', 
+															context, 
+															'generic')},
+					ipContexts);
+
+
+var prevalenceLevelsAllContexts = map(function(x){
+	return sort(_.uniq(map(function(y){
+		return y[prevalenceCol]
+	}, x)))
+}, tcStructured)
+
+
+//// probably more data munging to do above
+
+var cognitiveModel = function(gamma, delta, speakerOptimality, QUD, prevalence){
+
+	var discretizeBeta = function(gamma, delta, bins){
+		var shape_alpha = gamma * delta
+		var shape_beta = (1-gamma) * delta
+		var betaPDF = function(x){
+			return Math.pow(x,shape_alpha-1)*
+					Math.pow((1-x),shape_beta-1)
+		}
+		return map(betaPDF, bins)
+	}
 
 
 
-// var statePrior = function() {
-//   var prevalence = randomInteger(11) // random integer between 0 - 10, 
-//   return prevalence
+	var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+	var quintileProbs = discretizeBeta(gamma,delta,bins)
+
+	var statePrior = function() {
+	  var prevalence = 10*bins[discrete(quintileProbs)]
+	  return prevalence
+	}
+
+	var thetaPrior = function() {
+	  var threshold = randomInteger(10)+0.1 //something goes wonky if "generic is false" can never be false
+	  return threshold
+	}
+
+	var utterancePrior = function() {
+	  var utterances = ["generic is true",
+	                    "generic is false"]
+	 // var utterances = ["generic is true",
+	  //                  "mu"]                    
+	  var i = randomInteger(utterances.length)
+	  return utterances[i]
+	}
+
+	var meaning = function(utt,state, theta) {
+	  return utt=="generic is true"? state>theta :
+	         utt=="generic is false"? state<=theta :
+	         true
+	}
+
+	var listener0 = cache(function(utterance, theta) {
+	  Enumerate(function(){
+	    var state = statePrior()
+	    var m = meaning(utterance, state, theta)
+	    factor(m?0:-Infinity)
+	    return state
+	  })
+	})
+
+	var speaker1 = cache(function(state, theta) {
+	  Enumerate(function(){
+	    var utterance = utterancePrior()
+	    var L0 = listener0(utterance, theta)
+	    factor(L0.score([],state))
+	    return utterance
+	  })
+	})
+
+	var listener1 = cache(function(utterance) {
+	  Enumerate(function(){
+	    var state = statePrior()
+	    var theta = thetaPrior()
+	    var S1 = speaker1(state, theta)
+	    factor(S1.score([],utterance))
+	    return state
+	  })
+	})
+
+	var speaker2 = cache(function(state){
+		Enumerate(function(){
+			var utterance = utterancePrior()
+			var L1 = listener1(utterance)
+			factor(L1.score([], state))
+			return utterance
+		})
+	})
+
+	return QUD == "truth" ? 
+			//normalize(raiseToPower(
+			speaker2(prevalence):
+			listener1("generic is true")
+
+//	return listener1("generic is true")
+//	return speaker1(0.1,9)
+//	return listener0("generic is true", 9)
+}
+
+// var tfbt = function(QUD, utterance){
+// 	MH(function(){
+// 		var queryStatement = function(context){
+// 			return [gamma(context), delta(context)]
+// 		}
+// 		var phiTC = sample(uniformERP, [0,1])
+// 		var phiIP = sample(uniformERP, [0,1])
+
+// 		var speakerOptimality = sample(uniformERP,[0,10])
+
+// 		var gamma = cache(function(context){return sample(uniformERP, [0,1])})
+// 		var delta = cache(function(context){return sample(uniformERP, [0,10])})
+
+// 		var tcPredictions = map2(function(prevalenceLevels,context){
+// 			return map(function(prevlev){
+// 				return cognitiveModel(gamma(context), delta(context), speakerOptimality,
+// 										"truth", prevlev/10)
+// 			}, prevalenceLevels)
+// 		}, prevalenceLevelsAllContexts, tcContexts)
+
+// 		var ipPredictions = map(function(context){
+// 				return cognitiveModel(gamma(context), delta(context), speakerOptimality, 
+// 											"how many?", "generic is true")
+// 			}, ipContexts)
+
+
+// 	},10)
 // }
 
-// var thetaPrior = function() {
-//   var threshold = randomInteger(10)
-//   return threshold
+var tcPredictions = map2(function(prevalenceLevels,context){
+	return map(function(prevlev){
+		return cognitiveModel(0.3, 1, 1, "truth", prevlev/10)
+	}, prevalenceLevels)
+}, prevalenceLevelsAllContexts, tcContexts)
+
+
+var ipPredictions = map(function(context){
+		return cognitiveModel(0.3, 1, 1, "how many?", "generic is true")
+	}, ipContexts)
+
+// map(function(x){
+// 	return map(function(y){
+// 		//return [y.support(), y.score()]
+// 		return [y.support(), y.score()]
+// 	}, x)
+// }, tcPredictions)
+
+//cognitiveModel(0.3,1,1,"truth",1)
+
+var data = [1,1,1,2,4,1,1,1,1,9]
+
+var modelScore = function(modelERP, data){
+	return sum(map(function(d){return modelERP.score([],d)},data))
+}
+
+factor(modelScore(ipPredictions, allmydata))
+
+
+// map(function(x){
+// 	return [x.support(), x.score()]
 // }
 
-// var utterancePrior = function() {
-//   var utterances = ["generic is true",
-//                     "generic is false"]
-//  // var utterances = ["generic is true",
-//   //                  "mu"]                    
-//   var i = randomInteger(utterances.length)
-//   return utterances[i]
-// }
-
-// var meaning = function(utt,state, theta) {
-//   return utt=="generic is true"? state>theta :
-//          utt=="generic is false"? state<=theta :
-//          true
-// }
-
-// var listener0 = cache(function(utterance, theta) {
-//   Enumerate(function(){
-//     var state = statePrior()
-//     var m = meaning(utterance, state, theta)
-//     factor(m?0:-Infinity)
-//     return state
-//   })
-// })
-
-// var speaker1 = cache(function(state, theta) {
-//   Enumerate(function(){
-//     var utterance = utterancePrior()
-//     var L0 = listener0(utterance, theta)
-//     factor(L0.score([],state))
-//     return utterance
-//   })
-// })
-
-// var listener1 = function(utterance) {
-//   Enumerate(function(){
-//     var state = statePrior()
-//     var theta = thetaPrior()
-//     var S1 = speaker1(state, theta)
-//     factor(S1.score([],utterance))
-//     return state
-//   })
-// }
-
-// listener1("generic is true")
+// 	,ipPredictions)
