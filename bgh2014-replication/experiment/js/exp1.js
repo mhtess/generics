@@ -15,7 +15,6 @@ Object.prototype.getKeyByValue =function( value ) {
     }
 }
 
-
 function make_slides(f) {
   var slides = {};
 
@@ -33,6 +32,15 @@ function make_slides(f) {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
+
+
+  slides.intermediate_motivation = slide({
+    name : "intermediate_motivation",
+    button : function() {
+      exp.go(); //use exp.go() if and only if there is no "present" data.
+    }
+  });
+
 
   slides.implied_prevalence = slide({
     name: "implied_prevalence",
@@ -141,28 +149,45 @@ function make_slides(f) {
      (the variable 'stim' will change between each of these values,
       and for each of these, present_handle will be run.) */
 
-    present : _.zip(_.shuffle([
-                          {"prevalence":0}, {"prevalence":0},
-                          {"prevalence":0.33},{"prevalence":0.33},
-                          {"prevalence":0.66},{"prevalence":0.66},
-                          {"prevalence":1},{"prevalence":1}]),
-                    _.shuffle([
-                      {"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
-                      {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
-                      {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
-                      {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}]),
-                    // _.shuffle([
-                    //       {"proptype":"color"}, {"proptype":"color"},
-                    //       {"proptype":"color"},{"proptype":"part"},
-                    //       {"proptype":"part"},{"proptype":"part"},
-                    //       {"proptype":"color-part"},{"proptype":"color-part"}]),
-                    _.shuffle(colors)),
+    present : exp.stims[0],
 
+                  // _.zip(
+                  //   [_.shuffle([
+                  //         {"prevalence":0}, {"prevalence":0},
+                  //         {"prevalence":0.33},{"prevalence":0.33},
+                  //         {"prevalence":0.66},{"prevalence":0.66},
+                  //         {"prevalence":1},{"prevalence":1}]),
+                  //   _.shuffle([
+                  //         {"prevalence":0}, {"prevalence":0},
+                  //         {"prevalence":0.33},{"prevalence":0.33},
+                  //         {"prevalence":0.66},{"prevalence":0.66},
+                  //         {"prevalence":1},{"prevalence":1}])],
+                  //   [_.shuffle([
+                  //     {"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
+                  //     {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
+                  //     {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
+                  //     {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}]),
+                  //   _.shuffle([
+                  //     {"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
+                  //     {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
+                  //     {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
+                  //     {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}])]
+                  //   ,
+                  //   // _.shuffle([
+                  //   //       {"proptype":"color"}, {"proptype":"color"},
+                  //   //       {"proptype":"color"},{"proptype":"part"},
+                  //   //       {"proptype":"part"},{"proptype":"part"},
+                  //   //       {"proptype":"color-part"},{"proptype":"color-part"}]),
+                  //   _.shuffle(colors), ,
+                  //   exp.stims.shift()//takes the first list of lists
+                  //   ),
 
     //this gets run only at the beginning of the block
     present_handle : function(stim) {
+
       this.startTime = Date.now();
       this.stim = stim;
+      console.log(this.stim)
 
       this.stim.prevalence = this.stim[0]["prevalence"]
       this.stim.category = this.stim[1]["kind"]
@@ -171,6 +196,10 @@ function make_slides(f) {
       //this.stim.proptype = this.stim[2]["proptype"]
       this.stim.proptype = _.sample(["color","part","color-part"])
       this.stim.colorword = colors.getKeyByValue(this.stim[2])
+      this.stim.categoryName = this.stim[3]["category"]
+
+
+      this.stim.determiner = this.stim[4]
 
       var colorPart;
 
@@ -204,12 +233,16 @@ function make_slides(f) {
 
       this.stim.colorpartword = colors.getKeyByValue(this.stim.colorPartColor)
 
+      this.stim.determiner == 'generic' ? 
+        this.stim.np = utils.upperCaseFirst(this.stim.categoryName) :
+        this.stim.np = utils.upperCaseFirst(this.stim.determiner) + " " + this.stim.categoryName
+
       this.stim.proptype == 'part' ? 
-        this.utterance = "Crullets have " + this.stim.propertyName:
+        this.utterance = this.stim.np + " have " + this.stim.propertyName:
         this.stim.proptype == 'color' ? 
-          this.utterance = "Crullets are " + this.stim.colorword:
+          this.utterance = this.stim.np + " are " + this.stim.colorword:
           this.stim.proptype == 'color-part' ?
-            this.utterance = "Crullets have " + this.stim.colorpartword +" "+ this.stim.colorPart:
+            this.utterance = this.stim.np + " have " + this.stim.colorpartword +" "+ this.stim.colorPart:
             null
 
 
@@ -230,7 +263,7 @@ function make_slides(f) {
         "tar1":0, // never has a tail
         "tar2":0, // always has a crest
         "prop1":{"mean":0, "var":0.05}, //low height variance
-        "prop1":{"mean":0, "var":0.5}, //high fatness variance
+        "prop2":{"mean":0, "var":0.05}, //high fatness variance
         "var":0.01, //overall variance (overwritten by any specified variances)
       };
 
@@ -243,7 +276,7 @@ function make_slides(f) {
         "tar1":0, // never has a tail
         "tar2":0, // always has a crest
         "prop1":{"mean":0, "var":0.05}, //low height variance
-        "prop1":{"mean":0, "var":0.5}, //high fatness variance
+        "prop2":{"mean":0, "var":0.05}, //high fatness variance
         "var":0.001, //overall variance (overwritten by any specified variances)
       };
 
@@ -267,10 +300,10 @@ function make_slides(f) {
                                             genus.draw(x[0], {}, scale):
                                             negGenus.draw(x[0],{}, scale)});
 
-       console.log(this.stim.prevalence, this.stim.property)
-       console.log(this.stim.proptype)
-       console.log(this.stim.colorPartColor)
-       console.log(this.stim.colorPartLabel)
+       // console.log(this.stim.prevalence, this.stim.property)
+       // console.log(this.stim.proptype)
+       // console.log(this.stim.colorPartColor)
+       // console.log(this.stim.colorPartLabel)
 
       // _.zip(cells,properties).map(function(x){x[1]=="tar1" ? 
       //                                       genus.draw(x[0],{"tar1":1}, scale):
@@ -370,7 +403,14 @@ function make_slides(f) {
    //     "stim_color": this.stim.color,
    //     "stim_part":this.stim.part
       });
+    },
+
+    end : function() {
+      this.present = exp.stims.shift();
+      debugger;
+      //exp.stims.shift();
     }
+
   });
 
 
@@ -420,8 +460,62 @@ function init() {
   exp.condition = "truth_conditions";
 //  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
-  exp.determiner = _.shuffle(["generic","some","most","all"]);
-  exp.numTrials= 10;
+  var determiners = _.shuffle([utils.fillArray("generic",8),
+                              utils.fillArray("some",8),
+                              utils.fillArray("most",8),
+                              utils.fillArray("all",8)])
+  exp.numTrials = animalNames.length;
+  var shuffledStims = _.shuffle(animalNames);
+  exp.stims = [_.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(0,8), determiners.pop()),
+              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(8,16),determiners.pop()),
+              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(16,24),determiners.pop()),
+              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(24,32),determiners.pop())];
+
+  console.log(exp.stims)
+
+
+              // _.shuffle(prevlevObj),_.shuffle(prevlevObj),_.shuffle(prevlevObj)],
+              // [,_.shuffle(propertyObj),_.shuffle(propertyObj),_.shuffle(propertyObj)],
+              // [,_.shuffle(colors),_.shuffle(colors),_.shuffle(colors)],
+              // [,shuffledStims.slice(8,16),shuffledStims.slice(16,24),shuffledStims.slice(24,32)])
+
+                  // _.zip(
+                  //   [_.shuffle([
+                  //         {"prevalence":0}, {"prevalence":0},
+                  //         {"prevalence":0.33},{"prevalence":0.33},
+                  //         {"prevalence":0.66},{"prevalence":0.66},
+                  //         {"prevalence":1},{"prevalence":1}]),
+                  //   _.shuffle([
+                  //         {"prevalence":0}, {"prevalence":0},
+                  //         {"prevalence":0.33},{"prevalence":0.33},
+                  //         {"prevalence":0.66},{"prevalence":0.66},
+                  //         {"prevalence":1},{"prevalence":1}])],
+                  //   [_.shuffle([
+                  //     {"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
+                  //     {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
+                  //     {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
+                  //     {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}]),
+                  //   _.shuffle([
+                  //     {"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
+                  //     {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
+                  //     {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
+                  //     {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}])]
+                  //   ,
+                  //   // _.shuffle([
+                  //   //       {"proptype":"color"}, {"proptype":"color"},
+                  //   //       {"proptype":"color"},{"proptype":"part"},
+                  //   //       {"proptype":"part"},{"proptype":"part"},
+                  //   //       {"proptype":"color-part"},{"proptype":"color-part"}]),
+                  //   _.shuffle(colors), ,
+                  //   _.shuffle(animalNames)//takes the first list of lists
+                  //   ),
+
+
+
+
+
+//  exp.stims = [["a","b"],["c","d"]]; // list of blocks of stims
+
 
   // exp.numTrials = utils.flatten(allstims).length;
 
@@ -455,9 +549,12 @@ function init() {
    //                      "signpost", exp.condition,
    //                      'subj_info', 'thanks'];
 
-   exp.structure=["i0", "instructions", exp.condition, 
+   exp.structure=["i0",  "instructions", exp.condition,  "intermediate_motivation", exp.condition, 
+              "intermediate_motivation", exp.condition, "intermediate_motivation", exp.condition, 
                         'subj_info', 'thanks'];
-
+   // exp.structure=["i0",  "instructions", exp.condition, exp.condition, 
+   //           exp.condition, exp.condition, 
+   //                      'subj_info', 'thanks'];
    //exp.structure=['subj_info', 'thanks'];
  
   exp.data_trials = [];

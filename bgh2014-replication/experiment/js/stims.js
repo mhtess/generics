@@ -45,10 +45,71 @@ var colors = {
 var categories = ['fish','flower','bird','bug']
 
 var animalColorParts = {
-    "flower":[["stem","col1"],["petals","col3"]],
-    "fish": [["body","col1"],["fins","col2"]],
+    "flower":[["stems","col1"],["petals","col3"]],
+    "fish": [["bodies","col1"],["fins","col2"]],
     "bug":[["legs","col1"],["heads","col2"]],
-    "bird": [["body","col2"],["wing","col3"]]};
+    "bird": [["bodies","col2"],["wings","col3"]]};
+
+
+  var prevlevObj = [{"prevalence":0}, {"prevalence":0},
+                          {"prevalence":0.33},{"prevalence":0.33},
+                          {"prevalence":0.66},{"prevalence":0.66},
+                          {"prevalence":1},{"prevalence":1}];
+
+  var propertyObj = [{"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
+                      {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
+                      {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
+                      {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}];
+
+
+var animalNames = 
+    [{list:0,category: "morseths"},
+    {list:1, category: "ollers"},
+    {list:2, category: "kweps"},
+
+    {list:0,category: "blins"},
+    {list:1, category: "reesles"},
+    {list:2, category: "dorbs"},
+
+    {list:0,category: "zorbs"},
+    {list:1, category: "taifels"},
+    {list:2, category: "trufts"},
+
+    {list:0,category: "daiths"},
+    {list:1, category: "mooks"},
+    {list:2, category: "frams"},
+
+    {list:0,category: "moxes"},
+    {list:1, category: "luzaks"},
+    {list:2, category: "javs"},
+
+    {list:0,category: "ludinos"},
+    {list:1, category: "ackles"},
+    {list:2, category: "feps"},
+
+    {list:0,category: "cheebas"},
+    {list:1, category: "elleps"},
+    {list:2, category: "kazzes"},
+
+    {list:0,category: "lorches"},
+    {list:1, category: "plovs"},
+    {list:2, category: "noobs"},
+
+    {list:0,category: "glippets"},
+    {list:1, category: "sapers"},
+    {list:2, category: "stups"},
+
+    {list:0,category: "krivels"},
+    {list:1, category: "zoovs"},
+    {list:2, category: "thups"},
+
+    {list:3, category: "crullets"},
+    {list:3, category: "feps"}]
+      
+
+// var animalParts = {
+
+// }
 
 // var cells = ['foo','bar','moo','zonk'];
 // var papers = cells.map(function(x){return Raphael(x,300,300)});
