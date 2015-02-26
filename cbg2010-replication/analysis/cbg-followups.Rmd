@@ -1,0 +1,250 @@
+---
+title: "cbg-followups"
+author: "mht"
+date: "February 25, 2015"
+output: html_document
+---
+
+```{r helpers}
+bootstrap.ci.tc <- function(x){
+  
+  agr = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=mean)
+  agr$CILow = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.low)$truth_num
+  agr$CIHigh = aggregate(truth_num ~ stim_prevalence + stim_determiner + stim_type, data=x, FUN=ci.high)$truth_num
+  agr$YMin = agr$truth_num - agr$CILow
+  agr$YMax = agr$truth_num + agr$CIHigh
+  return(agr)
+}
+
+bool.tonum<-function(bool){abs(as.numeric(bool)*1-2)}
+
+discretize_beta<- function(gamma,delta,bins = c(0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99)) {
+  s_alpha<- gamma*delta
+  s_beta <- (1 - gamma) * delta
+  beta_pdf<- function(x){
+    return((x^(s_alpha-1))*((1-x)^(s_beta-1)))
+  }
+  return(sapply(bins,beta_pdf))
+}
+
+
+
+
+
+```
+
+
+# Exp 10e(xtra)
+
++ Truth conditions
++ 10, 30, 50, 70, 90 prevalence
++ generic
++ 3 conditions: Danger, distinct, bare
+
+```{r}
+setwd("~/Documents/research/generics/cbg2010-replication/analysis/")
+d<-read.csv('../data/cbgR-exp10e-trials.csv',header=T)
+d$workerid<-factor(d$workerid)
+#write.csv(d, file='../data/cbgR-exp10e-trials-churchrdy.csv')
+
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+table(d$stim_type,d$item)
+table(d$stim_type,d$stim_part)
+
+levels(factor(subset(d,stim_type=='bare')$item))
+
+d$rt <- d$rt/1000
+d$truth_conditions <- factor(as.logical(levels(d$response)[d$response]), 
+                              levels=c("TRUE","FALSE"))
+
+d$truth_num <- bool.tonum(d$truth_conditions)
+
+ggplot(d,aes(x=factor(truth_num),fill=stim_type))+
+  geom_histogram()+
+ # facet_wrap(~item)
+  facet_wrap(~workerid)
+
+#split by first half/second half to look at order effects
+#tc.bs<-bootstrap.ci.tc(d[d$trialNum>15,])
+
+tc.bs<-bootstrap.ci.tc(d)
+
+tc.bs$stim_type<-factor(tc.bs$stim_type,levels=c('danger','distinct','bare'))
+
+ggplot(tc.bs, aes(x=stim_prevalence,y=truth_num,
+                  colour=stim_type, group=stim_type))+
+  geom_point(size=3, position=position_dodge(4))+
+  geom_line(size=0.5,position=position_dodge(4))+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_type),
+              width=5,
+              size=0.8,
+              position=position_dodge(4))+
+  scale_colour_brewer(type='qual',palette=6)+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  guides(color=guide_legend(title="Context"))+
+  xlab("XX% of kind with property")+
+  ylab('proportion of "true" responses')+
+  coord_fixed(100)
+
+
+
+
+d$prev_centered <- scale(d$stim_prevalence, scale=F)
+#contrasts(d$stim_type) = cbind(quad = c(-1,2,-1), lin = c(-1, 0, 1))
+#contrasts(d$stim_type) = cbind(danger = c(0,1,0), ni = c(0, 0, 1))
+
+
+
+rs<-glmer(truth_num ~ prev_centered*stim_type + 
+            (1 | workerid), 
+          data=d, family = 'binomial')
+
+summary(rs)
+
+```
+
+## FBT: lvRSA
+
++ alpha = 1
+
+### Data analysis parameters and cogmod hyperparameters
+
+```{r fbt.exp10e}
+
+d<-read.csv('../models/bayesian_analysis/lvRSA_c1_expts10e_12_generic_mh1000_10.csv',header=F)
+
+ft.phi <- d %>% 
+  select(V1,V2) %>% 
+  rename(phi_tc=V1,phi_ip=V2) %>%
+  gather(variable,value) %>% 
+  separate(variable,into=c("parameter","task"), by="_")
+
+ft.phi %>%
+  group_by(parameter, task) %>%
+  summarise(mean=mean(value),
+      CIlow=quantile(value,probs=0.025),
+      CIhigh=quantile(value,probs=0.975))
+
+qplot(data=ft.phi,x=value,geom='histogram',fill=task)+
+  xlim(0,1)+
+  facet_wrap(~task)
+
+
+
+lv.alpha<-d %>% select(V36) %>% rename(alpha=V36)
+qplot(data=lv.alpha,x=alpha,geom='histogram')
+
+d.tidy <- d %>%
+  select(V3,V4, V6, V7, V9, V10) %>%
+  rename(danger_gamma = V3,
+         danger_delta = V4,
+         bare_gamma = V6,
+         bare_delta = V7,
+         distinct_gamma = V9,
+         distinct_delta = V10) %>%
+  gather(variable,value) %>%
+  separate(variable, into=c("context","parameter"), by="_")
+
+
+d.tidy %>%
+  group_by(context,parameter) %>%
+  summarise(mean=mean(value),
+      CIlow=quantile(value,probs=0.025),
+      CIhigh=quantile(value,probs=0.975))
+
+d.tidy$context<-factor(d.tidy$context,
+                        levels=c('bare','distinct','danger'))
+
+d.tidy$parameter<-factor(d.tidy$parameter, levels=c("gamma","delta"))
+                      #   labels(expression(gamma),expression(delta)))
+
+ggplot(d.tidy,aes(x=value,fill=context))+
+  #geom_density(alpha=0.4)+
+  geom_histogram(binwidth=0.01, alpha = 0.8)+
+  theme_paper()+
+ scale_x_continuous(limits=c(0,0.5))+
+  scale_fill_brewer(type='qual',palette=6)+
+  facet_grid(context~parameter,scales='free',labeller= label_parsed)+
+  theme(strip.text.x = element_text(size=14,color='black'),
+        legend.position='bottom',
+        legend.direction='horizontal',
+        strip.text.y = element_text(size=22,angle=0))+
+  guides(fill=guide_legend(title="Context"))+
+  xlab("inferred value")+
+  ylab("posterior density")
+
+```
+
+### Posterior predictive on prevalence prior
+
+```{r}
+
+bns<-c(0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99)
+
+f.tidy <- d %>%
+  select(V3,V4, V6, V7, V9, V10) %>%
+  rename(danger_gamma = V3,
+         danger_delta = V4,
+         bare_gamma = V6,
+         bare_delta = V7,
+         distinct_gamma = V9,
+         distinct_delta = V10) 
+
+f.tidy$s<- row.names(f.tidy)
+
+f.tidy<- f.tidy %>% 
+  gather(variable,value,-s) %>% 
+  separate(variable, into=c("parameter","context"), by="_") %>% 
+  spread(context,value)
+
+x = with(f.tidy, discretize_beta(gamma, delta))
+colnames(x) <- bns
+d.tidy2 <- cbind(f.tidy, x)
+
+d.tidy3<-d.tidy2 %>% 
+  rename(context=parameter) %>%
+  gather(bin, prob, -s, -context, -delta, -gamma)
+
+db.stats<- d.tidy3 %>% 
+  group_by(context, bin) %>%
+  summarise(mean=mean(prob),
+      CIlow=quantile(prob,probs=0.025),
+      CIhigh=quantile(prob,probs=0.975))
+
+db.norm <- data.frame(
+  danger_mean = with(subset(db.stats, context=='danger'), mean / sum(mean)),
+  bare_mean = with(subset(db.stats, context=='bare'), mean / sum(mean)),
+  distinct_mean = with(subset(db.stats, context=='distinct'), mean / sum(mean)),
+  danger_CIlow = with(subset(db.stats, context=='danger'), CIlow / sum(CIlow)),
+  bare_CIlow = with(subset(db.stats, context=='bare'), CIlow / sum(CIlow)),
+  distinct_CIlow = with(subset(db.stats, context=='distinct'), CIlow / sum(CIlow)),
+  danger_CIhigh = with(subset(db.stats, context=='danger'),  CIhigh / sum(CIhigh)),
+  bare_CIhigh = with(subset(db.stats, context=='bare'), CIhigh / sum(CIhigh)),
+  distinct_CIhigh = with(subset(db.stats, context=='distinct'), CIhigh / sum(CIhigh)))
+
+db.norm$bin <- to.n(bns)
+
+db.norm.tidy <- db.norm %>%
+  gather(variable,value,-bin) %>%
+  separate(variable,into=c('context','statistic'), by ="_")%>%
+  spread(statistic, value)
+
+ggplot(db.norm.tidy,aes(x=100*bin,y=mean,fill=context))+
+  geom_bar(stat='identity',position=position_dodge())+
+  #xlim(0,100)+
+  facet_wrap(~context)+
+  #guides(fill=F)+
+  scale_x_continuous(breaks=c(0,20,40,60,80,100))+
+  scale_fill_brewer(type='qual',palette=6)+
+  xlab("prevalence level")+
+  ylab("inferred prior probability")+
+  theme(strip.background = element_blank(),
+       strip.text.x = element_blank(),
+        legend.position='bottom',
+        legend.direction='horizontal')
+```
+
+

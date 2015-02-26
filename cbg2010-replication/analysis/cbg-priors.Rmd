@@ -1,0 +1,120 @@
+---
+title: "cbg-priors"
+author: "mht"
+date: "February 25, 2015"
+output: html_document
+---
+
+```{r}
+setwd("~/Documents/research/generics/cbg2010-replication/analysis")
+d<-read.table('../data/cbgR-exp11-trials.tsv',header=T)
+de<-read.table('../data/cbgR-exp11e-trials.tsv',header=T)
+de$workerid<-de$workerid+length(unique(d$workerid))
+d<-rbind(d,de)
+
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+table(d$stim_type,d$item)
+table(d$stim_type,d$stim_part)
+
+
+d.tidy<-d %>%   
+  select(workerid,rt,
+              response0,response1,response2,response3,response4,
+              stim_type) %>%
+  rename(context=stim_type) %>%
+  gather(option,value,-workerid,-rt,-context)
+
+d.tidy$context<-factor(d.tidy$context,
+                       levels=c("danger-distinct",
+                                "nondistinctive",
+                                "bare"), 
+                        labels=c("dangerous & distinctive", 
+                                 "nondistinctive & irrelevant",
+                                 "plain"))
+ggplot(d.tidy,aes(x=value,fill=context))+
+  geom_histogram(binwidth=10)+
+  facet_wrap(~context)+
+  guides(fill=F)+
+  scale_fill_brewer(type='qual',palette=6)+
+  xlab('prevalence')+
+  ggtitle('human elicited prior distribution')
+
+
+
+
+
+
+
+
+# 
+# ddply(d.tidy, .(context), summarise,
+#       median = mean(value))
+# 
+# 
+# 
+# 
+# dip.test(subset(d.tidy,context=='plain')$value)
+# dip.test(subset(d.tidy,context=="nondistinctive & irrelevant")$value)
+# dip.test(subset(d.tidy,context=='dangerous & distinctive')$value)
+# 
+# 
+# contrasts(d.tidy$context)<-cbind(dd = c(-2,1,1), ni = c(0, 1, -1))
+# contrasts(d.tidy$context)<-cbind(dd = c(1,0,-1), ni = c(-1, 2, -1))
+# 
+# rs<-lmer(value ~ context + (1 | workerid), data=d.tidy)
+# summary(rs)
+# 
+# wilcox.test(value ~ context, 
+#             data = subset(d.tidy, context!="nondistinctive & irrelevant"))
+# 
+# wilcox.test(value ~ context, 
+#             data = subset(d.tidy, context!='dangerous & distinctive'))
+# 
+# wilcox.test(value ~ context, 
+#             data = subset(d.tidy, context!='plain'))
+# 
+# kruskal.test(value ~ context, data = d.tidy) 
+# 
+# ks.test(subset(d.tidy,context=='plain')$value,
+#         subset(d.tidy,context=='dangerous & distinctive')$value)
+# 
+# ks.test(subset(d.tidy,context=="nondistinctive & irrelevant")$value,
+#         subset(d.tidy,context=='dangerous & distinctive')$value)
+# 
+# ks.test(subset(d.tidy,context=='plain')$value,
+#         subset(d.tidy,context=="nondistinctive & irrelevant")$value)
+
+
+```
+
+Single response, free response prior
+
+```{r prior1}
+d<-read.csv('../data/cbg-prior1-trials.csv',header=T)
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+table(d$stim_type,d$item)
+table(d$stim_type,d$stim_part)
+
+
+d.tidy<-d%>%select(workerid,rt,response0,stim_type) %>%
+  rename(context=stim_type) %>%
+  gather(option,value,-workerid,-rt,-context)
+
+d.tidy$context<-factor(d.tidy$context,
+                       levels=c("danger-distinct",
+                                "nondistinctive",
+                                "bare"), 
+                        labels=c("dangerous & distinctive", 
+                                 "nondistinctive & irrelevant",
+                                 "plain"))
+ggplot(d.tidy,aes(x=value,fill=context))+
+  geom_histogram(binwidth=10)+
+  facet_wrap(~context)+
+  guides(fill=F)+
+  scale_fill_brewer(type='qual',palette=6)+
+  xlab('prevalence')+
+  ggtitle('human elicited prior distribution')
+
+
+```
+
