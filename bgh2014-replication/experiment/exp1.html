@@ -52,8 +52,19 @@
 
   <div class="slide" id="instructions">
     <h3>Instructions</h3>
-    <p>You are a space-faring scientist, exploring the outer reaches of the galaxy. You come across a new planet and an alien on it named Droid. Droid is learning how to teach about the animals on his planet. Sometimes, Droid gets confused and says things that are wrong. Please help Droid by telling him whether each of his statements is <em>right</em> or <em>wrong</em>.
+    <p>Good job. Droid thinks you are going to be great help to him. </p>
+      <img id="droid" src="stims_raw/droid.png"style="max-width:256px;max-height:256px"></img>
+    <p>Droid is learning how to teach about the animals on his planet. As you know, sometimes Droid gets confused and says things that are wrong. Please help Droid by telling him whether each of his statements is <em>right</em> or <em>wrong</em>.
       <p>On each trial, you will see pictures of animals and hear what Droid has to say about them.</p>
+    <button onclick="_s.button()">Continue</button>
+  </div>
+
+  <div class="slide" id="practice_instructions">
+    <h3>Instructions</h3>
+    <p>You are a space-faring scientist, exploring the outer reaches of the galaxy. You come across a new planet and an alien on it named Droid.<p>
+    <img id="droid" src="stims_raw/droid.png"style="max-width:256px;max-height:256px"></img>
+    <p> Droid is learning how to teach about things on his planet. Sometimes, Droid gets confused and says things that are wrong. Please help Droid by telling him whether each of his statements is <em>right</em> or <em>wrong</em>.
+      <p>Let's begin with 4 practice trials, to make sure you understand how this works.</p>
     <button onclick="_s.button()">Continue</button>
   </div>
 
@@ -102,8 +113,21 @@
 
 
     <p>Is Droid's statement <em>right</em> or <em>wrong</em>?</p>
-    <label><input type="radio" name="radio_button" value="FALSE"/>Wrong</label>
-    <label><input type="radio" name="radio_button" value="TRUE"/>Right</label>
+    <label><input type="radio" name="radio_button" value=0/>Wrong</label>
+    <label><input type="radio" name="radio_button" value=1/>Right</label>
+    <button onclick="_s.button()">Continue</button>
+    <div class="err">Please make a choice before continuing.</div>
+  </div>
+
+  <div class="slide"  id="practice">
+
+    <p>Droid says: <span id="practiceUtterance">{{}}</span></p>
+    <br>
+    <img id="practiceImg" style="max-width:256px;max-height:128px"></img>
+
+    <p>Is Droid's statement <em>right</em> or <em>wrong</em>?</p>
+    <label><input type="radio" name="radio_button" value=0/>Wrong</label>
+    <label><input type="radio" name="radio_button" value=1/>Right</label>
     <button onclick="_s.button()">Continue</button>
     <div class="err">Please make a choice before continuing.</div>
   </div>

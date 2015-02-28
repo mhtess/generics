@@ -26,13 +26,19 @@ function make_slides(f) {
      }
   });
 
+  slides.practice_instructions = slide({
+    name : "practice_instructions",
+    button : function() {
+      exp.go(); //use exp.go() if and only if there is no "present" data.
+    }
+  });
+
   slides.instructions = slide({
     name : "instructions",
     button : function() {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
-
 
   slides.intermediate_motivation = slide({
     name : "intermediate_motivation",
@@ -145,44 +151,9 @@ function make_slides(f) {
   slides.truth_conditions = slide({
     name: "truth_conditions",
 
-    /* trial information for this block
-     (the variable 'stim' will change between each of these values,
-      and for each of these, present_handle will be run.) */
 
-    present : exp.stims[0],
+    present :  exp.stims.shift(),//exp.stims[0],
 
-                  // _.zip(
-                  //   [_.shuffle([
-                  //         {"prevalence":0}, {"prevalence":0},
-                  //         {"prevalence":0.33},{"prevalence":0.33},
-                  //         {"prevalence":0.66},{"prevalence":0.66},
-                  //         {"prevalence":1},{"prevalence":1}]),
-                  //   _.shuffle([
-                  //         {"prevalence":0}, {"prevalence":0},
-                  //         {"prevalence":0.33},{"prevalence":0.33},
-                  //         {"prevalence":0.66},{"prevalence":0.66},
-                  //         {"prevalence":1},{"prevalence":1}])],
-                  //   [_.shuffle([
-                  //     {"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
-                  //     {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
-                  //     {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
-                  //     {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}]),
-                  //   _.shuffle([
-                  //     {"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
-                  //     {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
-                  //     {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
-                  //     {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}])]
-                  //   ,
-                  //   // _.shuffle([
-                  //   //       {"proptype":"color"}, {"proptype":"color"},
-                  //   //       {"proptype":"color"},{"proptype":"part"},
-                  //   //       {"proptype":"part"},{"proptype":"part"},
-                  //   //       {"proptype":"color-part"},{"proptype":"color-part"}]),
-                  //   _.shuffle(colors), ,
-                  //   exp.stims.shift()//takes the first list of lists
-                  //   ),
-
-    //this gets run only at the beginning of the block
     present_handle : function(stim) {
 
       this.startTime = Date.now();
@@ -193,26 +164,22 @@ function make_slides(f) {
       this.stim.category = this.stim[1]["kind"]
       this.stim.property = this.stim[1]["property"]
       this.stim.propertyName = this.stim[1]["propertyName"]
-      //this.stim.proptype = this.stim[2]["proptype"]
       this.stim.proptype = _.sample(["color","part","color-part"])
       this.stim.colorword = colors.getKeyByValue(this.stim[2])
       this.stim.categoryName = this.stim[3]["category"]
-
-
       this.stim.determiner = this.stim[4]
+      this.stim.propSizes = this.stim[5]
+
+      console.log(this.stim.propSizes)
 
       var colorPart;
 
       $(".err").hide();
-      //cells.map(function(x){}))
       $("input[name=radio_button]").prop('checked', false); 
 
-      //console.log(this.stim.propertyName)
 
       // stim.prototype can be color, color part, or part
-
       // if its color, set the color to be that color
-
       // if its color-part,
       // --> sample an appropriate body part
       // --> sample a color
@@ -261,10 +228,10 @@ function make_slides(f) {
         "col4":{"mean":this.stim.color},
         "col5":{"mean":this.stim.color},
         "tar1":0, // never has a tail
-        "tar2":0, // always has a crest
-        "prop1":{"mean":0, "var":0.05}, //low height variance
-        "prop2":{"mean":0, "var":0.05}, //high fatness variance
-        "var":0.01, //overall variance (overwritten by any specified variances)
+        "tar2":0, // never has a crest
+        "prop1":{"mean":this.stim.propSizes[0]}, // mean size, unif(0, 0.5, 1)
+        "prop2":{"mean":this.stim.propSizes[1]},
+        "var":0.001, //overall variance (overwritten by any specified variances)
       };
 
       var negGenusOptions = {
@@ -274,9 +241,9 @@ function make_slides(f) {
         "col4":{"mean":"#FFFFFF"},
         "col5":{"mean":"#FFFFFF"},
         "tar1":0, // never has a tail
-        "tar2":0, // always has a crest
-        "prop1":{"mean":0, "var":0.05}, //low height variance
-        "prop2":{"mean":0, "var":0.05}, //high fatness variance
+        "tar2":0, // never has a crest
+        "prop1":{"mean":this.stim.propSizes[0]}, // mean size, unif(0, 0.5, 1)
+        "prop2":{"mean":this.stim.propSizes[1]},
         "var":0.001, //overall variance (overwritten by any specified variances)
       };
 
@@ -284,6 +251,9 @@ function make_slides(f) {
 
       genusOptions[this.stim.colorPartLabel].mean = this.stim.colorPartColor
       this.stim.proptype == 'part' ? genusOptions[this.stim.property] = 1 : null
+
+
+
       var genus = new Ecosystem.Genus(this.stim.category, genusOptions)
 
 
@@ -292,90 +262,11 @@ function make_slides(f) {
                                  utils.fillArray(false,6-animalsWithProperties)))
 
 
-
-
-      // console.log(properties)
-      // console.log(negGenus.propsAndParams)
       _.zip(cells,properties).map(function(x){x[1] ? 
                                             genus.draw(x[0], {}, scale):
                                             negGenus.draw(x[0],{}, scale)});
 
-       // console.log(this.stim.prevalence, this.stim.property)
-       // console.log(this.stim.proptype)
-       // console.log(this.stim.colorPartColor)
-       // console.log(this.stim.colorPartLabel)
 
-      // _.zip(cells,properties).map(function(x){x[1]=="tar1" ? 
-      //                                       genus.draw(x[0],{"tar1":1}, scale):
-      //                                         x[1]=="tar2" ?
-      //                                        genus.draw(x[0],{"tar2":1}, scale):
-      //                               genus.draw(x[0],{}, scale)});
-
-
-     // $(".query").html(this.query_prompt);
-
-      // this.stim = exp.stims[stim_num]; // allstims should be randomized, or stim_num should be
-      // this.trialNum = stim_num;
-
-      // //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
-      // //this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
-      // this.determiner = exp.determiner[0] // exp.determiner between-subjects var
-      // // BAD
-      // //this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
-      // // BETTER
-      // this.stimtype = exp.stims[stim_num].context
-
-      // //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
-      // this.prevalence = exp.prevalence_levels[this.stim.list].splice(0,1)[0] // grab prevalence level for this list
-
-      // this.stimtype == 'bare' ? this.adjective = '' : null;      
-      // this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;
-      // this.stimtype == 'distinct' ? this.adjective = 'distinctive ': null;
-      // this.stimtype == 'irrelevant' ? this.adjective = this.stim.extraneous + ' ': null;
-      // this.stimtype == 'danger-distinct' ? this.adjective = 'dangerous ' : null;
-      // this.stimtype == 'nondistinctive' ? this.adjective = this.stim.extraneous + ' ': null;
-
-      // this.evidence_prompt = this.prevalence+ "% of "  + this.stim.category + " have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n";
-
-      // if (this.determiner=='generic'){
-      //   var query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n";
-      // }
-      // else{
-      //   var query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.stim.color + " " + this.stim.part + ".\n";
-      // }
-
-      // if (this.stimtype == 'danger'){
-      //   evidence_prompt+=this.stim.danger +"\n No other animals on this island have this kind of " + this.stim.part
-      // }
-
-      // if (this.stimtype == 'irrelevant'){
-      //   evidence_prompt+=this.stim.irrelevant +"\n Other animals on this island also have this kind of " + this.stim.part
-      // }
-
-      // this.determiner=='generic' ?
-      //   (this.stimtype=='bare' ?
-      //     this.query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n" :
-      //     this.query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n"
-      //     ) :
-      //   (this.stimtype=='bare' ?
-      //     this.query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.stim.color + " " + this.stim.part + ".\n":
-      //     this.query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n"
-      //   );
-
-      // this.determiner=='generic' ?
-      //   this.query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n":
-      //   this.query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n";
-
-      // this.stimtype=='danger' ? this.evidence_prompt+=this.stim.dangerous:null;
-      // this.stimtype=='distinct' ? this.evidence_prompt+=this.stim.distinctive:null;
-      // this.stimtype=='irrelevant' ? this.evidence_prompt+=this.stim.irrelevant:null;
-      // this.stimtype == 'danger-distinct' ? this.evidence_prompt+=(this.stim.dangerous + ' ' + this.stim.dangdistinctive):null;
-      // this.stimtype=='nondistinctive' ? this.evidence_prompt+=(this.stim.irrelevant + ' ' + this.stim.nondistinctive):null;
-
-
-
-       // this.init_radiios();
-       // exp.sliderPost = null; //erase current slider value
     },
     button : function() {
       if ($("input[name=radio_button]:checked").val()==undefined) {
@@ -406,11 +297,59 @@ function make_slides(f) {
     },
 
     end : function() {
+      console.log(exp.stims.length)
       this.present = exp.stims.shift();
-      debugger;
+      //debugger;
       //exp.stims.shift();
     }
 
+  });
+
+  slides.practice = slide({
+    name: "practice",
+    present :  _.shuffle(["apples","bananas", "boat", "house"]),
+    present_handle : function(stim) {
+      this.startTime = Date.now();
+      this.stim = stim;
+      $(".err").hide();
+      $("input[name=radio_button]").prop('checked', false); 
+      var practiceUtterances={
+        "apples":"These apples are green.",
+        "bananas":"This is a picture of bananas.",
+        "boat":"This boat is brown.",
+        "house":"This house has a blue roof."
+      };
+      var practiceSolutions={
+        "apples":0,
+        "bananas":1,
+        "boat":1,
+        "house":0
+      };
+      this.solution = practiceSolutions[this.stim];
+      this.utterance = practiceUtterances[this.stim];
+      $("#practiceUtterance").html(this.utterance);
+      $("#practiceImg").attr("src","stims_raw/"+this.stim+".png");
+    },
+    button : function() {
+      if ($("input[name=radio_button]:checked").val()==undefined) {
+        $(".err").show();
+      } else {
+        this.rt = Date.now() - this.startTime;
+        this.log_responses();
+        _stream.apply(this);
+      }
+    },
+    log_responses : function() {
+
+      exp.data_trials.push({
+        "trial_type" : "practice",
+      //  "trialNum":this.trialNum,
+        "response" : $("input[name=radio_button]:checked").val(),
+        "correctResponse": this.solution,
+        "rt":this.rt,
+        "stim_type": this.stim
+      });
+    }
   });
 
 
@@ -464,53 +403,23 @@ function init() {
                               utils.fillArray("some",8),
                               utils.fillArray("most",8),
                               utils.fillArray("all",8)])
-  exp.numTrials = animalNames.length;
-  var shuffledStims = _.shuffle(animalNames);
-  exp.stims = [_.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(0,8), determiners.pop()),
-              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(8,16),determiners.pop()),
-              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(16,24),determiners.pop()),
-              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(24,32),determiners.pop())];
 
-  console.log(exp.stims)
-
-
-              // _.shuffle(prevlevObj),_.shuffle(prevlevObj),_.shuffle(prevlevObj)],
-              // [,_.shuffle(propertyObj),_.shuffle(propertyObj),_.shuffle(propertyObj)],
-              // [,_.shuffle(colors),_.shuffle(colors),_.shuffle(colors)],
-              // [,shuffledStims.slice(8,16),shuffledStims.slice(16,24),shuffledStims.slice(24,32)])
-
-                  // _.zip(
-                  //   [_.shuffle([
-                  //         {"prevalence":0}, {"prevalence":0},
-                  //         {"prevalence":0.33},{"prevalence":0.33},
-                  //         {"prevalence":0.66},{"prevalence":0.66},
-                  //         {"prevalence":1},{"prevalence":1}]),
-                  //   _.shuffle([
-                  //         {"prevalence":0}, {"prevalence":0},
-                  //         {"prevalence":0.33},{"prevalence":0.33},
-                  //         {"prevalence":0.66},{"prevalence":0.66},
-                  //         {"prevalence":1},{"prevalence":1}])],
-                  //   [_.shuffle([
-                  //     {"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
-                  //     {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
-                  //     {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
-                  //     {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}]),
-                  //   _.shuffle([
-                  //     {"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"fins"},
-                  //     {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
-                  //     {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
-                  //     {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}])]
-                  //   ,
-                  //   // _.shuffle([
-                  //   //       {"proptype":"color"}, {"proptype":"color"},
-                  //   //       {"proptype":"color"},{"proptype":"part"},
-                  //   //       {"proptype":"part"},{"proptype":"part"},
-                  //   //       {"proptype":"color-part"},{"proptype":"color-part"}]),
-                  //   _.shuffle(colors), ,
-                  //   _.shuffle(animalNames)//takes the first list of lists
-                  //   ),
+    var testdeterminers = _.shuffle([utils.fillArray("generic",2),
+                              utils.fillArray("some",2),
+                              utils.fillArray("most",2),
+                              utils.fillArray("all",2)])
+  exp.numTrials = testanimalNames.length;
+  var shuffledStims = _.shuffle(testanimalNames);
+  // exp.stims = [_.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(0,8), determiners.pop(),_.shuffle(propertySizes)),
+  //             _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(8,16),determiners.pop(),_.shuffle(propertySizes)),
+  //             _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(16,24),determiners.pop(),_.shuffle(propertySizes)),
+  //             _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(24,32),determiners.pop(),_.shuffle(propertySizes))];
 
 
+   exp.stims = [_.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(0,2), testdeterminers.pop(), _.shuffle(propertytestSizes)),
+              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(2,4),testdeterminers.pop(),_.shuffle(propertytestSizes)),
+              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(4,6),testdeterminers.pop(),_.shuffle(propertytestSizes)),
+              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(6,8),testdeterminers.pop(),_.shuffle(propertytestSizes))];
 
 
 
@@ -542,14 +451,8 @@ function init() {
     };
   //blocks of the experiment:
   // console.log(exp.instructions)
- // exp.structure=["i0", "two_afc","single_trial","two_afc","single_trial", "one_slider", "multi_slider", 'subj_info', 'thanks'];
-   // exp.structure=["i0", "instructions", exp.condition, 
-   //                      "signpost", exp.condition, 
-   //                      "signpost", exp.condition,
-   //                      "signpost", exp.condition,
-   //                      'subj_info', 'thanks'];
-
-   exp.structure=["i0",  "instructions", exp.condition,  "intermediate_motivation", exp.condition, 
+// "i0", "practice_instructions","practice","instructions",
+   exp.structure=[exp.condition,  "intermediate_motivation", exp.condition, 
               "intermediate_motivation", exp.condition, "intermediate_motivation", exp.condition, 
                         'subj_info', 'thanks'];
    // exp.structure=["i0",  "instructions", exp.condition, exp.condition, 
