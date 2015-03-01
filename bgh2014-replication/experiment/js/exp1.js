@@ -15,6 +15,10 @@ Object.prototype.getKeyByValue =function( value ) {
     }
 }
 
+function mark(el) {
+    el.style.border = "1px solid blue";
+}
+
 function make_slides(f) {
   var slides = {};
 
@@ -51,63 +55,123 @@ function make_slides(f) {
   slides.implied_prevalence = slide({
     name: "implied_prevalence",
 
-   // present : _.shuffle(_.range(numTrials)),
-  present : _.range(exp.numTrials),
-    //this gets run only at the beginning of the block
-    present_handle : function(stim_num) {
+  present : exp.stims.shift(),
+
+  present_handle : function(stim) {
+      this.stim = stim;
       this.startTime = Date.now();
+
+      this.stim.prevalence = this.stim[0]["prevalence"]
+      this.stim.category = this.stim[1]["kind"]
+      this.stim.property = this.stim[1]["property"]
+      this.stim.propertyName = this.stim[1]["propertyName"]
+      this.stim.proptype = _.sample(["color","part","color-part"])
+      this.stim.colorword = colors.getKeyByValue(this.stim[2])
+      this.stim.categoryName = this.stim[3]["category"]
+      this.stim.determiner = this.stim[4]
+      this.stim.propSizes = this.stim[5]
+
+      var colorPart;
+
+      $(".err").hide();
+      $("input[name=radio_button]").prop('checked', false); 
+
+
+      // stim.prototype can be color, color part, or part
+      // if its color, set the color to be that color
+      // if its color-part,
+      // --> sample an appropriate body part
+      // --> sample a color
+      this.stim.proptype == 'color' ?
+          this.stim.color = this.stim[2] :
+          this.stim.color = "#FFFFFF"
+
+      if (this.stim.proptype == 'color-part') {
+           colorPart = _.sample(animalColorParts[this.stim.category]);
+           this.stim.colorPart = colorPart[0];
+           this.stim.colorPartLabel = colorPart[1];
+           this.stim.colorPartColor = _.sample(colors);
+         } else {
+          this.stim.colorPart = null
+          this.stim.colorPartLabel = "col1" //just to set it equal to something
+          this.stim.colorPartColor = this.stim.color
+      } // no distinguishing color)
+
+      this.stim.colorpartword = colors.getKeyByValue(this.stim.colorPartColor)
+
+      this.stim.determiner == 'generic' ? 
+        this.stim.np = utils.upperCaseFirst(this.stim.categoryName) :
+        this.stim.np = utils.upperCaseFirst(this.stim.determiner) + " " + this.stim.categoryName
+
+      this.stim.proptype == 'part' ? 
+        this.utterance = this.stim.np + " have " + this.stim.propertyName:
+        this.stim.proptype == 'color' ? 
+          this.utterance = this.stim.np + " are " + this.stim.colorword:
+          this.stim.proptype == 'color-part' ?
+            this.utterance = this.stim.np + " have " + this.stim.colorpartword +" "+ this.stim.colorPart:
+            null
+
+
+      $("#utterance").html(this.utterance);
+
 
       $(".err").hide();
       $("#text_response").val('')
 
-      this.stim = exp.stims[stim_num]; // allstims should be randomized, or stim_num should be
-      this.trialNum = stim_num;
 
-      //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
-      //this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
-      this.determiner = exp.determiner[0] // exp.determiner between-subjects var
-      //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
-      // BAD
-      //this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
-      // BETTER
-      this.stimtype = exp.stims[stim_num].context
+      var scale = 0.5;
+      var cells = [['svg0a','svg1a','svg2a','svg3a','svg4a','svg5a'],
+                  ['svg0b','svg1b','svg2b','svg3b','svg4b','svg5b'],
+                  ['svg0c','svg1c','svg2c','svg3c','svg4c','svg5c'],
+                  ['svg0d','svg1d','svg2d','svg3d','svg4d','svg5d']];
 
-      //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
+      cells.map(function(tablecells){
+        tablecells.map(function(cell){$('#'+cell).empty()})});
 
-      this.stimtype == 'bare' ? this.adjective = '' : null;      
-      this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;
-      this.stimtype == 'distinct' ? this.adjective = 'distinctive ': null;
-      this.stimtype == 'irrelevant' ? this.adjective = this.stim.extraneous + ' ': null;
-      this.stimtype == 'danger-distinct' ? this.adjective = 'dangerous ' : null;
-      this.stimtype == 'nondistinctive' ? this.adjective = this.stim.extraneous + ' ': null;
+      var genusOptions = {
+        "col1":{"mean":this.stim.color},
+        "col2":{"mean":this.stim.color},
+        "col3":{"mean":this.stim.color},
+        "col4":{"mean":this.stim.color},
+        "col5":{"mean":this.stim.color},
+        "tar1":0, // never has a tail
+        "tar2":0, // never has a crest
+        "prop1":{"mean":this.stim.propSizes[0]}, // mean size, unif(0, 0.5, 1)
+        "prop2":{"mean":this.stim.propSizes[1]},
+        "var":0.001, //overall variance (overwritten by any specified variances)
+      };
+
+      var negGenusOptions = {
+        "col1":{"mean":"#FFFFFF"},
+        "col2":{"mean":"#FFFFFF"},
+        "col3":{"mean":"#FFFFFF"},
+        "col4":{"mean":"#FFFFFF"},
+        "col5":{"mean":"#FFFFFF"},
+        "tar1":0, // never has a tail
+        "tar2":0, // never has a crest
+        "prop1":{"mean":this.stim.propSizes[0]}, // mean size, unif(0, 0.5, 1)
+        "prop2":{"mean":this.stim.propSizes[1]},
+        "var":0.001, //overall variance (overwritten by any specified variances)
+      };
+
+      var genus = new Ecosystem.Genus(this.stim.category, genusOptions)
+      var negGenus = new Ecosystem.Genus(this.stim.category, negGenusOptions)
+
+      genusOptions[this.stim.colorPartLabel].mean = this.stim.colorPartColor
+      this.stim.proptype == 'part' ? genusOptions[this.stim.property] = 1 : null
 
 
+      _.map(_.zip(cells, prevalences), function(pieces){
+          var places = pieces[0];
+          var prev = pieces[1];
+          var animalsWithProperties = Math.round(prev*6)
+          var properties = _.shuffle(utils.fillArray(true,animalsWithProperties).concat(
+                                     utils.fillArray(false,6-animalsWithProperties)))
+          _.zip(places,properties).map(function(x){x[1] ? 
+                                            genus.draw(x[0], {}, scale):
+                                            negGenus.draw(x[0],{}, scale)});
+      })
 
-
-      var query_prompt = "What percentage of "  + this.stim.category + " do you think have " + this.adjective + this.stim.color + " " + this.stim.part + "?\n";
-
-
-      this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;
-      this.stimtype == 'distinct' ? this.adjective = 'distinctive ': null;
-      this.stimtype == 'irrelevant' ? this.adjective = this.stim.extraneous + ' ': null;
-
-      this.determiner=='generic' ?
-        this.evidence_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n" :
-        this.evidence_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n";
-
-      this.stimtype=='danger' ? this.evidence_prompt+=this.stim.dangerous:null;
-      this.stimtype=='distinct' ? this.evidence_prompt+=this.stim.distinctive:null;
-      this.stimtype=='irrelevant' ? this.evidence_prompt+=this.stim.irrelevant:null;
-      this.stimtype == 'danger-distinct' ? this.evidence_prompt+=(this.stim.dangerous + ' ' + this.stim.dangdistinctive):null;
-      this.stimtype=='nondistinctive' ? this.evidence_prompt+=(this.stim.irrelevant + ' ' + this.stim.nondistinctive):null;
-
-
-
-      $(".evidence").html(this.evidence_prompt);
-      $(".query").html(query_prompt);
-
-       // this.init_radiios();
-       // exp.sliderPost = null; //erase current slider value
     },
 
     button : function() {
@@ -118,32 +182,22 @@ function make_slides(f) {
         this.rt = Date.now() - this.startTime;
         this.log_responses();
 
-        /* use _stream.apply(this); if and only if there is
-        "present" data. (and only *after* responses are logged) */
         _stream.apply(this);
-
-
-      //   exp.data_trials.push({
-      //     "trial_type" : "single_trial",
-      //     "response" : response
-      //   });
-      //   exp.go(); //make sure this is at the *end*, after you log your data
-      // }
       }
 
     },
 
         log_responses : function() {
       exp.data_trials.push({
-        "trial_type" : "implied_prevalence",
-        "trial_num": this.trialNum,
-        "response" : $("#text_response").val(),
-        "rt":this.rt,
-        "stim_type": this.stimtype,
-        "stim_determiner": this.determiner,
-        "stim_category": this.stim.category,
-        "stim_color": this.stim.color,
-        "stim_part":this.stim.part
+        // "trial_type" : "implied_prevalence",
+        // "trial_num": this.trialNum,
+        // "response" : $("#text_response").val(),
+        // "rt":this.rt,
+        // "stim_type": this.stimtype,
+        // "stim_determiner": this.determiner,
+        // "stim_category": this.stim.category,
+        // "stim_color": this.stim.color,
+        // "stim_part":this.stim.part
       });
     }
   });
@@ -158,7 +212,6 @@ function make_slides(f) {
 
       this.startTime = Date.now();
       this.stim = stim;
-      console.log(this.stim)
 
       this.stim.prevalence = this.stim[0]["prevalence"]
       this.stim.category = this.stim[1]["kind"]
@@ -169,8 +222,6 @@ function make_slides(f) {
       this.stim.categoryName = this.stim[3]["category"]
       this.stim.determiner = this.stim[4]
       this.stim.propSizes = this.stim[5]
-
-      console.log(this.stim.propSizes)
 
       var colorPart;
 
@@ -218,8 +269,6 @@ function make_slides(f) {
       var scale = 0.5;
       var cells = ['svg0','svg1','svg2','svg3','svg4','svg5'];
       cells.map(function(cell){$('#'+cell).empty()});
-
-
 
       var genusOptions = {
         "col1":{"mean":this.stim.color},
@@ -396,7 +445,7 @@ function init() {
   exp.trials = [];
   exp.catch_trials = [];
 //  exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
-  exp.condition = "truth_conditions";
+  exp.condition = "implied_prevalence";
 //  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
   var determiners = _.shuffle([utils.fillArray("generic",8),
