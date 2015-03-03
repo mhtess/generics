@@ -75,11 +75,11 @@
   </div>
 
   <div class="slide" id="implied_prevalence">
-
+<br>
   <table>
     <tr>
       <td>
-        <table id='table0' onclick="mark(table0)">
+        <table class="ipTable" id='table0' onclick="mark(table0,['table1','table2','table3'])">
           <tr>
             <td><svg id="svg0a"></svg></td>
             <td><svg id="svg1a"></svg></td>
@@ -93,7 +93,7 @@
         </table>
       </td>
       <td>
-        <table id='table1' onclick="mark(table1)">
+        <table class="ipTable" id='table1' onclick="mark(table1,['table0','table2','table3'])">
           <tr>
             <td><svg id="svg0b"></svg></td>
             <td><svg id="svg1b"></svg></td>
@@ -109,7 +109,7 @@
     </tr>
     <tr>
       <td>
-        <table id='table2'>
+        <table class="ipTable" id='table2' onclick="mark(table2,['table1','table0','table3'])">
           <tr>
             <td><svg id="svg0c"></svg></td>
             <td><svg id="svg1c"></svg></td>
@@ -123,7 +123,7 @@
         </table>
       </td>
       <td>
-        <table id='table3'>
+        <table class="ipTable" id='table3' onclick="mark(table3,['table1','table2','table0'])">
           <tr>
             <td><svg id="svg0d"></svg></td>
             <td><svg id="svg1d"></svg></td>
@@ -140,13 +140,13 @@
 </table>
 
 
-    <p>Droid says: <span id="utterance">{{}}</span></p>
+    <p>Droid says: <span class="utterance">{{}}</span></p>
 
 
-    <input type="text" id="text_response" maxlength="3" size="3">%</input>
-    <br>
+<!--     <input type="text" id="text_response" maxlength="3" size="3">%</input>
+    <br> -->
     <button onclick="_s.button()">Continue</button>
-    <p class="err">Please enter a number between 0-100.</p>
+    <p class="err">Please select one of the displays for your answer.</p>
   </div>
 
 
@@ -154,7 +154,7 @@
 
 
 
-    <p>Droid says: <span id="utterance">{{}}</span></p>
+    <p>Droid says: <span class="utterance">{{}}</span></p>
     <br>
 
     <table>

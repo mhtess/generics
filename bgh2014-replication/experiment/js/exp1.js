@@ -15,8 +15,22 @@ Object.prototype.getKeyByValue =function( value ) {
     }
 }
 
-function mark(el) {
-    el.style.border = "1px solid blue";
+function mark(el, otherEls) {
+    el.style.border=='' ? 
+    $('#'+el.id).css({"border":'2px solid red',
+                    'background-color': 'white',
+                    'opacity': '1'}) : 
+    $('#'+el.id).css({"border":'',
+                    'background-color': 'white',
+                    'opacity': '0.5'})
+
+//el.style.border = "2px solid red": el.style.border='';
+
+    // var tableCells = ['table0','table1','table2','table3'];
+    // tableCells.splice(tableCells.indexOf(el),1)
+    otherEls.map(function(cell){$('#'+cell).css({"border":'',
+      'background-color': 'white','opacity': '0.5'})})
+
 }
 
 function make_slides(f) {
@@ -55,9 +69,16 @@ function make_slides(f) {
   slides.implied_prevalence = slide({
     name: "implied_prevalence",
 
-  present : exp.stims.shift(),
+  present : exp.stims2.shift(),
 
   present_handle : function(stim) {
+
+      ['table0','table1','table2','table3'].map(function(cell){
+          $('#'+cell).css({"border":'',
+                    'background-color': 'white',
+                    'opacity': '1'})})
+
+
       this.stim = stim;
       this.startTime = Date.now();
 
@@ -112,14 +133,14 @@ function make_slides(f) {
             null
 
 
-      $("#utterance").html(this.utterance);
+      $(".utterance").html(this.utterance);
 
 
       $(".err").hide();
       $("#text_response").val('')
 
 
-      var scale = 0.5;
+      var scale = 0.4;
       var cells = [['svg0a','svg1a','svg2a','svg3a','svg4a','svg5a'],
                   ['svg0b','svg1b','svg2b','svg3b','svg4b','svg5b'],
                   ['svg0c','svg1c','svg2c','svg3c','svg4c','svg5c'],
@@ -127,6 +148,8 @@ function make_slides(f) {
 
       cells.map(function(tablecells){
         tablecells.map(function(cell){$('#'+cell).empty()})});
+
+
 
       var genusOptions = {
         "col1":{"mean":this.stim.color},
@@ -160,8 +183,11 @@ function make_slides(f) {
       genusOptions[this.stim.colorPartLabel].mean = this.stim.colorPartColor
       this.stim.proptype == 'part' ? genusOptions[this.stim.property] = 1 : null
 
+      this.stim.prevalences = _.shuffle(prevalences)
 
-      _.map(_.zip(cells, prevalences), function(pieces){
+      this.prevalenceCells = _.object(_.zip(cells,this.stim.prevalences))
+
+      _.map(_.zip(cells, this.stim.prevalences), function(pieces){
           var places = pieces[0];
           var prev = pieces[1];
           var animalsWithProperties = Math.round(prev*6)
@@ -175,8 +201,11 @@ function make_slides(f) {
     },
 
     button : function() {
-      response = $("#text_response").val();
-      if (!(response<=100 && response>=0 && response!='')) {
+
+      var responses = ['table0','table1','table2','table3'].map(
+        function(cell){return $('#'+cell).css("opacity") == '1' ? 1 : 0})
+
+      if (responses.reduce(function(a, b){return a + b;})!=1) {
         $(".err").show();
       } else {
         this.rt = Date.now() - this.startTime;
@@ -199,14 +228,22 @@ function make_slides(f) {
         // "stim_color": this.stim.color,
         // "stim_part":this.stim.part
       });
+    },
+
+    end : function() {
+
+      this.present = exp.stims2.shift();
+      //debugger;
+      //exp.stims.shift();
     }
+
   });
 
   slides.truth_conditions = slide({
     name: "truth_conditions",
 
 
-    present :  exp.stims.shift(),//exp.stims[0],
+    present :  exp.stims1.shift(),//exp.stims[0],
 
     present_handle : function(stim) {
 
@@ -263,8 +300,7 @@ function make_slides(f) {
             this.utterance = this.stim.np + " have " + this.stim.colorpartword +" "+ this.stim.colorPart:
             null
 
-
-      $("#utterance").html(this.utterance);
+      $(".utterance").html(this.utterance);
 
       var scale = 0.5;
       var cells = ['svg0','svg1','svg2','svg3','svg4','svg5'];
@@ -346,9 +382,7 @@ function make_slides(f) {
     },
 
     end : function() {
-      console.log(exp.stims.length)
-      this.present = exp.stims.shift();
-      //debugger;
+      this.present = exp.stims1.shift();
       //exp.stims.shift();
     }
 
@@ -445,7 +479,7 @@ function init() {
   exp.trials = [];
   exp.catch_trials = [];
 //  exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
-  exp.condition = "implied_prevalence";
+  exp.condition = "truth_conditions";
 //  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
   var determiners = _.shuffle([utils.fillArray("generic",8),
@@ -465,7 +499,18 @@ function init() {
   //             _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(24,32),determiners.pop(),_.shuffle(propertySizes))];
 
 
-   exp.stims = [_.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(0,2), testdeterminers.pop(), _.shuffle(propertytestSizes)),
+   exp.stims1 = [_.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(0,2), testdeterminers.pop(), _.shuffle(propertytestSizes)),
+              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(2,4),testdeterminers.pop(),_.shuffle(propertytestSizes)),
+              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(4,6),testdeterminers.pop(),_.shuffle(propertytestSizes)),
+              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(6,8),testdeterminers.pop(),_.shuffle(propertytestSizes))];
+
+    var testdeterminers = _.shuffle([utils.fillArray("generic",2),
+                              utils.fillArray("some",2),
+                              utils.fillArray("most",2),
+                              utils.fillArray("all",2)])
+  exp.numTrials = testanimalNames.length;
+  var shuffledStims = _.shuffle(testanimalNames);
+   exp.stims2 = [_.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(0,2), testdeterminers.pop(), _.shuffle(propertytestSizes)),
               _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(2,4),testdeterminers.pop(),_.shuffle(propertytestSizes)),
               _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(4,6),testdeterminers.pop(),_.shuffle(propertytestSizes)),
               _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(6,8),testdeterminers.pop(),_.shuffle(propertytestSizes))];
