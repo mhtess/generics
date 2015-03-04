@@ -74,6 +74,55 @@
     <button onclick="_s.button()">Continue</button>
   </div>
 
+
+    <div class="slide"  id="practice_tc">
+
+    <p>Droid says: <span id="practiceUtterance">{{}}</span></p>
+    <br>
+    <img id="practiceImg" style="max-width:256px;max-height:128px"></img>
+
+    <p>Is Droid's statement <em>right</em> or <em>wrong</em>?</p>
+    <label><input type="radio" name="radio_button" value=0/>Wrong</label>
+    <label><input type="radio" name="radio_button" value=1/>Right</label>
+    <button onclick="_s.button()">Continue</button>
+    <div class="err">Please make a choice before continuing.</div>
+  </div>
+
+  <div class="slide" id="practice_ip">
+      <br>
+        <table>
+          <tr>
+            <td>
+              <table class="ipTable" id='table0p' onclick="mark(table0p,['table1p','table2p','table3p'])">
+                  <td><img id="svg0p" style="max-width:128px;max-height:128px"></img></td>
+              </table>
+            </td>
+            <td>
+              <table class="ipTable" id='table1p' onclick="mark(table1p,['table0p','table2p','table3p'])">
+                  <td><img id="svg1p" style="max-width:128px;max-height:128px"></img></td>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table class="ipTable" id='table2p' onclick="mark(table2p,['table1p','table0p','table3p'])">
+                  <td><img id="svg2p" style="max-width:128px;max-height:128px"></img></td>
+              </table>
+            </td>
+            <td>
+              <table class="ipTable" id='table3p' onclick="mark(table3p,['table1p','table2p','table0p'])">
+                  <td><img id="svg3p" style="max-width:128px;max-height:128px"></img></td>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+    <p>Droid says: <span class="practiceUtterance">{{}}</span></p>
+
+    <button onclick="_s.button()">Continue</button>
+    <p class="err">Please select one of the displays for your answer.</p>
+  </div>
+
   <div class="slide" id="implied_prevalence">
 <br>
   <table>
@@ -152,8 +201,6 @@
 
   <div class="slide"  id="truth_conditions">
 
-
-
     <p>Droid says: <span class="utterance">{{}}</span></p>
     <br>
 
@@ -171,14 +218,6 @@
     </table>
 
 
-<!--     <svg id="svg0"></svg>
-    <svg id="svg1"></svg>
-    <svg id="svg2"></svg>
-    <svg id="svg3"></svg>
-    <svg id="svg4"></svg>
-    <svg id="svg5"></svg> -->
-
-
     <p>Is Droid's statement <em>right</em> or <em>wrong</em>?</p>
     <label><input type="radio" name="radio_button" value=0/>Wrong</label>
     <label><input type="radio" name="radio_button" value=1/>Right</label>
@@ -186,9 +225,9 @@
     <div class="err">Please make a choice before continuing.</div>
   </div>
 
-  <div class="slide"  id="practice">
+  <div class="slide"  id="practice_tc">
 
-    <p>Droid says: <span id="practiceUtterance">{{}}</span></p>
+    <p>Droid says: <span class="practiceUtterance">{{}}</span></p>
     <br>
     <img id="practiceImg" style="max-width:256px;max-height:128px"></img>
 

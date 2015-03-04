@@ -1,4 +1,4 @@
-// direct replication of BGH (2014), adult condition
+// directish replication of BGH (2014), adult condition
 
 // structure
 // practice trials: 4 trials
@@ -185,8 +185,7 @@ function make_slides(f) {
 
       this.stim.prevalences = _.shuffle(prevalences)
 
-      this.prevalenceCells = _.object(_.zip(cells,this.stim.prevalences))
-
+      this.prevalenceCells = _.object(_.zip(['table0','table1','table2','table3'],this.stim.prevalences))
       _.map(_.zip(cells, this.stim.prevalences), function(pieces){
           var places = pieces[0];
           var prev = pieces[1];
@@ -217,16 +216,25 @@ function make_slides(f) {
     },
 
         log_responses : function() {
+
+      var prevObj = this.prevalenceCells
+      var responses = ['table0','table1','table2','table3'].map(
+        function(cell){return prevObj[cell]*($('#'+cell).css("opacity") == '1' ? 1 : 0)})
+
+      var response = responses.reduce(function(a, b){return a + b;})
+
       exp.data_trials.push({
-        // "trial_type" : "implied_prevalence",
-        // "trial_num": this.trialNum,
-        // "response" : $("#text_response").val(),
-        // "rt":this.rt,
-        // "stim_type": this.stimtype,
-        // "stim_determiner": this.determiner,
-        // "stim_category": this.stim.category,
-        // "stim_color": this.stim.color,
-        // "stim_part":this.stim.part
+        "trial_type" : "implied_prevalence",
+        "trial_num": this.trialNum,
+        "response" : response,
+        "rt":this.rt,
+        "stim_proptype":this.stim.proptype,
+        "stim_determiner": this.stim.determiner,
+        "stim_category": this.stim.category,
+        "stim_name": this.stim.categoryName,
+        "stim_color": this.stim.colorword,
+        "stim_colorpart":this.stim.colorPart,
+        "stim_colorpartcolor":this.stim.colorpartword
       });
     },
 
@@ -388,10 +396,11 @@ function make_slides(f) {
 
   });
 
-  slides.practice = slide({
-    name: "practice",
+  slides.practice_tc = slide({
+    name: "practice_tc",
     present :  _.shuffle(["apples","bananas", "boat", "house"]),
     present_handle : function(stim) {
+
       this.startTime = Date.now();
       this.stim = stim;
       $(".err").hide();
@@ -410,7 +419,7 @@ function make_slides(f) {
       };
       this.solution = practiceSolutions[this.stim];
       this.utterance = practiceUtterances[this.stim];
-      $("#practiceUtterance").html(this.utterance);
+      $(".practiceUtterance").html(this.utterance);
       $("#practiceImg").attr("src","stims_raw/"+this.stim+".png");
     },
     button : function() {
@@ -435,7 +444,98 @@ function make_slides(f) {
     }
   });
 
+  slides.practice_ip = slide({
+    name: "practice_ip",
+    present :  _.shuffle([{"apples":"There are 4 apples."},
+        {"bananas":"There are 3 bananes."},
+        {"boat":"This boat is brown."},
+        {"house":"This house has a white roof."}]),
+    present_handle : function(stim) {
 
+      ['table0p','table1p','table2p','table3p'].map(function(cell){
+          $('#'+cell).css({"border":'',
+                    'background-color': 'white',
+                    'opacity': '1'})})
+
+
+      this.startTime = Date.now();
+      this.stim = stim;
+      this.stim.kind = Object.keys(this.stim);
+      this.stim.utterance = this.stim[this.stim.kind];
+      $(".err").hide();
+      this.stimorder = _.shuffle(["apples","bananas", "boat", "house"]);
+
+
+      $(".practiceUtterance").html(this.stim.utterance);
+
+      _.zip(['svg0p','svg1p','svg2p','svg3p'],this.stimorder).map(function(cell){
+        $('#'+cell[0]).attr("src","stims_raw/"+cell[1]+".png")
+      });
+        
+    },
+    button : function() {
+      if ($("input[name=radio_button]:checked").val()==undefined) {
+        $(".err").show();
+      } else {
+        this.rt = Date.now() - this.startTime;
+        this.log_responses();
+        _stream.apply(this);
+      }
+    },
+
+    button : function() {
+
+      var responses = ['table0p','table1p','table2p','table3p'].map(
+        function(cell){return $('#'+cell).css("opacity") == '1' ? 1 : 0})
+
+      if (responses.reduce(function(a, b){return a + b;})!=1) {
+        $(".err").show();
+      } else {
+        this.rt = Date.now() - this.startTime;
+        this.log_responses();
+
+        _stream.apply(this);
+      }
+
+    },
+
+        log_responses : function() {
+
+      var prevObj = this.prevalenceCells
+      var responses = _.zip(['table0p','table1p','table2p','table3p'],
+        this.stimorder).map(
+        function(cell){return ($('#'+cell[0]).css("opacity") == '1' ? cell[1] : null)})
+
+
+      exp.data_trials.push({
+        "trial_type" : "implied_prevalence",
+        "trial_num": this.trialNum,
+        "response" : responses.join(''),
+        "correct": responses.join('')==this.stim.kind ? 1 : 0,
+        "rt":this.rt,
+        "stim_proptype":this.stim.proptype,
+        "stim_determiner": this.stim.determiner,
+        "stim_category": this.stim.category,
+        "stim_name": this.stim.categoryName,
+        "stim_color": this.stim.colorword,
+        "stim_colorpart":this.stim.colorPart,
+        "stim_colorpartcolor":this.stim.colorpartword
+      });
+    }
+
+
+    // log_responses : function() {
+
+    //   exp.data_trials.push({
+    //     "trial_type" : "practice",
+    //   //  "trialNum":this.trialNum,
+    //     "response" : $("input[name=radio_button]:checked").val(),
+    //     "correctResponse": this.solution,
+    //     "rt":this.rt,
+    //     "stim_type": this.stim
+    //   });
+    // }
+  });
 
   slides.subj_info =  slide({
     name : "subj_info",
@@ -479,7 +579,7 @@ function init() {
   exp.trials = [];
   exp.catch_trials = [];
 //  exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
-  exp.condition = "truth_conditions";
+  exp.condition = "implied_prevalence";
 //  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
   var determiners = _.shuffle([utils.fillArray("generic",8),
@@ -546,7 +646,7 @@ function init() {
   //blocks of the experiment:
   // console.log(exp.instructions)
 // "i0", "practice_instructions","practice","instructions",
-   exp.structure=[exp.condition,  "intermediate_motivation", exp.condition, 
+   exp.structure=["practice_ip", exp.condition,  "intermediate_motivation", exp.condition, 
               "intermediate_motivation", exp.condition, "intermediate_motivation", exp.condition, 
                         'subj_info', 'thanks'];
    // exp.structure=["i0",  "instructions", exp.condition, exp.condition, 
