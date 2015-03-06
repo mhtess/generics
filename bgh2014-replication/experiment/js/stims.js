@@ -51,6 +51,8 @@ var animalColorParts = {
     "bird": [["bodies","col2"],["wings","col3"]]};
 
 
+var prevalences = [0, 0.33, 0.66, 1];
+
 var prevlevObj = [{"prevalence":0}, {"prevalence":0},
                       {"prevalence":0.33},{"prevalence":0.33},
                       {"prevalence":0.66},{"prevalence":0.66},
