@@ -31,3 +31,6 @@ cbg2010-replication/models/scratch.church
 cbg2010-replication/models/tfbt_cbg_asymmetry.church
 cbg2010-replication/models/tfbt_cbg_asymmetry2.church
 cbg2010-replication/models/tfbt_kinds.church
+bgh2014-replication/mturk/
+*auth.json
+*mturk-and-gmail.txt
