@@ -44,15 +44,29 @@ function make_slides(f) {
      }
   });
 
-  slides.practice_instructions = slide({
-    name : "practice_instructions",
+  slides.practice_ip_instructions = slide({
+    name : "practice_ip_instructions",
     button : function() {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
 
-  slides.instructions = slide({
-    name : "instructions",
+  slides.ip_instructions = slide({
+    name : "ip_instructions",
+    button : function() {
+      exp.go(); //use exp.go() if and only if there is no "present" data.
+    }
+  });
+
+  slides.practice_tc_instructions = slide({
+    name : "practice_tc_instructions",
+    button : function() {
+      exp.go(); //use exp.go() if and only if there is no "present" data.
+    }
+  });
+
+  slides.tc_instructions = slide({
+    name : "tc_instructions",
     button : function() {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
@@ -207,7 +221,7 @@ function make_slides(f) {
       if (responses.reduce(function(a, b){return a + b;})!=1) {
         $(".err").show();
       } else {
-        this.rt = Date.now() - this.startTime;
+        this.rt = (Date.now() - this.startTime)/1000;
         this.log_responses();
 
         _stream.apply(this);
@@ -365,7 +379,7 @@ function make_slides(f) {
       if ($("input[name=radio_button]:checked").val()==undefined) {
         $(".err").show();
       } else {
-        this.rt = Date.now() - this.startTime;
+        this.rt = (Date.now() - this.startTime)/1000;
         this.log_responses();
 
         /* use _stream.apply(this); if and only if there is
@@ -419,23 +433,22 @@ function make_slides(f) {
       };
       this.solution = practiceSolutions[this.stim];
       this.utterance = practiceUtterances[this.stim];
-      $(".practiceUtterance").html(this.utterance);
+      $("#practiceUtterance").html(this.utterance);
       $("#practiceImg").attr("src","stims_raw/"+this.stim+".png");
     },
     button : function() {
       if ($("input[name=radio_button]:checked").val()==undefined) {
         $(".err").show();
       } else {
-        this.rt = Date.now() - this.startTime;
+        this.rt = (Date.now() - this.startTime)/1000;
         this.log_responses();
         _stream.apply(this);
       }
     },
     log_responses : function() {
 
-      exp.data_trials.push({
+      exp.catch_trials.push({
         "trial_type" : "practice",
-      //  "trialNum":this.trialNum,
         "response" : $("input[name=radio_button]:checked").val(),
         "correctResponse": this.solution,
         "rt":this.rt,
@@ -446,10 +459,19 @@ function make_slides(f) {
 
   slides.practice_ip = slide({
     name: "practice_ip",
-    present :  _.shuffle([{"apples":"There are 4 apples."},
-        {"bananas":"There are 3 bananes."},
-        {"boat":"This boat is brown."},
-        {"house":"This house has a white roof."}]),
+    present :  _.shuffle([{"item":"apples",
+          "utterance":"There are 4 apples.",
+          "alternatives":["apples","apples2","bananas","boat"]},
+        {"item":"bananas",
+        "utterance":"There are 3 bananes.",
+          "alternatives":["apples","bananas5","bananas","house-greyRoof"]},
+        {"item":"boat",
+        "utterance":"This boat is brown.",
+            "alternatives":["boat-red","boat","apples2","house"]},
+        {"item":"house","utterance":"This house has a white roof.",
+            "alternatives":["house-greyRoof","boat-red","bananas5","house"]}]),
+
+
     present_handle : function(stim) {
 
       ['table0p','table1p','table2p','table3p'].map(function(cell){
@@ -460,11 +482,10 @@ function make_slides(f) {
 
       this.startTime = Date.now();
       this.stim = stim;
-      this.stim.kind = Object.keys(this.stim);
-      this.stim.utterance = this.stim[this.stim.kind];
+      this.stim.kind = this.stim.item;
+      this.stim.utterance = this.stim.utterance;
+      this.stimorder = _.shuffle(this.stim.alternatives);
       $(".err").hide();
-      this.stimorder = _.shuffle(["apples","bananas", "boat", "house"]);
-
 
       $(".practiceUtterance").html(this.stim.utterance);
 
@@ -472,15 +493,6 @@ function make_slides(f) {
         $('#'+cell[0]).attr("src","stims_raw/"+cell[1]+".png")
       });
         
-    },
-    button : function() {
-      if ($("input[name=radio_button]:checked").val()==undefined) {
-        $(".err").show();
-      } else {
-        this.rt = Date.now() - this.startTime;
-        this.log_responses();
-        _stream.apply(this);
-      }
     },
 
     button : function() {
@@ -491,7 +503,7 @@ function make_slides(f) {
       if (responses.reduce(function(a, b){return a + b;})!=1) {
         $(".err").show();
       } else {
-        this.rt = Date.now() - this.startTime;
+        this.rt = (Date.now() - this.startTime)/1000;
         this.log_responses();
 
         _stream.apply(this);
@@ -499,42 +511,24 @@ function make_slides(f) {
 
     },
 
-        log_responses : function() {
+  log_responses : function() {
 
       var prevObj = this.prevalenceCells
       var responses = _.zip(['table0p','table1p','table2p','table3p'],
         this.stimorder).map(
         function(cell){return ($('#'+cell[0]).css("opacity") == '1' ? cell[1] : null)})
 
-
-      exp.data_trials.push({
+      exp.catch_trials.push({
         "trial_type" : "implied_prevalence",
-        "trial_num": this.trialNum,
         "response" : responses.join(''),
         "correct": responses.join('')==this.stim.kind ? 1 : 0,
         "rt":this.rt,
-        "stim_proptype":this.stim.proptype,
-        "stim_determiner": this.stim.determiner,
-        "stim_category": this.stim.category,
-        "stim_name": this.stim.categoryName,
-        "stim_color": this.stim.colorword,
-        "stim_colorpart":this.stim.colorPart,
-        "stim_colorpartcolor":this.stim.colorpartword
+        "category": this.stim.item,
+        "utterance": this.stim.utterance
       });
     }
 
 
-    // log_responses : function() {
-
-    //   exp.data_trials.push({
-    //     "trial_type" : "practice",
-    //   //  "trialNum":this.trialNum,
-    //     "response" : $("input[name=radio_button]:checked").val(),
-    //     "correctResponse": this.solution,
-    //     "rt":this.rt,
-    //     "stim_type": this.stim
-    //   });
-    // }
   });
 
   slides.subj_info =  slide({
@@ -557,6 +551,7 @@ function make_slides(f) {
   slides.thanks = slide({
     name : "thanks",
     start : function() {
+
       exp.data= {
           "trials" : exp.data_trials,
           "catch_trials" : exp.catch_trials,
@@ -578,8 +573,18 @@ function init() {
 
   exp.trials = [];
   exp.catch_trials = [];
-//  exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
-  exp.condition = "implied_prevalence";
+  exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
+
+ if (exp.condition == 'truth_conditions') {
+  exp.practice = "practice_tc";
+  exp.practiceinstructions = "practice_tc_instructions";
+  exp.instructions = "tc_instructions";
+  } else {
+  exp.practice = "practice_ip";
+  exp.practiceinstructions = "practice_ip_instructions";
+  exp.instructions = "ip_instructions";
+  };
+
 //  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
   var determiners = _.shuffle([utils.fillArray("generic",8),
@@ -587,53 +592,24 @@ function init() {
                               utils.fillArray("most",8),
                               utils.fillArray("all",8)])
 
-    var testdeterminers = _.shuffle([utils.fillArray("generic",2),
-                              utils.fillArray("some",2),
-                              utils.fillArray("most",2),
-                              utils.fillArray("all",2)])
-  exp.numTrials = testanimalNames.length;
-  var shuffledStims = _.shuffle(testanimalNames);
-  // exp.stims = [_.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(0,8), determiners.pop(),_.shuffle(propertySizes)),
-  //             _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(8,16),determiners.pop(),_.shuffle(propertySizes)),
-  //             _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(16,24),determiners.pop(),_.shuffle(propertySizes)),
-  //             _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(24,32),determiners.pop(),_.shuffle(propertySizes))];
+  exp.numTrials = animalNames.length;
 
+  var shuffledStims = _.shuffle(animalNames);
+  exp.stims1 = [_.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(0,8), determiners.pop(),_.shuffle(propertySizes)),
+              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(8,16),determiners.pop(),_.shuffle(propertySizes)),
+              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(16,24),determiners.pop(),_.shuffle(propertySizes)),
+              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(24,32),determiners.pop(),_.shuffle(propertySizes))];
+  
+  determiners = _.shuffle([utils.fillArray("generic",8),
+                              utils.fillArray("some",8),
+                              utils.fillArray("most",8),
+                              utils.fillArray("all",8)])
 
-   exp.stims1 = [_.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(0,2), testdeterminers.pop(), _.shuffle(propertytestSizes)),
-              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(2,4),testdeterminers.pop(),_.shuffle(propertytestSizes)),
-              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(4,6),testdeterminers.pop(),_.shuffle(propertytestSizes)),
-              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(6,8),testdeterminers.pop(),_.shuffle(propertytestSizes))];
+  exp.stims2 = [_.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(0,8), determiners.pop(),_.shuffle(propertySizes)),
+              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(8,16),determiners.pop(),_.shuffle(propertySizes)),
+              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(16,24),determiners.pop(),_.shuffle(propertySizes)),
+              _.zip(_.shuffle(prevlevObj),_.shuffle(propertyObj),_.shuffle(colors),shuffledStims.slice(24,32),determiners.pop(),_.shuffle(propertySizes))];
 
-    var testdeterminers = _.shuffle([utils.fillArray("generic",2),
-                              utils.fillArray("some",2),
-                              utils.fillArray("most",2),
-                              utils.fillArray("all",2)])
-  exp.numTrials = testanimalNames.length;
-  var shuffledStims = _.shuffle(testanimalNames);
-   exp.stims2 = [_.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(0,2), testdeterminers.pop(), _.shuffle(propertytestSizes)),
-              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(2,4),testdeterminers.pop(),_.shuffle(propertytestSizes)),
-              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(4,6),testdeterminers.pop(),_.shuffle(propertytestSizes)),
-              _.zip(_.shuffle(testprevlev),_.shuffle(testpropertyObj),_.shuffle(testcolors),shuffledStims.slice(6,8),testdeterminers.pop(),_.shuffle(propertytestSizes))];
-
-
-
-//  exp.stims = [["a","b"],["c","d"]]; // list of blocks of stims
-
-
-  // exp.numTrials = utils.flatten(allstims).length;
-
-  // var stims_with_context = 
-  //   allstims.map(function (x) {
-  //     var context_assign = _.shuffle(contexts);
-  //     x[0].context = context_assign[0];
-  //     x[1].context = context_assign[1];
-  //     x[2].context = context_assign[2];
-  //     return x;
-  //     });
-
-  // exp.stims = _.shuffle(utils.flatten(stims_with_context)); // shuffle stims
-
-//  exp.prevalence_levels = [_.shuffle(prev_levels),_.shuffle(prev_levels),_.shuffle(prev_levels)];
 
   exp.system = {
       Browser : BrowserDetect.browser,
@@ -644,16 +620,12 @@ function init() {
       screenUW: exp.width
     };
   //blocks of the experiment:
-  // console.log(exp.instructions)
-// "i0", "practice_instructions","practice","instructions",
-   exp.structure=["practice_ip", exp.condition,  "intermediate_motivation", exp.condition, 
+
+   exp.structure=["i0",exp.practiceinstructions,exp.practice,exp.instructions, exp.condition,  "intermediate_motivation", exp.condition, 
               "intermediate_motivation", exp.condition, "intermediate_motivation", exp.condition, 
                         'subj_info', 'thanks'];
-   // exp.structure=["i0",  "instructions", exp.condition, exp.condition, 
-   //           exp.condition, exp.condition, 
-   //                      'subj_info', 'thanks'];
-   //exp.structure=['subj_info', 'thanks'];
- 
+
+  exp.structure=["thanks"];
   exp.data_trials = [];
   //make corresponding slides:
   exp.slides = make_slides(exp);
