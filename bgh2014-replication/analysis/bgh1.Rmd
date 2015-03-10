@@ -8,8 +8,7 @@ author: Michael Henry Tessler
 
 ```{r, message=FALSE}
 library(jsonlite)
-library(plyr)
-library(dplyr)
+setwd("~/Documents/research/generics/bgh2014-replication/analysis")
 ```
 
 # Read in all the JSON strings
@@ -41,18 +40,14 @@ assignments <- fromJSON( json.superstring )
 ## Subject information (incl. comments)
 
 ```{r}
-subj.data <- Map(function(id, subject.trial.data) { cbind(workerid = id, subject.trial.data) },
-                  assignments$WorkerId,
-                  assignments$answers$subject_information)
 
 subj.data <- cbind(data.frame(workerid=assignments$WorkerId,
                               condition = assignments$answers$condition,
                               duration =assignments$answers$time_in_minutes), 
                         assignments$answers$subject_information)
 
-subj.data
+View(subj.data)
 ```
-
 
 
 ## Analyze practice trial data
@@ -74,7 +69,20 @@ is.ip <- function(x) {
   return(x$trial_type[1]!='practice')
 }
 
+
+
 catch.tc<- strip.rownames(do.call(rbind, Filter(is.tc, catch.data)))
+catch.tc$response <- as.numeric(substring(catch.tc$response,1,1))
+catch.tc<-catch.tc %>%
+  mutate(correct = (correctResponse==response))
+
+catch.tc.subj <- catch.tc %>%
+  group_by(workerid) %>%
+  summarise(correctTotal = sum(correct),
+            exclude = sum(correct)<3)
+
+
+
 catch.ip<- strip.rownames(do.call(rbind, Filter(is.ip, catch.data)))
 catch.ip 
 catch.tc
@@ -117,18 +125,25 @@ tc.tidy <- trial.tc %>%
   group_by(stim_word, stim_prevalence) %>%
   summarise(endorsement=mean(response))
 
+ggplot(tc.tidy, aes(x=stim_prevalence,y=endorsement,color=stim_word,group=stim_word))+
+  geom_point()+
+  geom_line()+
+  theme_black()
+
 
 # to compare with "implied prevalence" task
 # each subject gets a "truth" score -- the average prevalence at which they endorsed each of the sentences
 tc.subj <- trial.tc %>% 
   select(workerid,stim_word,stim_prevalence,response) %>%
   group_by(workerid, stim_word) %>%
-  summarise(truth=sum(response*stim_prevalence)/sum(response))
+  summarise(truth=sum(response*stim_prevalence)/sum(response))%>%
+  ungroup()
 
 tc.stats <- tc.subj %>%
   group_by(stim_word) %>%
   summarise(average = mean(truth),
-            sterr = sem(truth))
+            sterr = sem(truth),
+            task = 'truth')
 
 ```
 
@@ -147,13 +162,46 @@ ip.subj<-trial.ip %>%
 ip.stats<- ip.subj %>%
   group_by(stim_word) %>%
   summarise(average = mean(implied),
-            sterr = sem(implied))
+            sterr = sem(implied),
+            task = 'implied')
+
+final.stats<-bind_rows(ip.stats,tc.stats)
+final.stats$task <- factor(final.stats$task, levels=c("truth","implied"))
+
+
+ggplot(final.stats, aes(x=stim_word, y = average, fill=stim_word, alpha = task))+
+  geom_bar(stat='identity',color='white',width=0.6, position=position_dodge(0.6))+
+  geom_errorbar(aes(ymin=average-2*sterr, ymax=average+2*sterr), 
+                position=position_dodge(0.6),
+                width=0.3,
+                color='white')+
+  scale_alpha_manual(values=c(0.5,1))+
+  theme_black()
 
 ```
 
+# Stats
+
+```{r}
+tc.subj <- tc.subj %>%
+  rename(prevalence = truth) %>%
+  mutate(task = factor('truth'))
+
+ip.subj <- ip.subj %>%
+  rename(prevalence = implied) %>%
+  mutate(task = factor('implied'))
+
+final.subj<-bind_rows(tc.subj, ip.subj)
+
+final.subj<-final.subj %>%
+  mutate(workerid = factor(workerid),
+         stim_word = factor(stim_word),
+         task = factor(task))
 
 
-
+rs0<-lmer(data = final.subj, prevalence ~ -1 + task*stim_word + (1 | workerid))
+summary(rs0)
+```
 
 
 
