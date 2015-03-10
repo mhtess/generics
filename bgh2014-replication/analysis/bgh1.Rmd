@@ -1,0 +1,266 @@
+---
+title: "BGH (2014) Replication"
+output: html_document
+author: Michael Henry Tessler
+---
+
+# Libraries
+
+```{r, message=FALSE}
+library(jsonlite)
+library(plyr)
+library(dplyr)
+```
+
+# Read in all the JSON strings
+
+```{r comment=NA}
+read.file <- function(filename) {
+  con <- file(filename, "r", blocking = TRUE)
+  lines <- paste(readLines(con, warn = FALSE), collapse = "\n")
+  close(con)
+  lines
+}
+
+#json.dir <- "../mturk/sandbox-results/"
+json.dir <- "../mturk/production-results/"
+
+json.filenames <- paste0(json.dir, list.files(json.dir))
+json.strings <- Map(read.file, json.filenames)
+```
+
+# Convert JSON to a R data frame
+
+Merge all the json strings together, as if they are in a big array, and convert it to an R data frame:
+
+```{r comment=NA}
+json.superstring <- paste("[",paste(json.strings, collapse = ","),"]")
+assignments <- fromJSON( json.superstring )
+```
+
+## Subject information (incl. comments)
+
+```{r}
+subj.data <- Map(function(id, subject.trial.data) { cbind(workerid = id, subject.trial.data) },
+                  assignments$WorkerId,
+                  assignments$answers$subject_information)
+
+subj.data <- cbind(data.frame(workerid=assignments$WorkerId,
+                              condition = assignments$answers$condition,
+                              duration =assignments$answers$time_in_minutes), 
+                        assignments$answers$subject_information)
+
+subj.data
+```
+
+
+
+## Analyze practice trial data
+
+```{r}
+catch.data <- Map(function(id, subject.trial.data) { cbind(workerid = id, subject.trial.data) },
+                  assignments$WorkerId,
+                  assignments$answers$catch_trials)
+
+strip.rownames <- function(x) {
+  rownames(x) <- NULL
+  x
+}
+
+is.tc <- function(x) {
+  return(x$trial_type[1]=='practice')
+}
+is.ip <- function(x) {
+  return(x$trial_type[1]!='practice')
+}
+
+catch.tc<- strip.rownames(do.call(rbind, Filter(is.tc, catch.data)))
+catch.ip<- strip.rownames(do.call(rbind, Filter(is.ip, catch.data)))
+catch.ip 
+catch.tc
+```
+
+# Trial data
+
+
+```{r}
+trial.data <- Map(function(id, subject.trial.data) { cbind(workerid = id, subject.trial.data) },
+                  assignments$WorkerId,
+                  assignments$answers$trials)
+
+is.tc <- function(x) {
+  return (x$trial_type[1]=='truth_conditions')
+}
+is.ip <- function(x) {
+  return(x$trial_type[1]!='truth_conditions')
+}
+
+
+trial.tc <- strip.rownames(do.call(rbind, Filter(is.tc, trial.data)))
+trial.ip <- strip.rownames(do.call(rbind, Filter(is.ip, trial.data)))
+
+```
+
+# Analyze truth conditions task (BGH Exp 1)
+
+```{r}
+
+View(trial.tc)
+
+trial.tc$response <- to.n(trial.tc$response)
+
+#1:length(levels(trial.tc$workerid))
+
+# compute proportion endorsement at each prevalence level
+tc.tidy <- trial.tc %>% 
+  select(workerid,stim_word,stim_prevalence,response) %>%
+  group_by(stim_word, stim_prevalence) %>%
+  summarise(endorsement=mean(response))
+
+
+# to compare with "implied prevalence" task
+# each subject gets a "truth" score -- the average prevalence at which they endorsed each of the sentences
+tc.subj <- trial.tc %>% 
+  select(workerid,stim_word,stim_prevalence,response) %>%
+  group_by(workerid, stim_word) %>%
+  summarise(truth=sum(response*stim_prevalence)/sum(response))
+
+tc.stats <- tc.subj %>%
+  group_by(stim_word) %>%
+  summarise(average = mean(truth),
+            sterr = sem(truth))
+
+```
+
+# Analyze implied prevalence task (BGH Exp 2)
+
+
+```{r}
+
+ip.subj<-trial.ip %>%
+  select(workerid, stim_word, response) %>%
+  group_by(workerid, stim_word) %>%
+  summarise(implied = mean(response)) %>%
+  ungroup()
+
+
+ip.stats<- ip.subj %>%
+  group_by(stim_word) %>%
+  summarise(average = mean(implied),
+            sterr = sem(implied))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Let's look at the structure of `assignments`:
+
+```{r comment=NA}
+str(assignments)
+```
+
+Notice how most of the columns are pretty normal, except `answers`, which is itself a dataframe. To get a clearer picture, let's look at the `answers` column for just the first subject:
+
+```{r comment=NA}
+str(assignments[1,]$answers)
+```
+
+There are three fields - keyBindings (which tells us whether p = even and q = odd or vice versa), trials (parameters for each trial; empty), and data (recorded data for each trial). We're going to pull out `keyBindings` and `data` as their own top-level data frames and attach columns to them that allow us to cross-reference with particular subjects.
+
+## keyBindings
+
+Looking at `assignment$WorkerId`:
+
+```{r comment=NA}
+assignments$WorkerId
+```
+
+Very simple - just a vector of three strings.
+
+Looking at `assignments$answers$keyBindings`:
+
+```{r comment=NA}
+assignments$answers$keyBindings
+```
+
+Also simple - a data frame with two columns (q and p) and three rows (one for each subject telling us what q was for and what p was for). 
+
+Because the number of strings in the vector matches up with the number of rows in the dataframe, we can just use `cbind` to sew these structures together:
+
+```{r comment=NA}
+keyBindings <- cbind(workerid = assignments$WorkerId, assignments$answers$keyBindings)
+keyBindings
+```
+
+## data
+
+We already know what `assignments$WorkerId` looks like, so what does `assignments$answers$data` look like?
+
+```{r comment=NA}
+assignments$answers$data
+```
+
+This is a little more complicated - a list of three data frames. Thankfully, the data farmes have the same structure, so to combine them we can just use rbind. However, it would then be difficult to figure out which rows belong to which subjects.
+
+But notice that the list contains three data frames and we have three subject ids. So if we can somehow zip together the subject ids with the trials for each subject, we'd be in business. One way we can do this in R is using `Map`, applies a function and an arbitrary number of list/vector arguments (if you don't understand the difference between lists and vectors, you should Google it).
+
+For example, mapping a squaring function over a single list:
+```{r comment=NA}
+Map(function(x) x^2,
+    list(1,2,3))
+```
+
+Mapping a sum of squares function over two lists:
+```{r comment=NA}
+Map(function(x,y) x^2 + y^2,
+    list(1,2,3),
+    list(4,5,6))
+```
+
+(Note that `Map` always returns a list regardless of its input types. If you want to convert the output of `Map` to a vector, use `unlist`)
+
+Here's how we zip together the subject ids and trial dataframes - we just Map over every id-dataframe pair and cbind them together:
+
+```{r comment=NA}
+trial.data <- Map(function(id, subject.trial.data) { cbind(workerid = id, subject.trial.data) },
+                  assignments$WorkerId,
+                  assignments$answers$data)
+trial.data
+```
+
+Now we can rbind the dataframes together and strip the rownames in the resulting data frame to get what we want:
+
+```{r comment=NA}
+strip.rownames <- function(x) {
+  rownames(x) <- NULL
+  x
+}
+
+trial.data <- strip.rownames(do.call(rbind, trial.data))
+trial.data
+```
