@@ -237,18 +237,32 @@ function make_slides(f) {
 
       var response = responses.reduce(function(a, b){return a + b;})
 
+     this.stim.proptype == 'part' ? 
+        this.stim.colorsave = 'white' : 
+        this.stim.proptype == 'color' ? 
+          this.stim.colorsave = this.stim.colorword :
+          this.stim.proptype == 'color-part' ?
+          this.stim.colorsave = this.stim.colorpartword : 
+            null
+
+     this.stim.proptype == 'part' ? 
+        this.stim.propsave = this.stim.propertyName : 
+        this.stim.proptype == 'color' ? 
+          this.stim.propsave = 'full' :
+          this.stim.proptype == 'color-part' ?
+          this.stim.propsave = this.stim.colorPart : 
+            null
+
       exp.data_trials.push({
         "trial_type" : "implied_prevalence",
-        "trial_num": this.trialNum,
         "response" : response,
         "rt":this.rt,
         "stim_proptype":this.stim.proptype,
-        "stim_determiner": this.stim.determiner,
+        "stim_word": this.stim.determiner,
         "stim_category": this.stim.category,
         "stim_name": this.stim.categoryName,
-        "stim_color": this.stim.colorword,
-        "stim_colorpart":this.stim.colorPart,
-        "stim_colorpartcolor":this.stim.colorpartword
+        "stim_color": this.stim.colorsave,
+        "stim_part":this.stim.propsave
       });
     },
 
@@ -389,17 +403,35 @@ function make_slides(f) {
     },
 
     log_responses : function() {
+
+     this.stim.proptype == 'part' ? 
+        this.stim.colorsave = 'white' : 
+        this.stim.proptype == 'color' ? 
+          this.stim.colorsave = this.stim.colorword :
+          this.stim.proptype == 'color-part' ?
+          this.stim.colorsave = this.stim.colorpartword : 
+            null
+
+     this.stim.proptype == 'part' ? 
+        this.stim.propsave = this.stim.propertyName : 
+        this.stim.proptype == 'color' ? 
+          this.stim.propsave = 'full' :
+          this.stim.proptype == 'color-part' ?
+          this.stim.propsave = this.stim.colorPart : 
+            null
+
+
       exp.data_trials.push({
         "trial_type" : "truth_conditions",
-        "trialNum":this.trialNum,
         "response" : $("input[name=radio_button]:checked").val(),
         "rt":this.rt,
-        "stim_type": this.stimtype,
-        "stim_prevalence": this.prevalence,
-        "stim_determiner": this.determiner,
-   //     "stim_category": this.stim.category,
-   //     "stim_color": this.stim.color,
-   //     "stim_part":this.stim.part
+        "stim_prevalence": this.stim.prevalence,
+        "stim_word": this.stim.determiner,
+        "stim_proptype":this.stim.proptype,
+        "stim_category": this.stim.category,
+        "stim_name": this.stim.categoryName,
+        "stim_color": this.stim.colorsave,
+        "stim_part":this.stim.propsave
       });
     },
 
@@ -463,7 +495,7 @@ function make_slides(f) {
           "utterance":"There are 4 apples.",
           "alternatives":["apples","apples2","bananas","boat"]},
         {"item":"bananas",
-        "utterance":"There are 3 bananes.",
+        "utterance":"There are 3 bananas.",
           "alternatives":["apples","bananas5","bananas","house-greyRoof"]},
         {"item":"boat",
         "utterance":"This boat is brown.",
@@ -558,7 +590,8 @@ function make_slides(f) {
           "system" : exp.system,
           "condition" : exp.condition,
           "subject_information" : exp.subj_data,
-          "time_in_minutes" : (Date.now() - exp.startT)/60000
+          "time_in_minutes" : (Date.now() - exp.startT)/60000,
+          "fingerprintData" : fingerprint
       };
       setTimeout(function() {turk.submit(exp.data);}, 1000);
     }
@@ -624,8 +657,8 @@ function init() {
    exp.structure=["i0",exp.practiceinstructions,exp.practice,exp.instructions, exp.condition,  "intermediate_motivation", exp.condition, 
               "intermediate_motivation", exp.condition, "intermediate_motivation", exp.condition, 
                         'subj_info', 'thanks'];
+  //exp.structure = ['truth_conditions'];
 
-  exp.structure=["thanks"];
   exp.data_trials = [];
   //make corresponding slides:
   exp.slides = make_slides(exp);
