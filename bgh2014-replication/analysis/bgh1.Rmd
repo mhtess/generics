@@ -115,9 +115,19 @@ trial.ip <- strip.rownames(do.call(rbind, Filter(is.ip, trial.data)))
 
 View(trial.tc)
 
-trial.tc$response <- to.n(trial.tc$response)
+bootstrap.ci.tc <- function(x){
+  agr = aggregate(response ~ stim_prevalence + stim_word, data=x, FUN=mean)
+  agr$CILow = aggregate(response ~ stim_prevalence + stim_word, data=x, FUN=ci.low)$response
+  agr$CIHigh = aggregate(response ~ stim_prevalence + stim_word, data=x, FUN=ci.high)$response
+  agr$YMin = agr$response - agr$CILow
+  agr$YMax = agr$response + agr$CIHigh
+  return(agr)
+}
 
-#1:length(levels(trial.tc$workerid))
+trial.tc$response <- to.n(trial.tc$response)
+trial.tc$stim_prevalence <- factor(trial.tc$stim_prevalence)
+trial.tc$stim_word <- factor(trial.tc$stim_word)
+
 
 # compute proportion endorsement at each prevalence level
 tc.tidy <- trial.tc %>% 
@@ -130,9 +140,35 @@ ggplot(tc.tidy, aes(x=stim_prevalence,y=endorsement,color=stim_word,group=stim_w
   geom_line()+
   theme_black()
 
+### bootstrapped 95 % CI version
+tc.bs<- bootstrap.ci.tc(trial.tc)
+tc.bs$stim_prevalence<- to.n(tc.bs$stim_prevalence)
+
+ggplot(tc.bs, aes(x=stim_prevalence,y=response,color=stim_word,group=stim_word))+
+  geom_point(size=4, position=position_dodge(0.05))+
+  geom_line(size=1,position=position_dodge(0.05))+
+  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_word),
+              width=0.05,
+              size=0.9,
+              position=position_dodge(0.05))+
+  scale_colour_brewer(type='qual',palette=8)+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(-0.05,1.05))+
+  scale_x_continuous(breaks=c(0,0.33,0.66,1),limits=c(-0.05,1.05))+
+  theme_blackDisplay()+ 
+  guides(color=guide_legend(title="Context"))+
+  xlab("\n prevalence (in %)")+
+  ylab('proportion "true"\n')+
+  coord_fixed(1)+
+  theme(legend.key.size=unit(2, "lines"),
+        legend.text.align=NULL)
+
+#ggsave("../presentation/tc_data.png",width=10,height=15)
+
 
 # to compare with "implied prevalence" task
 # each subject gets a "truth" score -- the average prevalence at which they endorsed each of the sentences
+trial.tc$stim_prevalence <- to.n(trial.tc$stim_prevalence)
+
 tc.subj <- trial.tc %>% 
   select(workerid,stim_word,stim_prevalence,response) %>%
   group_by(workerid, stim_word) %>%
@@ -171,12 +207,22 @@ final.stats$task <- factor(final.stats$task, levels=c("truth","implied"))
 
 ggplot(final.stats, aes(x=stim_word, y = average, fill=stim_word, alpha = task))+
   geom_bar(stat='identity',color='white',width=0.6, position=position_dodge(0.6))+
-  geom_errorbar(aes(ymin=average-2*sterr, ymax=average+2*sterr), 
+  geom_errorbar(aes(ymin=average-2*sterr, ymax=average+2*sterr),
+                color='white',
                 position=position_dodge(0.6),
                 width=0.3,
-                color='white')+
+                size=2)+
   scale_alpha_manual(values=c(0.5,1))+
-  theme_black()
+  theme_blackDisplay()+
+  scale_fill_brewer(type='qual',palette=8)+
+  scale_color_brewer(type='qual',palette=8)+
+  guides(fill=F,color=F)+
+  xlab("")+
+  ylab("average prevalence\n")
+
+ggsave("../presentation/asymm_data.png",width=10,height=10)
+
+
 
 ```
 
