@@ -1,0 +1,237 @@
+; example call
+
+; time church -u lvRSA_generics_simulations.church &
+
+
+
+(define quantifier 'generic)
+
+;(define speaker-optimality 1)
+(define context 'all)
+(define task 'truth_conditions) ;;; depracated, but still need this
+
+(define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
+
+(define QUD (lambda (task quantifier)
+              (case task
+                    (('implied_prevalence) 'how-many)
+                    (('truth_conditions) 'truth))))
+
+(define uniform-score (lambda (lowerbound upperbound)
+                        (- 0 (log (- upperbound lowerbound))))) ;;assuming values are in the range
+
+(define all-true (lambda (lst) (apply and lst)))
+
+(define string->boolean (lambda (str)
+                          (equal? str 'True)))
+
+;; background
+;(define (state-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
+(define (theta-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90)))
+;(define (state-prior) (uniform-draw '(0 5 10 15 20 25 30 35 40 45 50)))
+(define (qud-prior) (uniform-draw (list 'is-lorch 'who-is-it)))
+
+(define (all state threshold) (= 100 state))
+(define (relaxed-all state threshold) (<= 90 state))
+
+(define (some state some-threshold) (< some-threshold state))
+(define (none state some-threshold) (>= some-threshold state))
+
+(define (most state most-threshold) (< most-threshold state))
+(define (anti-most state most-threshold) (>= most-threshold state))
+
+(define (generic state generic-threshold) (< generic-threshold state))
+(define (anti-generic state generic-threshold) (>= generic-threshold state))
+
+(define (mu state dummy) true)
+(define (how-many state dummy) state)
+
+(define who-is-it? (lambda (state theta) (flip state)))
+
+(define (raise-to-power dist alph)
+  (list (first dist) (map (lambda (x) (pow x alph)) (second dist))))
+
+(define (normalize dist)
+  (list (first dist) (map (lambda (x) (/ x (sum (second dist)))) (second dist))))
+
+
+(define (meaning word)
+  (case word
+        (('all) all)
+        (('some) some)
+        (('none) none)
+        (('most) most)
+        (('anti-most) anti-most)
+        (('how-many) how-many)
+        (('generic) generic)
+        (('anti-generic) anti-generic)
+        (('mu) mu)
+        (('is-lorch) generic?)
+        (('who-is-it) who-is-it?)))
+
+
+
+(define cognitive-model 
+  (mem 
+  ; (lambda (gamma delta speaker-optimality QUD evidence)
+   (lambda (state-prior speaker-optimality QUD evidence)
+
+     ;; input could be utterance (for listener / implied_prevalence)
+     ;; or state (for speaker / truth_conditions)
+
+     (define (theta-meaning word)
+       (case word
+             (('most-theta) most-theta)
+             (('some-theta) some-theta)
+             (('generic-theta) generic-theta)
+             (('how-many-theta) 'null)
+             (('anti-generic-theta) generic-theta)
+             (('none-theta) some-theta)
+             (('anti-most-theta) anti-most)))
+     
+     (define (theta words)
+       (theta-meaning (string-append words '-theta)))
+
+
+
+    (define speaker2
+      (mem (lambda (state)
+      (enumeration-query
+
+        (define words (uniform-draw (list 'generic 'anti-generic)))
+
+       words
+
+       (equal? state (apply multinomial (listener1 words)))))))
+
+
+     (define listener1
+       (mem (lambda (words) ;; listener1 does do inference over theta
+              (enumeration-query
+               (define state (state-prior))
+               (define generic-theta (theta-prior))
+;               (define QUD-val ((meaning QUD) state (theta QUD)))
+          ;      (define blah (display generic-theta))
+
+ ;              generic-theta
+                state
+
+               (equal? words 
+                (apply multinomial (raise-to-power (speaker1 state generic-theta) 
+                   speaker-optimality)))))))
+
+     (define speaker1
+       (mem (lambda (state generic-theta)
+              (enumeration-query
+               
+      ;          (define words (uniform-draw (list 'generic 'mu)))
+              (define words (if (equal? QUD 'truth)
+                              (uniform-draw (list 'generic 'anti-generic))
+                              (uniform-draw (list 'generic 'mu))))
+
+                ;(define words (uniform-draw (list 'generic-lorch 'generic-other)))
+
+               ; (define words
+               ;   (case QUD
+               ;         (('generic)  (uniform-draw (list 'generic 'anti-generic)))
+               ;         (('some) (uniform-draw (list 'some 'none)))
+               ;         (('most) (uniform-draw (list 'most 'anti-most)))
+               ;         (('how-many) (uniform-draw (list 'most 'some 'generic)))))
+               ;(define QUD-val ((meaning QUD) state (theta QUD)))
+
+               words
+
+;               (equal? QUD-val
+               (equal? state
+                       (apply multinomial (listener0 words generic-theta)))))))
+
+     (define listener0
+       (mem (lambda (words generic-theta) 
+              (enumeration-query
+               (define state (state-prior))
+              ; (define QUD-val ((meaning QUD) state (theta QUD)))
+
+               ;QUD-val
+               state
+
+               (case words
+                (('generic) ((meaning words) state generic-theta))
+                (('most) ((meaning words) state 50))
+                (('some) ((meaning words) state 1))
+                (('anti-generic) ((meaning words) state generic-theta))
+                (('mu) ((meaning words) state null)))))))
+
+
+     (if (equal? QUD 'truth)
+          (normalize (raise-to-power (speaker2 evidence) speaker-optimality))
+          (listener1 'generic)))))
+
+
+
+(define gamma 0.01)
+(define delta 0.1)
+(define alpha 2)
+
+  (define discretize-beta (lambda (gamma delta bins)
+      (define shape_alpha (* gamma delta))
+      (define shape_beta (* (- 1 gamma) delta))
+      (define beta-pdf (lambda (x) 
+        (*
+          (pow x (- shape_alpha 1))
+          (pow (- 1 x) (- shape_beta 1)))))
+    (map beta-pdf bins)))
+
+
+  (define bins '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99))
+  (define quintile-probs (discretize-beta gamma delta bins))
+
+
+  (define state-prior (lambda () (* 10 (round (* 10 (multinomial bins quintile-probs))))))
+(define prevlevs '(10 30 50 70 90))
+;;(define level 10)
+
+(define t-c-posteriors 
+  (map (lambda (level) 
+  (cognitive-model state-prior alpha 'truth level)) prevlevs))
+
+(define truth-conditions 
+  (map (lambda (posterior)
+      (list-ref (second posterior) (position (first posterior) "generic")))
+t-c-posteriors))
+
+(define average-tc-prevalence
+  (mean (map (lambda (x y) 
+        (* x y))
+  truth-conditions prevlevs)))
+
+(define i-p-posteriors
+  (cognitive-model state-prior alpha "how-many" "generic"))
+
+(define implied-prevalence
+    (mean (map 
+            (lambda (x y) (* x y)) 
+          (first i-p-posteriors) (second i-p-posteriors))))
+
+(list (list average-tc-prevalence implied-prevalence) truth-conditions)
+;;(map (lambda (level) (cognitive-model state-prior alpha 'truth level)) prevlevs)
+
+; (define output-path
+;   (if (equal? serv 'home)
+;    '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/
+;    '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
+
+; ; rds = remove dumb sampling... (the discretize by forward sampling betas..)
+
+; (define output-file-name (string-append  output-path 
+;   'lvRSA_c1_expts 
+;   expnum '_ exp2num
+;   '_ quantifier 
+;   '_mh mh_samples 
+;   '_ mh_lag 
+;   '.csv))
+
+;  (write-csv samples output-file-name)
+;  (define complete? 'complete)
+;  complete?
+
+
