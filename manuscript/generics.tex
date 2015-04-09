@@ -141,11 +141,11 @@ Generic statements are puzzling because their meaning is so flexible. On the one
 %It is perhaps this inherent uncertainty that leads generics to be so widespread in natural language. 
 
 \citeA{Cimpian2010} (henceforth, CBG) carried out a series of experiments designed to examine the truth conditions and implications of generic statements about novel animal categories. 
-They found that aspects of the target property (e.g.~its \emph{distinctiveness} or \emph{dangerousness}) modulated the acceptability of generic statements when the actual prevalence of the property was low. 
+They found that aspects of the target property, which we'll refer to as the property's \emph{type}, (e.g.~its \emph{distinctiveness} or \emph{dangerousness}) modulated the acceptability of generic statements when the actual prevalence of the property was low. 
 %
 CBG also found an asymmetry between interpretation and verification of generics: in one task, participants interpreted a generic (e.g.~``lorches have purple feathers'') as applying to nearly all of the category; in a different task, participants accepted the same generic as true at a much lower prevalence (e.g.~when ``50\% of lorches have purple feathers'').
 
-Both context \red{[Can we find a better word than context?]} and asymmetry effects pose a puzzle for the semantics of generics: what could be the stable meaning of a generic given this extreme flexibility? 
+Both type and asymmetry effects pose a puzzle for the semantics of generics: what could be the stable meaning of a generic given this extreme flexibility? 
 In this paper, we provide a formalism that explains both of these phenomena as the effects of pragmatic inference filling in a meaning that is underspecified in the semantics. 
 %
 In particular, we posit a scalar semantics for generics in which they express that the probability of the property given the kind-----i.e. the property's \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). Following \citeA{Lassiter2015}, we treat this threshold as underspecified in the semantics and thus, it is a free variable that is reasoned about by a pragmatic listener. The listener is then tasked with the joint problem of figuring out what the speaker is communicating in addition to the what the threshold is likely to mean (i.e., what does the generic \emph{mean} in this situation?). 
@@ -163,32 +163,31 @@ In what follows, we replicate the main effects reported by CBG. We use Bayesian 
 
 \section{Experiment 1: CBG replication}
 
-In CBG's \emph{truth conditions} task, participants were given an evidence statement consisting of the percentage of a category that had a property (e.g.~``30\% of lorches have purple feathers''). Participants were asked to judge the associated generic statement (i.e.~``Lorches have purple feathers'') as true or false. 
+In CBG's \emph{truth conditions} task, participants were given an evidence statement consisting of the percentage of a novel animal category that had a property (e.g.~``30\% of lorches have purple feathers''). Participants were asked to judge the associated generic statement (i.e.~``Lorches have purple feathers'') as true or false. 
 
-The authors manipulated context within-subjects by adding additional statements about the property. We focus on three contexts in this paper: \emph{dangerous and distinct} (DD, e.g.~``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers''), \emph{not distinct and irrelevant} (NI, e.g.~``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.''), and \emph{plain} (P, no additional statements). CBG found that DD increased the overall proportion of ``true'' responses to the generic, particularly so at lower prevalence levels. 
+The authors manipulated both the prevalence and the type of property within-subjects. Prevalence varied between 10, 30, 50, 70, and 90\%. Property type was manipulated by adding additional sentences to the prompt. CBG's original study used three property types: \emph{dangerous and distinct} (DangDist, e.g.~``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers''), \emph{non dangerous and non distinct} (NDangNDist, e.g.~``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.''), and \emph{plain} (no additional statements). CBG found that acceptability increased roughly linearly as prevalence increased. They also found an interaction with type: DangDist increased the overall proportion of ``true'' responses to the generic, particularly so at lower prevalence levels. 
 %That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. 10\% of lorches had purple feathers) to assert that the generic statement was true.
 
-In their \emph{implied prevalence} task, participants were supplied with the generic (again, context was a within-subjects variable) and asked to judge prevalence: ``What percentage of lorches do you think have purple feathers?''. CBG found that the generic was interpreted strongly---nearly all lorches have purple feathers---in all contexts. 
+In their \emph{implied prevalence} task, participants were supplied with the generic and asked to judge prevalence: ``What percentage of lorches do you think have purple feathers?''. Type was again manipulated within-subject. CBG found that the generic was interpreted strongly---nearly all lorches have purple feathers---for all three types of properties.
 
-Experiment 1 attempted to replicate the main findings of CBG: that context affects the proportion of ``true'' responses to a generic statement (Exp. 1a) and that there is an asymmetry between verification and interpretation of the truth conditions of the generic (Exp. 1b). 
+Experiment 1 attempted to replicate the main findings of CBG: that type affects the proportion of ``true'' responses to a generic statement (Exp. 1a) and that there is an asymmetry between verification and interpretation of the truth conditions of the generic (Exp. 1b). 
 Exp. 1a and 1b were conducted on separate sessions, one week apart. None of the participants completed both experiments.
 
 \subsection{Experiment 1a: \emph{truth conditions}}
 
 \subsubsection{Participants}
 
-We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk.  
-%NDG: restrictions on IP address or native language?
+We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 5 minutes and participants were compensated \$0.50.
 
 \subsubsection{Procedure and materials}
 
-Our procedure was very similar to CBG's \emph{truth conditions} task. Participants were told they were the resident zoologist of a team of scientists that recently discovered an island with many new animals, and that their task was to provide their expert opinion on questions about these animals\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-9.html}}. 
+Our procedure was very similar to CBG's \emph{truth conditions} task. Participants were told they were the resident zoologist of a team of scientists that recently discovered an island with many new animals; their task was to provide their expert opinion on questions about these animals\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-9.html}}. 
 
  %Our instructions were elaborated to improve interest and motivation
  
-We used the same materials as CBG (available in their Appendix). The materials used were 30 novel animals (e.g. lorches, morseths, blins) each paired with a unique property. Properties were pairs of colors and body-parts (e.g. purple feathers, orange tails). Each participant saw 30 unique animal-property pairs: 10 in each of 3 contexts (\emph{DD}, \emph{NI}, \emph{P}). The 10 items in each context were randomly paired with 1 of 5 ``prevalence levels'': \{10, 30, 50, 70, 90\}\%; each prevalence level appeared 2 times per context. 
+We used the same materials as CBG (available in their Appendix). The materials used were 30 novel animal categories (e.g. lorches, morseths, blins) each paired with a unique property. Properties were made by pairing a color with a body-part (e.g. purple feathers, orange tails). Each participant saw 30 unique animal-property pairs: 10 of each of the 3 types (\emph{DangDist}, \emph{NDangNDang}, \emph{Plain}). The 10 items of each property-type were randomly paired with 1 of 5 ``prevalence levels'': \{10, 30, 50, 70, 90\}\%; thus, each prevalence level appeared 2 times per type. 
 
-Participants saw a prevalence statement and a context statement (\emph{DD}, \emph{NI}, \emph{P}; illustrated above). 
+On each trial, participants saw a prevalence statement and type statements (\emph{DangDist}, \emph{NDangNDang}, \emph{Plain}; illustrated above). 
 %A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. 
 Participants were then asked ``Is the following sentence true or false?'', below which was presented the associated generic (e.g. ``Lorches have purple feathers'') and ``True'' and ``False'' radio buttons. 
 
@@ -221,26 +220,25 @@ Participants were then asked ``Is the following sentence true or false?'', below
   \label{fig:exp1}
 \end{figure}
 
-Results are shown in Figure~\ref{fig:exp1} (left). We entered participant's truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and context as well as their interaction\footnote{This was the maximal mixed-effect structure supported by the data.}.  
+Results are shown in Figure~\ref{fig:exp1} (Left). We entered participants' truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and type as well as their interaction\footnote{This was the maximal mixed-effect structure supported by the data.}.  
 %
-Our results replicated the finding of CBG that the generic statements were endorsed more in the dangerous and distinctive (DD) context than in the plain (P) context (Figure \ref{fig:exp1}, left; $\beta=1.99; SE = .36; z = 5.52; p < .001$). 
+Our results replicated the finding of CBG that the generic statements were endorsed more with dangerous and distinctive properties than with plain properties (Figure \ref{fig:exp1}, left; $\beta=1.99; SE = .36; z = 5.52; p < .001$). 
 %
-There was also an interaction between prevalence level and context such that the generic was endorsed more in \emph{DD} context than in \emph{P} at lower prevalence levels ($\beta=-.03; SE = .01; z=-2.35; p = 0.019$). There was a trending effect for the \emph{NI} context to be endorsed \emph{less} than the plain context ($\beta=-.57; SE = .30; z=-1.91; p = .056$).
+There was also an interaction between prevalence level and type such that the generic was endorsed more with\emph{DangDist} properties than with plain properties at lower prevalence levels ($\beta=.03; SE = .01; z=2.35; p = 0.019$). There was a trending effect for the \emph{NDangNDist} properties to be endorsed \emph{less} than the plain properties ($\beta=-.57; SE = .30; z=-1.91; p = .056$).
 
 \subsection{Experiment 1b: \emph{implied prevalence}}
 
 \subsubsection{Participants}
 
-We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Turk.  
+We recruited 30 participants over MTurk.  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 5 minutes and participants were compensated \$0.50.
 
 \subsubsection{Procedure and materials}
 
 Our procedure was very similar to CBG's \emph{implied prevalence} task. Our instructions were the same as in Exp. 1a\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-12.html}}. 
 
-The materials and context conditions were the same as in Exp. 1a. 
-On each trial, participants saw a generic statement (instead of a prevalence statement) and a context. 
+The materials and property-type conditions were the same as in Exp. 1a. Each participant saw 10 trials of each of the 3 property-types (30 trials in total). On each trial, participants saw a generic statement and property-type statements. 
 %A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. 
-Participants were then asked ``What percentage of [the kind] do you think have [the property]?'' (e.g. ``What percentage of lorches do you think have  purple feathers?'') The dependent measure was a free response required to be an integer, $0-100$. 
+Participants were then asked ``What percentage of [the kind] do you think have [the property]?'' (e.g. ``What percentage of lorches do you think have purple feathers?'') The dependent measure was a free response required to be an integer, $0-100$. 
 
 \subsubsection{Data analysis and results}
 \label{subsec:cbganalysis}
@@ -252,9 +250,9 @@ Participants were then asked ``What percentage of [the kind] do you think have [
 %  \label{fig:replication}
 %\end{figure}
 %
-We followed the data analysis strategy of CBG. Using the data from Exp. 1a, we computed, for each subject, an \emph{average prevalence level} that led to ``True'' responses (e.g. if a participant said ``True'' whenever the prevalence was 70\% or 90\% and ``False'' to everything else, that participant received an \emph{average prevalence score} of 80\%). This score was compared against the implied prevalence dependent measure of Exp. 1b. 
+To compare the truth conditions data with the implied prevalence data, we followed the data analysis strategy of CBG. Using the data from Exp. 1a, we computed, for each subject, an \emph{average prevalence level} that led to ``True'' responses (e.g. if a participant said ``True'' whenever the prevalence was 70\% or 90\% and ``False'' to everything else, that participant received an \emph{average prevalence score} of 80\%). This score was compared against the implied prevalence dependent measure of Exp. 1b. 
 
-The prevalence scores from each task were entered into a linear mixed model with a by-participant random effect of intercept; the fixed effects were context, task, and their interaction. Our results replicated the asymmetry finding of CBG that the generic statement was interpreted as having a higher prevalence than its truth conditions imply (i.e. main effect of task; $\beta=28.8; SE = 4.3; t=6.6; p < 0.001$; see Fig.~\ref{fig:exp1}, right).
+The prevalence scores from each task were entered into a linear mixed model with a by-participant random effect of intercept; the fixed effects were property-type, task, and their interaction. Our results replicated the asymmetry finding of CBG that the generic statement was interpreted as having a higher prevalence than its truth conditions entail (i.e. main effect of task; $\beta=28.8; SE = 4.3; t=6.6; p < 0.001$; see Fig.~\ref{fig:exp1}, right). In the original study, this asymmetry was not observed for sentences using the quantifier ``most''; however, we did not replicate this effect here.
 
 \section{Fixed-threshold semantics}
 The above results, replicated from CBG, indirectly constrain the effective truth conditions that participants are using for generic statements within these experimental conditions. In this section we begin the model-based exploration of these truth conditions by positing a simple threshold semantics. We explore how well this could account for the data of Exp.~1 using Bayesian data analysis.
