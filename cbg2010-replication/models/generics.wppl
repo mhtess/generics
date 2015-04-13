@@ -1,73 +1,26 @@
-// webppl generics.wppl --require-js ./simpleCSV 
-
+// webppl generics.wppl --require-js ./utils 
 
 // mht's helper functions
 
 // load experimental data
+var allData = utils.readInBothTCIPDataSets()
+var truthData = allData[0]
+var impliedData = allData[1]
 
-var dfilepath = "/Users/mht/Documents/research/generics/cbg2010-replication/data/";
-var dfile = dfilepath + "cbgR-exp9-trials.csv";
-var dfile2 = dfilepath + "cbgR-exp12-trials.csv";
+// empirical prior data
 
-var tcData = simpleCSV.readCSV(dfile).data;
-var ipData = simpleCSV.readCSV(dfile2).data;
-
-var contextCol = tcData[0].indexOf('stim_type');
-var prevalenceCol = tcData[0].indexOf("stim_prevalence");
-
-var tcContexts = _.uniq(map(function(x){return x[contextCol]},
-							tcData.slice(1)))
-var ipContexts = _.uniq(map(function(x){return x[contextCol]},
-							ipData.slice(1)))
-
-
-var isTask = function(row, desired_task){
-	var taskCol = tcData[0].indexOf('trial_type');
-	return row[taskCol]==desired_task
+// 5 free response (n=100)
+var prevelancePrior = {
+	"bare": [465,87,220,33,26,40,20,14,20,10,65],
+	"danger-distinct":[633,49,144,11,10,17,10,2,10,3,111],
+	"nondistinctive":[384,85,252,31,30,63,14,10,26,6,99]
 }
-
-var isQuantifier = function(row, desired_quantifier){
-	var quantifierCol = tcData[0].indexOf('stim_determiner');
-	return row[quantifierCol]==desired_quantifier
+// 1 free response (n=30)
+var prevelancePrior = {
+	"bare": [68,44,66,20,22,28,9,4,10,2,27],
+	"danger-distinct":[126,44,25,8,10,16,9,6,12,3,41],
+	"nondistinctive":[14,45,89,21,32,29,21,2,11,9,27]
 }
-
-var isContext = function(row, desired_context){
-	return row[contextCol]==desired_context
-}
-
-var isPrevalence = function(x, desired_prevlev){
-	return x[prevalenceCol] == desired_prevlev
-}
-
-var filterByTaskContextQuantifier = function(dataArray, task, context, quantifier){
-	return filter(function(item){
-			return (isTask(item,task) & isContext(item,context) & isQuantifier(item,quantifier));
-			}, dataArray)
-};
-
-var tcStructured = map(function(context)
-					{return filterByTaskContextQuantifier(tcData, 
-															'truth_conditions', 
-															context, 
-															'generic')},
-					tcContexts);
-
-var ipStructured = map(function(context)
-					{return filterByTaskContextQuantifier(ipData, 
-															'truth_conditions', 
-															context, 
-															'generic')},
-					ipContexts);
-
-
-var prevalenceLevelsAllContexts = map(function(x){
-	return sort(_.uniq(map(function(y){
-		return y[prevalenceCol]
-	}, x)))
-}, tcStructured)
-
-
-//// probably more data munging to do above
 
 var cognitiveModel = function(gamma, delta, speakerOptimality, QUD, prevalence){
 
@@ -80,8 +33,6 @@ var cognitiveModel = function(gamma, delta, speakerOptimality, QUD, prevalence){
 		}
 		return map(betaPDF, bins)
 	}
-
-
 
 	var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
 	var quintileProbs = discretizeBeta(gamma,delta,bins)
@@ -187,33 +138,33 @@ var cognitiveModel = function(gamma, delta, speakerOptimality, QUD, prevalence){
 // 	},10)
 // }
 
-var tcPredictions = map2(function(prevalenceLevels,context){
-	return map(function(prevlev){
-		return cognitiveModel(0.3, 1, 1, "truth", prevlev/10)
-	}, prevalenceLevels)
-}, prevalenceLevelsAllContexts, tcContexts)
+// var tcPredictions = map2(function(prevalenceLevels,context){
+// 	return map(function(prevlev){
+// 		return cognitiveModel(0.3, 1, 1, "truth", prevlev/10)
+// 	}, prevalenceLevels)
+// }, prevalenceLevelsAllContexts, tcContexts)
 
 
-var ipPredictions = map(function(context){
-		return cognitiveModel(0.3, 1, 1, "how many?", "generic is true")
-	}, ipContexts)
+// var ipPredictions = map(function(context){
+// 		return cognitiveModel(0.3, 1, 1, "how many?", "generic is true")
+// 	}, ipContexts)
 
-// map(function(x){
-// 	return map(function(y){
-// 		//return [y.support(), y.score()]
-// 		return [y.support(), y.score()]
-// 	}, x)
-// }, tcPredictions)
+// // map(function(x){
+// // 	return map(function(y){
+// // 		//return [y.support(), y.score()]
+// // 		return [y.support(), y.score()]
+// // 	}, x)
+// // }, tcPredictions)
 
-//cognitiveModel(0.3,1,1,"truth",1)
+// //cognitiveModel(0.3,1,1,"truth",1)
 
-var data = [1,1,1,2,4,1,1,1,1,9]
+// var data = [1,1,1,2,4,1,1,1,1,9]
 
-var modelScore = function(modelERP, data){
-	return sum(map(function(d){return modelERP.score([],d)},data))
-}
+// var modelScore = function(modelERP, data){
+// 	return sum(map(function(d){return modelERP.score([],d)},data))
+// }
 
-factor(modelScore(ipPredictions, allmydata))
+// factor(modelScore(ipPredictions, allmydata))
 
 
 // map(function(x){
