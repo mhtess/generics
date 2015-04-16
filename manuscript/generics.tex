@@ -76,6 +76,9 @@
   {\signed{\usebox\mybox}\end{quote}}
 
 
+ \newcommand{\denote}[1]{\mbox{ $[\![ #1 ]\!]$}}
+
+
 %\lstset{
 %  language=Scheme, % Andreas Stuhlmuller. Scheme listings. https://github.com/stuhlmueller/scheme-listings.git
 %  columns=fixed,
@@ -113,52 +116,128 @@
 
 
 \begin{abstract}
-Generic utterances are ubiquitous in natural language. Despite their prevalence, the meanings of generic statements are puzzling to formal approaches. \citeA{Cimpian2010} demonstrated that the endorsement rate of generic statements differs by context, and that generics can be endorsed based on weak evidence while the same sentences are interpreted strongly. Here, we replicate these effects in Exp.~1 and investigate how models based on prevalence (the probability of the property given the category) can account for this behavior. 
-Using Bayesian data analysis techniques, %to make inferences about the putative threshold used as well as to arbitrate between competing accounts. 
-we show how a simple scalar prevalence semantics is untenable, but that the same semantics within a probabilistic pragmatics framework can account for the data. 
-In this model, the generic has an underspecified meaning, but this uncertainty is resolved by context and interaction. 
-Context effects are predicted if the prior distribution of prevalence differs by context; in Exp.~2 we find direct evidence that this is so.
+Generic utterances (e.g. ``Dogs bark'') are ubiquitous in natural language. Despite their prevalence, the meanings of generic statements are puzzling to formal approaches. A scalar semantic account stipulates a generic statement is true if the prevalence (the probability of the property given the category) is greater than some threshold. Such accounts are difficult to defend because of the inherent flexibility in generic truth conditions. Here, we propose a scalar semantics for generics wherein the truth conditional threshold is underspecified in the semantics but is determined by context and interaction. In Expts.~1, we replicate the findings of \citeA{Cimpian2010}, who provided strong empirical support for the intuition that generics statements have flexible truth conditions but are interpreted very strongly. The model predicts flexibility in truth conditions across different types of properties if the prior distribution over prevalence differs across these property-types; in Exp.~2 we find direct evidence that this is so. We conclude by showing that the model is able to capture accidental and low-prevalence generics---two cases of theoretical importance.
+
+
+%demonstrated that the endorsement rate of generic statements differs by context, and that generics can be endorsed based on weak evidence while the same sentences are interpreted strongly. Here, we replicate these effects in Exp.~1 and investigate how models based on prevalence (the probability of the property given the category) can account for this behavior. 
+%Using Bayesian data analysis techniques, %to make inferences about the putative threshold used as well as to arbitrate between competing accounts. 
+%we show how a simple scalar prevalence semantics is untenable, but that the same semantics within a probabilistic pragmatics framework can account for the data. 
+%In this model, the generic has an underspecified meaning, but this uncertainty is resolved by context and interaction. 
+%Context effects are predicted if the prior distribution of prevalence differs by context; in Exp.~2 we find direct evidence that this is so.
 %The differences between verification and interpretation are understood as different tasks within a communicative framework. 
 %We use a Bayesian analysis again to infer a prior distribution, for which we then find confirmatory evidence in Exp. 2. 
-We conclude by showing that the model is able to capture accidental and low-prevalence generics---two cases of theoretical importance.
+
 
 \textbf{Keywords:} 
-generics; pragmatics; bayesian cognition; bayesian data analysis
+generics; pragmatics; bayesian model
 \end{abstract}
 
-\begin{aquote}{John Locke, \emph{An Essay Concerning Human Understanding (1690)}}
-Now since [articulate] sounds have no natural connexion with our ideas, but have all their signification from the arbitrary imposition of men, the doubtfulness and uncertainty of their signification has its cause more in the ideas they stand for than in any incapacity there is in one sound more than in another to signify any idea: For in that regard they are all equally perfect.
+%\begin{aquote}{John Locke, \emph{An Essay Concerning Human Understanding (1690)}}
+%Now since [articulate] sounds have no natural connexion with our ideas, but have all their signification from the arbitrary imposition of men, the doubtfulness and uncertainty of their signification has its cause more in the ideas they stand for than in any incapacity there is in one sound more than in another to signify any idea: For in that regard they are all equally perfect.
+%\end{aquote}
+
+\begin{aquote}{Simple Wikipedia}
+Animals breathe Oxygen to live.
 \end{aquote}
 
-Words are vague because ideas are vague, Locke argues. In making this argument, he falls into the habit of communication that we all fall into: using generalizations about members of a category---in this case, \emph{[articulate] sounds}. This type of utterance is generic \cite{Carlson1977, Leslie2008}. Meanings of generic statements are hard to pin down. Generics can be true with very little evidence: e.g., Locke is making his argument not based on a corpus study of words but based on his intuition and the particular examples he is considering implicitly, a relatively small proportion of the potential infinitude of articulate sounds. Further, they are robust to counterexamples: Locke's argument is still tenable even if we know that we know there are non arbitrary word--meaning mappings (hence, ``\emph{all} sounds have no natural connexion with our ideas'' is false, \red{cite bouba-kiki, erin?, molly?}). And what of the implications of generics; if a generic doesn't mean \emph{all}, what size subset of the category does it imply? Presumably, Locke is arguing about \emph{almost} all words. Why else would he go through the trouble of crafting this argument?
-
-\red{
-In this paper, we will see that the \emph{context} in which his words are uttered is essential to the meaning we derive. We propose that this aspect of generic language follows from pragmatic reasoning about an uncertain threshold for meaning; an idea which we formalize in a probabilistic model within the Rational Speech Acts framework \cite{Frank2012,Goodman2013}.
+Imagine you're talking with a 3 year old about oxygen. Oxygen is difficult to explain because it's rarely observable and the function of oxygen is abstract. You might use a construction similar to the one from Simple Wikipedia above. Few would argue with the truth of this sentence (though perhaps if you were talking with an adult, you would use more specific language), yet the meaning is difficult to specify. Is it synonymous with ``All animals breathe Oxygen to live''? %It's false that \emph{all} animals breathe oxygen (e.g. fish), yet intuitively the sentence seems to convey something stronger than the weak \emph{some} animals breathe oxygen. 
+%If you were talking with an adult, you might use a more nuanced statement (e.g. by talking about the subcategory Mammals).
+%Words are vague because ideas are vague, Locke argues. In making this argument, he falls into the habit of communication that we all fall into: using generalizations about members of a category---in this case, \emph{[articulate] sounds}. 
 %
-Generic statements are puzzling because their meaning is so flexible. On the one hand, generics would seem to suggest an almost universal quantification, as in ``Dogs bark''. Others, like ``Mosquitos carry West Nile virus'', involve a property that applies only to a small subset of the kind. 
-}
+
+This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category. Generics can be true with little evidence (e.g. each of us has encountered only a small number of all the animal-kinds in the world, yet we would still endorse this). % should I deply the mosquitos here?
+%
+%is making his argument not based on a corpus study of words but based on his intuition and the particular examples he is considering implicitly, a relatively small proportion of the potential infinitude of articulate sounds. 
+%
+At the same time, generics are robust to counterexamples: ``Animals breathe Oxygen to live'' is true even though there are three species of creatures called \emph{lorica} that live 2.2 miles underwater on the ocean floor and apparently do not breathe oxygen to live. 
+%
+%Locke's argument is still tenable even if we know that we know there are non arbitrary word--meaning mappings (hence, ``\emph{all} sounds have no natural connexion with our ideas'' is false, \red{cite bouba-kiki, erin?, molly?}). 
+%
+Finally, generics have strong implications. Upon hearing a generic, listeners are wont to interpret the sentence as applying to \emph{all or almost all} of a category.
+%
+
+
+What could be the stable meaning of a generic given this extreme flexibility? We propose these phenomena can be explained as the effects of pragmatic inference filling in a meaning that is underspecified in the semantics. 
+%
+In particular, we posit a scalar semantics for generics in which they express that the probability of the property given the kind-----i.e. the property's \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). Following \citeA{Lassiter2015}, we treat this threshold as underspecified in the semantics and thus, as a free variable that is reasoned about by a pragmatic listener within the \emph{Rational Speech-Act} (RSA) framework \cite{Frank2012,Goodman2013}. In this way, generics are vague in the way gradable adjectives like ``tall'' are vague. In this formalism, the listener is tasked with the joint problem of figuring out what the speaker is communicating in addition to the what the threshold is likely to mean (i.e., what does the generic \emph{mean} in this situation?). 
+%
+With an uncertain semantics, the listener solves this problem by using her prior beliefs, in this case, about the prevalence of the property, in addition to standard inferences from conversational pragmatics \cite{Clark1996; Grice1975; Levinson2000}. From this, flexible truth conditions are derived. At the same time, near-universal implications are predicted if the prevalence of the property follows a certain distribution.
+%
+
+\citeA{Cimpian2010} (henceforth, CBG) carried out a series of experiments designed to examine the truth conditions and implications of generic statements about novel animal categories (e.g.~``lorches have purple feathers'') . 
+They found empirical support for the flexibility of truth conditions by manipulating the type of property in question (e.g.~if the property was \emph{distinctive} or \emph{dangerous}); this manipulation led to differences in the acceptably of a generic at low levels of prevalence (e.g. when only ``30\% of lorches have purple feathers'').
+%
+CBG also reported an asymmetry between the truth conditions entailed by this \emph{verification} task and those reported in an analogous \emph{interpretation} task, where participants were asked to provide a prevalence estimate upon hearing a generic. The title of their article provides an excellent summary: ``Generic statements require little evidence for acceptance but have powerful implications''.
+
+In what follows, we describe our formal proposal for generic meaning and use simulations to confirm intuitions. We replicate the main effects reported by CBG and use Bayesian data analytic techniques to further examine the effective truth-conditions of generic statements. We show that our model predicts both flexible truth conditions and asymmetry effects, given appropriate priors over prevalence. We experimentally elicit the prevalence priors in CBG's experimental contexts, verifying the predictions of the model. We show that the elicited prevalence priors predict the same effects as the inferred priors, and then show how the effects dissipate when different types of properties (with different types of priors) are discussed. We close with a demonstration that the model captures additional cases of theoretical importance.
+
+%The asymmetry effects fall out of modeling task differences between the language understanding and answer-selection tasks faced by participants in the different experiments (cf. \citeA{Degen2014}). 
+%Presumably, Locke is arguing about \emph{almost} all words. Why else would he go through the trouble of crafting this argument?
+%
+%\red{
+%In this paper, we will see that the \emph{context} in which his words are uttered is essential to the meaning we derive. We propose that this aspect of generic language follows from pragmatic reasoning about an uncertain threshold for meaning; an idea which we formalize in a probabilistic model within the Rational Speech Acts framework \cite{Frank2012,Goodman2013}.
+%%
+%Generic statements are puzzling because their meaning is so flexible. On the one hand, generics would seem to suggest an almost universal quantification, as in ``Dogs bark''. Others, like ``Mosquitos carry West Nile virus'', involve a property that applies only to a small subset of the kind. 
+%}
 %It is perhaps this inherent uncertainty that leads generics to be so widespread in natural language. 
 
-\citeA{Cimpian2010} (henceforth, CBG) carried out a series of experiments designed to examine the truth conditions and implications of generic statements about novel animal categories. 
-They found that aspects of the target property, which we'll refer to as the property's \emph{type}, (e.g.~its \emph{distinctiveness} or \emph{dangerousness}) modulated the acceptability of generic statements when the actual prevalence of the property was low. 
-%
-CBG also found an asymmetry between interpretation and verification of generics: in one task, participants interpreted a generic (e.g.~``lorches have purple feathers'') as applying to nearly all of the category; in a different task, participants accepted the same generic as true at a much lower prevalence (e.g.~when ``50\% of lorches have purple feathers'').
 
-Both type and asymmetry effects pose a puzzle for the semantics of generics: what could be the stable meaning of a generic given this extreme flexibility? 
-In this paper, we provide a formalism that explains both of these phenomena as the effects of pragmatic inference filling in a meaning that is underspecified in the semantics. 
-%
-In particular, we posit a scalar semantics for generics in which they express that the probability of the property given the kind-----i.e. the property's \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). Following \citeA{Lassiter2015}, we treat this threshold as underspecified in the semantics and thus, it is a free variable that is reasoned about by a pragmatic listener. The listener is then tasked with the joint problem of figuring out what the speaker is communicating in addition to the what the threshold is likely to mean (i.e., what does the generic \emph{mean} in this situation?). 
-%
-With uncertain semantics, the listener solves this problem by using her prior beliefs about the prevalence of the property. From this, context effects are derived. The asymmetry effects fall out of modeling task differences between the language understanding and answer-selection tasks faced by participants in the different experiments (cf. \citeA{Degen2014}).  %suggested that different dependent measures in experimental pragmatics paradigms map onto different communicative roles, and thus should be modeled accordingly. 
+ %suggested that different dependent measures in experimental pragmatics paradigms map onto different communicative roles, and thus should be modeled accordingly. 
 
 %We draw on new advances in probabilistic pragmatics to formalize two possible theories of the generic. Further, we harness the power of Bayesian data analysis to mediate between these formal theories and draw inferences about cognitively interesting model parameters. 
 
-In what follows, we replicate the main effects reported by CBG. We use Bayesian data analytic techniques to further examine the effective truth-conditions of generic statements. We then introduce a model of generic comprehension, within the probabilistic Rational Speech Acts framework. We show that this model predicts both context and asymmetry effects, given appropriate prevalence priors. We experimentally elicit the prevalence priors in CBG's experimental contexts, verifying the predictions of the model. We confirm that the elicited prevalence priors predict the same effects as the inferred priors. We then show how the effects dissipate when different types of properties (with different types of priors) are discussed. We close with a demonstration that the model captures additional cases of theoretical importance.
 
 %(e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers'')
 % (e.g.  ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'')
 
 %How are we to understand these data? One interpretation is that context changes the truth-conditions for a generic statement, but that within a context, the truth-conditions are stable. A different sort of explanation is that context changes the nature of world somehow, and that generic meanings are inferred rationally from context. We draw on recent advances in probabilistic pragmatics and Bayesian data analysis to mediate between these two alternatives.
+
+\section{A lifted-threshold model of generic meaning}
+
+We view language understanding as a special case of social cognition, and language comprehension as deriving from an intuitive theory of language production.  We draw on recent work from probabilistic pragmatics to formalize how listeners arrive at interpretations of generic utterances. In particular, we draw on work from the Rational Speech-Act (RSA) theory of language understanding. In this framework, a listener infers the meaning of an utterance by considering the thought-processes of a speaker whose goal is to be informative. Variants of this theory have provided formal explanations for a number of linguistic phenomena including scalar implicature, hyperbole, and argument evaluation \cite{Kao2014, Tessler2014, Lassiter2014}. 
+
+%CBG showed how contexts affects the endorsement for generic statements. An additional concern of their experiments surrounded the relation between two dependent measures for understanding generics. One dependent measure was the ``truth conditions'', or \emph{sentence verification} measure that we've been considering up to this point. The other was an ``implied prevalence'', or \emph{sentence interpretation} dependent measure. The latter was collected by giving participants the generic statement (plus, any additional contextual information), and asking the participant ``What percentage of lorches have purple feathers?''
+
+%The tasks in Exp.~1 are, fundamentally, language understanding tasks. Participants are given premises and asked to draw a conclusion that necessarily involves reasoning about the meaning of words. 
+
+%\subsection{Lifted-variable RSA}
+
+%The Bayesian data analysis above provides compelling evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the high inferred value of the guessing parameter $\phi$ suggest, however, that our language model is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, 
+
+We propose that generics are vague. In this way, generics are similar to gradable adjectives like \emph{tall}. For example, the conditions under which ``John is tall'' and ``The Empire State Building is tall'' are quite different. \citeA{Lassiter2015}  propose the meaning of an adjective like \emph{tall} is a standard truth-functional, threshold meaning such that the object in question \emph{is tall} if it has a height greater than the threshold $\theta_{tall}$. 
+The vagueness and context-sensitivity of scalar adjectives are accounted for by treating $\theta_{tall}$ as an unknown property of the language, and modeling the pragmatic listener as inferring this threshold. In this example, different thresholds are derived through the interaction of the prior distribution over heights (people vs. buildings) with the communicative pressures to be truthful and informative. 
+ 
+In a similar way, we propose the literal semantics of a generic sentence is in fact a threshold on prevalence, but listeners don't know the appropriate threshold and actively must reason about it in context. The relevant prior distribution for generic meaning is the prior distribution of the property (e.g. ``breathes oxygen'' will have a different prior distribution than ``breathes polluted air''). This is the distribution of the property prevalence across categories (e.g. 0\% of books breathe oxygen, 10\% of Americans breathe polluted air, 100\% of dogs breathe oxygen). Just as the prior distributions of height for people and buildings differ, the prior distributions over prevalence for different types of properties vary.
+
+The RSA model for generic interpretation, with the prevalence threshold as a variable ``lifted'' to pragmatic reasoning is specified by:
+\begin{flalign}
+& P_{L_{0}}(x \mid g, \theta) \propto {\delta_{\denote{g(\theta)}(x)} P(x)} \label{eq:L0} \\
+& P_{S_{1}}(g \mid x, \theta) \propto {P_{L_{0}}(x \mid g, \theta)} \label{eq:S1}\\
+& P_{L_{1}}(x , \theta \mid g) \propto P_{S_{1}}(g \mid x, \theta) P(x) \label{eq:L1}
+\end{flalign}
+Here $\denote{g(\theta)}: X \rightarrow \text{Boolean}$ is a truth-function specifying the literal meaning of the generic. 
+
+The literal content of the generic in Eq.~\eqref{eq:L0} is given by $\denote{g(\theta)}= \{x | x > \theta \}$. $g$ is a function of $\theta$ because the meaning of a generic may vary across contexts.
+
+
+Eq.~\eqref{eq:L1} is a model of a listener ($L_{1}$) who has been told a generic statement. She assumes that, whatever the speaker ($S_{1}$) meant to communicate, the speaker was trying to be informative and that his goal was to communicate the prevalence $x$. Additionally, the speaker was trying to communicate the actual meaning of the generic, the threshold $\theta$.  The listener assumes the speaker in Eq.~\eqref{eq:S1} knows $\theta$ and chooses an utterance to be informative to a hypothetical literal listener ($L_{0}$).  From this, the listener jointly infers both $x$ and $\theta$. We call this type of model a ``lifted variable'' model (lvRSA) because $\theta$, traditionally thought to be part of the semantic content of the utterance (and thus perfectly transparent to all in the conversation), has been underspecified in the semantics but is locally fixed through pragmatic reasoning.
+ 
+%However, it interacts with the prior distribution $P(x)$ over prevalence levels---the prior distribution across kinds of a particular property's prevalence.
+
+The prevalence prior $P(x)$ has a critical effect on the interpretation of the generic in this model. 
+
+\subsection{The \emph{Question Under Discussion}}
+
+
+As a first test the model, we posit a family of possible priors $x \thicksim \beta(\gamma,\delta)$\footnote{For ease of interpretation, we are parametrizing the $\beta$ distribution by its mean and concentration. To recover the canonical shape parametrization, use $\gamma \delta$ and $(1-\gamma)\delta$.}. We hypothesize that the details of these priors (i.e.~$\gamma$'s and $\delta$'s) may differ according to the type of property in reference by the generic. For instance, when you know that a particular property is rare, a different distribution of that property over kinds is called to mind, than if the property is common. This would result in different meanings for the generic. Below we infer appropriate prior parameters for each property-type from the behavioral data.
+
+Following the advice of \citeA{Degen2014}, who investigated the relationship between dependent measures and speaker and listener roles in RSA, we will model the \emph{implied prevalence} task as a pragmatic listener ($L_{1}$) task, but the \emph{truth conditions} task as a pragmatic speaker task. We model the truth judgment with a speaker $S_{2}$ who is trying to convey the prevalence to a pragmatic listener, but can only produce the generic or its negation (i.e.~yes or no to the truth of the generic):
+\begin{equation} 
+P_{S_{2}}(g \mid x) \propto {P_{L_{1}}(x \mid g)}.
+\label{eq:S2}
+\end{equation}
+The speaker in \eqref{eq:S2}, like $L_{1}$, doesn't know the threshold, but knows that $L_{1}$ is thinking about it, and marginalizes over possible values: $ P_{L_{1}}(x \mid g) = \sum_{\theta} P_{L_{1}}(x , \theta \mid g) $.
+
 
 \section{Experiment 1: CBG replication}
 
@@ -257,6 +336,7 @@ The prevalence scores from each task were entered into a linear mixed model with
 The above results, replicated from CBG, indirectly constrain the effective truth conditions that participants are using for generic statements within these experimental conditions. In this section, we briefly review threshold semantics and the trouble posed by this data.
 
 Let us assume that the conditions for truth of the generic can be usefully represented by a threshold on prevalence: the generic is true when the prevalence of some property within a kind exceeds a given threshold (see \citeA{Cohen1999} for a similar assumption). If we use $x\in [0,1]$ to denote the prevalence $P(\text{property}|\text{category})$, then the simple threshold meaning is:
+
 \begin{align}
  g(x, \theta) = \begin{cases}
    1 & \text{if } x > \theta \\
@@ -265,6 +345,7 @@ Let us assume that the conditions for truth of the generic can be usefully repre
 %  \tag{\theequation}
    \label{eq:ftsem}
 \end{align}
+
 The function $g$ captures a very simple cognitive model in which people evaluate the generic by comparing observed prevalence to the known threshold.
 It is apparent that if the threshold $\theta$ were truly fixed, this model could account for neither property-type nor asymmetry effects.
 
@@ -379,127 +460,7 @@ The fixed-threshold semantics model is not flexible enough to explain the observ
 %
 
 
-\section{Reasoning about the threshold}
-
-%CBG showed how contexts affects the endorsement for generic statements. An additional concern of their experiments surrounded the relation between two dependent measures for understanding generics. One dependent measure was the ``truth conditions'', or \emph{sentence verification} measure that we've been considering up to this point. The other was an ``implied prevalence'', or \emph{sentence interpretation} dependent measure. The latter was collected by giving participants the generic statement (plus, any additional contextual information), and asking the participant ``What percentage of lorches have purple feathers?''
-
-The tasks in Exp.~1 are, fundamentally, language understanding tasks. Participants are given premises and asked to draw a conclusion that necessarily involves reasoning about the meaning of words. We draw on recent work from probabilistic pragmatics to formalize how listeners arrive at interpretations of utterances in these situations. In particular, we draw on work from the Rational Speech-Act (RSA) theory of language understanding. In this framework, a listener infers the meaning of an utterance by considering the thought-processes of a speaker whose goal is to be informative. Variants of this theory have provided computational explanations for a number of linguistic phenomena including scalar implicature, hyperbole, and argument evaluation \cite{Kao2014, Tessler2014, Lassiter2014}. 
-
-%\subsection{Lifted-variable RSA}
-
-%The Bayesian data analysis above provides compelling evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the high inferred value of the guessing parameter $\phi$ suggest, however, that our language model is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, 
-
-We propose that generics are vague. In this way, generics are like gradable adjectives like \emph{tall}. The conditions under which ``John is tall'' and ``The Empire State Building is tall'' are quite different. \citeA{Lassiter2015}  propose the meaning of an adjective like \emph{tall} is a standard truth-functional meaning such that the object in question \emph{is tall} if it has a height greater than the threshold $\theta_{tall}$. 
-The vagueness and context-sensitivity of scalar adjectives are accounted for by treating $\theta_{tall}$ as an unknown property of the language, and modeling the pragmatic listener as inferring this threshold. In this example, different thresholds are arrived through the interaction of the prior distribution over heights (people vs. buildings) with communicate pressures to be truthful and informative. 
- 
-%The key insight, though, is that the listener has uncertainty about what $\theta_{tall}$ actually is, and infers that value of $\theta_{tall}$ via the same recursive reasoning process through which she infers the intended meaning of the utterance.
-
-%How is a listener supposed to reason about $\theta_{tall}$? In the case of adjectives, reasonable thresholds are inferred by way of the prior distribution of the property in question. ``John is tall'' and the ``Empire State Building is tall'' imply different heights for John and the ESB because the prior distributions of heights for people and buildings are different. An adjective will only be informative (and truthful) with respect to the appropriate prior distribution. 
-
-
-
-%In Church, the model looks like:
-%
-%\begin{lstlisting}
-%(define pragmatic-listener (lambda (utterance)
-%	(query
-%		(define prevalence (prevalence-prior))
-%		; listener doesn't know the threshold
-%		(define generic-threshold (threshold-prior))
-%			
-%		prevalence
-%			
-%		(equal? utterance 
-%		; listener imagines the speaker does know the threshold
-%			(speaker prevalence generic-threshold)))))
-%			
-%(define speaker (lambda (prevalence generic-threshold)
-%	(query
-%		(define utterance (utterance-prior))
-%			
-%		utterance
-%			
-%		; speaker conditions on a literal-listener inferring the right prevalence
-%		(equal? prevalence 
-%			(literal-listener utterance generic-threshold)))))
-%			
-%(define literal-listener (lambda (utterance generic-threshold)
-%	(query
-%		(define prevalence (prevalence-prior))
-%			
-%		prevalence
-%		; literal listener conditions on the words being true
-%		(utterance prevalence generic-threshold))))
-%\end{lstlisting}
-
-In a similar way, we propose the literal semantics of a generic sentence is in fact a threshold on prevalence, but listeners don't know the appropriate threshold and actively must reason about it in context. Just as the prior distributions of height for people and buildings differ, the prior distributions over prevalence for distinctive and nondistinctive properties vary.
-
-The RSA model for generic interpretation, with the prevalence threshold as a variable ``lifted'' to pragmatic reasoning is specified by:
-\begin{flalign}
-& P_{L_{0}}(x \mid g, \theta) \propto g(x, \theta) P(x) \label{eq:L0} \\
-& P_{S_{1}}(g \mid x, \theta) \propto {P_{L_{0}}(x \mid g, \theta)} \label{eq:S1}\\
-& P_{L_{1}}(x , \theta \mid g) \propto P_{S_{1}}(g \mid x, \theta) P(x) \label{eq:L1}
-\end{flalign}
-The literal content of the generic in Eq.~\eqref{eq:L0} is identical to the fixed-threshold model in Eq.~\eqref{eq:ftsem}. However, it interacts with the prior distribution $P(x)$ over prevalence levels---the prior distribution of prevalence of a particular property across kinds.
-
-Eq.~\eqref{eq:L1} is a model of a listener ($L_{1}$) who has been told a generic statement. She assumes that, whatever the speaker ($S_{1}$) meant to communicate, the speaker was trying to be informative and that his goal was to communicate the prevalence $x$. She assumes the speaker in Eq.~\eqref{eq:S1} knows $\theta$ and chooses an utterance to be informative to the literal listener ($L_{0}$).  From this, the listener jointly infers both $x$ and $\theta$. We call this type of model a ``lifted variable'' model (lvRSA) because $\theta$, traditionally thought to be part of the semantic content of the utterance (and thus perfectly transparent to all in the conversation), has been underspecified in the semantics but is locally fixed through pragmatic reasoning.
-
-The prevalence prior $P(x)$ has a critical effect on the interpretation of the generic in this model. As a first test the model, we posit a family of possible priors $x \thicksim \beta(\gamma,\delta)$\footnote{For ease of interpretation, we are parametrizing the $\beta$ distribution by its mean and concentration. To recover the canonical shape parametrization, use $\gamma \delta$ and $(1-\gamma)\delta$.}. We hypothesize that the details of these priors (i.e.~$\gamma$'s and $\delta$'s) may differ according to the type of property in reference by the generic. For instance, when you know that a particular property is rare, a different distribution of that property over kinds is called to mind, than if the property is common. This would result in different meanings for the generic. Below we infer appropriate prior parameters for each property-type from the behavioral data.
-
-Following the advice of \citeA{Degen2014}, who investigated the relationship between dependent measures and speaker and listener roles in RSA, we will model the \emph{implied prevalence} task as a pragmatic listener ($L_{1}$) task, but the \emph{truth conditions} task as a pragmatic speaker task. We model the truth judgment with a speaker $S_{2}$ who is trying to convey the prevalence to a pragmatic listener, but can only produce the generic or its negation (i.e.~yes or no to the truth of the generic):
-\begin{equation} 
-P_{S_{2}}(g \mid x) \propto {P_{L_{1}}(x \mid g)}.
-\label{eq:S2}
-\end{equation}
-The speaker in \eqref{eq:S2}, like $L_{1}$, doesn't know the threshold, but knows that $L_{1}$ is thinking about it, and marginalizes over possible values: $ P_{L_{1}}(x \mid g) = \sum_{\theta} P_{L_{1}}(x , \theta \mid g) $.
-
-
-%\begin{lstlisting}
-%(define lifted-speaker (lambda (prevalence)
-%	(query
-%		(define utterance (utterance-prior))
-%			
-%		utterance
-%			
-%		(equal? prevalence (pragmatic-listener utterance)))))	
-%\end{lstlisting}
-
-
-%\subsection{Bayesian analysis to infer priors}
-
-
-%\begin{lstlisting}
-%(define bayesian-data-analysis
-%	(query
-%	
-%		(define gamma ; mean prevalence
-%			(lambda (context) (uniform 0 1)))
-%			
-%		(define delta ; concentration of our distribution around the mean
-%			(lambda (context) (uniform 0 5)))
-%			
-%		(define phi (uniform 0 1)) ; guessing parameter
-%	
-%		(define lifted-speaker ...) ; lvRSA model
-%		(define pragmatic-listener ...)
-%		(define speaker ...)
-%		(define literal-listener ...)
-%				
-%		'(gamma delta)
-%				
-%		(and 
-%			(= experiment1a-data lifted-speaker)
-%			(= experiment1b-data pragmatic-listener))))
-%\end{lstlisting}
-
-%\begin{figure}
-%\centering
-%    \includegraphics[width=\columnwidth]{fig4_bda2_hyper}
-%    \caption{Hyperprior parameters for lifted-variable RSA model}
-%  \label{fig:bda2hyperparams}
-%\end{figure}
-
-\subsection{Results}
+\section{Modeling Results}
 
 To evaluate this model we perform a Bayesian data analysis similar to that used above.
 %to evaluate this more sophisticated cognitive model. We are interested in how the hyperprior parameters $\gamma$ and $\delta$ might vary across contexts.
@@ -697,6 +658,9 @@ A lower-bound threshold on prevalence---the probability of the property given th
 We formalized reasoning about the threshold in a lifted-variable Rational Speech Acts (lvRSA) model. This model predicted graded truth judgements and an asymmetry between truth and prevalence judgements. It also accommodated the role of context, explaining these effects as the result of variation in the prevalence prior. 
 In Experiment 2, we verified that participants' beliefs about the prior on prevalence varied in this way. 
 This provides evidence that the model we propose can account for many of the empirical phenomena associated with generics.
+
+
+here exists a parallel but distinct problem of generic \emph{identification} (``Is the speaker telling me a generic statement?'') \cite{Cimpian2008} that listeners must solve as well. . 
 
 %We have shown how a Bayesian model of language understanding, motivated by contextual variation of the effective threshold of the generic statement, can explain the puzzling truth conditions and asymmetrical meanings of generic language. We have used techniques in Bayesian data analysis to help arbitrate between two cognitive theories. The first was a simple theory that proposed that a generic was akin to some alien quantifier. In this theory, the generic behaves like other quantifiers in that it has a fixed-threshold semantics. We explored one elaboration of this in allowing the generic to have a threshold that differed across contexts. 
 %
