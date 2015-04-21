@@ -4,7 +4,6 @@
 
 
 
-(define quantifier 'generic)
 
 ;(define speaker-optimality 1)
 (define context 'all)
@@ -32,6 +31,8 @@
 (define (qud-prior) (uniform-draw (list 'is-lorch 'who-is-it)))
 
 (define (all state threshold) (= 100 state))
+(define (not-all state threshold) (> 100 state))
+
 (define (relaxed-all state threshold) (<= 90 state))
 
 (define (some state some-threshold) (< some-threshold state))
@@ -67,67 +68,182 @@
         (('anti-generic) anti-generic)
         (('mu) mu)
         (('is-lorch) generic?)
-        (('who-is-it) who-is-it?)))
+        (('who-is-it) who-is-it?)
+        (("how-many") how-many)
+        ))
 
 
 
 (define cognitive-model 
   (mem 
   ; (lambda (gamma delta speaker-optimality QUD evidence)
-   (lambda (state-prior speaker-optimality QUD evidence)
+   (lambda (state-prior domain speaker-optimality QUD evidence)
 
      ;; input could be utterance (for listener / implied_prevalence)
      ;; or state (for speaker / truth_conditions)
 
-     (define (theta-meaning word)
-       (case word
-             (('most-theta) most-theta)
-             (('some-theta) some-theta)
-             (('generic-theta) generic-theta)
-             (('how-many-theta) 'null)
-             (('anti-generic-theta) generic-theta)
-             (('none-theta) some-theta)
-             (('anti-most-theta) anti-most)))
-     
-     (define (theta words)
-       (theta-meaning (string-append words '-theta)))
+(define (literal-meaning words state generic-theta)
+  (if (member words '(0 10 20 30 40 50 60 70 80 90 100))
+    (equal? words state)
+   (case words
+    (("generic") ((meaning words) state generic-theta))
+    (("most") ((meaning words) state 50))
+    (("anti-most") ((meaning words) state 50))
+    (("all") ((meaning words) state 99))
+    (("not-all") ((meaning words) state 99))
+    (("some") ((meaning words) state 1))
+    (("none") ((meaning words) state 1))
+    (("anti-generic") ((meaning words) state generic-theta))
+    (("mu") ((meaning words) state null)))))
 
+  (define (number-words-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
 
+  (define (utterance-prior) 
+    (uniform-draw 
+      (if (equal? QUD evidence)
+       ; (list "some" "none")
+        (list "generic" "anti-generic")
+       (list "generic" "mu")
+    ;  (list "some" "mu")
+;       (list "generic" "some" "most")
+      ; (list "some" "most" "all")
+      ; 
+      ; (list "most" "anti-most")
+    )))
 
-    (define speaker2
+    (define speaker2_TC
       (mem (lambda (state)
       (enumeration-query
+        (define nL1 (number-listener1 state))
+        (define prevalence (apply multinomial nL1))
+   ;     (define QUD-val ((meaning QUD) prevalence (theta QUD)))
 
-        (define words (uniform-draw (list 'generic 'anti-generic)))
+        (define words (utterance-prior))
 
        words
 
-       (equal? state (apply multinomial (listener1 words)))))))
+       (equal? prevalence (apply multinomial (word-listener1 words)))))))
+
+    (define speaker2_IP
+      (mem (lambda (words)
+      (enumeration-query
+        (define number-words (number-words-prior))
+        (define wL1 (word-listener1 words))
+        (define prevalence (apply multinomial wL1))
+  ;      (define QUD-val ((meaning QUD) prevalence (theta QUD)))
+
+       number-words
+
+       (equal? prevalence (apply multinomial (number-listener1 number-words)))))))
 
 
-     (define listener1
+     (define word-listener1
        (mem (lambda (words) ;; listener1 does do inference over theta
               (enumeration-query
-               (define state (state-prior))
+               (define state (state-prior domain))
                (define generic-theta (theta-prior))
-;               (define QUD-val ((meaning QUD) state (theta QUD)))
+             ; (define (theta words)
+             ;   (theta-meaning (string-append words '-theta)))
+
+             ;  (define (theta-meaning word)
+             ;   (case word
+             ;         (('most-theta) 50)
+             ;         (('some-theta) 1)
+             ;         (('generic-theta) generic-theta)
+             ;         (('how-many-theta) 'null)
+             ;         (('anti-generic-theta) generic-theta)
+             ;         (('none-theta) 1)
+             ;         (('anti-most-theta) 50)))
+                           
+             ;   (define QUD-val ((meaning QUD) state (theta QUD)))
+          ;      (define blah (display generic-theta))
+ ;              generic-theta
+                state
+                ;QUD-val
+
+               (equal? words 
+                (apply multinomial 
+                  (raise-to-power 
+                    (word-speaker1 state generic-theta) 
+                   speaker-optimality)))))))
+
+      (define number-listener1
+       (mem (lambda (number-words) ;; listener1 does do inference over theta
+              (enumeration-query
+               (define state (state-prior domain))
+               (define generic-theta (theta-prior))
+
+             ; (define (theta words)
+             ;   (theta-meaning (string-append words '-theta)))
+
+             ;  (define (theta-meaning word)
+             ;   (case word
+             ;         (('most-theta) 50)
+             ;         (('some-theta) 1)
+             ;         (('generic-theta) generic-theta)
+             ;         (('how-many-theta) 'null)
+             ;         (('anti-generic-theta) generic-theta)
+             ;         (('none-theta) 1)
+             ;         (('anti-most-theta) 50)))
+
+
+             ;   (define QUD-val ((meaning QUD) state (theta QUD)))
           ;      (define blah (display generic-theta))
 
  ;              generic-theta
                 state
+;                QUD-val
 
-               (equal? words 
-                (apply multinomial (raise-to-power (speaker1 state generic-theta) 
+               (equal? number-words 
+                (apply multinomial 
+                  (raise-to-power 
+                    (number-speaker1 state generic-theta) 
                    speaker-optimality)))))))
 
-     (define speaker1
+     (define word-speaker1
        (mem (lambda (state generic-theta)
               (enumeration-query
                
       ;          (define words (uniform-draw (list 'generic 'mu)))
-              (define words (if (equal? QUD 'truth)
-                              (uniform-draw (list 'generic 'anti-generic))
-                              (uniform-draw (list 'generic 'mu))))
+              (define words (utterance-prior))
+             ; (define (theta words)
+             ;   (theta-meaning (string-append words '-theta)))
+
+             ;  (define (theta-meaning word)
+             ;   (case word
+             ;         (('most-theta) 50)
+             ;         (('some-theta) 1)
+             ;         (('generic-theta) generic-theta)
+             ;         (('how-many-theta) 'null)
+             ;         (('anti-generic-theta) generic-theta)
+             ;         (('none-theta) 1)
+             ;         (('anti-most-theta) 50)))
+                ;(define words (uniform-draw (list 'generic-lorch 'generic-other)))
+
+               ; (define words
+               ;   (case QUD
+               ;         (('generic)  (uniform-draw (list 'generic 'anti-generic)))
+               ;         (('some) (uniform-draw (list 'some 'none)))
+               ;         (('most) (uniform-draw (list 'most 'anti-most)))
+               ;         (('how-many) (uniform-draw (list 'most 'some 'generic)))))
+              ; (define QUD-val ((meaning QUD) state (theta QUD)))
+
+               words
+
+;               (equal? QUD-val
+               (equal? state
+                       (apply multinomial (listener0 words generic-theta)))))))
+
+     (define number-speaker1
+       (mem (lambda (state generic-theta)
+              (enumeration-query
+               
+      ;          (define words (uniform-draw (list 'generic 'mu)))
+              (define number-words (number-words-prior))
+
+              ; (if (equal? QUD 'truth)
+              ;                 (uniform-draw (list 'generic 'anti-generic))
+              ;                 (uniform-draw (list 'generic 'mu))))
 
                 ;(define words (uniform-draw (list 'generic-lorch 'generic-other)))
 
@@ -137,82 +253,168 @@
                ;         (('some) (uniform-draw (list 'some 'none)))
                ;         (('most) (uniform-draw (list 'most 'anti-most)))
                ;         (('how-many) (uniform-draw (list 'most 'some 'generic)))))
-               ;(define QUD-val ((meaning QUD) state (theta QUD)))
 
-               words
+             ; (define (theta words)
+             ;   (theta-meaning (string-append words '-theta)))
 
-;               (equal? QUD-val
+             ;  (define (theta-meaning word)
+             ;   (case word
+             ;         (('most-theta) 50)
+             ;         (('some-theta) 1)
+             ;         (('generic-theta) generic-theta)
+             ;         (('how-many-theta) 'null)
+             ;         (('anti-generic-theta) generic-theta)
+             ;         (('none-theta) 1)
+             ;         (('anti-most-theta) 50)))
+
+             ;   (define QUD-val ((meaning QUD) state (theta QUD)))
+
+               number-words
+
                (equal? state
-                       (apply multinomial (listener0 words generic-theta)))))))
+;               (equal? state
+                       (apply multinomial (listener0 number-words generic-theta)))))))
 
      (define listener0
        (mem (lambda (words generic-theta) 
               (enumeration-query
-               (define state (state-prior))
-              ; (define QUD-val ((meaning QUD) state (theta QUD)))
+               (define state (state-prior domain))
+
+              ; (define (theta words)
+              ;  (theta-meaning (string-append words '-theta)))
+
+              ; (define (theta-meaning word)
+              ;  (case word
+              ;        (('most-theta) 50)
+              ;        (('some-theta) 1)
+              ;        (('generic-theta) generic-theta)
+              ;        (('how-many-theta) 'null)
+              ;        (('anti-generic-theta) generic-theta)
+              ;        (('none-theta) 1)
+              ;        (('anti-most-theta) 50)))
+
+              ;  (define QUD-val ((meaning QUD) state (theta QUD)))
 
                ;QUD-val
                state
 
-               (case words
-                (('generic) ((meaning words) state generic-theta))
-                (('most) ((meaning words) state 50))
-                (('some) ((meaning words) state 1))
-                (('anti-generic) ((meaning words) state generic-theta))
-                (('mu) ((meaning words) state null)))))))
+               ; (case words
+               ;  (('generic) ((meaning words) state generic-theta))
+               ;  (('most) ((meaning words) state 50))
+               ;  (('some) ((meaning words) state 1))
+               ;  (('anti-generic) ((meaning words) state generic-theta))
+               ;  (('mu) ((meaning words) state null)))
+               (literal-meaning words state generic-theta)
+               ))))
+
+ 
+
+     (if (equal? QUD "generic")
+        (normalize (speaker2_TC evidence) speaker-optimality)
+        (normalize (raise-to-power (speaker2_IP evidence) speaker-optimality))
+          ; (normalize (raise-to-power (speaker2 evidence) speaker-optimality))
+          ; (listener1 'generic)
+
+          ))))
 
 
-     (if (equal? QUD 'truth)
-          (normalize (raise-to-power (speaker2 evidence) speaker-optimality))
-          (listener1 'generic)))))
+
+(define bins '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99))
+
+
+; (define gamma 0.5) ; nzhikes (beta 3 3)
+; ; (define delta 2)
+; (define discretize-beta (lambda (gamma delta bins)
+;     (define shape_alpha (* gamma delta))
+;     (define shape_beta (* (- 1 gamma) delta))
+;     (define beta-pdf (lambda (x) 
+;       (*
+;         (pow x (- shape_alpha 1))
+;         (pow (- 1 x) (- shape_beta 1)))))
+;   (map beta-pdf bins)))
+;   (define quintile-probs (discretize-beta gamma delta bins))
 
 
 
-(define gamma 0.01)
-(define delta 0.1)
-(define alpha 2)
+(define discretize-beta (lambda (shape_alpha shape_beta bins)
+    (define beta-pdf (lambda (x) 
+      (*
+        (pow x (- shape_alpha 1))
+        (pow (- 1 x) (- shape_beta 1)))))
+  (map beta-pdf bins)))
 
-  (define discretize-beta (lambda (gamma delta bins)
-      (define shape_alpha (* gamma delta))
-      (define shape_beta (* (- 1 gamma) delta))
-      (define beta-pdf (lambda (x) 
-        (*
-          (pow x (- shape_alpha 1))
-          (pow (- 1 x) (- shape_beta 1)))))
-    (map beta-pdf bins)))
+;typical
+(define quintile-probs (discretize-beta 5 5 bins))
 
 
-  (define bins '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99))
-  (define quintile-probs (discretize-beta gamma delta bins))
+;biological
+;(define quintile-probs (discretize-beta 0.01 0.032 bins))
+(define normalize-list (lambda (lst) (map (lambda (x) (/ x (sum lst))) lst)))
+
+; gendered
+; (define quintile-probs 
+;   (map + (normalize-list (discretize-beta 50 50 bins))
+;           (normalize-list (discretize-beta 10 1000 bins))))
+
+; rare
+; (define quintile-probs 
+;    (map + (normalize-list (discretize-beta 10 90 bins))
+;            (normalize-list (discretize-beta 10 1000 bins))))
 
 
-  (define state-prior (lambda () (* 10 (round (* 10 (multinomial bins quintile-probs))))))
+;(define state-prior (lambda () (* 10 (round (* 10 (multinomial bins quintile-probs))))))
+
+(define (state-prior domain) 
+  (multinomial '(0 10 20 30 40 50 60 70 80 90 100)
+    (case domain
+      (("bare") '(656 127 161 40 42 52 21 10 18 6 55))
+      (("danger-distinct") '(835 124 79 17 14 28 13 7 19 4 91))
+      (("nondistinctive") '(565 116 209 38 46 62 31 6 30 13 69)))))
+
+
 (define prevlevs '(10 30 50 70 90))
+
+(define domain "danger-distinct")
+(define quantifier "generic")
+(define alpha 1)
+
 ;;(define level 10)
 
 (define t-c-posteriors 
   (map (lambda (level) 
-  (cognitive-model state-prior alpha 'truth level)) prevlevs))
+  (cognitive-model state-prior domain alpha quantifier level)) prevlevs))
+
+;t-c-posteriors
 
 (define truth-conditions 
   (map (lambda (posterior)
-      (list-ref (second posterior) (position (first posterior) "generic")))
+      (list-ref (second posterior) (position (first posterior) quantifier)))
 t-c-posteriors))
 
+(display truth-conditions)
+;truth-conditions
 (define average-tc-prevalence
-  (mean (map (lambda (x y) 
+  (sum (map (lambda (x y) 
         (* x y))
-  truth-conditions prevlevs)))
+  (normalize-list truth-conditions) prevlevs)))
+
+(display "average truth conditions is " average-tc-prevalence)
 
 (define i-p-posteriors
-  (cognitive-model state-prior alpha "how-many" "generic"))
+  (cognitive-model state-prior domain alpha "how-many" quantifier))
 
 (define implied-prevalence
-    (mean (map 
+    (sum (map 
             (lambda (x y) (* x y)) 
           (first i-p-posteriors) (second i-p-posteriors))))
 
-(list (list average-tc-prevalence implied-prevalence) truth-conditions)
+(display "implied prevalence is " implied-prevalence)
+; (list (list average-tc-prevalence implied-prevalence) truth-conditions)
+
+
+
+
+
 ;;(map (lambda (level) (cognitive-model state-prior alpha 'truth level)) prevlevs)
 
 ; (define output-path
