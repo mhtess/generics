@@ -64,7 +64,7 @@
 \usepackage{wrapfig}
 \usepackage{lipsum}
 
-\graphicspath{{figures/}}
+\graphicspath{{figures/cogsci/}}
 
 \def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
   \hbox{}\nobreak\hfil(#1)%
@@ -102,8 +102,8 @@
 \newcommand{\red}[1]{\textcolor{Red}{#1}}  
 
 
-\title{Words are vague: A formal account of generic meaning}
- 
+%\title{Words are vague: A formal account of generic meaning}
+ \title{Generic statements are vague}
 % \author{{\large \bf Michael Henry Tessler, Noah D. Goodman } \\
 %	\{mhtessler, ngoodman\}@stanford.edu \\
 %  Department of Psychology, Stanford University}
@@ -116,7 +116,8 @@
 
 
 \begin{abstract}
-Generic utterances (e.g. ``Dogs bark'') are ubiquitous in natural language. Despite their prevalence, the meanings of generic statements are puzzling to formal approaches. A scalar semantic account stipulates a generic statement is true if the prevalence (the probability of the property given the category) is greater than some threshold. Such accounts are difficult to defend because of the inherent flexibility in generic truth conditions. Here, we propose a scalar semantics for generics wherein the truth conditional threshold is underspecified in the semantics but is determined by context and interaction. In Expts.~1, we replicate the findings of \citeA{Cimpian2010}, who provided strong empirical support for the intuition that generics statements have flexible truth conditions but are interpreted very strongly. The model predicts flexibility in truth conditions across different types of properties if the prior distribution over prevalence differs across these property-types; in Exp.~2 we find direct evidence that this is so. We conclude by showing that the model is able to capture accidental and low-prevalence generics---two cases of theoretical importance.
+Generic utterances (e.g. ``Dogs bark'') are ubiquitous in natural language. Despite their prevalence, the meanings of generic statements are puzzling to formal approaches. A traditional, scalar semantic account would stipulate a generic statement is true if the prevalence (i.e. the probability of the property given the category) is greater than some threshold. Such accounts are difficult to defend because of the inherent flexibility in generic truth conditions. Here, we propose a scalar semantics for generics wherein the truth conditional threshold is underspecified in the semantics but is determined through pragmatic reasoning. 
+We use an experimental paradigm developed by \citeA{Cimpian2010}, who first provided empirical evidence for flexibility in truth conditions, as well as a ``paradoxical asymmetry'' between the truth conditions and implications of generics. In Expts.~1 \& 3, we replicate those findings. Our model predicts flexibility in truth conditions across different types of properties and asymmetry effects if the prior distribution over prevalence differs across these property-types.  In Expts.~2\& 4, we find direct evidence that this is so. We conclude by showing that the model is able to capture gendered and low-prevalence generics---two cases of theoretical importance.
 
 
 %demonstrated that the endorsement rate of generic statements differs by context, and that generics can be endorsed based on weak evidence while the same sentences are interpreted strongly. Here, we replicate these effects in Exp.~1 and investigate how models based on prevalence (the probability of the property given the category) can account for this behavior. 
@@ -140,28 +141,29 @@ generics; pragmatics; bayesian model
 Animals breathe Oxygen to live.
 \end{aquote}
 
-Imagine you're talking with a 3 year old about oxygen. Oxygen is difficult to explain because it's rarely observable and the function of oxygen is abstract. You might use a construction similar to the one from Simple Wikipedia above. Few would argue with the truth of this sentence (though perhaps if you were talking with an adult, you would use more specific language), yet the meaning is difficult to specify. Is it synonymous with ``All animals breathe Oxygen to live''? %It's false that \emph{all} animals breathe oxygen (e.g. fish), yet intuitively the sentence seems to convey something stronger than the weak \emph{some} animals breathe oxygen. 
+Imagine you're talking with a 3-year-old about oxygen. Oxygen is difficult to explain because it's rarely observable and the function of oxygen is abstract. You might use a construction similar to the one from Simple Wikipedia above. Few would argue with the truth of this sentence, yet the meaning is difficult to specify. 
+
+%Is it synonymous with ``All animals breathe Oxygen to live''? %It's false that \emph{all} animals breathe oxygen (e.g. fish), yet intuitively the sentence seems to convey something stronger than the weak \emph{some} animals breathe oxygen. 
 %If you were talking with an adult, you might use a more nuanced statement (e.g. by talking about the subcategory Mammals).
 %Words are vague because ideas are vague, Locke argues. In making this argument, he falls into the habit of communication that we all fall into: using generalizations about members of a category---in this case, \emph{[articulate] sounds}. 
 %
 
-This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category. Generics can be true with little evidence (e.g. each of us has encountered only a small number of all the animal-kinds in the world, yet we would still endorse this). % should I deply the mosquitos here?
+This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category. Generics can be true with little evidence (e.g. each of us has encountered only a small number of all the animal-kinds in the world). % should I deply the mosquitos here?
 %
 %is making his argument not based on a corpus study of words but based on his intuition and the particular examples he is considering implicitly, a relatively small proportion of the potential infinitude of articulate sounds. 
 %
-At the same time, generics are robust to counterexamples: ``Animals breathe Oxygen to live'' is true even though there are three species of creatures called \emph{lorica} that live 2.2 miles underwater on the ocean floor and apparently do not breathe oxygen to live. 
+At the same time, generics are robust to counterexamples: ``Animals breathe Oxygen to live'' is true even though there are three species of creatures called \emph{lorica} that live 2.2 miles underwater on the ocean floor and in an environment that is oxygen-free \cite{Danovaro2010}. 
 %
 %Locke's argument is still tenable even if we know that we know there are non arbitrary word--meaning mappings (hence, ``\emph{all} sounds have no natural connexion with our ideas'' is false, \red{cite bouba-kiki, erin?, molly?}). 
 %
-Finally, generics have strong implications. Upon hearing a generic, listeners are wont to interpret the sentence as applying to \emph{all or almost all} of a category.
+Finally, generics have strong implications. Upon hearing a generic, listeners are wont to interpret the sentence as applying to \emph{all or almost all} of a category \cite{Gelman2002}.
 %
 
-
-What could be the stable meaning of a generic given this extreme flexibility? We propose these phenomena can be explained as the effects of pragmatic inference filling in a meaning that is underspecified in the semantics. 
+What could the stable meaning of a generic be given this extreme flexibility? We propose these phenomena can be explained as the effects of pragmatic inference filling in a meaning that is underspecified in the semantics. 
 %
 In particular, we posit a scalar semantics for generics in which they express that the probability of the property given the kind-----i.e. the property's \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). Following \citeA{Lassiter2015}, we treat this threshold as underspecified in the semantics and thus, as a free variable that is reasoned about by a pragmatic listener within the \emph{Rational Speech-Act} (RSA) framework \cite{Frank2012,Goodman2013}. In this way, generics are vague in the way gradable adjectives like ``tall'' are vague. In this formalism, the listener is tasked with the joint problem of figuring out what the speaker is communicating in addition to the what the threshold is likely to mean (i.e., what does the generic \emph{mean} in this situation?). 
 %
-With an uncertain semantics, the listener solves this problem by using her prior beliefs, in this case, about the prevalence of the property, in addition to standard inferences from conversational pragmatics \cite{Clark1996; Grice1975; Levinson2000}. From this, flexible truth conditions are derived. At the same time, near-universal implications are predicted if the prevalence of the property follows a certain distribution.
+With an uncertain semantics, the listener solves this puzzle by using her prior beliefs, in this case about the prevalence of the property, in addition to standard inferences from conversational pragmatics \cite{Clark1996; Grice1975; Levinson2000}. From this, flexible truth conditions can be derived. At the same time, generics will have near-universal implications if the prevalence of the property follows a certain distribution.
 %
 
 \citeA{Cimpian2010} (henceforth, CBG) carried out a series of experiments designed to examine the truth conditions and implications of generic statements about novel animal categories (e.g.~``lorches have purple feathers'') . 
@@ -224,19 +226,29 @@ Eq.~\eqref{eq:L1} is a model of a listener ($L_{1}$) who has been told a generic
  
 %However, it interacts with the prior distribution $P(x)$ over prevalence levels---the prior distribution across kinds of a particular property's prevalence.
 
-The prevalence prior $P(x)$ has a critical effect on the interpretation of the generic in this model. 
+The prevalence prior $P(x)$ has a critical effect on the interpretation of the generic in this model. Since $\theta$ is actively reasoned about, it will be set to values that balance truthfulness and informativity. Consider again the case of vague adjectives. \emph{Tall} means something different if it is predicating ``John'' than if it is predicating ``The Empire State Building'' because the distribution over heights varies for people and buildings. In the people domain, $\theta_{tall}$ will probably be set somewhere around 6 feet, since this is above the mean (and hence, would be informative) but not too far above the mean (hence, would still be truthful). 
 
-\subsection{The \emph{Question Under Discussion}}
+%\subsection{The \emph{Question Under Discussion}}
+%
+%To connect this model to the dependent measures used in the experiments that follow, we introduce another level to the model. One of the tasks is a true-false judgment task, which we model as a speaker who can either say ``[[the generic]] is true'' or ``[[the generic]] is false''.
+%
+%\begin{equation} 
+%P_{S_{2}}(g \mid x) \propto {P_{L_{1}}(x \mid g)}.
+%\label{eq:S2}
+%\end{equation}
+%
+%This speaker in \eqref{eq:S2}, like $L_{1}$, doesn't know the threshold, but knows that $L_{1}$ is thinking about it, and marginalizes over possible values: $ P_{L_{1}}(x \mid g) = \sum_{\theta} P_{L_{1}}(x , \theta \mid g) $.
+%
+%In the other task, participants are given a generic utterance and asked to judge the prevalence of the property. 
+%
 
 
-As a first test the model, we posit a family of possible priors $x \thicksim \beta(\gamma,\delta)$\footnote{For ease of interpretation, we are parametrizing the $\beta$ distribution by its mean and concentration. To recover the canonical shape parametrization, use $\gamma \delta$ and $(1-\gamma)\delta$.}. We hypothesize that the details of these priors (i.e.~$\gamma$'s and $\delta$'s) may differ according to the type of property in reference by the generic. For instance, when you know that a particular property is rare, a different distribution of that property over kinds is called to mind, than if the property is common. This would result in different meanings for the generic. Below we infer appropriate prior parameters for each property-type from the behavioral data.
 
-Following the advice of \citeA{Degen2014}, who investigated the relationship between dependent measures and speaker and listener roles in RSA, we will model the \emph{implied prevalence} task as a pragmatic listener ($L_{1}$) task, but the \emph{truth conditions} task as a pragmatic speaker task. We model the truth judgment with a speaker $S_{2}$ who is trying to convey the prevalence to a pragmatic listener, but can only produce the generic or its negation (i.e.~yes or no to the truth of the generic):
-\begin{equation} 
-P_{S_{2}}(g \mid x) \propto {P_{L_{1}}(x \mid g)}.
-\label{eq:S2}
-\end{equation}
-The speaker in \eqref{eq:S2}, like $L_{1}$, doesn't know the threshold, but knows that $L_{1}$ is thinking about it, and marginalizes over possible values: $ P_{L_{1}}(x \mid g) = \sum_{\theta} P_{L_{1}}(x , \theta \mid g) $.
+%As a first test the model, we posit a family of possible priors $x \thicksim \beta(\gamma,\delta)$\footnote{For ease of interpretation, we are parametrizing the $\beta$ distribution by its mean and concentration. To recover the canonical shape parametrization, use $\gamma \delta$ and $(1-\gamma)\delta$.}. We hypothesize that the details of these priors (i.e.~$\gamma$'s and $\delta$'s) may differ according to the type of property in reference by the generic. For instance, when you know that a particular property is rare, a different distribution of that property over kinds is called to mind, than if the property is common. This would result in different meanings for the generic. Below we infer appropriate prior parameters for each property-type from the behavioral data.
+%
+%Following the advice of \citeA{Degen2014}, who investigated the relationship between dependent measures and speaker and listener roles in RSA, we will model the \emph{implied prevalence} task as a pragmatic listener ($L_{1}$) task, but the \emph{truth conditions} task as a pragmatic speaker task. We model the truth judgment with a speaker $S_{2}$ who is trying to convey the prevalence to a pragmatic listener, but can only produce the generic or its negation (i.e.~yes or no to the truth of the generic):
+
+
 
 
 \section{Experiment 1: CBG replication}
