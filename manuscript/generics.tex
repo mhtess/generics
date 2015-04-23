@@ -111,6 +111,11 @@
   Department of Psychology, Stanford University}
  
 \begin{document}
+\newpage
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
 \maketitle
 
 
@@ -140,7 +145,7 @@ generics; pragmatics; bayesian model
 Animals breathe Oxygen to live.
 \end{aquote}
 
-Imagine you're talking with a 3-year-old about oxygen. Oxygen is difficult to explain because it's rarely observable and the function of oxygen is abstract. You might use a construction similar to the one from Simple Wikipedia above. Few would argue with the truth of this sentence, yet the meaning is difficult to specify. 
+Imagine talking with a 3-year-old about oxygen. Oxygen is difficult to explain because oxygen is rarely observable and the function of oxygen is abstract. You might use a construction similar to the one from Simple Wikipedia above. Few would argue with the truth of this sentence, yet its meaning is difficult to specify. 
 
 %Is it synonymous with ``All animals breathe Oxygen to live''? %It's false that \emph{all} animals breathe oxygen (e.g. fish), yet intuitively the sentence seems to convey something stronger than the weak \emph{some} animals breathe oxygen. 
 %If you were talking with an adult, you might use a more nuanced statement (e.g. by talking about the subcategory Mammals).
@@ -755,14 +760,16 @@ Participants were randomly assigned to either the \emph{truth conditions} task (
 
 \subsubsection{Results}
 
-We followed the data same data analysis strategy as in Exp.~1 and as in CBG. We replicate CBG's finding that the generic statement about accidental properties was not interpreted as applying to nearly all of the category. Figure \ref{fig:exp3_asymm} shows that difference between the two tasks, together with the data from Exp.~1, collapsed across property types (dangerous and distinct, etc...). \red{[Insert some boringly obvious statistics here.]
-
 \begin{figure}
 \centering
     \includegraphics[width=0.8\columnwidth]{exp3_asymmetry}
     \caption{Implied prevalence of generic statements about biological (Exp.~1) and accidental (Exp.~3) are differentially associated with the truth conditions. Error bars denote bootstrapped 95\% confidence intervals.}
   \label{fig:exp3_asymm}
 \end{figure}
+
+
+We followed the data same data analysis strategy as in Exp.~1 and as in CBG. We replicate CBG's finding that the generic statement about accidental properties was not interpreted as applying to nearly all of the category. Figure \ref{fig:exp3_asymm} shows that difference between the two tasks, together with the data from Exp.~1, collapsed across property types (dangerous and distinct, etc...). \red{[Insert some boringly obvious statistics here.]}
+
 
 
 \subsection{Experiment 4}
@@ -775,32 +782,148 @@ We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Tu
 
 \subsubsection{Procedure and materials}
 
+Our procedure\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/prior-5.html}} was identical to Exp. 2. On each trial, participants were told: ``Listed below are 5 kinds of animals that are found on the island.'' and asked: ``What percentage of each kind of animal do you think has [accidental/temporary property]?'' 
+
 In Exp.~2, we found high reliability between dependent measures in this prior elicitation paradigm. In this experiment, we ran only the condition with 5 animal-kinds per trial with a slider varying from 0--100 for each animal.
 
 
 \subsubsection{Results}
 
+The elicited prior over prevalence for accidental properties was markedly different than the priors over the biological properties. Most importantly, there was no special status given to 100\% prevalence. \red{[What else to say about this...]}
+
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.5\columnwidth]{accidental_priors}
+    \caption{Elicited prior distribution over prevalence of accidental properties.}
+  \label{fig:accidentalpriors}
+\end{figure}
+
+
 \subsection{Modeling results}
 
+We use the priors elicited in Exp.~4 to test if our model, like participants, infers a lower overall prevalence when interpreting a generic statement about accidental properties.
+
+
+Thus, we can see how the shape of the prior over prevalence is critical to fostering the strong implications of generic statements about biological properties. When properties with different shaped priors are under discussion (particularly, priors without large mass at 100\%), the asymmetry between truth conditions and implications can disappear or even reverse.
 
 \section{Experiments 5 \& 6: Dangerous properties}
 
+Our model explains the flexibility of truth conditions in terms of the prior distribution over prevalence. One potential challenge to this is that properties which are not necessarily \emph{distinctive} still garner acceptability as generic statements. For example, CBG found that \emph{dangerous} properties alone increased the proportion of ``true'' responses to the generic. Here, we sought to replicate these findings, and observe if the prior distribution over \emph{dangerous} properties was in fact similar to the prior distribution over \emph{distinctive} properties. 
+
 \subsection{Experiment 5}
 
-\subsection{Experiment 6}
+Experiment 5 differed from Exp.~1a only in that the three property types tested were \emph{dangerous} (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding''),  \emph{distinctive} (e.g. ``No other animals have these kinds of feathers''), and \emph{plain} (no additional information). 
+
+\subsubsection{Participants}
+
+We recruited 80 participants over Amazon's crowd-sourcing platform Mechanical Turk. Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 5 minutes and participants were compensated \$0.50.
+
+\subsubsection{Procedure and materials}
+
+All participants were assigned to the \emph{truth conditions} task \footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-15.html}}. 
+ 
+We used the same materials as CBG (available in their Appendix). The materials used were 30 novel animal categories (e.g. lorches, morseths, blins) each paired with a unique property. Properties were made by pairing a color with a body-part (e.g. purple feathers, orange tails). Each participant saw 30 unique animal-property pairs: 10 of each of the 3 types (\emph{dangerous}, \emph{distinctive}, \emph{plain}). The 10 items of each property-type were randomly paired with 1 of 5 ``prevalence levels'': \{10, 30, 50, 70, 90\}\%; thus, each prevalence level appeared 2 times per type. 
+
+On each trial, participants saw a prevalence statement and type statements (\emph{dangerous}, \emph{distinctive}, \emph{plain}; illustrated above). 
+%A context here was either (1) dangerous \& distinct statements (e.g. ``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), (2) not distinct \& irrelevant statements (e.g. ``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.'', or (3) nothing else. 
+Participants were then asked ``Is the following sentence true or false?'', below which was presented the associated generic (e.g. ``Lorches have purple feathers'') and ``True'' and ``False'' radio buttons. 
+ 
+\subsubsection{Results}
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.8\columnwidth]{dd_separate_truthconds}
+    \caption{Replication of CBG Exp. 4. Truth conditions for dangerous and distinctive properties (separately) are more relaxed than for plain properties.}
+  \label{fig:ddseparate}
+\end{figure}
+
+Results are shown in Figure~\ref{fig:ddseparate}. We entered participants' truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and type as well as their interaction\footnote{This was the maximal mixed-effect structure supported by the data.}.  
+%
+Our results replicated the finding of CBG that the generic statements were endorsed more with dangerous properties and with distinctive properties than with plain properties ($\beta_{danger}=0.85; SE = .18; z = 4.69; p < .001; \beta_{distinct}=0.83; SE = .18; z = 4.53; p < .001$). 
+%
+There was also an interaction between prevalence level and type such that the generic was endorsed more with \emph{dangerous} properties than with plain properties at lower prevalence levels ($\beta=.02; SE = .007; z=2.76; p < 0.01$). There was a trending interactive effect for the \emph{distinctive} properties to be endorsed \emph{more} than the plain properties at low prevalence levels ($\beta=.01; SE = .007; z=1.67; p < .1$).
+
+
+\subsection{Experiment 6 --- prior elicitation}
+
+Experiment 6 differed from Expt.~2 only in that there was only one property type: accidental or temporary properties. 
+
+\subsubsection{Participants}
+
+We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk. Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 4 minutes and participants were compensated \$0.40.
+
+\subsubsection{Procedure and materials}
+
+Our procedure\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/prior-5.html}} was identical to Exp. 2. On each trial, participants either read information about the property type (\emph{dangerous} or \emph{distinctive}) or no additional information (\emph{plain}). 
+
+In addition to the information about property type, participants were told: ``Listed below are 5 kinds of animals that are found on the island.'' and asked: ``What percentage of each kind of animal do you think has [property]?'' In Exp.~2, we found high reliability between dependent measures in this prior elicitation paradigm. In this experiment, we ran only the condition with 5 animal-kinds per trial with a free response restricted to be a number between 0--100 for each animal.
+
+
+\subsubsection{Results}
+
+\red{Coming soon...}
 
 \subsection{Modeling results}
 
+\red{Coming soon...}
+
+\section{Simulations of theoretical interest}
+
+We have shown that a model of generics with a scalar semantics on prevalence is tenable if the threshold is left underspecified in the semantics. This model of generic interpretation makes further predictions for situations with qualitatively different prevalence priors. For example, if the prior distribution was bimodal with peaks at 0\% and 50\%, as in the case with properties that belong to only one sex of a species (e.g. ``Birds lay eggs''), then we would expect strong endorsements for such generics at moderate prevalence levels. We would further predict that the strong implications of generics would go away (i.e. upon hearing ``Birds lay eggs'', one still only believes about 50\% of birds lay eggs). This is in contrast with, for example, ``Birds are female'', which is often taken as a ``prevalence control'' for statements like ``Birds lay eggs'' \cite{Khemlani2009, Brandone2012}. ``Birds are female'' is different from ``Birds lay eggs'' because the overwhelming majority of animal kinds are about 50\% female (see Figure \ref{fig:schematic}). By contrast, very few animal kinds have 50\% egg layers. 
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.8\columnwidth]{schematicPriors}
+  \end{center}
+  \caption{Schematic priors over prevalence for generics like ``Birds lay eggs'', ``Birds are female'', and ``Mosquitos carry West Nile Virus''.}
+   \label{fig:schematic}
+\end{figure}
+
+Another example of theoretical concern is a bimodal prior with a second peak at some low prevalence level. This prior should describe properties that are not only rare \emph{across kinds} but also rare \emph{within kinds}. A canonical example of this is ``West Nile Virus'' in the generic ``Mosquitos carry West Nile Virus''. For a prior like this, the truth conditions for the generic would be relaxed at low prevalence levels, relative to the more common all-or-none priors. 
+
+
+We explore these generics using the schematic priors shown in Figure \ref{fig:schematic}. We observe the prior distribution over a gender-specific property (e.g. laying eggs) leads to much higher acceptability of the generic at all prevalence levels relative to the property of just having a gender, a property that all animal species have (Figure \ref{fig:schem_tc}. For the ``Birds are female'' prior, the model predicts no greater acceptability of the generic than the prevalence estimate entails. Finally, extremely rare properties are more acceptable as a generic at low prevalence levels, owing to the fact that even categories do have at least some members that have the property, have very few members that have the property.
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.8\columnwidth]{schematic_tc}
+  \end{center}
+  \caption{Schematic truth conditions for generics like ``Birds lay eggs'', ``Birds are female'', and ``Mosquitos carry West Nile Virus''.}
+   \label{fig:schem_tc}
+\end{figure}
+
+Further, upon hearing an unambiguous generic statement about these different types of properties, the implications of them are dramatically different than for the biological properties that we tested in the experiments. Upon hearing a generic like ``Birds lay eggs'' or ``Birds are female'', the model is still likely to believe that only about 50\% of birds lay eggs and only about 50\% of birds are female (Figure \ref{fig:schem_ip}, dark bars). Similarly, a generic utterance over extremely rare properties still leads the model to believe that the property is not widely shared. 
+
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.8\columnwidth]{schematic_asym}
+  \end{center}
+  \caption{Schematic implied prevalence for generics like ``Birds lay eggs'', ``Birds are female'', and ``Mosquitos carry West Nile Virus''.}
+   \label{fig:schem_ip}
+\end{figure}
+
+
+
+%
+%
+
+
 \section{General discussion}
+
+The lifted-threshold RSA model takes a generic statement to be vague. ``X has Y'' means ``many X have Y, \emph{relative to other categories, the vast majority of which, very few or none of the individuals in those categories have Y}''.
 
 \subsection{The parallel problem of generic identification}
 
-Prasada found that the overall ``true'' responses for statements in the bare plural construction was higher than other sorts of constructions associated with generic meaning.
+Prasada2013 (Cognition) found that the overall ``true'' responses for statements in the bare plural construction was higher than other sorts of constructions associated with generic meaning.
 
 \subsection{Generics in learning}
 
+Where do the priors come from? What is the relevant ``contrast class'' (i.e., X have Y relative to other categories.... how do determine the scope of the ``other categories''?)? Stereotypes?
  
-
+ 
+ 
 
 We have demonstrated the viability of a scalar semantics for generics when coupled with a sophisticated pragmatics. 
 A lower-bound threshold on prevalence---the probability of the property given the category---is inferred as part of pragmatic interpretation, yielding vague and context sensitive meanings. 
@@ -823,25 +946,10 @@ here exists a parallel but distinct problem of generic \emph{identification} (``
 %
 %Our model makes the prediction that if the shape of the prior distribution was not bimodal, the asymmetry between verification and interpretation would change. Indeed, this is a similar prediction to \citeA{Cimpian2010}, who posited that accidental or disease states (e.g. ``muddy feathers'', ``infected ears'') would weaken the asymmetry. We would expect accidental or disease states to not follow a bimodal distribution. 
  
-This model of generic interpretation makes further predictions for situations with qualitatively different prevalence priors. For example, if the prior distribution was unimodal, as in the case with incidental properties (e.g. broken legs), then the asymmetry between verification and interpretation could be dramatically reduced, cease altogether, or reverse (see Figure \ref{fig:lvRSAposteriorpred} for a prediction using the schematic prior in Figure \ref{fig:schematic}). 
-Indeed, CBG explored this possibility in one of their experiments using ``accidental and disease states''; consistent with lvRSA, they found no asymmetry. 
-Another example is a bimodal prior with a second peak at some low prevalence level (as opposed to a bimodal prior with a second peak at a high prevalence level, which we've focused on in this paper). 
-\begin{wrapfigure}{r}{0.5\columnwidth}
-  \begin{center}
-    \includegraphics[width=0.48\columnwidth]{schematic_priors}
-  \end{center}
-  \caption{Schematic priors over prevalence of accidental properties and ``mosquitos with West Nile Virus''.}
-   \label{fig:schematic}
-\end{wrapfigure}
-This prior should describe rare properties that are not only rare \emph{across kinds} but also rare \emph{within kinds}. 
-%
-%
-A canonical example of this is ``West Nile Virus'' in the generic ``Mosquitos carry West Nile Virus''. For a prior like this, the truth conditions for the generic would be relaxed at low prevalence levels, relative to the more common all-or-none priors. We see this behavior using a schematic prior (see Figure \ref{fig:lvRSAposteriorpred} for the truth conditions of the mosquito prior shown in Figure \ref{fig:schematic}). 
+
 
 Generics are ubiquitous in natural language. It might seem paradoxical, then, that the semantics of generic statements are underspecified. Why should vague language get so much usage? One possibility is apparent in the lvRSA model: generic language provides interlocutors with the flexibility to convey rich meanings, which are easily understood in context. 
 Generics are vague, but behaved and useful.
-
-%In this paper, we used techniques of both Bayesian Cognitive Science and Bayesian Data Analysis. The former helped us develop a rich, formal theory of language understanding. These sorts of theories have implications for psychology and linguistics. The latter helped us make inferences about our theories. Bayesian Data Analysis is crucial to make assumptions explicit (e.g. about fixed-threshold semantics) and clean up our data (e.g. discounting behavior that can conceivably be attributed to guessing). Together, they embody a manifestation of a more general philosophy of science: making assumptions explicit and beginning our science by announcing our uncertainty.
 
 
 %\begin{itemize}
