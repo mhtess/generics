@@ -1,7 +1,6 @@
-; example call
+  ; example call
 
-; time church -u -a 'home,generic,9,12,1000,10' tfbt_cbg.church
-
+; time church -u -a 'home,generic,15,12,10,10' tfbt_lvRSA_emprior.church
 
 (define args (regexp_split argstring ","))
 
@@ -13,7 +12,7 @@
 (define mh_lag (sixth args))
 
 (define empirical-prior #t)
-(define speaker-optimality 1)
+;(define speaker-optimality 1)
 (define context 'all)
 (define task 'truth_conditions) ;;; depracated, but still need this
 
@@ -41,7 +40,8 @@
 ;(define data-file (string-append data-path 'cbgR-exp4_anonymized-trials.csv))
 ;(define data-file (string-append data-path (string-append 'cbgR-exp expnum '_anonymized-trials.csv)))
 
-(define data-file (string-append data-path (string-append 'cbgR-exp expnum '-trials.csv)))
+;(define data-file (string-append data-path (string-append 'cbgR-exp expnum '-trials.csv)))
+(define data-file (string-append data-path (string-append 'cbg-exp expnum '-trials.csv)))
 
 (define implied-data-file (string-append data-path (string-append 'cbgR-exp exp2num '-trials.csv)))
 
@@ -49,10 +49,15 @@
 (define alldata (read-csv data-file))
 (define implieddata (read-csv implied-data-file))
 
+; earlier versions of task
+; (define task? (lambda (x) (equal? (fourth x) task)))
+; (define quantifier? (lambda (x) (equal? (seventh x) quantifier)))
+; (define context? (lambda (x context) (equal? (fifth x) context)))
 
-(define task? (lambda (x) (equal? (fourth x) task)))
-(define quantifier? (lambda (x) (equal? (seventh x) quantifier)))
-(define context? (lambda (x context) (equal? (fifth x) context)))
+; later versions of task
+(define task? (lambda (x) (equal? (third x) task)))
+(define quantifier? (lambda (x) (equal? (sixth x) quantifier)))
+(define context? (lambda (x context) (equal? (fourth x) context)))
 ; (define stimulus-prevlevel? (lambda (lst target) (equal? 
 ;                                                   (string->number (last (but-last (but-last (but-last lst)))))
 ;                                                   target)))
@@ -61,10 +66,12 @@
                                                   (string->number (last (but-last (but-last lst))))
                                                   target)))
 
-(define all-contexts (unique (map fifth (rest alldata))))
+;(define all-contexts (unique (map fifth (rest alldata))))
+(define all-contexts (unique (map fourth (rest alldata))))
+
 (define implied-contexts (unique (map fifth (rest implieddata))))
 
-
+(display all-contexts)
 (define data-subset 
   (if (equal? context 'all)
     (map
@@ -138,6 +145,7 @@
             data-subset)))
     (sort (unique evidence-data)))))
 
+
 ; (define simplified-data ;;; obsolete
 ;   (case task
 ;         (('implied_prevalence) (map (lambda (x) (string->number x)) query-data))
@@ -174,7 +182,8 @@
 
 (define (raise-to-power dist alph)
   (list (first dist) (map (lambda (x) (pow x alph)) (second dist))))
-
+(define (normalize dist)
+  (list (first dist) (map (lambda (x) (/ x (sum (second dist)))) (second dist))))
 
 
 (define (meaning word)
@@ -195,7 +204,7 @@
 (define cognitive-model 
   (mem 
   ; (lambda (generic-theta most-theta some-theta QUD evidence) ;; fixed treshold model (obviously wrong)
-   (lambda (prevalence-prior QUD evidence)
+   (lambda (prevalence-prior QUD evidence speaker-optimality)
      ;; input could be utterance (for listener / implied_prevalence)
      ;; or state (for speaker / truth_conditions)
 
@@ -230,18 +239,18 @@
     (define (state-prior) (multinomial prevalence-bins prevalence-prior))
 
     (define speaker2
-      (mem (lambda (state)
+      (mem (lambda (state speaker-optimality)
       (enumeration-query
 
         (define words (uniform-draw (list 'generic 'anti-generic)))
 
        words
 
-       (equal? state (apply multinomial (listener1 words)))))))
+       (equal? state (apply multinomial (listener1 words speaker-optimality)))))))
 
 
      (define listener1
-       (mem (lambda (words) ;; listener1 does do inference over theta
+       (mem (lambda (words speaker-optimality) ;; listener1 does do inference over theta
               (enumeration-query
                (define state (state-prior))
                (define generic-theta (theta-prior))
@@ -298,8 +307,10 @@
 
 
      (if (equal? QUD 'truth)
-          (speaker2 evidence)
-          (listener1 'generic)))))
+          (normalize (raise-to-power (speaker2 evidence speaker-optimality) speaker-optimality))
+          (normalize (raise-to-power (listener1 'generic speaker-optimality) speaker-optimality)) ; this is equivalent to an S2
+
+          ))))
 
 (define tfbt-model
   ; (lambda (QUD utterance context)
@@ -320,12 +331,30 @@
      (define phi-tc (uniform 0 1)) ;; guessing parameter
      (define phi-ip (uniform 0 1)) ;; one for each task.
 
+
+     ; (define (prevalence-prior context)
+     ;  (case context
+     ;   ; (('bare) (list 146 29 47 5 8 17 6 4 11 5 22)) first 30 subjectst
+     ;    (("bare") (list 465  87 220  33  26  40  20  14  20  10  65))
+     ;   ; (('danger-distinct) (list  182 23  34   4   4   7   3   2   4   2  35))
+     ;    (("danger-distinct") (list 633  49 144  11  10  17  10   2  10   3 111))
+     ;    (("nondistinctive") (list 384  85 252  31  30  63  14  10  26   6  99))))
+
+
+     ; priors
      (define (prevalence-prior context)
       (case context
-        (('bare) (list 146 29 47 5 8 17 6 4 11 5 22))
-        (('danger-distinct) (list  182 23  34   4   4   7   3   2   4   2  35))
-        (('nondistinctive) (list 96  29  70  12   9  26   8   5  12   2  31))))
-     ;(define speaker-optimality (uniform 0 5))  
+     ; (("bare") '(448 157 199 59 59 80 38 33 26 15 68))
+      (("danger-distinct") '(690 159 94 24 21 39 21 12 26 14 127))
+      (("nondistinctive") '(342 144 246 60 68 93 50 15 45 24 95))
+      (("accidental") '(283 176 186 116 120 87 95 52 56 8 21))
+      (("bare") '(385  93  91   8  16  38  15   7   5   5  37))
+      (("danger") '(410  79  82  17  12  31  10  10  17   2  30))
+      (("distinct") '(474  43  69  14  15  23   3   1   8   4  46))
+      ))
+
+     (define speaker-optimality-tc (uniform 0 5))
+     (define speaker-optimality-ip (uniform 0 5))  
 
      ;(define generic-theta (mem (lambda (context) (if (equal? QUD 'generic) (uniform 0 100) 'null))))
      ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
@@ -357,11 +386,11 @@
           (lambda (unique-evidence-data-for-one-context context)
             (map 
               (lambda (evidence) 
-              (cognitive-model (prevalence-prior context) QUD evidence))
+              (cognitive-model (prevalence-prior context) QUD evidence speaker-optimality-tc))
             unique-evidence-data-for-one-context))
         unique-evidence-data all-contexts)
        (map 
-        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
+        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence speaker-optimality-tc))
         unique-evidence-data)))
      ;; compute the score for each data point, and sum then together
      (define scores
@@ -371,7 +400,7 @@
                 [match (lambda (x) (position (first modelpred-byprev) x))]
                 [prob (lambda (x) (if (= (match x) -1) 0
                                       (list-ref (second modelpred-byprev) (match x))))]
-                [score-marginalized-phi (lambda (x) (log (+ (* phi 0.5) (* (- 1 phi) (prob x)))))])
+                [score-marginalized-phi (lambda (x) (log (+ (* phi-tc 0.5) (* (- 1 phi-tc) (prob x)))))])
            (sum (map score-marginalized-phi data-as-quantifier)))))
 
      ;; for speaker model 
@@ -398,9 +427,9 @@
         (if (equal? context 'all)
           (map 
             (lambda (context)
-              (cognitive-model (prevalence-prior context) 'how-many 'generic))
+              (cognitive-model (prevalence-prior context) 'how-many 'generic speaker-optimality-ip))
           all-contexts)
-            (cognitive-model (prevalence-prior context) 'how-many 'generic)))
+            (cognitive-model (prevalence-prior context) 'how-many 'generic speaker-optimality-ip)))
 
      (define scores-for-implied
        (lambda (data modelpred)
@@ -409,9 +438,9 @@
                                       (list-ref (second modelpred) (match x))))]
                 [score-marginalized-phi 
                   (lambda (x) (log (+ 
-                                    (* phi 
-                                      (/ 1 (length (first modelpred)))) 
-                                    (* (- 1 phi) 
+                                    (* phi-ip 
+                                      (/ 1 10)) 
+                                    (* (- 1 phi-ip) 
                                       (prob x)))))])
 
            (sum (map score-marginalized-phi data)))))
@@ -431,11 +460,11 @@
           (lambda (unique-evidence-data-for-one-context context)
             (map 
               (lambda (evidence) 
-              (cognitive-model (prevalence-prior context) 'truth evidence))
+              (cognitive-model (prevalence-prior context) 'truth evidence speaker-optimality-tc))
             unique-evidence-data-for-one-context))
         unique-evidence-data all-contexts)
        (map 
-        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
+        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence speaker-optimality-tc))
         unique-evidence-data)))
 
 
@@ -443,7 +472,7 @@
       (if (equal? context 'all)
         (map 
           (lambda (context)
-            (cognitive-model (prevalence-prior context)'how-many 'generic))
+            (cognitive-model (prevalence-prior context)'how-many 'generic speaker-optimality-ip))
         all-contexts)))
 
      ;;; for listener model
@@ -497,13 +526,14 @@
 
 
 
-    (list phi
-     ; (if (equal? context 'all)
-     ;  (map (lambda (c) (query-statement c)) all-contexts))
+    (list phi-tc
+     phi-ip
+    ; (if (equal? context 'all)
+    ;   (map (lambda (c) (query-statement c)) all-contexts))
      speaker-predictive
      listener-predictive
-     speaker-optimality
-     )
+     speaker-optimality-tc
+     speaker-optimality-ip)
 ;; for fixed threshold model
      ; (if (equal? context 'all)
      ;  (map (lambda (c) (query-statement utterance c))
@@ -526,12 +556,10 @@
    '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
 
 (define output-file-name (string-append  output-path 
-  'lvRSAemp_condition2_expts 
-  expnum '_ exp2num
-  '_ quantifier 
+  'lvRSAemprior_2S2_2phis_2alphas_
+  'sepDD
   '_mh mh_samples 
-  '_ mh_lag 
-  '_alpha (number->string speaker-optimality) '.csv))
+  '_ mh_lag 'b.csv))
 
  (write-csv samples output-file-name)
  (define complete? 'complete)
