@@ -157,7 +157,7 @@ How many people make their responses add to 100?
 
 ```{r}
 
-d.bad<-d.subj %>% filter((total==100)&(awesome==F))
+d.bad<-d.subj %>% filter((total==100)&(onedone==F))
 
 print("number of subjects who do this 100 behavior at least once")
 
@@ -172,21 +172,26 @@ qplot(data=data.frame(table(d.bad$workerid)), x=Freq, geom='histogram')+
   xlab("number of noncompliant trials")+
   ylab("number of subjects")
 
-qplot(data=d.bad, x=max, geom='histogram')+
+d.bad<-d.bad %>% mutate(id = paste(workerid,trial))
+d.tidy<-d.tidy%>% mutate(id = paste(workerid,trial))
+
+d.culprits<-d.tidy %>% filter(id%in%d.bad$id)
+
+qplot(data=d.culprits, x=value, geom='histogram')+
   scale_x_continuous(breaks=seq(0,100,10), limits=c(0,100))+
-  ggtitle("distribution of max responses")+
-  xlab("max response in a noncompliant trial")+
-  ylab("number of trials")
+  ggtitle("distribution of responses")+
+  xlab("response in a noncompliant trial")+
+  ylab("number of responses")
 
 ```
 
 
+# Single response, free response prior
 
-
-Single response, free response prior
+## Dangerous & Distinct, Nondistinct, Plain
 
 ```{r prior1}
-d<-read.csv('../data/cbg-prior1-trials.csv',header=T)
+d<-read.csv('../data/cbg-prior1a-trials.csv',header=T)
 d$item <- paste(d$stim_color,d$stim_part,sep="_")
 table(d$stim_type,d$item)
 table(d$stim_type,d$stim_part)
@@ -194,30 +199,83 @@ table(d$stim_type,d$stim_part)
 
 d.tidy<-d%>%select(workerid,rt,response0,stim_type) %>%
   rename(context=stim_type) %>%
-  gather(option,value,-workerid,-rt,-context)
-
-d.tidy$context<-factor(d.tidy$context,
-                       levels=c("danger-distinct",
-                                "nondistinctive",
-                                "bare"), 
-                        labels=c("dangerous & distinctive", 
-                                 "nondistinctive & irrelevant",
-                                 "plain"))
-ggplot(d.tidy,aes(x=value,fill=context))+
-  geom_histogram(binwidth=9)+
-  facet_wrap(~context)+
-  guides(fill=F)+
-  scale_fill_brewer(type='qual',palette=6)+
-  xlab('prevalence')+
-  ggtitle('human elicited prior distribution')
+  gather(option,value,-workerid,-rt,-context)%>%
+  mutate(roundval=round(value/10)*10)
 
 
+d.tidy0<-data.frame(table(filter(d.tidy,context=='bare')$roundval),
+           table(filter(d.tidy,context=='danger-distinct')$roundval),
+           table(filter(d.tidy,context=='nondistinctive')$roundval)) %>%
+  select(Var1,Freq,Freq.1,Freq.2) %>%
+  rename(prev=Var1,
+         plain = Freq,
+         dangerdistinct = Freq.1,
+         nondistinct = Freq.2) %>%
+  gather(type, value, -prev) %>%
+  mutate(prev = to.n(prev))
+
+
+d.tidy0$type<-factor(d.tidy0$type,
+                       levels=c("dangerdistinct",
+                                "nondistinct",
+                                "plain"))
+
+ggplot(d.tidy0, aes(x=prev, y=value, fill=type))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~type)+
+  scale_fill_brewer(type='qual',palette='Set1')+
+  xlab("prevalence")+
+  ylab("count")+
+  ggtitle("Single response prior")
 ```
 
-Binned histograms
+## Danger, Distinct, Plain
+
+```{r prior1b}
+d<-read.csv('../data/cbg-prior1b-trials.csv',header=T)
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+table(d$stim_type,d$item)
+table(d$stim_type,d$stim_part)
+
+
+d.tidy<-d%>%select(workerid,rt,response0,stim_type) %>%
+  rename(context=stim_type) %>%
+  gather(option,value,-workerid,-rt,-context)%>%
+  mutate(roundval=round(value/10)*10)
+
+
+d.tidy0<-data.frame(table(filter(d.tidy,context=='bare')$roundval),
+           table(filter(d.tidy,context=='danger')$roundval),
+           table(filter(d.tidy,context=='distinct')$roundval)) %>%
+  select(Var1,Freq,Freq.1,Freq.2) %>%
+  rename(prev=Var1,
+         plain = Freq,
+         danger = Freq.1,
+         distinct = Freq.2) %>%
+  gather(type, value, -prev) %>%
+  mutate(prev = to.n(prev))
+
+
+d.tidy0$type<-factor(d.tidy0$type,
+                       levels=c("danger",
+                                "distinct",
+                                "plain"))
+
+ggplot(d.tidy0, aes(x=prev, y=value, fill=type))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~type)+
+  scale_fill_brewer(type='qual',palette='Dark2')+
+  xlab("prevalence")+
+  ylab("count")+
+  ggtitle("Single response prior")
+```
+
+
+
+Binned histograms (garbage?)
 
 ```{r prior1}
-d<-read.csv('../data/cbg-prior2-trials.csv',header=T)
+d<-read.csv('../data/cbg-prior2a-trials.csv',header=T)
 d$item <- paste(d$color,d$part,sep="_")
 table(d$context,d$item)
 table(d$context,d$part)
@@ -258,5 +316,476 @@ ggplot(d.stats,aes(x=bin,y=mn_n,fill=context))+
   ggtitle('human elicited prior distribution')
 ```
 
+
+# 10 numbers
+
+## Dangerous & Distinct, Nondistinct, Plain
+
+```{r prior3}
+d<-read.csv(file = '../data/cbg-prior3-trials.csv')
+#head(d)
+d.tidy3<- d%>%
+  select(stim_type, starts_with("response"), workerid, trial_num) %>%
+  rename(context = stim_type,
+         trial = trial_num) %>%
+  gather(key, value, -context, -workerid, -trial) %>%
+    mutate(roundval=round(value/10)*10)
+
+## add counts to certain bins to fill out responses
+d.tidy3<-bind_rows(d.tidy3,
+data.frame(workerid=1000, context='danger-distinct',item='blank',
+           key='hand',value=c(70,90), roundval=c(70,90))
+)
+
+d.tidy0<-data.frame(table(filter(d.tidy3,context=='bare')$roundval),
+           table(filter(d.tidy3,context=='danger-distinct')$roundval),
+           table(filter(d.tidy3,context=='nondistinctive')$roundval)) %>%
+  select(Var1,Freq,Freq.1,Freq.2) %>%
+  rename(prev=Var1,
+         plain = Freq,
+         dangerdistinct = Freq.1,
+         nondistinct = Freq.2) %>%
+  gather(type, value, -prev) %>%
+  mutate(prev = to.n(prev))
+
+
+d.tidy0$type<-factor(d.tidy0$type,
+                       levels=c("dangerdistinct",
+                                "nondistinct",
+                                "plain"))
+
+ggplot(d.tidy0, aes(x=prev, y=value, fill=type))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~type)+
+  scale_fill_brewer(type='qual',palette='Set1')+
+  xlab("prevalence")+
+  ylab("count")
+```
+
+
+
+### Distinctive manipulation check
+
+Does distinctive imply taboo? That is, if you rate one animal as having it, do you set all the others to 0? (compare with other types)
+
+```{r distinctive.taboo}
+d.taboo<-d.tidy3 %>%
+  group_by(workerid,trial, context) %>%
+  summarise(n.positive = sum(value>0))
+
+qplot(data=d.taboo,x=n.positive,geom='histogram')+
+  facet_wrap(~context)+
+  xlab("number of animal kinds with > 0 %")+
+  scale_x_continuous(breaks = 0:10)
+
+```
+
+### Compliance
+
+How much do subjects put for each trial? (What do their numbers sum to?)
+
+"onedone" here means subject puts 100 for one of the animals, and all 0s otherwise
+```{r}
+
+d.subj <- d.tidy3 %>%
+  group_by(workerid, trial) %>%
+  summarise(total = round(sum(value)/5)*5, # rounds to the nearest 5
+            max = max(value),
+            min = min(value)) %>%
+  mutate(onedone=((total==100)&(max==100)))
+
+d.subj0<-data.frame(table(d.subj$total,d.subj$onedone)) %>%
+  mutate(total = to.n(Var1)) %>%
+  rename(onedone = Var2)
+
+ggplot(data=d.subj0,aes(x=total,y=Freq, fill=onedone))+
+  geom_bar(stat='identity',position=position_dodge())+
+  xlab("total for one trial")+
+  ylab("number of trials")+
+  ggtitle("40 subjects x 3 trials/subject")
+```
+
+
+How many people make their responses add to 100?
+
+
+```{r}
+
+d.bad<-d.subj %>% filter((total==100)&(onedone==F))
+
+print("number of subjects who do this 100 behavior at least once")
+
+length(levels(factor(d.bad$workerid)))
+
+print("total number of trials with this 100 behavior")
+length(d.bad$workerid)
+
+qplot(data=data.frame(table(d.bad$workerid)), x=Freq, geom='histogram')+
+  scale_x_continuous(breaks=seq(0:4))+
+  ggtitle("number of noncompliant trials / subject")+
+  xlab("number of noncompliant trials")+
+  ylab("number of subjects")
+
+
+d.bad<-d.bad %>% mutate(id = paste(workerid,trial))
+d.tidy3<-d.tidy3%>% mutate(id = paste(workerid,trial))
+
+d.culprits<-d.tidy3 %>% filter(id%in%d.bad$id)
+
+qplot(data=d.culprits, x=value, geom='histogram')+
+  scale_x_continuous(breaks=seq(0,100,10), limits=c(0,100))+
+  ggtitle("distribution of responses")+
+  xlab("response in a noncompliant trial")+
+  ylab("number of responses")
+
+```
+
+
+# Prior 4: 5 sliders
+
+```{r prior4}
+d<-read.csv(file = '../data/cbg-prior4-trials.csv')
+#head(d)
+d.tidy4<- d%>%
+  select(stim_type, starts_with("slider"), workerid, trial_num) %>%
+  rename(context = stim_type,
+          trial = trial_num) %>%
+  gather(key, value, -context, -workerid, -trial)%>%
+    mutate(roundval=round(value*10)*10)
+
+
+
+d.tidy0<-data.frame(table(filter(d.tidy4,context=='bare')$roundval),
+           table(filter(d.tidy4,context=='danger-distinct')$roundval),
+           table(filter(d.tidy4,context=='nondistinctive')$roundval)) %>%
+  select(Var1,Freq,Freq.1,Freq.2) %>%
+  rename(prev=Var1,
+         plain = Freq,
+         dangerdistinct = Freq.1,
+         nondistinct = Freq.2) %>%
+  gather(type, value, -prev) %>%
+  mutate(prev = to.n(prev))
+
+
+d.tidy0$type<-factor(d.tidy0$type,
+                       levels=c("dangerdistinct",
+                                "nondistinct",
+                                "plain"))
+
+ggplot(d.tidy0, aes(x=prev, y=value, fill=type))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~type)+
+  scale_fill_brewer(type='qual',palette='Set1')+
+  xlab("prevalence")+
+  ylab("count")
+
+```
+
+
+
+### Distinctive manipulation check
+
+Does distinctive imply taboo? That is, if you rate one animal as having it, do you set all the others to 0? (compare with other types)
+
+```{r distinctive.taboo}
+d.taboo<-d.tidy4 %>%
+  group_by(workerid,trial, context) %>%
+  summarise(n.positive = sum(roundval>0))
+
+qplot(data=d.taboo,x=n.positive,geom='histogram')+
+  facet_wrap(~context)+
+  xlab("number of animal kinds with > round(0) %")+
+  scale_x_continuous(breaks = 0:5)
+
+```
+
+### Compliance
+
+How much do subjects put for each trial? (What do their numbers sum to?)
+
+"onedone" here means subject puts 100 for one of the animals, and all 0s otherwise
+```{r}
+
+d.subj <- d.tidy4 %>%
+  group_by(workerid, trial) %>%
+  summarise(total = sum(roundval), # rounds to the nearest 5
+            max = max(roundval),
+            min = min(roundval)) %>%
+  mutate(onedone=((total==100)&(max==100)))
+
+d.subj0<-data.frame(table(d.subj$total,d.subj$onedone)) %>%
+  mutate(total = to.n(Var1)) %>%
+  rename(onedone = Var2)
+
+ggplot(data=d.subj0,aes(x=total,y=Freq, fill=onedone))+
+  geom_bar(stat='identity',position=position_dodge())+
+  xlab("total for one trial")+
+  ylab("number of trials")+
+  ggtitle("40 subjects x 6 trials/subject")
+```
+
+
+How many people make their responses add to 100?
+
+
+```{r}
+
+d.bad<-d.subj %>% filter((total==100)&(onedone==F))
+
+print("number of subjects who do this 100 behavior at least once")
+
+length(levels(factor(d.bad$workerid)))
+
+print("total number of trials with this 100 behavior")
+length(d.bad$workerid)
+
+qplot(data=data.frame(table(d.bad$workerid)), x=Freq, geom='histogram')+
+  scale_x_continuous(breaks=seq(0:4))+
+  ggtitle("number of noncompliant trials / subject")+
+  xlab("number of noncompliant trials")+
+  ylab("number of subjects")
+
+
+d.bad<-d.bad %>% mutate(id = paste(workerid,trial))
+d.tidy4<-d.tidy4%>% mutate(id = paste(workerid,trial))
+
+d.culprits<-d.tidy4 %>% filter(id%in%d.bad$id)
+
+qplot(data=d.culprits, x=roundval, geom='histogram')+
+  scale_x_continuous(breaks=seq(0,100,10), limits=c(0,100))+
+  ggtitle("distribution of responses")+
+  xlab("response in a noncompliant trial")+
+  ylab("number of responses")
+
+```
+
+
+# Prior 5: Accidental with 5 sliders
+
+```{r prior5}
+setwd(dir = '../prior5')
+d<-read.csv(file = 'cbg-prior5-trials.csv')
+#head(d)
+d.tidy5<- d%>%
+  select(workerid, stim_type, starts_with("slider")) %>%
+  rename(context = stim_type) %>%
+  gather(key, value, -context, -workerid)
+
+ggplot(d.tidy5,aes(x=value))+
+  geom_density(adjust=0.25)+
+  #geom_histogram(binwidth=0.01)+
+  facet_wrap(~context)+
+  xlim(0,1)
+
+d.tidy5$roundval<-round(d.tidy5$value*10)*10
+
+d.sum<-data.frame(table(d.tidy5$roundval)) %>%
+  mutate(Var1 = to.n(Var1))
+
+ggplot(data=d.sum, aes(x=Var1,y=Freq))+
+  geom_bar(stat='identity',position=position_dodge())+
+  ylab('frequency')+
+  xlab('prevalence')+
+  scale_x_continuous(breaks=seq(0,100,20))
+
+
+
+d.tidy5 %>%
+  group_by(context) %>%
+  summarise(mean(value))
+
+
+n.subj<-length(levels(factor(d.tidy5$workerid)))
+
+db.total=data.frame()
+for (i in 1:1000){
+  samp.subj<-sample.int(n.subj,replace=T) 
+  samp.tidy<-d.tidy5[d.tidy5$workerid%in%samp.subj,]
+  df.temp<-data.frame(matrix(table(samp.tidy$roundval)+1,nrow=1))
+  db.total<-bind_rows(db.total,df.temp)
+}
+
+db.total<-db.total[complete.cases(db.total),]
+file.path<-'../../models/'
+write.csv(db.total, file=paste(file.path,'bootstrap_acc_priors.csv',sep=''))
+
+
+
+```
+
+
+
+
+# Prior 6: 10 state, separate danger / distinct
+
+```{r prior6}
+setwd(dir = '~/Documents/research/generics/cbg2010-replication/turk/prior6')
+d<-read.csv(file = 'cbg-prior6-trials.csv')
+
+d$item<-paste(d$stim_color,d$stim_part,sep='_')
+#head(d)
+d.tidy6<- d%>%
+  select(workerid,stim_type, item, starts_with("response")) %>%
+  rename(context = stim_type) %>%
+  gather(key, value, -context, -item, -workerid) %>%
+  #mutate(roundval=round(value/5)*5)
+  mutate(roundval=round(value/10)*10)
+
+
+
+d.tidy<-d.tidy6
+
+d.tidy %>%
+  group_by(context) %>%
+  summarise(mn = mean(value),
+            hi = mean(value)+1.96*sem(value),
+            lo = mean(value) - 1.96*sem(value))
+
+ggplot(d.tidy,aes(x=value))+
+  geom_histogram(binwidth=1)+
+  #facet_wrap(~item,scales='free')+
+  facet_wrap(~context)+
+  xlim(0,100)
+
+## add counts to certain bins to fill out responses
+d.tidy6<-bind_rows(d.tidy6,
+data.frame(workerid=1000, context='danger',item='blank',key='hand',value=85, roundval=85),
+data.frame(workerid=1000, context='distinct',item='blank',key='hand',value=55, roundval=55)
+)
+
+d.tidy<-data.frame(table(filter(d.tidy6,context=='bare')$roundval),
+           table(filter(d.tidy6,context=='danger')$roundval),
+           table(filter(d.tidy6,context=='distinct')$roundval)) %>%
+  select(Var1,Freq,Freq.1,Freq.2) %>%
+  rename(prev=Var1,
+         plain = Freq,
+         danger = Freq.1,
+         distinct = Freq.2) %>%
+  gather(type, value, -prev) %>%
+  mutate(prev = to.n(prev))
+
+ggplot(d.tidy, aes(x=prev, y=value, fill=type))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~type)+
+    scale_fill_brewer(type='qual',palette='Dark2')+
+  xlab("prevalence")+
+  ylab("count")
+
+
+  
+```
+
+
+
+```{r sep.dang.dist.priorstats}
+setwd("~/Documents/research/generics/cbg2010-replication/data")
+d<- read.csv('cbg-prior0b-trials.csv')
+#d0<- read.csv('cbg-prior1b-trials.csv')
+#d<-d0
+
+d.tidy<-d%>%   select(workerid,rt,
+              response0,response1,response2,response3,response4,
+              stim_type) %>%
+  rename(context=stim_type) %>%
+  gather(option,value,-workerid,-rt,-context)
+#d.tidy<-d%>%   select(workerid,rt,
+#              response0,
+#              stim_type) %>%
+#  rename(context=stim_type) %>%
+#  gather(option,value,-workerid,-rt,-context)
+
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+table(d$stim_type,d$item)
+table(d$stim_type,d$stim_part)
+
+d.tidy %>%
+  group_by(context) %>%
+  #summarise(median(value))
+  summarise(mean(value))
+
+
+
+
+d.tidy$context<-factor(d.tidy$context,
+                       levels=c("bare",
+                                "danger",
+                                "distinct"))
+
+
+ggplot(d.tidy,aes(x=value,fill=context))+
+  geom_histogram(binwidth=0.5)+
+  facet_wrap(~context)+
+  guides(fill=F)+
+  scale_fill_brewer(type='qual',palette=6)+
+  xlab('prevalence')+
+  ggtitle('human elicited prior distribution')
+
+
+
+
+d.tidy$roundval<-round(d.tidy$value/10)*10
+out<-data.frame(table(d.tidy$context, d.tidy$roundval))
+out$Var2<-to.n(out$Var2)
+
+
+ggplot(out,aes(x=Var2,y=Freq, fill=Var1))+
+  geom_bar(stat='identity')+
+  facet_grid(.~Var1)+
+  scale_fill_brewer(type='qual',palette='Dark2')+
+  xlab('\n % of kind with feature')+
+  #  theme_blackDisplay()+
+    theme(strip.background = element_blank(),
+       strip.text.y = element_text(angle=0),
+        legend.position='bottom',
+        legend.direction='horizontal')+
+  guides(fill=F)+
+  scale_x_continuous(breaks=seq(0,100,20))
+
+#ggsave('../../semfest-2015/figures/exp2.png',width=20, height=10)
+
+
+
+plotpath = "~/Documents/research/generics/cogsci-2015//paper/figures/"
+
+# 
+# ggsave(filename=paste(plotpath,'elicited_priors.png',sep=''),
+#        plot=exp2,
+#        width=12,
+#        height=4.5)
+
+
+
+dip.test(subset(d.tidy,context=='bare')$value)
+dip.test(subset(d.tidy,context=="distinct")$value)
+dip.test(subset(d.tidy,context=='danger')$value)
+
+
+contrasts(d.tidy$context)<-cbind(dd = c(-2,1,1), ni = c(0, 1, -1))
+contrasts(d.tidy$context)<-cbind(dd = c(1,0,-1), ni = c(-1, 2, -1))
+contrasts(d.tidy$context)
+
+rs<-lmer(value ~ context + (1 | workerid), data=d.tidy)
+summary(rs)
+
+wilcox.test(value ~ context, 
+            data = subset(d.tidy, context!="distinct"))
+
+wilcox.test(value ~ context, 
+            data = subset(d.tidy, context!='danger'))
+
+wilcox.test(value ~ context, 
+            data = subset(d.tidy, context!='bare'))
+
+kruskal.test(value ~ context, data = d.tidy) 
+
+ks.test(subset(d.tidy,context=='bare')$value,
+        subset(d.tidy,context=='danger')$value)
+
+ks.test(subset(d.tidy,context=="distinct")$value,
+        subset(d.tidy,context=='danger')$value)
+
+ks.test(subset(d.tidy,context=='bare')$value,
+        subset(d.tidy,context=="distinct")$value)
+```
 
 
