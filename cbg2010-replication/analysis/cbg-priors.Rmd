@@ -5,6 +5,7 @@ date: "February 25, 2015"
 output: html_document
 ---
 
+
 ```{r}
 setwd("~/Documents/research/generics/cbg2010-replication/analysis")
 d<-read.table('../data/cbgR-exp11-trials.tsv',header=T)
@@ -18,31 +19,54 @@ table(d$stim_type,d$stim_part)
 
 
 d.tidy<-d %>%   
-  select(workerid,rt,
+  select(workerid,rt,trial_num,
               response0,response1,response2,response3,response4,
               stim_type) %>%
-  rename(context=stim_type) %>%
-  gather(option,value,-workerid,-rt,-context)
-
-d.tidy$context<-factor(d.tidy$context,
-                       levels=c("danger-distinct",
-                                "nondistinctive",
-                                "bare"), 
-                        labels=c("dangerous & distinctive", 
-                                 "nondistinctive & irrelevant",
-                                 "plain"))
-ggplot(d.tidy,aes(x=value,fill=context))+
-  geom_histogram(binwidth=10)+
-  facet_wrap(~context)+
-  guides(fill=F)+
-  scale_fill_brewer(type='qual',palette=6)+
-  xlab('prevalence')+
-  ggtitle('human elicited prior distribution')
+  rename(context=stim_type, trial=trial_num) %>%
+  gather(option,value,-workerid,-rt,-context,-trial)%>%
+  mutate(roundval=round(value/10)*10)
 
 
+d.tidy0<-data.frame(table(filter(d.tidy,context=='bare')$roundval),
+           table(filter(d.tidy,context=='danger-distinct')$roundval),
+           table(filter(d.tidy,context=='nondistinctive')$roundval)) %>%
+  select(Var1,Freq,Freq.1,Freq.2) %>%
+  rename(prev=Var1,
+         plain = Freq,
+         dangerdistinct = Freq.1,
+         nondistinct = Freq.2) %>%
+  gather(type, value, -prev) %>%
+  mutate(prev = to.n(prev))
+
+
+d.tidy0$type<-factor(d.tidy0$type,
+                       levels=c("dangerdistinct",
+                                "nondistinct",
+                                "plain"))
+
+ggplot(d.tidy0, aes(x=prev, y=value, fill=type))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~type)+
+  scale_fill_brewer(type='qual',palette='Set1')+
+  xlab("prevalence")+
+  ylab("count")
 
 
 
+# d.tidy$context<-factor(d.tidy$context,
+#                        levels=c("danger-distinct",
+#                                 "nondistinctive",
+#                                 "bare"), 
+#                         labels=c("dangerous & distinctive", 
+#                                  "nondistinctive & irrelevant",
+#                                  "plain"))
+# ggplot(d.tidy,aes(x=value,fill=context))+
+#   geom_histogram(binwidth=1)+
+#   facet_wrap(~context)+
+#   guides(fill=F)+
+#   scale_fill_brewer(type='qual',palette=6)+
+#   xlab('prevalence')+
+#   ggtitle('human elicited prior distribution')
 
 
 
@@ -87,6 +111,78 @@ ggplot(d.tidy,aes(x=value,fill=context))+
 
 ```
 
+# Distinctive manipulation check
+
+Does distinctive imply taboo? That is, if you rate one animal as having it, do you set all the others to 0? (compare with other types)
+
+```{r distinctive.taboo}
+d.taboo<-d.tidy %>%
+  group_by(workerid,trial, context) %>%
+  summarise(n.positive = sum(value>0))
+
+qplot(data=d.taboo,x=n.positive,geom='histogram')+
+  facet_wrap(~context)+
+  xlab("number of animal kinds with > 0 %")
+
+```
+
+# Compliance
+
+How much do subjects put for each trial? (What do their numbers sum to?)
+
+"onedone" here means subject puts 100 for one of the animals, and all 0s otherwise
+```{r}
+
+d.subj <- d.tidy %>%
+  group_by(workerid, trial) %>%
+  summarise(total = round(sum(value)/5)*5, # rounds to the nearest 5
+            max = max(value),
+            min = min(value)) %>%
+  mutate(onedone=((total==100)&(max==100)))
+
+d.subj0<-data.frame(table(d.subj$total,d.subj$onedone)) %>%
+  mutate(total = to.n(Var1)) %>%
+  rename(onedone = Var2)
+
+ggplot(data=d.subj0,aes(x=total,y=Freq, fill=onedone))+
+  geom_bar(stat='identity',position=position_dodge())+
+  xlab("total for one trial")+
+  ylab("number of trials")+
+  ggtitle("100 subjects x 6 trials/subject")
+```
+
+
+How many people make their responses add to 100?
+
+
+```{r}
+
+d.bad<-d.subj %>% filter((total==100)&(awesome==F))
+
+print("number of subjects who do this 100 behavior at least once")
+
+length(levels(factor(d.bad$workerid)))
+
+print("total number of trials with this 100 behavior")
+length(d.bad$workerid)
+
+qplot(data=data.frame(table(d.bad$workerid)), x=Freq, geom='histogram')+
+  scale_x_continuous(breaks=seq(1,6,1))+
+  ggtitle("number of noncompliant trials / subject")+
+  xlab("number of noncompliant trials")+
+  ylab("number of subjects")
+
+qplot(data=d.bad, x=max, geom='histogram')+
+  scale_x_continuous(breaks=seq(0,100,10), limits=c(0,100))+
+  ggtitle("distribution of max responses")+
+  xlab("max response in a noncompliant trial")+
+  ylab("number of trials")
+
+```
+
+
+
+
 Single response, free response prior
 
 ```{r prior1}
@@ -108,7 +204,7 @@ d.tidy$context<-factor(d.tidy$context,
                                  "nondistinctive & irrelevant",
                                  "plain"))
 ggplot(d.tidy,aes(x=value,fill=context))+
-  geom_histogram(binwidth=10)+
+  geom_histogram(binwidth=9)+
   facet_wrap(~context)+
   guides(fill=F)+
   scale_fill_brewer(type='qual',palette=6)+
@@ -117,4 +213,50 @@ ggplot(d.tidy,aes(x=value,fill=context))+
 
 
 ```
+
+Binned histograms
+
+```{r prior1}
+d<-read.csv('../data/cbg-prior2-trials.csv',header=T)
+d$item <- paste(d$color,d$part,sep="_")
+table(d$context,d$item)
+table(d$context,d$part)
+
+
+#maybe?
+## yes: the experiment allowed you to advance if you had clicked the last slider, but not any of the other ones
+d[is.na(d)]<-0
+
+d.tidy<-d %>% 
+  select(workerid,rt,context,item,starts_with("bin"),-binOrder) %>%
+  gather(bin,value,-workerid,-rt,-context, -item) %>%
+  group_by(workerid,item) %>%
+  mutate(val_normed = value/sum(value)) %>%
+  separate(bin, into=c("thing","bin"), by="_") 
+
+d.tidy$context<-factor(d.tidy$context,
+                       levels=c("danger-distinct",
+                                "nondistinctive",
+                                "bare"), 
+                        labels=c("dangerous & distinctive", 
+                                 "nondistinctive & irrelevant",
+                                 "plain"))
+d.stats <- d.tidy %>% 
+  group_by(context,bin) %>%
+  summarise(mn = mean(value,na.rm=T),
+            sterr = sem(value),
+            mn_n = mean(val_normed, na.rm=T),
+            sterr_n = sem(val_normed))
+
+ggplot(d.stats,aes(x=bin,y=mn_n,fill=context))+
+  geom_bar(stat='identity')+
+  geom_errorbar(aes(ymin=mn_n-1.96*sterr_n,ymax=mn_n+1.96*sterr_n))+
+  facet_wrap(~context)+
+  guides(fill=F)+
+  scale_fill_brewer(type='qual',palette=6)+
+  xlab('prevalence')+
+  ggtitle('human elicited prior distribution')
+```
+
+
 
