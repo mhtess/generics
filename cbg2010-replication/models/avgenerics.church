@@ -1,0 +1,103 @@
+(define qud-set (list "p" "s"))
+(define (qud-prior) (multinomial qud-set '(1 1)))
+
+(define (qud-fn qud)
+	(case qud
+		(("p") (lambda (prevalence salience) prevalence))
+		(("s") (lambda (prevalence salience) salience))
+		(("sp") (lambda (prevalence salience) (list prevalence salience)))
+		(else "error")
+		)
+	)
+
+(define (meaning utterance prevalence salience prevalence-threshold salience-threshold qud)
+	(case utterance
+		(("generic") (generic prevalence salience prevalence-threshold salience-threshold qud))
+		(("not-generic") (not (generic prevalence salience prevalence-threshold salience-threshold qud)))
+		(("mu") true)
+		(else (equal? utterance prevalence))))
+
+(define (generic prevalence salience prevalence-threshold salience-threshold qud)
+	(case qud
+		(("p") (> prevalence prevalence-threshold))
+		(("s") (> salience salience-threshold))
+		(("sp") (and (> prevalence prevalence-threshold) (> salience salience-threshold)))
+		(else "error")))
+
+(define (utterance-prior) (uniform-draw (list "generic" "not-generic")))
+
+(define (prevalence-prior) 
+  (multinomial '(0 10 30 50 70 90 100)
+	  		   '(564 155 30 30 6 15 54)))
+
+(define (salience-prior)
+	(multinomial '(1 2 3) '(30 10 1)))
+
+(define literal-listener
+	(mem (lambda (utterance qud prevalence-threshold salience-threshold)
+		(enumeration-query
+			(define prevalence (prevalence-prior))
+			(define salience (salience-prior))
+
+			;(list prevalence salience)	
+			((qud-fn qud) prevalence salience)
+
+			;(equal? 
+			(meaning utterance prevalence salience prevalence-threshold salience-threshold qud)
+		 		))))
+
+
+; not sure if speaker is communicating full world, or just QUDval
+(define speaker
+	(mem (lambda (val prevalence salience qud prevalence-threshold salience-threshold)
+		(enumeration-query
+			(define utterance (utterance-prior))
+
+			utterance
+
+			(equal? val;(list prevalence salience)
+				(apply multinomial
+					(literal-listener utterance qud prevalence-threshold salience-threshold))
+				)
+			)
+		)))
+
+
+(define listener
+	(mem (lambda (utterance qud)
+		(enumeration-query
+			(define prevalence (prevalence-prior))
+			(define salience (multinomial '(1 2 3) '(30 10 1)))
+
+			(define prevalence-threshold (uniform-draw '(0 20 40 60 80 90)))
+			(define salience-threshold (uniform-draw '(0 1 2)))
+			(define val ((qud-fn qud) prevalence salience))
+
+			(list prevalence salience)	
+		
+
+			(equal? utterance
+				(apply multinomial 
+					(speaker val prevalence salience qud prevalence-threshold salience-threshold)))))))
+
+
+
+
+(define truth-conditions
+	(mem (lambda (prevalence salience)
+		(enumeration-query
+			; the generic is ambiguous between a prevalence and a salience reading 
+			(define qud (qud-prior))
+			; this generic has an interpretation
+			;(define words ((qud-fn qud) prevalence-word salience-word))
+			(define utterance (utterance-prior))
+
+			utterance
+
+			(equal? (list prevalence salience)
+					(apply multinomial (listener utterance qud)))))))
+
+(truth-conditions 10 2)
+;(literal-listener "generic" "p" 0 0)
+
+
