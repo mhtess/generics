@@ -1,0 +1,156 @@
+(define (qud-prior prevalence-reading) (if (flip prevalence-reading)
+						"p"
+						"s"))
+
+(define (prevalence-prior domain) 
+  (multinomial '(0 10 20 30 40 50 60 70 80 90 100)
+    (case domain
+    ;  (("bare") '(448 157 199 59 59 80 38 33 26 15 68))
+      (("danger-distinct") '(690 159 94 24 21 39 21 12 26 14 127))
+      (("nondistinctive") '(342 144 246 60 68 93 50 15 45 24 95))
+      (("accidental") '(283 176 186 116 120 87 95 52 56 8 21))
+      (("birds lay eggs") '(100 10 2 2 2 20 2 2 2 2 2))
+      (("birds are female") '(2 2 2 2 2 1000 2 2 2 2 2))
+      (("mosquito") '(140 90 1 1 1 1 1 1 1 1 1))
+      (("pollution") '(1 2 4 8 4 2 1 1 1 1 1))
+      (("oxygen") '(1 1 1 1 1 1 20 40 80 40 20))
+	  (("bare") '(564 155 80 35 21 41 14  6 15 15  54))
+	  (("danger") '(617 139 69 26 19 33 17 10 20 16  34))
+	  (("distinct") '(735 96 52 10 10 20 6 2 9 8 52)))))
+
+
+
+; (define (salience-value state domain)
+; 	(second
+; 	(case domain
+; 		(("bare") (assoc state (zip (list 10 30 50 70 90) 
+; 							(list 0.20 0.25 0.30 0.40 0.40))))
+; 		(("danger") (assoc state (zip (list 10 30 50 70 90) 
+; 							(list 0.80 0.85 0.85 0.90 0.95))))
+; 		(("distinct") (assoc state (zip (list 10 30 50 70 90) 
+; 							(list 0.35 0.45 0.50 0.50 0.55)))))))
+
+; (define (salience-prior)
+; 	(uniform-draw '(0.1 0.15 0.2 0.25 0.3 0.35 0.40 0.45 0.50 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1)))
+
+;; rounded to nearest 0.1
+(define (salience-value state domain)
+	(second
+	(case domain
+		(("bare") (assoc state (zip (list 10 30 50 70 90) 
+							(list 0.20 0.2 0.30 0.40 0.40))))
+		(("danger") (assoc state (zip (list 10 30 50 70 90) 
+							(list 0.80 0.80 0.80 0.90 0.90))))
+		(("distinct") (assoc state (zip (list 10 30 50 70 90) 
+							(list 0.30 0.40 0.50 0.50 0.50)))))))
+
+(define (salience-prior)
+	(uniform-draw '(0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1)))
+
+
+
+;(define (prevalence-prior domain) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
+
+(define (qud-fn qud)
+	(case qud
+		(("p") (lambda (prevalence salience) prevalence))
+		(("s") (lambda (prevalence salience) salience))
+		(("sp") (lambda (prevalence salience) (list prevalence salience)))
+		(else "error")
+		)
+	)
+
+(define receiving
+	(mem (lambda (message qud domain)
+		(enumeration-query
+			(define prevalence (prevalence-prior domain))
+			(define salience (salience-prior))
+			(define val ((qud-fn qud) prevalence salience))
+
+			(list prevalence salience)	
+		
+
+			;(equal? words ((qud-fn qud) prevalence salience))
+			(<= message ((qud-fn qud) prevalence salience))))))
+
+
+
+(define literal-listener
+	(mem (lambda (message qud salience-threshold)
+		(enumeration-query
+			(define prevalence (prevalence-prior domain))
+			(define salience (salience-prior))
+
+			;(list prevalence salience)	
+			((qud-fn qud) prevalence salience)
+
+			;(equal? 
+			(if (equal? qud "p")
+				(equal? message prevalence)
+				(if (equal? message "salient!")
+					(> salience salience-threshold)
+					(<= salience salience-threshold))) ; maybe a separate threshold? or mu?
+		 		))))
+
+
+; not sure if speaker is communicating full world, or just QUDval
+(define speaker
+	(mem (lambda (val prevalence salience qud salience-threshold)
+		(enumeration-query
+			(define message (if (equal? qud "p")
+						(uniform-draw '(0 10 20 30 40 50 60 70 80 90 100))
+						(uniform-draw '("salient!" "meh"))
+				))
+
+			message
+
+			(equal? val;
+				;(list prevalence salience)
+				(apply multinomial
+					(literal-listener message qud salience-threshold))
+				)
+			)
+		)))
+
+
+(define listener
+	(mem (lambda (message qud)
+		(enumeration-query
+			(define prevalence (prevalence-prior domain))
+			(define salience (salience-prior))
+
+			(define salience-threshold (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))
+
+			(define val ((qud-fn qud) prevalence salience))
+
+			(list prevalence salience)
+		
+			(equal? message
+				(apply multinomial 
+					(speaker val prevalence salience qud salience-threshold)))))))
+
+
+
+
+(define forwarding
+	(mem (lambda (prevalence prevalence-reading)
+		(enumeration-query
+
+			(define qud (qud-prior prevalence-reading))
+			(define salience (salience-value prevalence domain))
+			(define message (if (equal? qud "p")
+								prevalence
+								"salient!"))
+			qud
+
+			(equal? (list prevalence salience)
+					(apply multinomial (listener message qud domain)))))))
+
+(define domain "distinct")
+(forwarding 10 0.5)
+
+; (map 
+; 	(lambda (prev) 
+; 		(forwarding prev "distinct" 0.5)
+; 		)
+; 	'(10 30 50 70 90))
