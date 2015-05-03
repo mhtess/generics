@@ -1,19 +1,21 @@
 ; example call
 
-; time church -a 'truth_conditions,generic,all,100,25,3,9' tfbt_cbg.church &
+; time church -u -a 'home,1000,10' tfbt_cbg.church &
 
 
 (define args (regexp_split argstring ","))
 
 (define serv (first args))
-(define quantifier (second args))
-(define expnum (third args))
-(define exp2num (fourth args))
-(define mh_samples (fifth args))
-(define mh_lag (sixth args))
+(define mh_samples (second args))
+(define mh_lag (third args))
 
+(define quantifier 'generic)
+(define expnum "9")
+(define expnum "10e")
 
-(define speaker-optimality 1)
+(define exp2num "12")
+
+;(define speaker-optimality 1)
 (define context 'all)
 (define task 'truth_conditions) ;;; depracated, but still need this
 
@@ -41,12 +43,13 @@
 ;(define data-file (string-append data-path 'cbgR-exp4_anonymized-trials.csv))
 ;(define data-file (string-append data-path (string-append 'cbgR-exp expnum '_anonymized-trials.csv)))
 
-(define data-file (string-append data-path (string-append 'cbgR-exp expnum '-trials.csv)))
+(define data-file (string-append data-path (string-append 'cbgR-exp expnum '-trials-churchrdy.csv)))
 
 (define implied-data-file (string-append data-path (string-append 'cbgR-exp exp2num '-trials.csv)))
 
 
 (define alldata (read-csv data-file))
+
 (define implieddata (read-csv implied-data-file))
 
 
@@ -62,6 +65,7 @@
                                                   target)))
 
 (define all-contexts (unique (map fifth (rest alldata))))
+
 (define implied-contexts (unique (map fifth (rest implieddata))))
 
 
@@ -175,6 +179,8 @@
 (define (raise-to-power dist alph)
   (list (first dist) (map (lambda (x) (pow x alph)) (second dist))))
 
+(define (normalize dist)
+  (list (first dist) (map (lambda (x) (/ x (sum (second dist)))) (second dist))))
 
 
 (define (meaning word)
@@ -192,10 +198,52 @@
         (('who-is-it) who-is-it?)))
 
 
+; (define discretize-beta (lambda (gamma delta)
+;     (define pseudocount_alpha (* gamma delta))
+;     (define pseudocount_beta (* (- 1 gamma) delta))
+;     (define (beta-rv) (* 10 (beta pseudocount_alpha pseudocount_beta))) ;; multiplied by 10 so i can use floor to bin
+;     (define beta-samples (repeat 1000 beta-rv))
+;     (define bins '(0 1 2 3 4 5 6 7 8 9 10))
+;     (define quintile-hist (lambda (x bins nsamp)
+;                             (map (lambda (n) (/ (length (filter (lambda (i) 
+;                               (= (floor i) n)) x)) nsamp)) bins)))
+
+;     (define quintile-probs (map (lambda (x) (+ 0.0001 x)) (quintile-hist beta-samples bins 1000)))
+
+;     quintile-probs))
+
+; (define discretize-beta (lambda (gamma delta bins)
+;   (define shape_alpha (* gamma delta))
+;   (define shape_beta (* (- 1 gamma) delta))
+;   (define beta-pdf (lambda (x) 
+;     (*
+;       (pow x (- shape_alpha 1))
+;       (pow (- 1 x) (- shape_beta 1))
+;     )))
+;   (map beta-pdf bins)))
+
+
+    ; (define pseudocount_alpha (* gamma delta))
+    ; (define pseudocount_beta (* (- 1 gamma) delta))
+    ; (define (beta-rv) (* 10 (beta pseudocount_alpha pseudocount_beta))) ;; multiplied by 10 so i can use floor to bin
+    ; (define beta-samples (repeat 1000 beta-rv))
+    ; (define bins '(0 1 2 3 4 5 6 7 8 9 10))
+    ; (define quintile-hist (lambda (x bins nsamp)
+    ;                         (map (lambda (n) (/ (length (filter (lambda (i) 
+    ;                           (= (floor i) n)) x)) nsamp)) bins)))
+
+    ; (define quintile-probs (map (lambda (x) (+ 0.0001 x)) (quintile-hist beta-samples bins 1000)))
+
+    ; quintile-probs))
+
+;(define all-gammas '(0.01 0.1 0.2 0.3))
+;(define all-deltas '(0.01 0.03 0.06))
+
+
 (define cognitive-model 
   (mem 
   ; (lambda (generic-theta most-theta some-theta QUD evidence) ;; fixed treshold model (obviously wrong)
-   (lambda (gamma delta QUD evidence)
+   (lambda (gamma delta speaker-optimality QUD evidence)
      ;; input could be utterance (for listener / implied_prevalence)
      ;; or state (for speaker / truth_conditions)
 
@@ -212,26 +260,21 @@
      (define (theta words)
        (theta-meaning (string-append words '-theta)))
 
+  (define discretize-beta (lambda (gamma delta bins)
+      (define shape_alpha (* gamma delta))
+      (define shape_beta (* (- 1 gamma) delta))
+      (define beta-pdf (lambda (x) 
+        (*
+          (pow x (- shape_alpha 1))
+          (pow (- 1 x) (- shape_beta 1)))))
+    (map beta-pdf bins)))
 
-    ;; can't enumerate over continuous state-prior, so bin 
-    (define pseudocount_alpha (* gamma delta))
-    (define pseudocount_beta (* (- 1 gamma) delta))
 
-    ; (display gamma)
-    ; (display delta)
+  (define bins '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99))
+  (define quintile-probs (discretize-beta gamma delta bins))
 
-    (define (beta-rv) (* 10 (beta pseudocount_alpha pseudocount_beta))) ;; multiplied by 10 so i can use floor to bin
-    (define beta-samples (repeat 1000 beta-rv))
-    (define bins '(0 1 2 3 4 5 6 7 8 9 10))
-    (define quintile-hist (lambda (x bins nsamp)
-                            (map (lambda (n) (/ (length (filter (lambda (i) 
-                              (= (floor i) n)) x)) nsamp)) bins)))
 
-    (define quintile-probs (map (lambda (x) (+ 0.0001 x)) (quintile-hist beta-samples bins 1000)))
-
-   ; (define blah (display quintile-probs))
-    ; multiply by 10 to be consistent with other state prior above
-    (define (state-prior) (* (multinomial bins quintile-probs) 10))
+  (define (state-prior) (* 10 (round (* 10 (multinomial bins quintile-probs)))))
 
     (define speaker2
       (mem (lambda (state)
@@ -302,43 +345,61 @@
 
 
      (if (equal? QUD 'truth)
-          (speaker2 evidence)
-          (listener1 'generic)))))
+          (normalize (raise-to-power (speaker2 evidence) speaker-optimality))
+          (normalize (raise-to-power (listener1 'generic) speaker-optimality))
+
+
+          ))))
+
+
+
+; (define (track-samples)
+;   (mod (string->number (first (string-split (gensym) 'g))) (string->number mh_lag)))
 
 (define tfbt-model
   ; (lambda (QUD utterance context)
   (lambda (QUD utterance)
+;    (enumeration-query
     (mh-query 
      (string->number mh_samples)
      (string->number mh_lag)
 
-     ; (define query-statement (lambda (utterance context)
-     ;                           (case utterance
-     ;                                 (('most) (list phi (most-theta context)))
-     ;                                 (('some) (list phi (some-theta context)))
-     ;                                 (('generic) (list phi (generic-theta context))))))
 
      (define query-statement (lambda (context) (list (gamma context) (delta context))))
 
 
      (define phi-tc (uniform 0 1)) ;; guessing parameter for truth cond task
      (define phi-ip (uniform 0 1)) ;; guessing parameter for implied prevalence task
+     ;(define phi-tc (uniform-draw '(0.05 0.25))) ;; guessing parameter for truth cond task
+     ;(define phi-ip (uniform-draw '(0.05 0.25))) ;; guessing parameter for implied prevalence task
 
-     ;(define speaker-optimality (uniform 0 5))  
+     (define speaker-optimality-tc (uniform 0 5))  
+     (define speaker-optimality-ip (uniform 0 5))  
+
+;     (define speaker-optimality 1)
 
      ;(define generic-theta (mem (lambda (context) (if (equal? QUD 'generic) (uniform 0 100) 'null))))
      ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
      ;(define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
 
-     ; (define gamma (mem (lambda (context) (uniform 0 1))))
-     ; (define delta (mem (lambda (context) (uniform 0 3))))
+    (define gamma (mem (lambda (context) (uniform 0 1))))
+    (define delta (mem (lambda (context) (uniform 0 2))))
 
-     (define gamma (mem (lambda (context) (uniform-draw '(0.01 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 
-              0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95)))))
-     (define delta (mem (lambda (context) (uniform-draw '(0.01 0.05 0.1 0.15 0.2 0.4 0.6 0.8 1 1.2 
-      1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3)))))
+   ;   (define gamma (mem (lambda (context) (uniform-draw 
+   ; ;         '(0.01 0.3)
+   ;   '(0.01 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 
+   ;            0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95)
+   ;  ;  '(0.01 0.05 0.15 0.25 0.35 0.45 0.55 0.65 0.75 0.85 0.95)
+   ;    ))))
+   ;   (define delta (mem (lambda (context) (uniform-draw 
+   ;   ; '(0.01 0.06)))))
 
+   ;    ;'(0.01 0.5 1 1.5 2 2.5 3 3.5 4 4.5 5)))))
 
+   ;    '(0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2 
+   ;    1.3 1.4 1.5 1.6 1.7 1.8 1.9 2)))))
+
+    
 
      (define alt-words
        (case QUD
@@ -346,24 +407,23 @@
              (('some) (list 'some 'none))
              (('most) (list 'most 'anti-most))
              (('how-many) (list 'most 'some 'generic))))
-     ; (define model-predictions
-     ;   (cognitive-model generic-theta most-theta some-theta QUD evidence))
-     ; for truth_conditions task, get model-predictions for each of the prevalence levels
 
-     ;;; for speaker model
-     ;;; condition on truth_conditions data
+
+
+     ;;; condition on truth_conditions data via S2 model
      (define model-predictions
       (if (equal? context 'all)
         (map 
           (lambda (unique-evidence-data-for-one-context context)
             (map 
               (lambda (evidence) 
-              (cognitive-model (gamma context) (delta context) QUD evidence))
+              (cognitive-model (gamma context) (delta context) speaker-optimality-tc QUD evidence))
             unique-evidence-data-for-one-context))
         unique-evidence-data all-contexts)
        (map 
         (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
         unique-evidence-data)))
+
      ;; compute the score for each data point, and sum then together
      (define scores
        (lambda (truthcond-byprev modelpred-byprev)
@@ -372,7 +432,11 @@
                 [match (lambda (x) (position (first modelpred-byprev) x))]
                 [prob (lambda (x) (if (= (match x) -1) 0
                                       (list-ref (second modelpred-byprev) (match x))))]
-                [score-marginalized-phi (lambda (x) (log (+ (* phi-tc 0.5) (* (- 1 phi-tc) (prob x)))))])
+                [score-marginalized-phi 
+                (lambda (x) (log (+ 
+                                  (* phi-tc 0.5) 
+                                  (* (- 1 phi-tc) 
+                                    (prob x)))))])
            (sum (map score-marginalized-phi data-as-quantifier)))))
 
      ;; for speaker model 
@@ -391,15 +455,15 @@
       (if (equal? context 'all)
        (factor (sum (flatten (map (lambda (y x) (map scores y x)) sorted-truthcond-data model-predictions))))
        (factor (sum (map scores sorted-truthcond-data model-predictions)))))
+     ;;;
 
 
-
-     ;;; condition on exp3 (implied prevalence) data
+     ;;; condition on implied prevalence data via L1
       (define implied_prev-predictions
         (if (equal? context 'all)
           (map 
             (lambda (context)
-              (cognitive-model (gamma context) (delta context) 'how-many 'generic))
+              (cognitive-model (gamma context) (delta context) speaker-optimality-ip 'how-many 'generic))
           all-contexts)
             (cognitive-model (gamma context) (delta context) 'how-many 'generic)))
 
@@ -417,15 +481,13 @@
 
            (sum (map score-marginalized-phi data)))))
      
-     ;(define blah (display context))
      (define factoring-implied_prev
       (if (equal? context 'all)
         (factor (sum (flatten (map (lambda (y x) (scores-for-implied y x)) implied-query-data implied_prev-predictions))))
         (factor (scores-for-implied implied-query-data implied_prev-predictions))))
+     ;;; 
 
-
-
-
+      ;;; posterior predictives
      (define speaker-predictive
       (if (equal? context 'all)
         (map 
@@ -435,7 +497,7 @@
              ; (cognitive-model (gamma context) (delta context) 'truth evidence))
               (lambda (evidence) 
                (let* 
-                ([posterior (cognitive-model (gamma context) (delta context) 'truth evidence)]
+                ([posterior (cognitive-model (gamma context) (delta context) speaker-optimality-tc 'truth evidence)]
                 [match (lambda (x) (position (first posterior) x))])
                 (if (= (match 'generic) -1) 0
                               (list-ref (second posterior) (match 'generic)))))
@@ -445,7 +507,6 @@
         (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence))
         unique-evidence-data)))
 
-
      (define listener-predictive
       (if (equal? context 'all)
         (map 
@@ -453,12 +514,15 @@
           ;  (cognitive-model (gamma context) (delta context) 'how-many 'generic))
           (lambda (context)
             (let* 
-              ([posterior (cognitive-model (gamma context) (delta context) 'how-many 'generic)])
+              ([posterior (cognitive-model (gamma context) (delta context) speaker-optimality-ip 'how-many 'generic)])
               (sum (map 
                     (lambda (a b) (* a b)) 
                     (first posterior) 
                     (second posterior)))))
         all-contexts)))
+      ;;;
+
+
 
      ;;; for listener model
      ; (define model-predictions
@@ -514,7 +578,8 @@
       (if (equal? context 'all) (map (lambda (c) (query-statement c)) all-contexts))
      speaker-predictive
      listener-predictive
-     speaker-optimality
+     speaker-optimality-tc
+     speaker-optimality-ip
      )
 ;; for fixed threshold model
      ; (if (equal? context 'all)
@@ -527,7 +592,8 @@
 
 
 
-;(cognitive-model 0.3 1 'truth 30)
+
+
 
 (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
 
@@ -536,13 +602,15 @@
    '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/
    '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
 
+; rds = remove dumb sampling... (the discretize by forward sampling betas..)
+
 (define output-file-name (string-append  output-path 
-  'lvRSA_condition2_dscFine_2phis_expts 
+  'lvRSA_2alphas_expts 
   expnum '_ exp2num
   '_ quantifier 
   '_mh mh_samples 
   '_ mh_lag 
-  '_alpha (number->string speaker-optimality) '.csv))
+  'c.csv))
 
  (write-csv samples output-file-name)
  (define complete? 'complete)

@@ -55,10 +55,10 @@
 
 
 ; (speaker1 10)
-(define goal-satisfied? (lambda (goal prevalence salience)
-  (case goal
-    (('prevalence) (generic state generic-theta))
-    (('salience)    )
+; (define goal-satisfied? (lambda (goal prevalence salience)
+;   (case goal
+;     (('prevalence) (generic state generic-theta))
+;     (('salience)    )
 
 
 (define cognitive-model 

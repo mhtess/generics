@@ -156,7 +156,7 @@ d.tidy %>%
       CIhigh=quantile(value,probs=0.975))
 
 d.tidy$context<-factor(d.tidy$context,
-                        levels=c('bare','distinct','danger'))
+                        levels=c('bare','danger','distinct'))
 
 d.tidy$parameter<-factor(d.tidy$parameter, levels=c("gamma","delta"))
                       #   labels(expression(gamma),expression(delta)))

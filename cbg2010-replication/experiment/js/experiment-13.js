@@ -128,9 +128,12 @@ function make_slides(f) {
       //this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
       // BETTER
       this.stimtype = exp.stims[stim_num].context
+      this.prevalence = exp.stims[stim_num].prevalence
+
+    //  this.prevalence = exp.prev_levels[]
 
       //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
-      this.prevalence = exp.prevalence_levels[this.stim.list].splice(0,1)[0] // grab prevalence level for this list
+  //    this.prevalence = exp.prevalence_levels[this.stim.list].splice(0,1)[0] // grab prevalence level for this list
 
       this.stimtype == 'bare' ? this.adjective = '' : null;      
       this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;
@@ -343,7 +346,7 @@ function make_slides(f) {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
-  
+
   slides.thanks = slide({
     name : "thanks",
     start : function() {
@@ -364,8 +367,14 @@ function make_slides(f) {
 
 /// init ///
 function init() {
+
   var prev_levels = ["5","15","25","35","45","55","65","75","85","95"];
   var contexts = ["bare","danger-distinct","nondistinctive"];
+  // exp.prev_levels = {"bare":_.shuffle(["5","15","25","35","45","55","65","75","85","95"]),
+  //                   contexts[1]:_.shuffle(["5","15","25","35","45","55","65","75","85","95"]),
+  //                   contexts[2]:_.shuffle(["5","15","25","35","45","55","65","75","85","95"])};
+
+
 
   exp.trials = [];
   exp.catch_trials = [];
@@ -379,10 +388,28 @@ function init() {
 
   exp.numTrials = utils.flatten(allstims).length;
 
-  var stims_with_context = 
+//  exp.prevalence_levels = [_.shuffle(prev_levels),_.shuffle(prev_levels),_.shuffle(prev_levels)];
+ // debugger;
+
+  // var stims_with_context = []
+  // for (i = 0; i < allstims.length; i++){
+  //   var context_assign = _.shuffle(contexts);
+  //   allstims[i][0].context = context_assign[0]
+  //   allstims[i][1].context = context_assign[1]
+  //   allstims[i][2].context = context_assign[2]
+  //   allstims[i][0].prevalence = prev_levels[0][i]
+  //   allstims[i][1].prevalence = prev_levels[1][i]
+  //   allstims[i][2].prevalence = prev_levels[2][i]
+  // }
+  // var stims_with_context = allstims
+
+
+
+  var stims_with_context =
     allstims.map(function (x) {
       var context_assign = _.shuffle(contexts);
       x[0].context = context_assign[0];
+     // x[0].prevalence = exp.prev_levels[0]
       x[1].context = context_assign[1];
       x[2].context = context_assign[2];
       return x;
@@ -390,7 +417,11 @@ function init() {
 
   exp.stims = _.shuffle(utils.flatten(stims_with_context)); // shuffle stims
 
-  exp.prevalence_levels = [_.shuffle(prev_levels),_.shuffle(prev_levels),_.shuffle(prev_levels)];
+  _.map(contexts,
+    function(c){
+    _.map(_.zip(_.filter(exp.stims, function(x){return x.context==c}),
+          _.shuffle(prev_levels)),
+        function(y){y[0].prevalence=y[1]})})
 
   exp.system = {
       Browser : BrowserDetect.browser,

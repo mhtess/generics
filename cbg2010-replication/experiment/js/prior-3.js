@@ -85,7 +85,7 @@ function make_slides(f) {
         // this.evidence_prompt = utils.upperCaseFirst(this.stim.color) + " " + this.stim.part + " "
 
 
-       var query_prompt = "What percentage of <strong>each kind of animal</strong> do you think has " + 
+       var query_prompt = "What <strong>percentage</strong> of each kind of animal do you think has " + 
         this.adjective + this.stim.color + " " + this.stim.part + "?\n";
       // // }
       // this.evidence_prompt = this.prevalence+ "% of "  + this.stim.category + " have " + this.adjective + 
@@ -427,7 +427,7 @@ function make_slides(f) {
 function init() {
 
   var prev_levels = ["10","10","30","30","50","50","70","70","90","90"];
-  var contexts = ["bare","danger-distinct","nondistinctive","bare","danger-distinct","nondistinctive"];
+  var contexts = ["bare","danger-distinct","nondistinctive"];
 //  var contexts = ["bare","danger","distinct","bare","danger","distinct"];
 
   //var all_contexts = utils.flatten(contexts.map(function(x) {return utils.fillArray(x,10);}));

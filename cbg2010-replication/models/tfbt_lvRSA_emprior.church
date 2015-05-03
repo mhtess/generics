@@ -1,6 +1,6 @@
   ; example call
 
-; time church -u -a 'home,generic,15,12,10,10' tfbt_lvRSA_emprior.church
+; time church -u -a 'home,generic,14,12,10,10' tfbt_lvRSA_emprior.church
 
 (define args (regexp_split argstring ","))
 
@@ -13,7 +13,7 @@
 
 (define empirical-prior #t)
 ;(define speaker-optimality 1)
-(define context 'all)
+(define context "accidental")
 (define task 'truth_conditions) ;;; depracated, but still need this
 
 (define tasks '(how-many? true?)) ;; 1-to-1 map between QUD -- task
@@ -144,6 +144,32 @@
             (lambda (x) (stimulus-prevlevel? x y))
             data-subset)))
     (sort (unique evidence-data)))))
+
+
+
+(define data (read-csv "/Users/mht/Documents/research/generics/cbg2010-replication/data/accidental_tc_long.csv"))
+
+(define td (transpose (rest data)))
+
+(define sorted-truthcond-data
+  (map 
+   (lambda (prev)
+     (map 
+      (lambda (y) (number->boolean (string->number (second y))))
+      (filter 
+       (lambda (x) (equal? (string->number (first x)) prev))
+       (zip (second td) (third td)))))
+   '(10 30 50 70 90)))
+(define unique-evidence-data '(10 30 50 70 90))
+
+
+(define data (read-csv "/Users/mht/Documents/research/generics/cbg2010-replication/data/accidental_ip_long.csv"))
+
+(define implied-query-data (map nearest-ten (second (transpose (rest data)))))
+
+
+(define all-contexts '(accidental))
+
 
 
 ; (define simplified-data ;;; obsolete
@@ -329,7 +355,7 @@
 
 
      (define phi-tc (uniform 0 1)) ;; guessing parameter
-    ; (define phi-ip (uniform 0 1)) ;; one for each task.
+     (define phi-ip (uniform 0 1)) ;; one for each task.
 
 
      ; (define (prevalence-prior context)
@@ -354,17 +380,21 @@
      ;  ))
 
 
-      (define (prevalence-prior context)
-      (case context
-     ; (("bare") '(448 157 199 59 59 80 38 33 26 15 68))
-      (("bare") (first bootstrapp-priors))
-      (("danger")  (second bootstrapp-priors))
-      (("distinct")  (third bootstrapp-priors))
-      ))
+     ;  (define (prevalence-prior context)
+     ;  (case context
+     ; ; (("bare") '(448 157 199 59 59 80 38 33 26 15 68))
+     ;  (("bare") (first bootstrapp-priors))
+     ;  (("danger")  (second bootstrapp-priors))
+     ;  (("distinct")  (third bootstrapp-priors))
+     ;  ))
 
+
+      (define (prevalence-prior context)
+        (case context
+          (("accidental") '(283 176 186 116 120  87  95  52  56   8  21))))
 
      (define speaker-optimality-tc (uniform 0 5))
-     ;(define speaker-optimality-ip (uniform 0 5))  
+     (define speaker-optimality-ip (uniform 0 5))  
 
      ;(define generic-theta (mem (lambda (context) (if (equal? QUD 'generic) (uniform 0 100) 'null))))
      ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
@@ -400,7 +430,7 @@
             unique-evidence-data-for-one-context))
         unique-evidence-data all-contexts)
        (map 
-        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence speaker-optimality-tc))
+        (lambda (evidence) (cognitive-model (prevalence-prior context) QUD evidence speaker-optimality-tc))
         unique-evidence-data)))
      ;; compute the score for each data point, and sum then together
      (define scores
@@ -431,37 +461,34 @@
        (factor (sum (map scores sorted-truthcond-data model-predictions)))))
 
 
-
      ;;; condition on exp3 (implied prevalence) data
-     ;  (define implied_prev-predictions
-     ;    (if (equal? context 'all)
-     ;      (map 
-     ;        (lambda (context)
-     ;          (cognitive-model (prevalence-prior context) 'how-many 'generic speaker-optimality-ip))
-     ;      all-contexts)
-     ;        (cognitive-model (prevalence-prior context) 'how-many 'generic speaker-optimality-ip)))
+      (define implied_prev-predictions
+        (if (equal? context 'all)
+          (map 
+            (lambda (context)
+              (cognitive-model (prevalence-prior context) 'how-many 'generic speaker-optimality-ip))
+          all-contexts)
+            (cognitive-model (prevalence-prior context) 'how-many 'generic speaker-optimality-ip)))
 
-     ; (define scores-for-implied
-     ;   (lambda (data modelpred)
-     ;      (let* ([match (lambda (x) (position (first modelpred) x))]
-     ;            [prob  (lambda (x) (if (= (match x) -1) 0
-     ;                                  (list-ref (second modelpred) (match x))))]
-     ;            [score-marginalized-phi 
-     ;              (lambda (x) (log (+ 
-     ;                                (* phi-ip 
-     ;                                  (/ 1 10)) 
-     ;                                (* (- 1 phi-ip) 
-     ;                                  (prob x)))))])
+     (define scores-for-implied
+       (lambda (data modelpred)
+          (let* ([match (lambda (x) (position (first modelpred) x))]
+                [prob  (lambda (x) (if (= (match x) -1) 0
+                                      (list-ref (second modelpred) (match x))))]
+                [score-marginalized-phi 
+                  (lambda (x) (log (+ 
+                                    (* phi-ip 
+                                      (/ 1 11)) 
+                                    (* (- 1 phi-ip) 
+                                      (prob x)))))])
 
-     ;       (sum (map score-marginalized-phi data)))))
+           (sum (map score-marginalized-phi data)))))
      
-     ; ;(define blah (display context))
-     ; (define factoring-implied_prev
-     ;  (if (equal? context 'all)
-     ;    (factor (sum (flatten (map (lambda (y x) (scores-for-implied y x)) implied-query-data implied_prev-predictions))))
-     ;    (factor (scores-for-implied implied-query-data implied_prev-predictions))))
-
-
+     ;(define blah (display context))
+     (define factoring-implied_prev
+      (if (equal? context 'all)
+        (factor (sum (flatten (map (lambda (y x) (scores-for-implied y x)) implied-query-data implied_prev-predictions))))
+        (factor (scores-for-implied implied-query-data implied_prev-predictions))))
 
 
      (define speaker-predictive
@@ -474,29 +501,32 @@
             unique-evidence-data-for-one-context))
         unique-evidence-data all-contexts)
        (map 
-        (lambda (evidence) (cognitive-model generic-theta most-theta some-theta QUD evidence speaker-optimality-tc))
+        (lambda (evidence) (cognitive-model (prevalence-prior context) "truth" evidence speaker-optimality-tc))
         unique-evidence-data)))
 
 
-     ; (define listener-predictive
-     ;  (if (equal? context 'all)
-     ;    (map 
-     ;      (lambda (context)
-     ;        (cognitive-model (prevalence-prior context)'how-many 'generic speaker-optimality-ip))
-     ;    all-contexts)))
+     (define listener-predictive
+      (if (equal? context 'all)
+        (map 
+          (lambda (context)
+            (cognitive-model (prevalence-prior context) 'how-many 'generic speaker-optimality-ip))
+        all-contexts)
+            (cognitive-model (prevalence-prior context) 'how-many 'generic speaker-optimality-ip)
+        )
+      )
 
 
 
 
 
     (list phi-tc
-    ; phi-ip
+         phi-ip
     ; (if (equal? context 'all)
     ;   (map (lambda (c) (query-statement c)) all-contexts))
      speaker-predictive
-   ;  listener-predictive
+     listener-predictive
      speaker-optimality-tc
-     ;speaker-optimality-ip
+     speaker-optimality-ip
      )
 ;; for fixed threshold model
      ; (if (equal? context 'all)
@@ -509,56 +539,74 @@
      true)))
 
 
-;;; bootstrapping priors
 
-(define bspriors (read-csv "bootstrap_ddp_priors.csv"))
-
-(define get-counts (lambda (x)
-  (rest (rest x))))
-(define numerify-list (lambda (lst) 
-  (map string->number lst)))
-
-(define make-3s 
-  (lambda (lst)
-    (if (null? lst)
-      '()
-      (pair 
-        (list (/ (- (string->number (first (first lst))) 1) 3)
-          (list (numerify-list (get-counts (first lst)))
-                (numerify-list (get-counts (second lst)))
-                (numerify-list (get-counts (third lst)))
-                ))
-        (make-3s (rest (rest (rest lst))))))))
-
-
-
-(define bspriors_organized (make-3s (rest bspriors)))
-
+(define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier 'null))))
 
 (define output-path
   (if (equal? serv 'home)
-   '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/
+   '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/bootstrap/
    '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
 
-(map 
-  (lambda (bspr)
+(define output-file-name (string-append  output-path 
+  'lvRSAemprior_
+  'ACCIDENTAL
+  '_mh mh_samples 
+  '_ mh_lag '.csv))
 
-    (define sample_no (number->string (first bspr)))
-    (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier (second bspr)))))
+(write-csv samples output-file-name)
 
-    (define output-file-name (string-append  output-path 
-      'lvRSAemprior_truthconditions_
-      'sepDD
-      'bootstrap
-      sample_no
-      '_mh mh_samples 
-      '_ mh_lag '.csv))
 
-    (write-csv samples output-file-name)
-    (display (string-append "bootstrap " sample_no " complete"))
-    )
 
-  bspriors_organized)
+;;; bootstrapping priors
+
+; (define bspriors (read-csv "bootstrap_ddp_priors.csv"))
+
+; (define get-counts (lambda (x)
+;   (rest (rest x))))
+; (define numerify-list (lambda (lst) 
+;   (map string->number lst)))
+
+; (define make-3s 
+;   (lambda (lst)
+;     (if (null? lst)
+;       '()
+;       (pair 
+;         (list (/ (- (string->number (first (first lst))) 1) 3)
+;           (list (numerify-list (get-counts (first lst)))
+;                 (numerify-list (get-counts (second lst)))
+;                 (numerify-list (get-counts (third lst)))
+;                 ))
+;         (make-3s (rest (rest (rest lst))))))))
+
+
+
+; (define bspriors_organized (make-3s (rest bspriors)))
+
+
+; (define output-path
+;   (if (equal? serv 'home)
+;    '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/bootstrap/
+;    '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
+
+; (map 
+;   (lambda (bspr)
+
+;     (define sample_no (number->string (first bspr)))
+;     (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier (second bspr)))))
+
+;     (define output-file-name (string-append  output-path 
+;       'lvRSAemprior_truthconditions_
+;       'sepDD
+;       'bootstrap
+;       sample_no
+;       '_mh mh_samples 
+;       '_ mh_lag '.csv))
+
+;     (write-csv samples output-file-name)
+;     (display (string-append "bootstrap " sample_no " complete"))
+;     )
+
+;   bspriors_organized)
 
 
 

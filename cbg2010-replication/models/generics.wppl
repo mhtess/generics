@@ -17,9 +17,9 @@ var impliedData = allData[1]
 // }
 // 10 free response (n=40)
 var prevelancePrior = {
-	"bare": [656,127,161,40,42,52,21,10,18,6,55],
-	"danger-distinct":[835,124,79,17,14,28,13,7,19,4,91],
-	"nondistinctive":[565,116,209,38,46,62,31,6,30,13,69]
+	"bare": [448,157,199,59,59,80,38,33,26,15,68],
+	"danger-distinct":[690,159,94,24,21,39,21,12,26,14,127],
+	"nondistinctive":[342,144,246,60,68,93,50,15,45,24,95]
 }
 // 1 free response (n=30)
 // var prevelancePrior = {
@@ -55,7 +55,7 @@ var cognitiveModel = function(gamma, delta, domain, speakerOptimality, QUD, prev
 	}
 
 	var thetaPrior = function() {
-	  var threshold = randomInteger(10)+0.1 //something goes wonky if "generic is false" can never be false
+	  var threshold = randomInteger(10)+0.1//something goes wonky if "generic is false" can never be false
 	  return threshold
 	}
 	var numberUtterancePrior = function() {
@@ -69,11 +69,12 @@ var cognitiveModel = function(gamma, delta, domain, speakerOptimality, QUD, prev
 	  return utterances[i]
 	}
 	var wordUtterancePrior = function() {
-	   var utterances = ["generic is true",
-	                     "generic is false"]
-
-	 //var utterances = ["generic is true",
-	  //                 "mu"]                    
+	   //var utterances = ["generic is true",
+	   //                  "generic is false"]
+	   //var utterances = ["some",
+	    //                 "most"]
+	 var utterances = ["generic is true",
+	                   "mu"]                    
 	  var i = randomInteger(utterances.length)
 	  return utterances[i]
 	}
@@ -81,9 +82,12 @@ var cognitiveModel = function(gamma, delta, domain, speakerOptimality, QUD, prev
 	  return utils.isNumber(utt) ? state == utt :
 	  		utt=="generic is true"? state>theta :
 	         utt=="generic is false"? state<=theta :
+	         utt=="some is true"? state>0 :
+	         utt=="some is false"? state==0 :
 	         utt=='mu'? true:
 	         utt=='some'? state>0:
 	         utt=='most'? state>= 0.5:
+	         utt=='all'? state == 1:
 	         true
 	}
 	var listener0 = cache(function(utterance, theta) {
@@ -110,7 +114,8 @@ var cognitiveModel = function(gamma, delta, domain, speakerOptimality, QUD, prev
 	    var theta = thetaPrior()
 	    var S1 = wordSpeaker1(state, theta)
 	    factor(speakerOptimality*S1.score([],utterance))
-	    return state
+//	    return state
+	    return theta
 	  })
 	})
 
@@ -132,15 +137,6 @@ var cognitiveModel = function(gamma, delta, domain, speakerOptimality, QUD, prev
 	    return state
 	  })
 	})
-
-	// var speaker2 = cache(function(state){
-	// 	Enumerate(function(){
-	// 		var utterance = utterancePrior()
-	// 		var L1 = listener1(utterance)
-	// 		factor(L1.score([], state))
-	// 		return utterance
-	// 	})
-	// })
 
 	var speaker2_impliedPrevalence = cache(function(WHATSUP){
 		Enumerate(function(){
@@ -173,8 +169,11 @@ var cognitiveModel = function(gamma, delta, domain, speakerOptimality, QUD, prev
 	// 		listener1("generic is true")
 
 	//return speaker2_impliedPrevalence("generic is true")
-	return speaker2_truthConditions(prevalence)
+//	return speaker2_truthConditions(prevalence)
+	return wordListener1("generic is true")
 
+
+//	return wordListener1("generic is true")
 //	return listener1("generic is true")
 
 //	return listener1("generic is true")
@@ -182,24 +181,28 @@ var cognitiveModel = function(gamma, delta, domain, speakerOptimality, QUD, prev
 //	return listener0("generic is true", 9)
 }
 
-var writeERP = function(myERP){
-  return map(
-          function(value){
-            value.concat(Math.exp(myERP.score([], value)))
-          },
-//          myERP.support([])
-          ["generic is true"]
-          )
-}
 
 
-cognitiveModel(0.0003,100,'danger-distinct',1,"truth",1)
+cognitiveModel(0.5, 10, 'fbt', 1, 'how-many', 5)
+
+// var writeERP = function(myERP){
+//   return map(
+//           function(value){
+//             value.concat(Math.exp(myERP.score([], value)))
+//           },
+// //          myERP.support([])
+//           ["some"]
+//           )
+// }
+
+
+// //cognitiveModel(0.0003,100,'danger-distinct',1,"truth",5)
 
 // map(function(x)
 // 	{return map(function(d)
 // 		{return writeERP(cognitiveModel(0.0003,100,d,1,"truth",x))},
 // 	["danger-distinct", "bare","nondistinctive"])},
-// [0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5])
+// [1,3,5,7,9])
 
 
 
@@ -214,13 +217,15 @@ cognitiveModel(0.0003,100,'danger-distinct',1,"truth",1)
 // 		var queryStatement = function(context){
 // 			return [gamma(context), delta(context)]
 // 		}
+
 // 		var phiTC = sample(uniformERP, [0,1])
 // 		var phiIP = sample(uniformERP, [0,1])
 
-// 		var speakerOptimality = sample(uniformERP,[0,10])
+// 		var speakerOptimalityTC = sample(uniformERP,[0,10])
+// 		var speakerOptimalityIP = sample(uniformERP,[0,10])
 
-// 		var gamma = cache(function(context){return sample(uniformERP, [0,1])})
-// 		var delta = cache(function(context){return sample(uniformERP, [0,10])})
+// 	//	var gamma = cache(function(context){return sample(uniformERP, [0,1])})
+// 	//	var delta = cache(function(context){return sample(uniformERP, [0,10])})
 
 // 		var tcPredictions = map2(function(prevalenceLevels,context){
 // 			return map(function(prevlev){

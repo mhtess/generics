@@ -84,6 +84,16 @@ catch.tc.subj <- catch.tc %>%
 
 
 catch.ip<- strip.rownames(do.call(rbind, Filter(is.ip, catch.data)))
+
+
+catch.ip.subj <- catch.ip %>%
+  group_by(workerid) %>%
+  summarise(correctTotal = sum(correct),
+            exclude = sum(correct)<3)
+
+
+
+
 catch.ip 
 catch.tc
 ```
@@ -133,20 +143,30 @@ trial.tc$stim_word <- factor(trial.tc$stim_word)
 tc.tidy <- trial.tc %>% 
   select(workerid,stim_word,stim_prevalence,response) %>%
   group_by(stim_word, stim_prevalence) %>%
-  summarise(endorsement=mean(response))
+  summarise(endorsement=mean(response),
+            sterr = sqrt((mean(response) * (1-mean(response)))/ length(response)))%>%
+  rename(word = stim_word)
 
-ggplot(tc.tidy, aes(x=stim_prevalence,y=endorsement,color=stim_word,group=stim_word))+
-  geom_point()+
-  geom_line()+
-  theme_black()
+ggplot(tc.tidy, aes(x=stim_prevalence,y=endorsement,color=word,group=word))+
+  geom_point(size =3.5, position=position_dodge(0.1))+
+  geom_errorbar(aes(ymin=endorsement-2*sterr,ymax=endorsement+2*sterr,
+                    colour=word),
+              width=0.05,
+              size=0.9,
+              position=position_dodge(0.1))+
+  geom_line(size=0.8, linetype=2,position=position_dodge(0.1))+
+  xlab("observed prevalence")+
+    scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(-0.05,1.05))+
+  scale_x_continuous(breaks=c(0,0.33,0.66,1),limits=c(-0.05,1.05))+
+  ylab('proportion of "Right" responses')
 
 ### bootstrapped 95 % CI version
 tc.bs<- bootstrap.ci.tc(trial.tc)
 tc.bs$stim_prevalence<- to.n(tc.bs$stim_prevalence)
 
 ggplot(tc.bs, aes(x=stim_prevalence,y=response,color=stim_word,group=stim_word))+
-  geom_point(size=4, position=position_dodge(0.05))+
-  geom_line(size=1,position=position_dodge(0.05))+
+  geom_point(size=5, position=position_dodge(0.05))+
+  geom_line(size=0.7,position=position_dodge(0.05))+
   geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_word),
               width=0.05,
               size=0.9,
@@ -165,15 +185,92 @@ ggplot(tc.bs, aes(x=stim_prevalence,y=response,color=stim_word,group=stim_word))
 #ggsave("../presentation/tc_data.png",width=10,height=15)
 
 
+
+```
+
+
+# Confirmatory analysis 1: truth conditions profile
+
+```{r}
+
+# back out the block order from the stim order
+trial.tc <-trial.tc %>% 
+  group_by(workerid) %>%
+  mutate(block_order = paste(as.numeric(unique(stim_word)), collapse=""),
+         item = paste(stim_proptype, stim_category,sep="")) %>%
+  ungroup()
+
+trial.tc$block_order<-factor(trial.tc$block_order)
+trial.tc$item <- factor(trial.tc$item)
+
+
+# confirmatory analysis
+str(trial.tc)
+trial.tc$stim_prevalence <- factor(trial.tc$stim_prevalence)
+
+
+contrasts(trial.tc$stim_word)<-contr.treatment(4, base = 2)
+                                       
+rs <- glmer(response ~ -1 + stim_prevalence * stim_word + 
+                    ( 1| workerid), data = trial.tc, family='binomial')
+
+
+# the big model failed to converge so I ran this one instead
+rs <- glmer(response ~ -1 + stim_prevalence * stim_word + 
+                    ( 1| item), data = trial.tc, family='binomial')
+
+summary(rs)
+```
+
+These statistics confirm what we observe in the plot
+
+Comparing all vs. generic
+ generic is significantly more endorsed at 0.33 and 0.66, but not at 1.00
+
+Most vs. generic
+ more endorsements (though not significant) at 0.33
+ significantly fewer endorsements at 0.66, and no difference at 1.00
+
+Some vs. generic
+ more endorsements for some at 0.33 and at 0.66, and fewer at 1.00
+
+In sum, comparing the generic to other quantifiers reveals a unique profile of differences at each of these prevalence levels
+
+the generic is different from each quantifier at at least one prevalence levels, and the levels at which it is different are differen for the different quantifiers
+
+
+
+```{r}
+rs <- MCMCglmm(response ~ -1 + stim_prevalence * stim_word, 
+               random=~workerid, data = trial.tc, family='binomial')
+summary(rs)
+
+rs<-glm(response ~ -1 + (stim_prevalence-1)* stim_word, 
+    data = trial.tc, family='binomial')
+```
+
+
+# Confirmatory analysis 2: Difference in average prevalence
+
+```{r} 
 # to compare with "implied prevalence" task
 # each subject gets a "truth" score -- the average prevalence at which they endorsed each of the sentences
 trial.tc$stim_prevalence <- to.n(trial.tc$stim_prevalence)
 
 tc.subj <- trial.tc %>% 
-  select(workerid,stim_word,stim_prevalence,response) %>%
+  select(workerid,stim_word,stim_prevalence,response, item) %>%
   group_by(workerid, stim_word) %>%
   summarise(truth=sum(response*stim_prevalence)/sum(response))%>%
   ungroup()
+
+
+
+contrasts(tc.subj$stim_word)<-contr.treatment(4, base = 2)
+
+
+rs0<-lmer(truth ~ stim_word + (1 | workerid),data=tc.subj)
+
+summary(rs0)
 
 tc.stats <- tc.subj %>%
   group_by(stim_word) %>%
@@ -181,20 +278,72 @@ tc.stats <- tc.subj %>%
             sterr = sem(truth),
             task = 'truth')
 
+
 ```
 
-# Analyze implied prevalence task (BGH Exp 2)
+It doesn't make sense to do an a by-item random effect since the average prevalence score is necessarily calcuated across items.
+
+There is an identifiability issue including a random effect of word. 
+
+The generic is significantly different from all other 3 words. 
+
+Average prevalence score for ...
+
+Generic is 0.84
+
++ All is signifcantly greater than generic (estimate = 0.091; SE = 0.02; t = 4.15)
++ Most is significantly less than generic (estimate = -0.04, SE = 0.02; t = -2.09)
++ Some is significantly less than generic (estimate = -0.25; SE = 0.02; t = -11.4)
+
+
+
+# Confirmatory analysis 3: Implied prevalence (BGH Exp 2)
 
 
 ```{r}
 
 ip.subj<-trial.ip %>%
-  select(workerid, stim_word, response) %>%
-  group_by(workerid, stim_word) %>%
-  summarise(implied = mean(response)) %>%
-  ungroup()
+ # select(workerid, stim_word, response) %>%
+ # group_by(workerid, stim_word) %>%
+  mutate(stim_word = factor(stim_word)) %>%
+  group_by(workerid) %>%
+  mutate(block_order = paste(as.numeric(unique(stim_word)), collapse=""),
+         item = paste(stim_proptype, stim_category,sep="")) %>%
+  ungroup() %>%
+  mutate(block_order = factor(block_order),
+         item = factor(item))
+  
+  
+#   summarise(implied = mean(response)) %>%
+#   ungroup()
+
+contrasts(ip.subj$stim_word)<-contr.treatment(4, base = 2)
 
 
+
+rs3<-lmer(response ~ stim_word + (1 | workerid) + 
+                                (1  | item), data = ip.subj)
+
+summary(rs3)
+
+```
+
+The generic has implications that are different from most and some, but not different from all.
+
+Generic mean implied prevalence = 0.98
+
+Significantly greater than
+
++ most: estimate = 0.28; SE = 0.008; t = 33
++ some: estimate = 0.54; SE = 0.008; t = 64
+
+Not different from All
+
++ all: estimate = 8e-6; SE = 0.008; t = 0.001
+
+Thus, the generic is interpreted as the universal.
+
+```{r}
 ip.stats<- ip.subj %>%
   group_by(stim_word) %>%
   summarise(average = mean(implied),
@@ -208,23 +357,22 @@ final.stats$task <- factor(final.stats$task, levels=c("truth","implied"))
 ggplot(final.stats, aes(x=stim_word, y = average, fill=stim_word, alpha = task))+
   geom_bar(stat='identity',color='white',width=0.6, position=position_dodge(0.6))+
   geom_errorbar(aes(ymin=average-2*sterr, ymax=average+2*sterr),
-                color='white',
+                color='black',
                 position=position_dodge(0.6),
                 width=0.3,
-                size=2)+
+                size=1)+
   scale_alpha_manual(values=c(0.5,1))+
-  theme_blackDisplay()+
-  scale_fill_brewer(type='qual',palette=8)+
-  scale_color_brewer(type='qual',palette=8)+
+  #theme_blackDisplay()+
+  #scale_fill_brewer(type='qual',palette=6)+
+  #scale_color_brewer(type='qual',palette=6)+
   guides(fill=F,color=F)+
   xlab("")+
   ylab("average prevalence\n")
 
 ggsave("../presentation/asymm_data.png",width=10,height=10)
 
-
-
 ```
+
 
 # Stats
 
@@ -234,7 +382,9 @@ tc.subj <- tc.subj %>%
   mutate(task = factor('truth'))
 
 ip.subj <- ip.subj %>%
-  rename(prevalence = implied) %>%
+  select(workerid, stim_word, response) %>%
+  group_by(workerid, stim_word) %>%
+  summarise(prevalence = mean(response)) %>%
   mutate(task = factor('implied'))
 
 final.subj<-bind_rows(tc.subj, ip.subj)
@@ -244,117 +394,55 @@ final.subj<-final.subj %>%
          stim_word = factor(stim_word),
          task = factor(task))
 
+#%>%
+ # spread(task, prevalence)
+  
 
-rs0<-lmer(data = final.subj, prevalence ~ -1 + task*stim_word + (1 | workerid))
-summary(rs0)
+contrasts(final.subj$task)<-contr.treatment(2, base=2)
+contrasts(final.subj$stim_word)<-contr.treatment(4, base = 3)
+
+
+
+summary(lm(data = filter(final.subj, stim_word=='all'),
+          prevalence ~ task))
+
+summary(lm(data = filter(final.subj, stim_word=='generic'),
+          prevalence ~ task))
+
+
+summary(lm(data = filter(final.subj, stim_word=='most'),
+          prevalence ~ task))
+
+summary(lm(data = filter(final.subj, stim_word=='some'),
+          prevalence ~ task))
+
+
+summary(lmer (data=final.subj, prevalence ~ task*stim_word  + (1 | workerid)))
+  
 ```
 
+It again doesn't make sense to use workerid as a random effect since each worker was not in each condition. 
+
+I'm not sure if it makes sense to use workerid as a random effect since task was a between-subjects manipulation.
 
 
+So then I just did lm (or t-tests) comparing the prevalencs scores between tasks.
+
+All of the words had significant differences.
+
+Implied compared to truth.
+
++ All. Estimate = 0.06; SE = 0.02; t = 2.6
++ Generic: Estimate = 0.15; SE = 0.02; t = 5.86
++ Most: Estimate = -0.08; SE = 0.02 ; t = -4.48
++ Some: Estimate = -0.13; SE = 0.02; t = -5.00
+
+The interpretation for each of these is slightly different.
 
 
+When I enter the whole thing into the mixed effects model, I can't seem to get the difference between implied and turth for generic...
 
 
+But I do find that the difference between the two tasks, is itself
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Let's look at the structure of `assignments`:
-
-```{r comment=NA}
-str(assignments)
-```
-
-Notice how most of the columns are pretty normal, except `answers`, which is itself a dataframe. To get a clearer picture, let's look at the `answers` column for just the first subject:
-
-```{r comment=NA}
-str(assignments[1,]$answers)
-```
-
-There are three fields - keyBindings (which tells us whether p = even and q = odd or vice versa), trials (parameters for each trial; empty), and data (recorded data for each trial). We're going to pull out `keyBindings` and `data` as their own top-level data frames and attach columns to them that allow us to cross-reference with particular subjects.
-
-## keyBindings
-
-Looking at `assignment$WorkerId`:
-
-```{r comment=NA}
-assignments$WorkerId
-```
-
-Very simple - just a vector of three strings.
-
-Looking at `assignments$answers$keyBindings`:
-
-```{r comment=NA}
-assignments$answers$keyBindings
-```
-
-Also simple - a data frame with two columns (q and p) and three rows (one for each subject telling us what q was for and what p was for). 
-
-Because the number of strings in the vector matches up with the number of rows in the dataframe, we can just use `cbind` to sew these structures together:
-
-```{r comment=NA}
-keyBindings <- cbind(workerid = assignments$WorkerId, assignments$answers$keyBindings)
-keyBindings
-```
-
-## data
-
-We already know what `assignments$WorkerId` looks like, so what does `assignments$answers$data` look like?
-
-```{r comment=NA}
-assignments$answers$data
-```
-
-This is a little more complicated - a list of three data frames. Thankfully, the data farmes have the same structure, so to combine them we can just use rbind. However, it would then be difficult to figure out which rows belong to which subjects.
-
-But notice that the list contains three data frames and we have three subject ids. So if we can somehow zip together the subject ids with the trials for each subject, we'd be in business. One way we can do this in R is using `Map`, applies a function and an arbitrary number of list/vector arguments (if you don't understand the difference between lists and vectors, you should Google it).
-
-For example, mapping a squaring function over a single list:
-```{r comment=NA}
-Map(function(x) x^2,
-    list(1,2,3))
-```
-
-Mapping a sum of squares function over two lists:
-```{r comment=NA}
-Map(function(x,y) x^2 + y^2,
-    list(1,2,3),
-    list(4,5,6))
-```
-
-(Note that `Map` always returns a list regardless of its input types. If you want to convert the output of `Map` to a vector, use `unlist`)
-
-Here's how we zip together the subject ids and trial dataframes - we just Map over every id-dataframe pair and cbind them together:
-
-```{r comment=NA}
-trial.data <- Map(function(id, subject.trial.data) { cbind(workerid = id, subject.trial.data) },
-                  assignments$WorkerId,
-                  assignments$answers$data)
-trial.data
-```
-
-Now we can rbind the dataframes together and strip the rownames in the resulting data frame to get what we want:
-
-```{r comment=NA}
-strip.rownames <- function(x) {
-  rownames(x) <- NULL
-  x
-}
-
-trial.data <- strip.rownames(do.call(rbind, trial.data))
-trial.data
-```

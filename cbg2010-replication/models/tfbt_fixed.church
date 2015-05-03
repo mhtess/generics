@@ -1,6 +1,6 @@
 ; example call
 
-;church -u -a 'home,generic,9,12,100,10' tfbt_fixed.church
+;church -u -a 'home,generic,9,12,10000,10' tfbt_fixed.church
 
 (define args (regexp_split argstring ","))
 
@@ -254,12 +254,14 @@
      (define query-statement (lambda (context) (generic-theta context)))
 
 
-     (define phi (uniform 0 1)) ;; guessing parameter
+  ;   (define phi (uniform 0 1)) ;; guessing parameter
+  ;   (define generic-theta (mem (lambda (context) (uniform 0 100))))
      (define generic-theta (mem (lambda (context) (uniform 0 100))))
 
      (define phi-tc (uniform 0 1))
-     (define phi-ip (uniform 0 1))
-
+     ;(define phi-tc '1)
+     ;(define phi-ip (uniform 0 1))
+     (define phi-ip '1)
      ;(define some-theta (mem (lambda (context) (if (equal? QUD 'some) (uniform 0 100) 'null))))
      ;(define most-theta (mem (lambda (context) (if (equal? QUD 'most) (uniform 0 100) 'null))))
 
@@ -310,38 +312,34 @@
        (factor (sum (map scores sorted-truthcond-data model-predictions)))))
 
 
-
-
      ;;; condition on exp12 (implied prevalence) data
-      (define implied_prev-predictions
-        (if (equal? context 'all)
-          (map 
-            (lambda (context)
-              (cognitive-model (generic-theta context) 'how-many 'generic))
-          all-contexts)
-            (cognitive-model (generic-theta context) 'how-many 'generic)))
+     ;  (define implied_prev-predictions
+     ;    (if (equal? context 'all)
+     ;      (map 
+     ;        (lambda (context)
+     ;          (cognitive-model (generic-theta context) 'how-many 'generic))
+     ;      all-contexts)
+     ;        (cognitive-model (generic-theta context) 'how-many 'generic)))
 
-     (define scores-for-implied
-       (lambda (data modelpred)
-          (let* ([match (lambda (x) (position (first modelpred) x))]
-                [prob  (lambda (x) (if (= (match x) -1) 0
-                                      (list-ref (second modelpred) (match x))))]
-                [score-marginalized-phi 
-                  (lambda (x) (log (+ 
-                                    (* phi-ip 
-                                      (/ 1 10)) 
-                                    (* (- 1 phi-ip) 
-                                      (prob x)))))])
+     ; (define scores-for-implied
+     ;   (lambda (data modelpred)
+     ;      (let* ([match (lambda (x) (position (first modelpred) x))]
+     ;            [prob  (lambda (x) (if (= (match x) -1) 0
+     ;                                  (list-ref (second modelpred) (match x))))]
+     ;            [score-marginalized-phi 
+     ;              (lambda (x) (log (+ 
+     ;                                (* phi-ip 
+     ;                                  (/ 1 10)) 
+     ;                                (* (- 1 phi-ip) 
+     ;                                  (prob x)))))])
 
-           (sum (map score-marginalized-phi data)))))
+     ;       (sum (map score-marginalized-phi data)))))
 
      
-     (define factoring-implied_prev
-      (if (equal? context 'all)
-        (factor (sum (flatten (map (lambda (y x) (scores-for-implied y x)) implied-query-data implied_prev-predictions))))
-        (factor (scores-for-implied implied-query-data implied_prev-predictions))))
-
-
+     ; (define factoring-implied_prev
+     ;  (if (equal? context 'all)
+     ;    (factor (sum (flatten (map (lambda (y x) (scores-for-implied y x)) implied-query-data implied_prev-predictions))))
+     ;    (factor (scores-for-implied implied-query-data implied_prev-predictions))))
 
 
      (define speaker-predictive
@@ -370,15 +368,13 @@
                     (second posterior)))))
         all-contexts)))
 
-
-
-    (list phi-tc
+    (list 
+     phi-tc
+     phi-ip
      (if (equal? context 'all)
       (map (lambda (c) (query-statement c)) all-contexts))
      speaker-predictive
-     listener-predictive
-     phi-ip)
-
+     listener-predictive)
 
      true)))
 
@@ -398,7 +394,7 @@
    '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
 
 (define output-file-name (string-append  output-path 
-  'ft_conditionBoth_2phis_cnts_expts 
+  'ft_conditionTC_cnts_expts 
   expnum '_ exp2num
   '_ quantifier 
   '_mh mh_samples 

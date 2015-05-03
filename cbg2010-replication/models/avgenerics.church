@@ -1,3 +1,41 @@
+(define (get-indices needle haystack)
+  (define (loop rest-of-haystack index)
+    (if (null? rest-of-haystack) '()
+        (let ((rest-of-indices (loop (rest rest-of-haystack) (+ index 1))))
+          (if (equal? (first rest-of-haystack) needle)
+              (pair index rest-of-indices)
+              rest-of-indices))))
+  (loop haystack 1))
+
+
+
+(define (marginalize output)
+  (let ([states (first output)])
+    (map (lambda (sub-output) 
+           (let* ([probs (second output)]
+                  [unique-states (unique sub-output)]
+                  [unique-state-indices 
+                   (map 
+                    (lambda (x) (list x (get-indices x sub-output))) 
+                    unique-states)])
+
+             (list (map first unique-state-indices)
+                   (map 
+                    (lambda (y) (sum (map 
+                                      (lambda (x) (list-elt probs x)) 
+                                      (second y)))) 
+                    unique-state-indices))))
+         (transpose states))))
+
+
+(define nearest-soft (lambda (p)
+            (if (= p 100)
+                90
+                (if (= (mod p 20) 0)
+                    (+  p 10)
+                    p))))
+
+
 (define qud-set (list "p" "s"))
 ;(define (qud-prior) (multinomial qud-set '(1 1)))
 
@@ -170,18 +208,45 @@
 					(apply multinomial (listener utterance qud)))))))
 
 
-(define domain "bare")
-(define prior-probability-of-prevalence-reading
-	'(0.1 0.3 0.5 0.7 0.9))
+(define generic-listener
+	(mem (lambda (utterance prevalence-reading)
+		(enumeration-query
+			(define prevalence (prevalence-prior domain))
+			(define salience (salience-prior))
+			(define qud (qud-prior prevalence-reading))
 
+			(define prevalence-threshold (uniform-draw '(0 20 40 60 80 90)))
+			(define salience-threshold (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))
+
+			(define val ((qud-fn qud) prevalence salience))
+
+			(list prevalence salience)	
+			;qud
+		
+			(equal? utterance
+				(apply multinomial 
+					(speaker val prevalence salience qud prevalence-threshold salience-threshold)))))))
+
+
+
+;(define (utterance-prior) (uniform-draw (list "generic" "not-generic")))
+
+(define (utterance-prior) (uniform-draw (list "generic" "not-generic" 10 20 30 40 50 60 70 80 90 100)))
+
+(define domain "bare")
+; (define prior-probability-of-prevalence-reading
+; 	'(0.1 0.3 0.5 0.7 0.9))
+
+
+(marginalize (generic-listener 90 0.5))
 
 ; (map (lambda (prevread)
 ; 	(truth-conditions 10 prevread))
 ; prior-probability-of-prevalence-reading)
 
-(map (lambda (prev)
-	(truth-conditions prev 0.9))
-'(10 30 50 70 90))
+; (map (lambda (prev)
+; 	(truth-conditions prev 0.9))
+; '(10 30 50 70 90))
 
 ;(define prevalence-reading 0.8)
 ;(truth-conditions 10)

@@ -1,5 +1,6 @@
 var allstims = 
-    [ [{list:0,category: "morseths", color: "silver", part: "fur", extraneous:"curly", 
+    [ 
+    [{list:0,category: "morseths", color: "silver", part: "fur", extraneous:"curly", 
     dangerous:"This fur sheds particles that get lodged in your lungs and make it impossible to breathe.", 
     dangerfrag:"sheds particles that get lodged in your lungs and make it impossible to breathe.",
     distinctgen:"Only one kind of animal on this island has this kind of fur.",
@@ -22,7 +23,8 @@ var allstims =
         dangerfrag:"sheds particles that get lodged in your lungs and make it impossible to breathe.",
         distinctive: "No other animals on this island have curly, rough fur like this.", 
         nondistinctive: "Other animals on this island have this kind of fur.",
-        irrelevant:"This fur is very curly and rough to the touch."}],
+        irrelevant:"This fur is very curly and rough to the touch."}
+        ],
 
         [{list:0,category: "blins", color: "red", part: "scales", extraneous: "soft", 
         dangerous:"These scales secrete a strong venom that kills you on the spot.", 
@@ -249,3 +251,26 @@ var allstims =
         nondistinctive: "Other animals on this island have these kinds of teeth.", 
         irrelevant:"These teeth are long and narrow."}]
       ]
+
+var accidental = [
+    "broken legs",
+    "broken tails",
+    "cracked claws",
+    "cracked shells",
+    "fungus-covered claws",
+    "fungus-covered scales",
+    "infected ears",
+    "infected scales",
+    "itchy skin",
+    "itchy tails",
+    "muddy feathers",
+    "muddy fur",
+    "rotting shells",
+    "rotting teeth",
+    "sore legs",
+    "sore teeth",
+    "swollen ears",
+    "swollen skin",
+    "wet feathers",
+    "wet fur"
+]

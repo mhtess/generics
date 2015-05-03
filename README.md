@@ -1,4 +1,4 @@
 generics
 ========
 
-understanding generic propositions
+understanding generic language

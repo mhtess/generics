@@ -1386,7 +1386,7 @@ d$rt <- d$rt/1000
 d$truth_conditions <- factor(as.logical(levels(d$response)[d$response]), 
                               levels=c("TRUE","FALSE"))
 
-d$truth_num <- bool.tonum(d$truth_conditions)
+d$truth_num <- as.numeric(d$truth_conditions=='TRUE')
 
 d.subj<-d %>% 
   select(workerid,stim_type,trialNum, stim_prevalence,response) %>%
@@ -1402,11 +1402,26 @@ ggplot(d.subj,aes(x=prev,y=ave_resp, color=type))+
   facet_wrap(~workerid)
 
 
+d.tidy<- d %>%
+  group_by(stim_type,stim_prevalence) %>%
+  summarise(p=mean(truth_num),
+            n=length(truth_num)) %>%
+  mutate(sdev = sqrt(p*(1-p)))
 
+(filter(d.tidy,stim_type=='danger-distinct' & stim_prevalence==10)$p-
+  filter(d.tidy,stim_type=='bare' & stim_prevalence==10)$p)/
+  sqrt(((filter(d.tidy,stim_type=='danger-distinct' & stim_prevalence==10)$sdev)^2+
+     (filter(d.tidy,stim_type=='bare' & stim_prevalence==10)$sdev)^2)/2)
+
+propes(filter(d.tidy,stim_type=='bare' & stim_prevalence==10)$p,
+       filter(d.tidy,stim_type=='danger-distinct' & stim_prevalence==10)$p,
+       filter(d.tidy,stim_type=='bare' & stim_prevalence==10)$n,
+       filter(d.tidy,stim_type=='danger-distinct' & stim_prevalence==10)$n)
 
 tc.bs<-bootstrap.ci.tc(d)
 
-tc.bs$stim_type<-factor(tc.bs$stim_type,levels=c('danger-distinct','nondistinctive','bare'))
+tc.bs$stim_type<-factor(tc.bs$stim_type,
+                        levels=c('danger-distinct','nondistinctive','bare'))
 # ggplot(d,aes(x=factor(truth_num),fill=stim_type))+
 #   geom_histogram()+
 #   facet_wrap(~item)+
@@ -1417,23 +1432,7 @@ tc.bs$stim_type<-factor(tc.bs$stim_type,levels=c('danger-distinct','nondistincti
 
 
 
-ggplot(tc.bs, aes(x=stim_prevalence,y=truth_num,
-                  colour=stim_type, group=stim_type))+
-  geom_point(size=3, position=position_dodge(4))+
-  geom_line(size=0.5,position=position_dodge(4))+
-  geom_errorbar(aes(ymin=YMin,ymax=YMax,colour=stim_type),
-              width=5,
-              size=0.8,
-              position=position_dodge(4))+
-  scale_colour_brewer(type='qual',palette=6)+
-  #theme(strip.text.x = element_text(size=14,color='black'))+
-  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
-  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
-  theme_paper()+ 
-  guides(color=guide_legend(title="Context"))+
-  xlab("XX% of lorches have purple feathers")+
-  ylab('proportion of "true" responses')+
-  coord_fixed(100)
+
 ```
 
 ### bayesian data of fixed threshold model
@@ -4720,16 +4719,58 @@ d<-read.csv(file = 'cbg-prior3-trials.csv')
 d.tidy3<- d%>%
   select(stim_type, starts_with("response")) %>%
   rename(context = stim_type) %>%
-  gather(key, value, -context)
+  gather(key, value, -context) %>%
+    mutate(roundval=round(value/10)*10)
+
+
 
 ggplot(d.tidy3,aes(x=value))+
   geom_histogram(binwidth=1)+
   facet_wrap(~context)
+  #mutate(roundval=round(value/5)*5)
+
 
 
 d.tidy3 %>%
   group_by(context) %>%
-  summarise(mean(value))
+  summarise(mn = mean(value),
+            hi = mean(value)+1.96*sem(value),
+            lo = mean(value) - 1.96*sem(value))
+
+ggplot(d.tidy,aes(x=value))+
+  geom_histogram(binwidth=1)+
+  #facet_wrap(~item,scales='free')+
+  facet_wrap(~context)+
+  xlim(0,100)
+
+## add counts to certain bins to fill out responses
+d.tidy3<-bind_rows(d.tidy3,
+data.frame(workerid=1000, context='danger-distinct',item='blank',
+           key='hand',value=c(70,90), roundval=c(70,90))
+)
+
+
+
+d.tidy0<-data.frame(table(filter(d.tidy3,context=='bare')$roundval),
+           table(filter(d.tidy3,context=='danger-distinct')$roundval),
+           table(filter(d.tidy3,context=='nondistinctive')$roundval)) %>%
+  select(Var1,Freq,Freq.1,Freq.2) %>%
+  rename(prev=Var1,
+         plain = Freq,
+         dangerdistinct = Freq.1,
+         nondistinct = Freq.2) %>%
+  gather(type, value, -prev) %>%
+  mutate(prev = to.n(prev))
+
+d.tidy0$type<-factor(d.tidy0$type,
+                     levels=c("dangerdistinct","nondistinct","plain"))
+  
+ggplot(d.tidy0,aes(x=prev,y=value,fill=type))+
+  facet_wrap(~type)+
+  geom_bar(stat='identity',position=position_dodge())+
+  scale_fill_brewer(palette='Set1')
+
+
 
 
 hist(filter(d.tidy, context=='bare')$value,
@@ -5278,6 +5319,17 @@ d.tc <- d %>%
   mutate(boolresp = as.numeric(response=='True'))
 
 
+
+(filter(d.tidy,stim_type=='danger-distinct' & stim_prevalence==10)$p-
+  filter(d.tidy,stim_type=='bare' & stim_prevalence==10)$p)/
+  sqrt(((filter(d.tidy,stim_type=='danger-distinct' & stim_prevalence==10)$sdev)^2+
+     (filter(d.tidy,stim_type=='bare' & stim_prevalence==10)$sdev)^2)/2)
+
+propes(filter(d.tidy,stim_type=='bare' & stim_prevalence==10)$p,
+       filter(d.tidy,stim_type=='danger-distinct' & stim_prevalence==10)$p,
+       filter(d.tidy,stim_type=='bare' & stim_prevalence==10)$n,
+       filter(d.tidy,stim_type=='danger-distinct' & stim_prevalence==10)$n)
+
 d.tc$prev_centered <- scale(d.tc$prev, scale=F)
 
 #contrasts(d$stim_type) = cbind(quad = c(-1,2,-1), lin = c(-1, 0, 1))
@@ -5324,8 +5376,6 @@ ggplot(tc.sum, aes(x=prev,y=boolresp, color=type, group=type))+
 
 ```{r sep.dang.dist.priorstats}
 setwd("~/Documents/research/generics/cbg2010-replication/data")
-
-
 d<- read.csv('cbg-prior0b-trials.csv')
 #d0<- read.csv('cbg-prior1b-trials.csv')
 #d<-d0
@@ -5448,7 +5498,9 @@ d.tidy6<- d%>%
   select(workerid,stim_type, item, starts_with("response")) %>%
   rename(context = stim_type) %>%
   gather(key, value, -context, -item, -workerid) %>%
-  mutate(roundval=round(value/5)*5)
+  #mutate(roundval=round(value/5)*5)
+  mutate(roundval=round(value/10)*10)
+
 
 
 d.tidy<-d.tidy6
@@ -5590,7 +5642,7 @@ m.tidy$type <- factor(m.tidy$type, levels=c("danger","nondistinct","bare"),
                       labels =c("dangerous & distinct",
                              "nondangerous & nondistinct", "plain"))
 
-m.tidy$type <- factor(m.tidy$type, labels=c("plain","danger","distinct"))
+#m.tidy$type <- factor(m.tidy$type, labels=c("plain","danger","distinct"))
 ggplot(data=m.tidy,aes(x=prev,y=expected.value,color=type,group=type))+
   geom_point(size=2.5, position=position_dodge(6))+
   geom_line(size=1,position=position_dodge(6), linetype=3, alpha=0.5)+
@@ -5598,16 +5650,16 @@ ggplot(data=m.tidy,aes(x=prev,y=expected.value,color=type,group=type))+
               width=5,
               size=1,
               position=position_dodge(6))+
-  scale_colour_brewer(type='qual',palette='Dark2')+
+  scale_colour_brewer(type='qual',palette='Set1')+
   #theme(strip.text.x = element_text(size=14,color='black'))+
-  scale_y_continuous(breaks=c(0.25,0.5,0.75,1),limits=c(0.2,1))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
   scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
  # theme_blackDisplay()+ 
   #guides(color=guide_legend(title="Context"))+
   #guides(color=F)+
   xlab("prevalence")+
-  ylab('P("[[generic]] is true" | prevalence) \n')+
-  coord_fixed(120)+
+  ylab('P("generic is true" | prevalence) \n')+
+  coord_fixed(100)+
   theme(legend.key.size=unit(2, "lines"),
         legend.text.align=NULL)
 
@@ -5675,4 +5727,52 @@ ggplot(sum.tidy, aes(x=type,y=expected.value,fill=type,alpha=task, group=task))+
 
 ```
 
+# Experiment 16: Importance
 
+```{r exp16}
+setwd(dir = '~/Documents/research//generics//cbg2010-replication/turk/exp16/')
+d<-read.csv(file = 'cbg-exp16-trials.csv')
+table(d$stim_prevalence,d$stim_type)
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+
+d.tidy <- d %>%
+  filter(trial_type=='importance') %>%
+  select(workerid,stim_type,trialNum, stim_prevalence,response, item) %>%
+  rename(type = stim_type,
+         trial = trialNum,
+         prev = stim_prevalence)
+
+
+qplot(data=d.tidy,x=response,geom='histogram')+
+  facet_grid()
+
+d.ave<-d.tidy %>% group_by(prev,type) %>%
+  summarise(ave = mean(response),
+            sterr = sem(response))
+
+d.tidy$prev_centered <- scale(d.tidy$prev, scale=F)
+rs<-lmer(data=d.tidy, 100*response~prev_centered*type + (1 | workerid))
+summary(rs)
+
+ggplot(d.ave, aes(x=prev,y=ave, color=type, group=type))+
+  geom_point(size=3, position=position_dodge(8))+
+  geom_line(size=0.8,position=position_dodge(8),linetype=3)+
+  geom_errorbar(aes(ymin=ave+2*sterr,ymax=ave-2*sterr),
+              width=12,
+              size=1.5,
+              position=position_dodge(8))+
+  scale_colour_brewer(type='qual',palette='Dark2')+
+  #theme(strip.text.x = element_text(size=14,color='black'))+
+  scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_paper()+ 
+  xlab("prevalence")+
+  ylab('"importance"')+
+  coord_fixed(100)
+
+
+
+d.ave %>% select(-sterr) %>%
+  spread(prev,ave)
+
+```

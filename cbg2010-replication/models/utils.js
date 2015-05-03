@@ -10,6 +10,10 @@ function writeCSV(jsonCSV, filename){
   fs.writeFileSync(filename, babyparse.unparse(jsonCSV) + "\n");
 };
 
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
 function readInBothTCIPDataSets(){
 	var dfilepath = "/Users/mht/Documents/research/generics/cbg2010-replication/data/";
 	var dfile = dfilepath + "cbgR-exp9-trials.csv";
@@ -24,7 +28,6 @@ function readInBothTCIPDataSets(){
 	var tcContexts = _.uniq(_.map(tcData.slice(1),function(x){return x[contextCol]}))
 	var ipContexts = _.uniq(_.map(ipData.slice(1),function(x){return x[contextCol]}))
 
-	console.log(ipContexts)
 
 	var isTask = function(row, desired_task){
 		var taskCol = tcData[0].indexOf('trial_type');
@@ -71,5 +74,6 @@ function readInBothTCIPDataSets(){
 module.exports = {
   readCSV: readCSV,
   writeCSV: writeCSV,
-  readInBothTCIPDataSets: readInBothTCIPDataSets
+  readInBothTCIPDataSets: readInBothTCIPDataSets,
+  isNumber: isNumber
 };

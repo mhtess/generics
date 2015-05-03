@@ -1,4 +1,4 @@
-// direct replication of CBG exp 1: generics in 3 contexts {bare, dangerous and distinctive, nondistinctive control}
+// direct replication of CBG exp 4: generics in 3 contexts {bare, dangerous, distinctive}
 
 // proper item level randomization
 // each 3 body part stimulus-set paired with a random permutation of the contexts
