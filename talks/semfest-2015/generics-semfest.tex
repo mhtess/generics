@@ -1,0 +1,101 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage{pslatex}
+\usepackage{apacite}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+\usepackage{lipsum}
+\setlength{\topmargin}{-.5in} \setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{.125in} \setlength{\textwidth}{6in}
+
+
+\graphicspath{{figures/}}
+
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil(#1)%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}}
+  {\signed{\usebox\mybox}\end{quote}}
+
+
+\definecolor{Red}{RGB}{255,0,0}
+\newcommand{\red}[1]{\textcolor{Red}{#1}}  
+
+
+\title{Words are vague: A model of generic language}
+ 
+\author{{\large \bf Michael Henry Tessler} (mhtessler@stanford.edu)\\
+{\large \bf Noah D. Goodman} (ngoodman@stanford.edu) \\
+  Department of Psychology, Stanford University}
+ 
+\begin{document}
+\maketitle
+
+
+Generic utterances are ubiquitous in natural language. Generic statements convey a generalization about the members of a kind \cite{Carlson1977, Leslie2008}. These statements are puzzling because their meaning is so flexible. On the one hand, generics would seem to suggest an almost universal quantification, as in ``Dogs bark''. Others, like ``Mosquitos carry West Nile virus'', involve a property that applies only to a small subset of the kind. 
+\citeA{Cimpian2010} (henceforth, CBG) carried out a series of experiments designed to examine the truth conditions and implications of generic statements. 
+They found evidence for the influence of additional knowledge about a target property (e.g.~its \emph{distinctiveness}) on participants' willingness to accept generic statements. This type of contextual information modified the truth conditions. CBG also found an asymmetry between interpretation and verification: in one task, participants interpreted a generic (e.g.~``lorches have purple feathers'') as nearly universal; in a different task, they would endorse the same generic as true at a much lower prevalence (e.g.~when ``50\% of lorches have purple feathers'').
+
+Both context and asymmetry effects pose a puzzle for the semantics of generics: what could be the stable meaning of a generic given this extreme flexibility? 
+In this work, we seek to explain both of these phenomena as the effects of pragmatic inference filling in a meaning that is underspecified in the semantics. 
+In particular, we posit a scalar semantics for generics in which they express that the probability of the property given the kind-----which we'll refer to as its \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). Following \citeA{Lassiter2015}, we treat this threshold as a free variable that is reasoned about by a pragmatic listener: what is the threshold likely to be, given that a speaker bothered to utter the generic? Context effects follow from differences in prior beliefs about the distribution of the property across categories. Asymmetry effects fall out of modeling task differences between the language understanding and answer-selection tasks faced by participants in the different experiments (cf. \citeA{Degen2014}).  
+
+
+In this work, we first replicate the main effects reported by CBG. We use Bayesian data analytic techniques to further examine the effective truth-conditions of generic statements. In particular, we examine the explanations available from a fixed scalar-semantics. We conclude that a fixed scalar-semantics is untenable; there is far too much uncertainty in participants' responses to posit a fixed-semantics for generic statements. In addition, context and asymmetry effects need to be postulated \emph{a priori} is the data analysis, rather than accounted for the language understanding model.  
+
+We then introduce a model of generic comprehension, within the probabilistic Rational Speech Acts framework \cite{Frank2012,Goodman2013}. We show that this model predicts both context and asymmetry effects, given appropriate prior distributions over prevalence. We experimentally elicit the prevalence priors in CBG's experimental contexts, verifying the predictions of the model. Further simulations demonstrate that the model can capture additional cases of theoretical importance --- accidental and low-prevalence generics.
+
+%Despite their prevalence, the meanings of generic statements are puzzling to formal approaches. \citeA{Cimpian2010} demonstrated that the endorsement rate of generic statements differs by context, and that generics can be endorsed based on weak evidence while the same sentences are interpreted strongly. I replicate these two effects in Exp.~1 and investigate how models based on prevalence (the probability of the property given the category) can account for this behavior. 
+%Using Bayesian data analysis techniques, I explore a simple scalar prevalence semantics, and conclude that this alone is untenable; there is far too much uncertainty in participants' responses to posit a fixed-semantics for generic statements. 
+%
+%
+%
+% that the same semantics within a probabilistic pragmatics framework can account for the data. 
+%In this model, the generic has an underspecified meaning, but this uncertainty is resolved by context and interaction. 
+%Context effects are predicted if the prior distribution of prevalence differs by context; in Exp.~2 we find direct evidence that this is so.
+%
+%We conclude by showing that the model is able to capture accidental and low-prevalence generics---two cases of theoretical importance.
+%
+%
+%\begin{aquote}{Barack Obama, \emph{2015 State of the Union Address}}
+%New sanctions passed by this Congress, at this moment in time, will all but guarantee that diplomacy fails -- alienating America from its allies; making it harder to maintain sanctions; and ensuring that Iran starts up its nuclear program again.
+%\end{aquote}
+%
+%
+%Generic meanings are hard to pin down.  Consider President Obama's remark during the State of the Union Address. 
+%
+%It leaves totally open the question: ``Exactly how many of these new sanctions will guarantee diplomatic failure?'' President Obama's statement is conceivably true if most or only a few new sanctions will be problematic. At the same time, he is not a man to waste words---why does he go through the trouble of producing such a vague utterance? In this paper, we will see that the \emph{context} in which his words are uttered is essential to the meaning we derive. We propose that this aspect of generic language follows from pragmatic reasoning about an uncertain threshold for meaning; an idea which we formalize in a probabilistic model within the Rational Speech Acts framework \cite{Frank2012,Goodman2013}.
+
+
+
+
+
+\bibliographystyle{apacite}
+
+\setlength{\bibleftmargin}{.125in}
+\setlength{\bibindent}{-\bibleftmargin}
+
+\bibliography{generics}
+
+
+\end{document}
+
+
+% after cogsci
+% prior elicitation for accidental / disease states
+% -- asymmetry weakened
+
+% most / some: better experiments
+% -- asymmetry X prior analysis
+
