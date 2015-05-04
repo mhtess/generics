@@ -1,0 +1,85 @@
+---
+title: "generics are ambiguous and doubly vague"
+author: "mht"
+date: "May 3, 2015"
+output: html_document
+---
+
+Experiments to confirm the hypothesis that generics are ambiguous and doubly vague.
+
+# Generalization 1
+
+This experiment looks at the effect of the QUD on inferences derived from generic (vs. quantified) utterances. Two inferences are looked at:
+
+1. Prevalence
+2. Salience
+
+The latter is measured by asking the question: "Compared with other potential characteristics of lorches, how do *purple feathers* rank among the other characteristics in terms of *importance*?" With a slider bar ranging from "not a very important characteristic" to "a very important characteristic". If effects are at ceiling, I can try more extreme endpoints.
+
+QUD is manipulated between-subjects:
+
+1. Property QUD: "What has purple feathers?"
+2. Category QUD: "Tell me about lorches."
+
+## Hypothesis
+
+Property QUD will lead to the **prevalence reading** of the generic, and thus, stronger inferences in terms of prevalence (vs. Category QUD). It's possible this inference will at ceiling for both QUDs; if that's the case, accidental properties (which don't show a ceiling effect) can be investigated. 
+
+Category QUD will lead to the **salience reading** of the generic, and thus, stronger inferences in terms of salience (vs. Property QUD).
+
+For the quantifiers, I expect pretty predictable answers for the prevalence question. I also expect that the Category QUD will lead to higher salience scores (due to the fact that the speaker is mentioning it), but (hopefully) not as high of an increase as for the generic (for which it is an intrinsic part of the meaning, or at least that's the hypothesis).
+
+
+```{r subj.info, echo=FALSE}
+setwd("~/Documents/research/generics/experiments/turk/generalization-1")
+d<- read.csv('generalization-1-trials.csv')
+subj.info<-read.csv('generalization-1-subject_information.csv')
+View(subj.info)
+```
+
+Reaction time is expected to be higher for queries about salience.
+
+```{r rt, echo=FALSE}
+rt.tidy <- d %>%
+  select(qud, word,query,rt) %>%
+  mutate(rt = rt/ 1000) 
+
+qplot(data=rt.tidy, x=rt, fill=query, 
+      geom='histogram', position=position_dodge(),
+      binwidth=5)
+```
+
+
+```{r}
+
+d.tidy <- d %>% select(workerid,qud, word, query, response) %>%
+  group_by(workerid) %>%
+  mutate(z_score = scale(response)) %>%
+  ungroup() %>%
+  group_by(qud, word, query) %>%
+  summarise(average.z = mean(z_score),
+            ciHi.z = mean(z_score)+2*sem(z_score),
+            ciLo.z = mean(z_score)-2*sem(z_score),
+            average = mean(response),
+            ciHi = mean(response)+2*sem(response),
+            ciLo = mean(response)-2*sem(response))
+
+
+ggplot(d.tidy, aes(x=query, y=average.z, color=qud))+
+  geom_point()+
+  facet_wrap(~word)+
+  geom_errorbar(aes(ymin=ciLo.z, ymax = ciHi.z),width=0.2, 
+                position=position_dodge())+
+  ylab("average response (z-scored)")
+
+
+
+ggplot(d.tidy, aes(x=query, y=average, color=qud))+
+  geom_point()+
+  facet_wrap(~word)+
+  geom_errorbar(aes(ymin=ciLo, ymax = ciHi),width=0.2, 
+                position=position_dodge())+
+  ylab("average response (unnormalized)")
+
+```
+
