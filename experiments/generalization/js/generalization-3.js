@@ -99,16 +99,28 @@ function make_slides(f) {
       //     this.query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n"
       //   );
     
+     // var speaker1 = (this.qud == 'property') ? 
+     //  "I was talking to my friend the other day and we got into an argument what animals have "+ this.stim.property+". It was sort of embarrassing because I know there are tons of animals with " + this.stim.property+ " but I couldn't remember any of them. <strong>What would you say has "+this.stim.property+"</strong>?":
+     //  "I was talking with my friend the other day and we got into an argument about " +this.stim.category+ ". It was sort of embarrassing because I couldn't remember anything about " +this.stim.category +". <strong>What would you say "+this.stim.category+" are like?</strong>"
+     // // "I was walking in the park the other day, and I came across an animal with " + this.stim.property + ". <strong>Name an animal with " + this.stim.property +".</strong>" :
+     // // "I was talking with my friend the other day, and I could not remember anything about "+ this.stim.category + ".  <strong>Tell me about " + this.stim.category + ".</strong>"
+
      var speaker1 = (this.qud == 'property') ? 
-      "I was talking to my friend the other day and we got into an argument what animals have "+ this.stim.property+". It was sort of embarrassing because I know there are tons of animals with " + this.stim.property+ " but I couldn't remember any of them. <strong>What would you say has "+this.stim.property+"</strong>?":
-      "I was talking with my friend the other day and we got into an argument about " +this.stim.category+ ". It was sort of embarrassing because I couldn't remember anything about " +this.stim.category +". <strong>What would you say "+this.stim.category+" are like?</strong>"
+      "I was walking in the park the other day and I came across a kind of animal with "+ this.stim.property+". <strong>What has "+this.stim.property+"</strong>?":
+      "I was reading about animals the other day and I came across a kind of animal called " +this.stim.category+ ". <strong>What are " +this.stim.category+" like?</strong>"
      // "I was walking in the park the other day, and I came across an animal with " + this.stim.property + ". <strong>Name an animal with " + this.stim.property +".</strong>" :
      // "I was talking with my friend the other day, and I could not remember anything about "+ this.stim.category + ".  <strong>Tell me about " + this.stim.category + ".</strong>"
 
 
-    var speaker2 = (this.word=='generic') ?
-        utils.upperCaseFirst(this.stim.category) + " have " + this.stim.property + ".\n":
-        utils.upperCaseFirst(this.word) + " " + this.stim.category +" have " + this.stim.property + ".\n";
+
+    // var speaker2 = (this.word=='generic') ?
+    //     utils.upperCaseFirst(this.stim.category) + " have " + this.stim.property + ".\n":
+    //     utils.upperCaseFirst(this.word) + " " + this.stim.category +" have " + this.stim.property + ".\n";
+
+    var speaker2 = (this.qud=='property') ?
+         utils.upperCaseFirst(this.stim.category)+ " have " + this.stim.property + ".\n":
+         utils.upperCaseFirst(this.stim.category)+ " have " + this.stim.property + ".\n"
+
 
       // this.stimtype=='danger' ? this.evidence_prompt+=this.stim.dangerous:null;
       // this.stimtype=='distinct' ? this.evidence_prompt+=this.stim.distinctive:null;
@@ -120,11 +132,12 @@ function make_slides(f) {
 
 
       $("#speaker1").html(this.stim.speaker1+ ' says: "'+ speaker1 +'"');
+      $("#speaker1").html(this.stim.speaker1+ ', a visitor to the zoo, says: "'+ speaker1 +'"');
 
       var expertStatus = (this.qud=='property') ?
-          'all animals' : this.stim.category
+          'many different animals' : this.stim.category
 
-      $("#speaker2").html(this.stim.speaker2+ ', <em>an expert on '+ expertStatus+'</em>, says: "'+ speaker2 +'"');
+      $("#speaker2").html(this.stim.speaker2+ ', a teacher at the zoo and <em>an expert on '+ expertStatus+'</em>, says: <br>"'+ speaker2 +'"');
 
       //  this.n_sliders = 1;//exp.numKinds;
       // $(".slider_row").remove();
@@ -157,8 +170,8 @@ function make_slides(f) {
           isare = 'is' : isare = 'are';
 
 
-      var queries = {"prevalence":"Other animals have "+ this.stim.property+ ". What percentage of "  + this.stim.category + " do you think have " + this.stim.property + "?\n",
-      "salience":utils.upperCaseFirst(this.stim.category) + " have other properties. How important do you think " + this.stim.property + " " + isare + "?"//" <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
+      var queries = {"prevalence":"Other animals have "+ this.stim.property+ ".<br> What percentage of "  + this.stim.category + " do you think have " + this.stim.property + "?\n",
+      "salience":utils.upperCaseFirst(this.stim.category) + " have other properties.<br> How important of a property do you think " + this.stim.property + " " + isare + "?"//" <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
     };
 
       var endpoints = {"prevalence":["0%","100%"],
@@ -198,8 +211,8 @@ function make_slides(f) {
       utils.match_row_height("#multi_slider_table1", ".slider_target");
 
       exp.query_order[0] == 'prevalence' ? 
-        $("#multi_slider_table1").css("padding-right","51px") :
-        $("#multi_slider_table1").css("padding-left","50px")
+        $("#multi_slider_table0").css("padding-left","37px") :
+        $("#multi_slider_table1").css("padding-left","37px")
 
 
       this.n_sliders = 2;
@@ -472,6 +485,8 @@ function init() {
 
   exp.query_order = _.shuffle(["prevalence","salience"]);
 
+  console.log(exp.query_order[0])
+
 
 //  exp.qud = _.sample(["category","property"])
 
@@ -560,7 +575,8 @@ function init() {
 
   // var stims_color_other_accidental = _.shuffle(_.flatten([accidental_stims, stims_color_and_other]))
 
-  var creatures = _.map(_.shuffle(creatureNames),function(x){return {"category":x.category}}).slice(0,totalStims)
+  var creatures = _.map(_.shuffle(creatureNames),function(x){return {"category":x.category,
+                                                  "exemplar":x.exemplar}}).slice(0,totalStims)
 
 //  var blockedCreatures = [creatures.splice(0,totalStims/2), creatures]
   var zippedStim = _.zip(_.flatten(stimtypes), 
@@ -577,6 +593,7 @@ function init() {
                             "property_class":pieces[0].property_class,
                            // "query":pieces[0].query,
                             "category":pieces[1].category,
+                            "exemplar":pieces[1].exemplar,
                             "property_type":"vague",
                             "property":pieces[2],
                             "speaker1":pieces[3][0],
