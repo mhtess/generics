@@ -33,8 +33,16 @@ For the quantifiers, I expect pretty predictable answers for the prevalence ques
 ```{r subj.info, echo=FALSE}
 setwd("~/Documents/research/generics/experiments/turk/generalization-1")
 d<- read.csv('generalization-1-trials.csv')
+c<- read.csv('generalization-1-catch_trials.csv')
+ 
+umabiguous.pass.catch<-c(1,3,4,5,7,11,12,16,17,21,22,23,25,26,27,28,32,34,36,37,38,39,40,42,44,45)
+
+d<- d %>% filter(workerid%in% umabiguous.pass.catch)
+
 subj.info<-read.csv('generalization-1-subject_information.csv')
 View(subj.info)
+View(c)
+
 ```
 
 Reaction time is expected to be higher for queries about salience.
@@ -50,9 +58,23 @@ qplot(data=rt.tidy, x=rt, fill=query,
 ```
 
 
+Response histograms
+
+```{r rt, echo=FALSE}
+responses.tidy <- d %>%
+  select(qud, word,query,response) 
+
+qplot(data=responses.tidy, x=response, fill=qud, 
+      geom='histogram', position=position_dodge(),
+      binwidth=0.02)+
+  facet_wrap(~query)
+```
+
+
+
 ```{r}
 
-d.tidy <- d %>% select(workerid,qud, word, query, response) %>%
+d.tidy <- d %>% select(workerid,qud, word, query, stimtype, response) %>%
   group_by(workerid) %>%
   mutate(z_score = scale(response)) %>%
   ungroup() %>%
@@ -65,21 +87,495 @@ d.tidy <- d %>% select(workerid,qud, word, query, response) %>%
             ciLo = mean(response)-2*sem(response))
 
 
-ggplot(d.tidy, aes(x=query, y=average.z, color=qud))+
-  geom_point()+
-  facet_wrap(~word)+
+ggplot(d.tidy, aes(x=word, y=average.z, color=qud))+
+  geom_point(position=position_dodge(0.5))+
+  facet_wrap(~query)+
   geom_errorbar(aes(ymin=ciLo.z, ymax = ciHi.z),width=0.2, 
-                position=position_dodge())+
+                position=position_dodge(0.5))+
   ylab("average response (z-scored)")
 
 
 
-ggplot(d.tidy, aes(x=query, y=average, color=qud))+
-  geom_point()+
-  facet_wrap(~word)+
+ggplot(d.tidy, aes(x=word, y=average, color=qud))+
+  geom_point(position=position_dodge(0.5))+
+  facet_wrap(~query)+
   geom_errorbar(aes(ymin=ciLo, ymax = ciHi),width=0.2, 
-                position=position_dodge())+
+                position=position_dodge(0.5))+
   ylab("average response (unnormalized)")
 
 ```
 
+
+Item analysis. Stim type was either color (e.g. "Purple feathers") or other biological (e.g. "Smooth feathers").
+
+```{r}
+
+d.type <- d %>% select(workerid,qud, word, query, stimtype, response) %>%
+  group_by(workerid) %>%
+  mutate(z_score = scale(response)) %>%
+  ungroup() %>%
+  group_by(qud, word, stimtype, query) %>%
+  summarise(average.z = mean(z_score),
+            ciHi.z = mean(z_score)+2*sem(z_score),
+            ciLo.z = mean(z_score)-2*sem(z_score),
+            average = mean(response),
+            ciHi = mean(response)+2*sem(response),
+            ciLo = mean(response)-2*sem(response))
+
+
+ggplot(d.type, aes(x=word, y=average.z, color=stimtype))+
+  geom_point(position=position_dodge(0.5))+
+  facet_grid(qud~query)+
+  geom_errorbar(aes(ymin=ciLo.z, ymax = ciHi.z),width=0.2, 
+                position=position_dodge(0.5))+
+  ylab("average response (z-scored)")
+
+
+
+ggplot(d.type, aes(x=word, y=average, color=stimtype))+
+  geom_point(position=position_dodge(0.5))+
+  facet_grid(qud~query)+
+  geom_errorbar(aes(ymin=ciLo, ymax = ciHi),width=0.2, 
+                position=position_dodge(0.5))+
+  ylab("average response (unnormalized)")
+
+```
+
+
+
+
+
+Subject analysis
+
+```{r subj}
+d.subj <- d %>% select(workerid,qud, word, query, response) %>%
+  group_by(workerid) %>%
+  mutate(z_score = scale(response)) %>%
+  group_by(workerid, qud, word, query) %>%
+  summarise(ave_z = mean(z_score),
+            ave = mean(response))
+
+
+
+ggplot(filter(d.subj, query=='prevalence'), aes(x=word,color=qud, y=ave, group=qud))+
+  geom_point()+
+  geom_line()+
+  facet_wrap(~workerid)
+
+
+
+ggplot(filter(d.subj, query=='salience'), aes(x=word,color=qud, y=ave, group=qud))+
+  geom_point()+
+  geom_line()+
+  facet_wrap(~workerid)
+
+```
+
+
+# Generalization 2
+
+
+```{r subj.info2, echo=FALSE}
+setwd("~/Documents/research/generics/experiments/turk/generalization-2")
+d<- read.csv('generalization-2-trials.csv')
+
+d<-d %>% group_by(workerid) %>%
+  mutate(prevalence.first = query[1]=='prevalence')
+
+c<- read.csv('generalization-2-catch_trials.csv')
+ 
+#umabiguous.pass.catch<-c(0,2,6,7,10,11,12,13,15,16,17,18,19,21,23,25,26,27,28,29)
+#d<- d %>% filter(workerid%in% umabiguous.pass.catch)
+subj.info<-read.csv('generalization-2-subject_information.csv')
+View(subj.info)
+View(c)
+
+```
+
+Reaction time is expected to be higher for queries about salience.
+
+```{r rt, echo=FALSE}
+rt.tidy <- d %>%
+  select(qud, word,query,rt)
+
+qplot(data=rt.tidy, x=rt, fill=query, 
+      geom='histogram', position=position_dodge(),
+      binwidth=2.5)
+```
+
+
+Response histograms
+
+```{r rt, echo=FALSE}
+responses.tidy <- d %>%
+  select(qud, word,query,response) 
+
+qplot(data=responses.tidy, x=response, fill=qud, 
+      geom='histogram', position=position_dodge(),
+      binwidth=0.02)+
+  facet_wrap(~query)
+```
+
+Main results
+
+```{r}
+
+d.tidy <- d %>% select(workerid,qud, word, query, stimtype, response, prevalence.first) %>%
+  group_by(workerid) %>%
+  mutate(z_score = scale(response)[,1]) %>%
+  ungroup() 
+
+d.tidy<-d.tidy[complete.cases(d.tidy),]
+
+d.tidy<-d.tidy%>%
+  group_by(qud, word, query) %>%
+  summarise(average.z = mean(z_score),
+            ciHi.z = mean(z_score)+2*sem(z_score),
+            ciLo.z = mean(z_score)-2*sem(z_score),
+            average = mean(response),
+            ciHi = mean(response)+2*sem(response),
+            ciLo = mean(response)-2*sem(response))
+
+
+
+d.tidy$qud <- factor(d.tidy$qud, labels=c("tell me about [category]","name animal with [property]"))
+
+
+
+ggplot(d.tidy, aes(x=qud, y=average.z, color=query, group=query))+
+  geom_point(position=position_dodge(0))+
+  geom_line(position=position_dodge(0))+
+#  facet_wrap(~query)+
+  geom_errorbar(aes(ymin=ciLo.z, ymax = ciHi.z),width=0.1, 
+                position=position_dodge(0))+
+  ylab("average response (z-scored)")
+
+
+
+ggplot(d.tidy, aes(x=qud, y=average, color=query, group=query))+
+  geom_point(position=position_dodge(0))+
+  geom_line(position=position_dodge(0))+
+#  facet_wrap(~query)+
+  geom_errorbar(aes(ymin=ciLo, ymax = ciHi),width=0.1, 
+                position=position_dodge(0))+
+  ylab("average response (unnormalized)")
+
+rs<-lmer(data=d, response~query*qud + (1 + query*qud | workerid))
+summary(rs)
+rs<-lmer(data=filter(d, query=='salience'), response~qud + (1 + qud| workerid))
+summary(rs)
+
+
+d.z <- d %>% #select(workerid,qud, word, query, stimtype, response) %>%
+  group_by(workerid) %>%
+  mutate(z_score = scale(response)[,1]) %>%
+  ungroup()
+
+rs<-lmer(data=d.z, z_score~query*qud + (1 | workerid))
+summary(rs)
+rs<-lmer(data=filter(d.z, query=='salience'), z_score~qud + (1 | workerid))
+summary(rs)
+
+
+```
+
+Split by half
+
+```{r}
+
+d.tidy <- d %>% select(workerid,qud, word, query, stimtype, response, prevalence.first) %>%
+  group_by(workerid, query) %>%
+  mutate(z_score = scale(response)) %>%
+  ungroup() %>%
+  mutate(block.first=factor(prevalence.first, levels=c("TRUE","FALSE"),labels=c("block 1: prevalence","block 1: salience")))%>%
+  group_by(qud, word, query, block.first) %>%
+  summarise(average.z = mean(z_score),
+            ciHi.z = mean(z_score)+2*sem(z_score),
+            ciLo.z = mean(z_score)-2*sem(z_score),
+            average = mean(response),
+            ciHi = mean(response)+2*sem(response),
+            ciLo = mean(response)-2*sem(response))
+
+
+
+
+d.tidy$qud <- factor(d.tidy$qud, labels=c("tell me about [category]","name animal with [property]"))
+
+
+
+
+
+ggplot(d.tidy, aes(x=qud, y=average, color=query, group=query))+
+  geom_point(position=position_dodge(0))+
+  geom_line(position=position_dodge(0))+
+  facet_wrap(~block.first)+
+  geom_errorbar(aes(ymin=ciLo, ymax = ciHi),width=0.1, 
+                position=position_dodge(0))+
+  ylab("average response (unnormalized)")
+
+
+ggplot(d.tidy, aes(x=qud, y=average.z, color=query, group=query))+
+  geom_point(position=position_dodge(0))+
+  geom_line(position=position_dodge(0))+
+  facet_wrap(~prevalence.first)+
+  geom_errorbar(aes(ymin=ciLo.z, ymax = ciHi.z),width=0.1, 
+                position=position_dodge(0))+
+  ylab("average response (z-scored)")
+
+
+
+
+
+rs<-lmer(data=d, response~query*qud + (1 | workerid))
+summary(rs)
+rs<-lmer(data=filter(d, query=='salience'), response~qud + (1 | workerid))
+summary(rs)
+
+
+d.z <- d %>% #select(workerid,qud, word, query, stimtype, response) %>%
+  group_by(workerid, query) %>%
+  mutate(z_score = scale(response)) %>%
+  ungroup()
+
+rs<-lmer(data=d.z, z_score~query*qud + (1 | workerid))
+summary(rs)
+rs<-lmer(data=filter(d.z, query=='salience'), z_score~qud + (1 | workerid))
+summary(rs)
+
+
+```
+
+
+Subject analysis
+
+```{r subj}
+d.subj <- d %>% select(workerid,qud, word, query, response) %>%
+  group_by(workerid) %>%
+  mutate(z_score = scale(response)) %>%
+  group_by(workerid, qud, word, query) %>%
+  summarise(ave_z = mean(z_score),
+            ave = mean(response))
+
+
+
+ggplot(d.subj,
+       aes(x=qud,color=query, y=ave, group=query))+
+  geom_point()+
+  geom_line()+
+  facet_wrap(~workerid)
+
+
+
+ggplot(filter(d.subj, query=='salience'), aes(x=word,color=qud, y=ave, group=qud))+
+  geom_point()+
+  geom_line()+
+  facet_wrap(~workerid)
+
+```
+
+# Generalization 2
+
+Hopefully stronger QUD manipulation. Dependent measures encourage participants to think about the distribution before answering.
+
+
+```{r subj.info3, echo=FALSE}
+setwd("~/Documents/research/generics/experiments/turk/generalization-3")
+d<- read.csv('generalization-3-trials.csv')
+
+d<-d %>% group_by(workerid) %>%
+  mutate(one = 1) %>%
+  group_by(workerid) %>%
+  mutate(trial=cumsum(one)) %>%
+  select(-one) %>%
+  mutate(half = trial<=(max(trial)/2))#,prevalence.first = query[1]=='prevalence')
+
+c<- read.csv('generalization-3-catch_trials.csv')
+ 
+#umabiguous.pass.catch<-c(0,2,6,7,10,11,12,13,15,16,17,18,19,21,23,25,26,27,28,29)
+#d<- d %>% filter(workerid%in% umabiguous.pass.catch)
+subj.info<-read.csv('generalization-3-subject_information.csv')
+View(subj.info)
+View(c)
+
+```
+
+Reaction time 
+
+```{r rt, echo=FALSE}
+rt.tidy <- d %>%
+  select(qud,rt)
+
+qplot(data=rt.tidy, x=rt,
+      geom='histogram', position=position_dodge(),
+      binwidth=2.5)
+```
+
+
+Response histograms
+
+```{r rt, echo=FALSE}
+responses.tidy <- d %>%
+  select(qud, word,query,response) 
+
+qplot(data=responses.tidy, x=response, fill=qud, 
+      geom='histogram', position=position_dodge(),
+      binwidth=0.02)+
+  facet_wrap(~query)
+```
+
+Main results
+
+```{r}
+
+d.tidy <- d %>% select(workerid,qud, word, query, stimtype, response, prevalence.first) %>%
+  group_by(workerid) %>%
+  mutate(z_score = scale(response)[,1]) %>%
+  ungroup() 
+
+d.tidy<-d.tidy[complete.cases(d.tidy),]
+
+d.tidy<-d.tidy%>%
+  group_by(qud, word, query) %>%
+  summarise(average.z = mean(z_score),
+            ciHi.z = mean(z_score)+2*sem(z_score),
+            ciLo.z = mean(z_score)-2*sem(z_score),
+            average = mean(response),
+            ciHi = mean(response)+2*sem(response),
+            ciLo = mean(response)-2*sem(response))
+
+
+
+d.tidy$qud <- factor(d.tidy$qud, labels=c("tell me about [category]","name animal with [property]"))
+
+
+
+ggplot(d.tidy, aes(x=qud, y=average.z, color=query, group=query))+
+  geom_point(position=position_dodge(0))+
+  geom_line(position=position_dodge(0))+
+#  facet_wrap(~query)+
+  geom_errorbar(aes(ymin=ciLo.z, ymax = ciHi.z),width=0.1, 
+                position=position_dodge(0))+
+  ylab("average response (z-scored)")
+
+
+
+ggplot(d.tidy, aes(x=qud, y=average, color=query, group=query))+
+  geom_point(position=position_dodge(0))+
+  geom_line(position=position_dodge(0))+
+#  facet_wrap(~query)+
+  geom_errorbar(aes(ymin=ciLo, ymax = ciHi),width=0.1, 
+                position=position_dodge(0))+
+  ylab("average response (unnormalized)")
+
+rs<-lmer(data=d, response~query*qud + (1 + query*qud | workerid))
+summary(rs)
+rs<-lmer(data=filter(d, query=='salience'), response~qud + (1 + qud| workerid))
+summary(rs)
+
+
+d.z <- d %>% #select(workerid,qud, word, query, stimtype, response) %>%
+  group_by(workerid) %>%
+  mutate(z_score = scale(response)[,1]) %>%
+  ungroup()
+
+rs<-lmer(data=d.z, z_score~query*qud + (1 | workerid))
+summary(rs)
+rs<-lmer(data=filter(d.z, query=='salience'), z_score~qud + (1 | workerid))
+summary(rs)
+
+
+```
+
+Split by half
+
+```{r}
+
+d.tidy <- d %>% select(workerid,qud, word, query, stimtype, response, prevalence.first) %>%
+  group_by(workerid, query) %>%
+  mutate(z_score = scale(response)) %>%
+  ungroup() %>%
+  mutate(block.first=factor(prevalence.first, levels=c("TRUE","FALSE"),labels=c("block 1: prevalence","block 1: salience")))%>%
+  group_by(qud, word, query, block.first) %>%
+  summarise(average.z = mean(z_score),
+            ciHi.z = mean(z_score)+2*sem(z_score),
+            ciLo.z = mean(z_score)-2*sem(z_score),
+            average = mean(response),
+            ciHi = mean(response)+2*sem(response),
+            ciLo = mean(response)-2*sem(response))
+
+
+
+
+d.tidy$qud <- factor(d.tidy$qud, labels=c("tell me about [category]","name animal with [property]"))
+
+
+
+
+
+ggplot(d.tidy, aes(x=qud, y=average, color=query, group=query))+
+  geom_point(position=position_dodge(0))+
+  geom_line(position=position_dodge(0))+
+  facet_wrap(~block.first)+
+  geom_errorbar(aes(ymin=ciLo, ymax = ciHi),width=0.1, 
+                position=position_dodge(0))+
+  ylab("average response (unnormalized)")
+
+
+ggplot(d.tidy, aes(x=qud, y=average.z, color=query, group=query))+
+  geom_point(position=position_dodge(0))+
+  geom_line(position=position_dodge(0))+
+  facet_wrap(~prevalence.first)+
+  geom_errorbar(aes(ymin=ciLo.z, ymax = ciHi.z),width=0.1, 
+                position=position_dodge(0))+
+  ylab("average response (z-scored)")
+
+
+
+
+
+rs<-lmer(data=d, response~query*qud + (1 | workerid))
+summary(rs)
+rs<-lmer(data=filter(d, query=='salience'), response~qud + (1 | workerid))
+summary(rs)
+
+
+d.z <- d %>% #select(workerid,qud, word, query, stimtype, response) %>%
+  group_by(workerid, query) %>%
+  mutate(z_score = scale(response)) %>%
+  ungroup()
+
+rs<-lmer(data=d.z, z_score~query*qud + (1 | workerid))
+summary(rs)
+rs<-lmer(data=filter(d.z, query=='salience'), z_score~qud + (1 | workerid))
+summary(rs)
+
+
+```
+
+
+Subject analysis
+
+```{r subj}
+d.subj <- d %>% select(workerid,qud, word, query, response) %>%
+  group_by(workerid) %>%
+  mutate(z_score = scale(response)) %>%
+  group_by(workerid, qud, word, query) %>%
+  summarise(ave_z = mean(z_score),
+            ave = mean(response))
+
+
+
+ggplot(d.subj,
+       aes(x=qud,color=query, y=ave, group=query))+
+  geom_point()+
+  geom_line()+
+  facet_wrap(~workerid)
+
+
+
+ggplot(filter(d.subj, query=='salience'), aes(x=word,color=qud, y=ave, group=qud))+
+  geom_point()+
+  geom_line()+
+  facet_wrap(~workerid)
+
+```
