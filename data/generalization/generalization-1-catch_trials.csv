@@ -1,0 +1,53 @@
+workerid,debrief,qud
+0,"Different animals have certain ""characteristics"".",NA
+1,Tell me about _______.,NA
+2,I was walking in the park the other day,NA
+3,"What animal has X? They were stating they found an animal with a characteristic (ie long teeth, red scales, sensitive spots, pink teeth...) and they wanted to know what animal has that trait.",NA
+4,They were asking about animal traits,category
+5,What animal has [insert observed characteristic]?,property
+6,How many of an animal have a certain characteristic.,property
+7,Please tell me something about (whatever animal).,category
+8,Some/All/Many X&quotechars have Y trait.,property
+9,What percentage has this characteristic? ,property
+10,,property
+11,I was talking with a friend the other day and I could not remember anything about ______.  Tell me about ______.,category
+12,What animal has a specific characteristic?,property
+13,how many of the animals have that characteristic,property
+14,,property
+15,how important is,category
+16,To tell him/her something about the animal,category
+17,"They were at the park and wondered what animal they thought they saw, describing it and naming it but wanting clarification/verfication.",property
+18,What percentage or how important was something.,property
+19,How important a characteristic was.,property
+20,The percentage or how important each trait was,category
+21,the character or trait that most or some kind of animal has,property
+22,I was walking in the park when I saw an animal,property
+23,"I was walking in the park and I saw a ""insert animal and characteristic here."" Do ""inset animal here"" have ""insert characteristic here.""
+
+(I think that you are asking what the question about the animals was in general. I hope I have understood your question. It did confuse me a bit exactly what you are asking here.)",property
+24,how important is this characteristic,category
+25,What has,property
+26,This has this characteristic. Most/some have this characteristic. Then a question would follow.,property
+27,tell me more about,category
+28,I can&quotechart remember anything about _____ can you please tell me about them,category
+29,,property
+30,,category
+31,What percentage of each animal has a certain trait.,property
+32,Tell me about xxxx.,category
+33,How is important provided parameters for the described animals,property
+34,"I was walking in the park the other day, and I came across an animal with X. What has X?",property
+35,,property
+36,"The speaker would state ""I don&quotechart remember anything about [animal name], please tell me more about [animal name]"". The next speaker would give some sort of identifying information, which would be a physical attribute",category
+37,What animal has a certain characteristic. Ex: I saw a creature in the park today that had black spots. What percentage of cats have black spots?,property
+38,The speaker was asking kind of animal has a certain characteristic.,property
+39,I do not remember about x alien. Tell me about x alien.,category
+40,What kind of animal has [this characteristic]? where this characteristic was some visual or textural feature.,property
+41,How important where each characteristic and what percentage of animals had a certain characteristic.,category
+42,"I don&quotechart remember much about_______, please tell me about _______.",category
+43,I recall it was two. What is the importance of the charateristic and/or what percentage did I think said animal had. Unless you were referencing to the first part where it was said to just give your best answer.,property
+44,For the other person to tell them about some kind of animal.,category
+45,Tell me about...,category
+46,Is the characteristic important,category
+47,What percentage of an animal has a certain attribute or how important is that attribute,property
+48,What animal has [insert characteristic/trait here]?,property
+49,They couldn&quotechart remember something about the animal.,category

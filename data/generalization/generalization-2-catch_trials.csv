@@ -1,0 +1,33 @@
+workerid,debrief1,debrief2
+0,Whether or not a certain kid of animal had a certain characteristic.,Naming an animal with a certain characteristic. 
+1,to name a feathered animal,to name a spotted animal
+2,Name something that had a property.,Tell me about a certain animal.
+3,how many [insert animal] have [insert quality]?,how important do you think [insert quality of said animal] is important to them?
+4,What was the important factor of the animal,Was this an important trait of the animal.
+5,all animals,some animals
+6,Give an example of a creature with a trait,Give an example of a trait that a creature possesses
+7,expert on ALL animals,expert on a specific animal
+8,To determine how important the attribute was,To tell them more about certain made up animals/words/aliens
+9,Is this an important characteristic,What is the percentage of animals with this characteristic
+10,One of them was asking the expert to just name an animal with a feature.,The other question was just asking about features of a certain animal. 
+11,name an animal with this feature,tell me about this animal
+12,Name an animal with a trait.,Describe a specific animal.
+13,Requesting the importance on the trait of an animal from an expert on all animals,Requesting the importance on the trait of an animal from an expert on a specific animal
+14,Name an animal with this characteristic.,Name a characteristic of this animal.
+15,Tell me a type of animal that has...,Tell me about...
+16,"
+what animals have &quotecharspecific trait&quotechar?","
+what is a characteristic of &quotecharspecific animal&quotechar?"
+17,Tell me about ___,Tell me about an animal that has ___
+18,name an animal that has,name an animal that has
+19,Name me an animal with _________,I forgot what _______ looked like. What is a characteristic of ________
+20,the probability it has the trait in question,how important the trait is
+21,To name the animal with the particular characteristic,To name a characteristic of a specific animal.
+22,Judge these statements,Percieve these statements
+23,Tell me about...,Name an animal with...
+24,they told me certain animals have certain attributes,I was inclined to believe not all of the same animal had the attributes
+25,Tell me an animal with wide feathers. ,Tell me about Ackles. 
+26,Which animals have a [specific attribute]?,Tell me more about [specific animal]?
+27,Does x have a certain feature?,What feature does x have?
+28,The expert was asked to name an animal with a particular characteristic.,"I have to confess that I am pretty confused about this question, as I do not recall any other particular requests of the expert in this scenario. "
+29,tell me about the animal,how important was it
