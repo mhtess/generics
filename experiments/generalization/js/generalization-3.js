@@ -124,7 +124,7 @@ function make_slides(f) {
       var expertStatus = (this.qud=='property') ?
           'all animals' : this.stim.category
 
-      $("#speaker2").html(this.stim.speaker2+ ', an expert on <em>'+ expertStatus+'</em>, says: "'+ speaker2 +'"');
+      $("#speaker2").html(this.stim.speaker2+ ', <em>an expert on '+ expertStatus+'</em>, says: "'+ speaker2 +'"');
 
       //  this.n_sliders = 1;//exp.numKinds;
       // $(".slider_row").remove();
@@ -153,41 +153,56 @@ function make_slides(f) {
 
       $(".slider_row").remove();
 
-      // FIRST QUESTION
-      // $("#query1").html("How well did Robert answer Justine's request?");
-      // var firstqueryendpoints = ["not a very good answer","a very good answer"];
-
-      // $("#multi_slider_table0").append('<tr class="slider_row"><td class="slider_target" id="sentence0">'+firstqueryendpoints[0] +'</td><td colspan="2"><div id="slider0" class="slider">-------[ ]--------</div></td><td class="slider_targetright">'+firstqueryendpoints[1]+'</td></tr>');
-      // utils.match_row_height("#multi_slider_table0", ".slider_target");
-
-
-      // SECOND QUESTION
        var isare = (this.stim.property.split(' ')[1] == 'fur' || this.stim.property.split(' ')[1] == 'skin') ? 
           isare = 'is' : isare = 'are';
 
-      var query_prompt = this.query=='prevalence' ? 
-       "Other animals have "+ this.stim.property+ ". What percentage of "  + this.stim.category + " do you think have " + this.stim.property + "?\n" :
-       //"Consider other potential characteristics of " + this.stim.category + ". How "+ isare + " <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
-        utils.upperCaseFirst(this.stim.category) + " have other properties. How important do you think " + this.stim.property + " " + isare + "?"//" <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
+
+      var queries = {"prevalence":"Other animals have "+ this.stim.property+ ". What percentage of "  + this.stim.category + " do you think have " + this.stim.property + "?\n",
+      "salience":utils.upperCaseFirst(this.stim.category) + " have other properties. How important do you think " + this.stim.property + " " + isare + "?"//" <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
+    };
+
+      var endpoints = {"prevalence":["0%","100%"],
+      "salience":["not very important","very important"]
+    };
 
 
-      $("#query1").html(query_prompt);
+      // FIRST QUESTION
 
-      this.query=='prevalence' ?
-        $("#query1").css("padding-right","200px"):
-        $("#query1").css("padding-right","150px")
+      $("#query1").html(queries[exp.query_order[0]]);
 
 
-      var endpoints = this.query=='prevalence' ? 
-        ["0%","100%"] :
-        ["not a very important property","a very important property"]
-
-
-      $("#multi_slider_table0").append('<tr class="slider_row"><td class="slider_target" id="sentence0">'+endpoints[0] +'</td><td colspan="2"><div id="slider0" class="slider">-------[ ]--------</div></td><td class="slider_targetright">'+endpoints[1]+'</td></tr>');
+      $("#multi_slider_table0").append('<tr class="slider_row"><td class="slider_target" id="sentence0">'+endpoints[exp.query_order[0]][0] +'</td><td colspan="2"><div id="slider0" class="slider">-------[ ]--------</div></td><td class="slider_targetright">'+endpoints[exp.query_order[0]][1]+'</td></tr>');
       utils.match_row_height("#multi_slider_table0", ".slider_target");
 
 
-      this.n_sliders = 1;
+      // SECOND QUESTION
+
+      // var query_prompt = this.query=='prevalence' ? 
+      //  "Other animals have "+ this.stim.property+ ". What percentage of "  + this.stim.category + " do you think have " + this.stim.property + "?\n" :
+      //  //"Consider other potential characteristics of " + this.stim.category + ". How "+ isare + " <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
+      //   utils.upperCaseFirst(this.stim.category) + " have other properties. How important do you think " + this.stim.property + " " + isare + "?"//" <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
+
+
+      $("#query2").html(queries[exp.query_order[1]]);
+
+      // this.query=='prevalence' ?
+      //   $("#query1").css("padding-right","200px"):
+      //   $("#query1").css("padding-right","150px")
+
+
+      // var endpoints = this.query=='prevalence' ? 
+      //   ["0%","100%"] :
+
+
+      $("#multi_slider_table1").append('<tr class="slider_row"><td class="slider_target" id="sentence1">'+endpoints[exp.query_order[1]][0] +'</td><td colspan="2"><div id="slider1" class="slider">-------[ ]--------</div></td><td class="slider_targetright">'+endpoints[exp.query_order[1]][1]+'</td></tr>');
+      utils.match_row_height("#multi_slider_table1", ".slider_target");
+
+      exp.query_order[0] == 'prevalence' ? 
+        $("#multi_slider_table1").css("padding-right","51px") :
+        $("#multi_slider_table1").css("padding-left","50px")
+
+
+      this.n_sliders = 2;
       this.init_sliders(this.n_sliders);
       exp.sliderPost = utils.fillArray(-1,this.n_sliders);
 
@@ -234,23 +249,26 @@ function make_slides(f) {
 
     log_responses : function() {
 
-      // var response_label0 = exp.sentence_order[0];
-      // var response_label1 = exp.sentence_order[1];
-
-      exp.data_trials.push({
+      var response_label0 = exp.query_order[0];
+      var response_label1 = exp.query_order[1];
+      var trial_data = {
         "trial_type" : "generalization",
     //    "trialNum":this.trialNum,
-        "response" : exp.sliderPost[0], // slider dependent measure
         // response_label0 : $("input:radio[name=radio_button1]:checked").val(), // radio button dependent measure
         // response_label1 : $("input:radio[name=radio_button2]:checked").val(), // radio button dependent measure
         "rt":this.rt,
         "qud":this.qud,
-        "query":this.query,
         "word": this.word,
         "stimtype": this.stimtype,
         "category": this.stim.category,
-        "property": this.stim.property
-      });
+        "property": this.stim.property,
+        "prevalenceFirst": exp.query_order[0]=='prevalence'
+      }
+
+      trial_data[response_label0] =  exp.sliderPost[0]; // slider dependent measure
+      trial_data[response_label1] =  exp.sliderPost[1]; // slider dependent measure
+
+      exp.data_trials.push(trial_data);
     },
 
     end : function() {
@@ -398,7 +416,9 @@ function make_slides(f) {
       $(".err").hide();
     },
     button : function() {
-    if (($("#importance_debrief1").val() == '') ||($("#importance_debrief2").val() == '')) {
+//    if (($("#importance_debrief1").val() == '') ||($("#importance_debrief2").val() == '')) {
+    if ($("#check").val() == 99) {
+
       $(".err").show();
     } else {
       this.submit();
@@ -412,8 +432,9 @@ function make_slides(f) {
     submit : function(e){
       //if (e.preventDefault) e.preventDefault(); // I don't know what this means.
       exp.catch_trials.push({
-        debrief1 : $("#importance_debrief1").val(),
-        debrief2 : $("#importance_debrief2").val()
+        // debrief1 : $("#importance_debrief1").val(),
+        // debrief2 : $("#importance_debrief2").val()
+        debrief : $("#check").val()
 
       });
 
@@ -449,7 +470,9 @@ function init() {
   //                   contexts[1]:_.shuffle(["5","15","25","35","45","55","65","75","85","95"]),
   //                   contexts[2]:_.shuffle(["5","15","25","35","45","55","65","75","85","95"])};
 
-  exp.queryblock_order = _.shuffle(["prevalence","salience"]);
+  exp.query_order = _.shuffle(["prevalence","salience"]);
+
+
 //  exp.qud = _.sample(["category","property"])
 
   // var unique_stimuli = [
@@ -475,15 +498,15 @@ function init() {
   // ];
   var totalStims = 16
 
-  var unique_stimuli_query1 = [
-  {"word":"generic","qud":"category","query":"prevalence","property_class":"biological"},
-  {"word":"generic","qud":"property","query":"prevalence","property_class":"biological"}
+  var unique_stimuli = [
+  {"word":"generic","qud":"category","property_class":"biological"},
+  {"word":"generic","qud":"property","property_class":"biological"}
   ];
 
-    var unique_stimuli_query2 = [
-  {"word":"generic","qud":"category","query":"salience","property_class":"biological"},
-  {"word":"generic","qud":"property","query":"salience","property_class":"biological"}
-  ];
+  //   var unique_stimuli_query2 = [
+  // {"word":"generic","qud":"category","query":"salience","property_class":"biological"},
+  // {"word":"generic","qud":"property","query":"salience","property_class":"biological"}
+  // ];
 
   var makeBlock = function(){
      return _.shuffle(_.flatten([unique_stimuli, unique_stimuli, unique_stimuli, unique_stimuli]))
@@ -508,12 +531,10 @@ function init() {
   var vague = _.shuffle(vagueProperties)
 
   // 2 sets of (totalStims/2) stimuli each, everything shuffled
-  var shuffledslicedVague = [_.shuffle(vague[0]).slice(0,totalStims/2), _.shuffle(vague[1]).slice(0,totalStims/2)]
+  var shuffledslicedVague = _.flatten([_.shuffle(vague[0]).slice(0,totalStims/2), _.shuffle(vague[1]).slice(0,totalStims/2)])
 
 
-  var stimtypes = _.shuffle([_.shuffle(_.flatten([unique_stimuli_query1, unique_stimuli_query1, unique_stimuli_query1, unique_stimuli_query1])),
-           _.shuffle(_.flatten([unique_stimuli_query2, unique_stimuli_query2, unique_stimuli_query2, unique_stimuli_query2]))])
-
+  var stimtypes = _.flatten([makeBlock(), makeBlock()]);
   // var accidental_stims = _.map(_.shuffle(accidental).slice(0,16),
   //   function(x){return {"property_type":"accidental","property":x}})
 
@@ -541,9 +562,9 @@ function init() {
 
   var creatures = _.map(_.shuffle(creatureNames),function(x){return {"category":x.category}}).slice(0,totalStims)
 
-  var blockedCreatures = [creatures.splice(0,totalStims/2), creatures]
+//  var blockedCreatures = [creatures.splice(0,totalStims/2), creatures]
   var zippedStim = _.zip(_.flatten(stimtypes), 
-    _.flatten(blockedCreatures), 
+    _.flatten(creatures), 
     _.flatten(shuffledslicedVague),
     speakerPairs)
 
@@ -554,15 +575,14 @@ function init() {
     function(pieces){return {"word":pieces[0].word,
                             "qud":pieces[0].qud,
                             "property_class":pieces[0].property_class,
-                            "query":pieces[0].query,
+                           // "query":pieces[0].query,
                             "category":pieces[1].category,
                             "property_type":"vague",
                             "property":pieces[2],
                             "speaker1":pieces[3][0],
                             "speaker2":pieces[3][1]}});
 
-  // slice into 2 blocks
-  exp.stims = [stimsCompiledFlat.splice(0,totalStims/2), stimsCompiledFlat]
+  exp.stims = [stimsCompiledFlat]
 
 //  console.log(_.map(y, function(x){return x.property}))
 
@@ -635,7 +655,7 @@ function init() {
   //blocks of the experiment:
 
  // exp.structure=["i0", "two_afc","single_trial","two_afc","single_trial", "one_slider", "multi_slider", 'subj_info', 'thanks'];
-   exp.structure=["i0", "instructions",exp.condition,"block_break",exp.condition,"debrief",'subj_info','thanks'];
+   exp.structure=["i0", "instructions",exp.condition,"debrief",'subj_info','thanks'];
  //  exp.structure=['debrief','subj_info','thanks'];
 
    //exp.structure=['subj_info', 'thanks'];

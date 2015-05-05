@@ -42,7 +42,7 @@
   <div class="slide" id="i0" >
     <img src="../../../_shared/images/cocologo.png" alt="Stanford CoCoLab" id="cocologo"></img>
     <p id="cocolab">Stanford CoCoLab</p>
-    <p id="instruct-text">You will read <span id="total-num">{{}}</span> prompts about animals on an alien planet and be asked some questions about them. The HIT should take approximately 5 minutes. Please pay attention, thanks!</p>
+    <p id="instruct-text">You will read <span id="total-num">{{}}</span> prompts about animals on an alien planet and be asked some questions about them. The HIT should take approximately 7 minutes. Please pay attention, thanks!</p>
     <button id="start_button" type="button">Start Experiment</button>
     <p id="legal">Legal information: By answering the following questions, you are participating in a study being performed by cognitive scientists in the Stanford Department of Psychology. If you have questions about this research, please contact M.H. Tessler at <a href="mailto://mhtessler@stanford.edu">mhtessler@stanford.edu</a> or Noah Goodman, at ngoodman@stanford.edu. You must be  at least 18 years old to participate. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</p>
   </div>
@@ -55,7 +55,7 @@
 
   <div class="slide" id="instructions">
     <h3>Instructions</h3>
-    <p>This experiment is broken up into 2 blocks. In this block, on each trial, you will see a short exchange between two aliens about the animals on their planet. You will then be asked a question about the exchange. Please try to answer the questions to the best of your ability.</p>
+    <p>On each trial, you will see a short exchange between two aliens about the animals on their planet. You will then be asked questions about the exchange. Please try to answer the questions to the best of your ability.</p>
 
     <button onclick="_s.button()">Continue</button>
   </div>
@@ -70,14 +70,25 @@
   <div class="slide"  id="debrief">
       <div class="subj_info_title">Debrief</div>
 
-      <p>In this experiment, two different requests were asked <em>of the expert</em>.
-        Briefly summarise the two questions. (The order doesn't matter). </p>
-        <p>(Note: these were the requests that <em>the expert</em> in the exchange answered. These were not the same questions that you answered.) </p>
+      <p>In this experiment, two different questions were asked <em>of the expert</em> in the exchange.
+        Pick the best summary of these questions below.</p>
+        <p>(Important!: these were the requests that <em>the expert</em> in the exchange answered. These were <strong>not the questions that you answered</strong>.) </p>
+
+      <select id="check">
+        <label><option value="99"></option></label>
+        <label><option value="0">"All animals have ___."; "Some animals have ____."</option></label>
+        <label><option value="0" >"Judge these statements."; "Perceive these statements."</option></label>
+        <label><option value="1">"What are __ like?"; "What has ___?"</option></label>
+        <label><option value="0">"What % has ___?"; "How important is ____?"</option></label>
+      </select>
+
+
+<!-- 
       <p> Request #1 </p>
       <textarea id="importance_debrief1" rows="2" cols="50"></textarea>
       <p> Request #2 </p>
       <textarea id="importance_debrief2" rows="2" cols="50"></textarea>
-      <br>
+      <br> -->
       <button onclick="_s.button()">Submit</button>
       <div class="err">Please answer the question before continuing.</div>
   </div>
