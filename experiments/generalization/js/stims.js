@@ -275,6 +275,34 @@ var accidental = [
     "wet fur"
 ]
 
+
+var vagueProperties = [
+["curly fur",
+"soft scales",
+"long teeth",
+"sensitive spots",
+"wide feathers",
+"long legs",
+"small ears",
+"long tails",
+"light shells",
+"thin stripes",
+"bumpy skin"
+],
+["rough fur",
+"shiny scales",
+"narrow teeth",
+"small spots",
+"smooth feathers",
+"short legs",
+"round ears",
+"curled tails",
+"square shells",
+"thick stripes",
+"smooth skin"
+]
+]
+
 var creatureNames = 
     [{list:0,category: "morseths"},
     {list:1, category: "ollers"},

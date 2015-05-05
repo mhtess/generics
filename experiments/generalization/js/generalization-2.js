@@ -1,8 +1,3 @@
-// direct replication of CBG exp 1: generics in 3 contexts {bare, dangerous and distinctive, nondistinctive control}
-
-// proper item level randomization
-// each 3 body part stimulus-set paired with a random permutation of the contexts
-
 function make_slides(f) {
   var slides = {};
 
@@ -21,87 +16,14 @@ function make_slides(f) {
     }
   });
 
-  slides.implied_prevalence = slide({
-    name: "implied_prevalence",
-
-   // present : _.shuffle(_.range(numTrials)),
-  present : _.range(exp.numTrials),
-    //this gets run only at the beginning of the block
-    present_handle : function(stim_num) {
-      this.startTime = Date.now();
-
-      $(".err").hide();
-      $("#text_response").val('')
-
-      this.stim = exp.stims[stim_num]; // allstims should be randomized, or stim_num should be
-      this.trialNum = stim_num;
-
-      //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
-      //this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
-      this.determiner = exp.determiner[0] // exp.determiner between-subjects var
-      this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
-      //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
-
-      var query_prompt = "What percentage of "  + this.stim.category + " do you think have " + this.stim.color + " " + this.stim.part + "?\n";
-
-
-      this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;
-      this.stimtype == 'distinct' ? this.adjective = 'distinctive ': null;
-      this.stimtype == 'irrelevant' ? this.adjective = this.stim.extraneous + ' ': null;
-
-      this.determiner=='generic' ?
-        this.evidence_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n" :
-        this.evidence_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n";
-
-      this.stimtype=='danger' ? this.evidence_prompt+=this.stim.dangerous:null;
-      this.stimtype=='distinct' ? this.evidence_prompt+=this.stim.distinctive:null;
-      this.stimtype=='irrelevant' ? this.evidence_prompt+=this.stim.irrelevant:null;
-
-
-      $(".evidence").html(this.evidence_prompt);
-      $(".query").html(query_prompt);
-
-       // this.init_radiios();
-       // exp.sliderPost = null; //erase current slider value
-    },
-
+  slides.block_break = slide({
+    name : "block_break",
     button : function() {
-      response = $("#text_response").val();
-      if (!(response<=100 && response>=0 && response!='')) {
-        $(".err").show();
-      } else {
-        this.rt = Date.now() - this.startTime;
-        this.log_responses();
-
-        /* use _stream.apply(this); if and only if there is
-        "present" data. (and only *after* responses are logged) */
-        _stream.apply(this);
-
-
-      //   exp.data_trials.push({
-      //     "trial_type" : "single_trial",
-      //     "response" : response
-      //   });
-      //   exp.go(); //make sure this is at the *end*, after you log your data
-      // }
-      }
-
-    },
-
-        log_responses : function() {
-      exp.data_trials.push({
-        "trial_type" : "implied_prevalence",
-        "trial_num": this.trialNum,
-        "response" : $("#text_response").val(),
-        "rt":this.rt,
-        "stim_type": this.stimtype,
-        "stim_determiner": this.determiner,
-        "stim_category": this.stim.category,
-        "stim_color": this.stim.color,
-        "stim_part":this.stim.part
-      });
+      exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
+
+
 
   slides.generalization = slide({
     name: "generalization",
@@ -109,18 +31,20 @@ function make_slides(f) {
     /* trial information for this block
      (the variable 'stim' will change between each of these values,
       and for each of these, present_handle will be run.) */
-    present : _.range(exp.numTrials),
+  //  present : _.range(exp.numTrials),
+    present: exp.stims.shift(),
 
     //this gets run only at the beginning of the block
-    present_handle : function(stim_num) {
+    present_handle : function(stim) {
       this.startTime = Date.now();
       $(".err").hide();
 
       // $('input[name="radio_button1"]').prop('checked', false);
       // $('input[name="radio_button2"]').prop('checked', false);
 
-      this.stim = exp.stims[stim_num]; // allstims should be randomized, or stim_num should be
-      this.trialNum = stim_num;
+//      this.stim = exp.stims[stim_num]; // allstims should be randomized, or stim_num should be
+      this.stim = stim;
+//      this.trialNum = stim_num;
 
 
       //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
@@ -130,6 +54,10 @@ function make_slides(f) {
       //this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
       // BETTER
       this.stimtype = this.stim.property_type
+
+      this.qud = this.stim.qud
+      this.query = this.stim.query
+
       //this.prevalence = exp.stims[stim_num].prevalence
 
     //  this.prevalence = exp.prev_levels[]
@@ -171,8 +99,8 @@ function make_slides(f) {
       //     this.query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n"
       //   );
     
-     var speaker1 = (exp.qud == 'property') ? 
-      "I was walking in the park the other day, and I came across an animal with " + this.stim.property + ". <strong>What has " + this.stim.property +"?</strong>" :
+     var speaker1 = (this.qud == 'property') ? 
+      "I was walking in the park the other day, and I came across an animal with " + this.stim.property + ". <strong>Name an animal with " + this.stim.property +".</strong>" :
       "I was talking with my friend the other day, and I could not remember anything about "+ this.stim.category + ".  <strong>Tell me about " + this.stim.category + ".</strong>"
 
 
@@ -189,8 +117,12 @@ function make_slides(f) {
 
 
 
-      $("#speaker1").html(exp.speakers[stim_num*2]+ ' says: "'+ speaker1 +'"');
-      $("#speaker2").html(exp.speakers[stim_num*2+1]+ ' says: "'+ speaker2 +'"');
+      $("#speaker1").html(this.stim.speaker1+ ' says: "'+ speaker1 +'"');
+
+      var expertStatus = (this.qud=='property') ?
+          'all animals' : this.stim.category
+
+      $("#speaker2").html(this.stim.speaker2+ ', an expert on <em>'+ expertStatus+'</em>, says: "'+ speaker2 +'"');
 
       //  this.n_sliders = 1;//exp.numKinds;
       // $(".slider_row").remove();
@@ -217,9 +149,6 @@ function make_slides(f) {
 
 
 
-
-
-
       $(".slider_row").remove();
 
       // FIRST QUESTION
@@ -231,23 +160,25 @@ function make_slides(f) {
 
 
       // SECOND QUESTION
-       var isare = ''
-          this.stim.property.split(' ')[1] == 'fur' ? isare = 'does' : isare = 'do';
+       var isare = (this.stim.property.split(' ')[1] == 'fur' || this.stim.property.split(' ')[1] == 'skin') ? 
+          isare = 'is' : isare = 'are';
 
-      var query_prompt = this.stim.query=='prevalence' ? 
+      var query_prompt = this.query=='prevalence' ? 
        "What percentage of "  + this.stim.category + " do you think have " + this.stim.property + "?\n" :
-       "Consider other potential characteristics of " + this.stim.category + ". How "+ isare + " <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
+       //"Consider other potential characteristics of " + this.stim.category + ". How "+ isare + " <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
+       "Compared to other properties of " + this.stim.category + ", how important do you think " + this.stim.property + " " + isare + "?"//" <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
+
 
       $("#query1").html(query_prompt);
 
-      this.stim.query=='prevalence' ?
+      this.query=='prevalence' ?
         $("#query1").css("padding-right","200px"):
         $("#query1").css("padding-right","150px")
 
 
-      var endpoints = this.stim.query=='prevalence' ? 
+      var endpoints = this.query=='prevalence' ? 
         ["0%","100%"] :
-        ["not a very important characteristic","a very important characteristic"]
+        ["not a very important property","a very important property"]
 
 
       $("#multi_slider_table0").append('<tr class="slider_row"><td class="slider_target" id="sentence0">'+endpoints[0] +'</td><td colspan="2"><div id="slider0" class="slider">-------[ ]--------</div></td><td class="slider_targetright">'+endpoints[1]+'</td></tr>');
@@ -265,7 +196,7 @@ function make_slides(f) {
       if (exp.sliderPost.indexOf(-1)>-1) {
         $(".err").show();
       } else {
-        this.rt = Date.now() - this.startTime;
+        this.rt = (Date.now() - this.startTime)/1000;
         this.log_responses();
         _stream.apply(this); //use _stream.apply(this); if and only if there is "present" data.
       }
@@ -306,19 +237,24 @@ function make_slides(f) {
 
       exp.data_trials.push({
         "trial_type" : "generalization",
-        "trialNum":this.trialNum,
+    //    "trialNum":this.trialNum,
         "response" : exp.sliderPost[0], // slider dependent measure
         // response_label0 : $("input:radio[name=radio_button1]:checked").val(), // radio button dependent measure
         // response_label1 : $("input:radio[name=radio_button2]:checked").val(), // radio button dependent measure
         "rt":this.rt,
-        "qud":exp.qud,
-        "query":this.stim.query,
+        "qud":this.qud,
+        "query":this.query,
         "word": this.word,
         "stimtype": this.stimtype,
         "category": this.stim.category,
         "property": this.stim.property
       });
+    },
+
+    end : function() {
+      this.present = exp.stims.shift();
     }
+
   });
 
   slides.one_slider = slide({
@@ -455,11 +391,27 @@ function make_slides(f) {
 
   slides.debrief =  slide({
     name : "debrief",
+    present : ["single trial"],
+    present_handle : function(stim) {
+      $(".err").hide();
+    },
+    button : function() {
+    if (($("#importance_debrief1").val() == '') ||($("#importance_debrief2").val() == '')) {
+      $(".err").show();
+    } else {
+      this.submit();
+
+      /* use _stream.apply(this); if and only if there is
+      "present" data. (and only *after* responses are logged) */
+//      _stream.apply(this);
+    }
+    },
+
     submit : function(e){
       //if (e.preventDefault) e.preventDefault(); // I don't know what this means.
       exp.catch_trials.push({
-        qud: exp.qud,
-        debrief : $("#importance_debrief").val(),
+        debrief1 : $("#importance_debrief1").val(),
+        debrief2 : $("#importance_debrief2").val()
 
       });
 
@@ -475,7 +427,7 @@ function make_slides(f) {
           "catch_trials" : exp.catch_trials,
           "system" : exp.system,
           "condition" : exp.condition,
-          "qud":exp.qud,
+          "query":exp.query,
           "subject_information" : exp.subj_data,
           "time_in_minutes" : (Date.now() - exp.startT)/60000
       };
@@ -495,8 +447,8 @@ function init() {
   //                   contexts[1]:_.shuffle(["5","15","25","35","45","55","65","75","85","95"]),
   //                   contexts[2]:_.shuffle(["5","15","25","35","45","55","65","75","85","95"])};
 
-  exp.sentence_order = _.shuffle(["prevalence","salience"]);
-  exp.qud = _.sample(["category","property"])
+  exp.queryblock_order = _.shuffle(["prevalence","salience"]);
+//  exp.qud = _.sample(["category","property"])
 
   // var unique_stimuli = [
   // {"word":"generic","query":"prevalence","property_class":"biological"},
@@ -519,71 +471,99 @@ function init() {
   // {"word":"some","query":"prevalence","property_class":"accidental"},
   // {"word":"some","query":"salience","property_class":"accidental"}
   // ];
+  var totalStims = 16
 
-  var unique_stimuli = [
-  {"word":"generic","query":"prevalence","property_class":"biological"},
-  {"word":"generic","query":"salience","property_class":"biological"},
-  
-  {"word":"most","query":"prevalence","property_class":"biological"},
-  {"word":"most","query":"salience","property_class":"biological"},
-  
-  {"word":"all","query":"prevalence","property_class":"biological"},
-  {"word":"all","query":"salience","property_class":"biological"},
-  {"word":"some","query":"prevalence","property_class":"biological"},
-  {"word":"some","query":"salience","property_class":"biological"}
+  var unique_stimuli_query1 = [
+  {"word":"generic","qud":"category","query":"prevalence","property_class":"biological"},
+  {"word":"generic","qud":"property","query":"prevalence","property_class":"biological"}
   ];
 
-  exp.speakers = _.shuffle(["Robert","Justine","Erin","Desmond","Daniel","Kyle","Claire",
+    var unique_stimuli_query2 = [
+  {"word":"generic","qud":"category","query":"salience","property_class":"biological"},
+  {"word":"generic","qud":"property","query":"salience","property_class":"biological"}
+  ];
+
+  var makeBlock = function(){
+     return _.shuffle(_.flatten([unique_stimuli, unique_stimuli, unique_stimuli, unique_stimuli]))
+  }
+
+  var speakers = _.shuffle(["Robert","Justine","Erin","Desmond","Daniel","Kyle","Claire",
   "Sara","Karen","Rosemary","Josiah","Sal","Sid","Kyla","Molly","Judith","Gregory",
   "Nathan","Val","Sophie","Barbara","Alex","Allison","Tom","Josh","Carrie","Ken","Mary","Brandon",
-  "Maria","Albert","James"])
+  "Maria","Albert","James"]).slice(0,totalStims*2)
+
+  function split(a, n) {
+    var len = a.length,out = [], i = 0;
+    while (i < len) {
+        var size = Math.ceil((len - i) / n--);
+        out.push(a.slice(i, i += size));
+    }
+    return out;
+  }
+
+  var speakerPairs = split(speakers, totalStims)
+
+  var vague = _.shuffle(vagueProperties)
+
+  // 2 sets of (totalStims/2) stimuli each, everything shuffled
+  var shuffledslicedVague = [_.shuffle(vague[0]).slice(0,totalStims/2), _.shuffle(vague[1]).slice(0,totalStims/2)]
 
 
-  var stimtypes = _.shuffle(_.flatten([unique_stimuli, unique_stimuli]));
+  var stimtypes = _.shuffle([_.shuffle(_.flatten([unique_stimuli_query1, unique_stimuli_query1, unique_stimuli_query1, unique_stimuli_query1])),
+           _.shuffle(_.flatten([unique_stimuli_query2, unique_stimuli_query2, unique_stimuli_query2, unique_stimuli_query2]))])
 
   // var accidental_stims = _.map(_.shuffle(accidental).slice(0,16),
   //   function(x){return {"property_type":"accidental","property":x}})
 
   // choose a random list for the color properties and a random list for the "extraneous" property
-  var color_other_stim_lists = _.sample([0,1,2],2)
+//   var color_other_stim_lists = _.sample([0,1,2],2)
 
-  var stims_color_and_other = allstims.map(function(x){
-    var color = x[color_other_stim_lists[0]].color + ' ' + x[color_other_stim_lists[0]].part
-    var colorstim = {"property_type":"color",
-                  "property":color};
-    var other = x[color_other_stim_lists[1]].extraneous + ' ' + x[color_other_stim_lists[1]].part;
-    var otherbiostim = {"property_type":"otherbio",
-                  "property":other}
-    return [colorstim,otherbiostim]
-  })
 
-  stims_color_and_other = _.flatten(_.shuffle(stims_color_and_other).slice(0,8))
+//   var stims_color_and_other = allstims.map(function(x){
+//     // var color = x[color_other_stim_lists[0]].color + ' ' + x[color_other_stim_lists[0]].part
+//     // var colorstim = {"property_type":"color",
+//     //               "property":color};
+//     var other = x[color_other_stim_lists[1]].extraneous + ' ' + x[color_other_stim_lists[1]].part;
+//     var otherbiostim = {"property_type":"otherbio",
+//                   "property":other}
+// //    return [colorstim,otherbiostim]
+//     return otherbiostim
+//   })
 
-  var stims_color_other_accidental = _.shuffle(stims_color_and_other)
+  // stims_color_and_other = _.flatten(_.shuffle(stims_color_and_other).slice(0,8))
+
+  // var stims_color_other_accidental = _.shuffle(stims_color_and_other)
+
+
   // var stims_color_other_accidental = _.shuffle(_.flatten([accidental_stims, stims_color_and_other]))
-  console.log(_.map(stims_color_other_accidental, function(x){return x.property}))
 
-
-  var totalStims = 16
   var creatures = _.map(_.shuffle(creatureNames),function(x){return {"category":x.category}}).slice(0,totalStims)
 
-  var zippedStim = _.zip(stimtypes, stims_color_other_accidental, creatures)
+  var blockedCreatures = [creatures.splice(0,totalStims/2), creatures]
+  var zippedStim = _.zip(_.flatten(stimtypes), 
+    _.flatten(blockedCreatures), 
+    _.flatten(shuffledslicedVague),
+    speakerPairs)
 
 //  console.log(_.map(x, function(x){return x[1].property}))
 //  debugger;
 // each entry has a "word", "query", "property" and a property_type tag
-  exp.stims = _.map(zippedStim,
+  var stimsCompiledFlat = _.map(zippedStim,
     function(pieces){return {"word":pieces[0].word,
-                            "query":pieces[0].query,
+                            "qud":pieces[0].qud,
                             "property_class":pieces[0].property_class,
-                            "property_type":pieces[1].property_type,
-                            "property":pieces[1].property,
-                            "category":pieces[2].category}});
+                            "query":pieces[0].query,
+                            "category":pieces[1].category,
+                            "property_type":"vague",
+                            "property":pieces[2],
+                            "speaker1":pieces[3][0],
+                            "speaker2":pieces[3][1]}});
 
+  // slice into 2 blocks
+  exp.stims = [stimsCompiledFlat.splice(0,totalStims/2), stimsCompiledFlat]
 
 //  console.log(_.map(y, function(x){return x.property}))
 
-  console.log(_.map(exp.stims, function(x){return x.property}))
 
   var stims_with_context =
     allstims.map(function (x) {
@@ -606,7 +586,7 @@ function init() {
 //  exp.determiner = ["generic","generic","generic"];
 //  exp.instructions = "elaborate_instructions";
 
-  exp.numTrials = exp.stims.length;
+  exp.numTrials = _.flatten(exp.stims).length;
 
 //  exp.prevalence_levels = [_.shuffle(prev_levels),_.shuffle(prev_levels),_.shuffle(prev_levels)];
  // debugger;
@@ -653,7 +633,7 @@ function init() {
   //blocks of the experiment:
 
  // exp.structure=["i0", "two_afc","single_trial","two_afc","single_trial", "one_slider", "multi_slider", 'subj_info', 'thanks'];
-   exp.structure=["i0", "instructions",exp.condition,"debrief",'subj_info','thanks'];
+   exp.structure=["i0", "instructions",exp.condition,"block_break",exp.condition,"debrief",'subj_info','thanks'];
  //  exp.structure=['debrief','subj_info','thanks'];
 
    //exp.structure=['subj_info', 'thanks'];
