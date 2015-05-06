@@ -1,0 +1,285 @@
+(define (get-indices needle haystack)
+  (define (loop rest-of-haystack index)
+    (if (null? rest-of-haystack) '()
+        (let ((rest-of-indices (loop (rest rest-of-haystack) (+ index 1))))
+          (if (equal? (first rest-of-haystack) needle)
+              (pair index rest-of-indices)
+              rest-of-indices))))
+  (loop haystack 1))
+
+
+
+(define (marginalize output)
+  (let ([states (first output)])
+    (map (lambda (sub-output) 
+           (let* ([probs (second output)]
+                  [unique-states (unique sub-output)]
+                  [unique-state-indices 
+                   (map 
+                    (lambda (x) (list x (get-indices x sub-output))) 
+                    unique-states)])
+
+             (list (map first unique-state-indices)
+                   (map 
+                    (lambda (y) (sum (map 
+                                      (lambda (x) (list-elt probs x)) 
+                                      (second y)))) 
+                    unique-state-indices))))
+         (transpose states))))
+
+
+(define nearest-soft (lambda (p)
+            (if (= p 100)
+                90
+                (if (= (mod p 20) 0)
+                    (+  p 10)
+                    p))))
+
+
+(define qud-set (list "p" "s" "sp"))
+(define (qud-prior) (multinomial qud-set '(1 1 1)))
+
+; (define (qud-prior how-many-prior) 
+; 	(if (flip prevalence-reading)
+; 			"p"
+; 			"s"))
+
+(define (qud-fn qud)
+	(case qud
+		(("p") (lambda (prevalence salience) prevalence))
+		(("s") (lambda (prevalence salience) salience))
+		(("sp") (lambda (prevalence salience) (list prevalence salience)))
+		(else "error")
+		)
+	)
+
+(define (meaning utterance prevalence prevalence-threshold)
+	(case utterance
+		(("generic") (> prevalence prevalence-threshold))
+		(("not-generic") (not (> prevalence prevalence-threshold)))
+		(("mu") true)
+		(else (equal? utterance prevalence))))
+
+; (define (generic prevalence salience prevalence-threshold salience-threshold qud)
+; 	(case qud
+; 		(("p") (> prevalence prevalence-threshold))
+; 		(("s") (> salience salience-threshold))
+; 		(("sp") (and (> prevalence prevalence-threshold) (> salience salience-threshold)))
+; 		(else "error")))
+
+; (define (prevalence-prior) 
+;   (multinomial '(0 10 30 50 70 90 100)
+; 	  		   '(564 155 30 30 6 15 54)))
+
+(define (prevalence-prior domain) 
+  (multinomial '(0 10 20 30 40 50 60 70 80 90 100)
+    (case domain
+    ;  (("bare") '(448 157 199 59 59 80 38 33 26 15 68))
+      (("danger-distinct") '(690 159 94 24 21 39 21 12 26 14 127))
+      (("nondistinctive") '(342 144 246 60 68 93 50 15 45 24 95))
+      (("accidental") '(283 176 186 116 120 87 95 52 56 8 21))
+      (("birds lay eggs") '(100 10 2 2 2 20 2 2 2 2 2))
+      (("birds are female") '(2 2 2 2 2 1000 2 2 2 2 2))
+      (("mosquito") '(140 90 1 1 1 1 1 1 1 1 1))
+      (("pollution") '(1 2 4 8 4 2 1 1 1 1 1))
+      (("oxygen") '(1 1 1 1 1 1 20 40 80 40 20))
+	  (("bare") '(564 155 80 35 21 41 14  6 15 15  54))
+	  (("danger") '(617 139 69 26 19 33 17 10 20 16  34))
+	  (("distinct") '(735 96 52 10 10 20 6 2 9 8 52)))))
+
+
+; (define (salience-prior)
+; 	(multinomial '(1 2 3) '(30 10 1)))
+
+; (define (salience-prior state domain)
+; 	(second
+; 	(case domain
+; 		(("bare") (assoc state (zip (list 10 30 50 70 90) 
+; 							(list 0.2081667 0.2586667 0.3123333 0.4056667 0.3875000))))
+; 		(("danger") (assoc state (zip (list 10 30 50 70 90) 
+; 							(list 0.8068333 0.8345000 0.8650000 0.8971667 0.9291667))))
+; 		(("distinct") (assoc state (zip (list 10 30 50 70 90) 
+; 							(list 0.3435000 0.4360000 0.4971667 0.4853333 0.5420000))))))))
+
+
+;; rounded to nearest 0.05
+
+; (define (salience-value state domain)
+; 	(second
+; 	(case domain
+; 		(("bare") (assoc state (zip (list 10 30 50 70 90) 
+; 							(list 0.20 0.25 0.30 0.40 0.40))))
+; 		(("danger") (assoc state (zip (list 10 30 50 70 90) 
+; 							(list 0.80 0.85 0.85 0.90 0.95))))
+; 		(("distinct") (assoc state (zip (list 10 30 50 70 90) 
+; 							(list 0.35 0.45 0.50 0.50 0.55)))))))
+
+; (define (salience-prior)
+; 	(uniform-draw '(0.1 0.15 0.2 0.25 0.3 0.35 0.40 0.45 0.50 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1)))
+
+
+
+
+
+(define literal-listener
+	(mem (lambda (utterance qud prevalence-threshold domain)
+		(enumeration-query
+			(define prevalence (prevalence-prior domain))
+;			(define salience (salience-prior prevalence domain))
+			(define property (if (equal? utterance "generic")
+								domain
+								"no-domain"))
+
+		;	(define salience (salience-prior prevalence property))
+			(define salience (if (equal? utterance "generic")
+				 				(salience-prior prevalence domain)
+				 				(not (salience-prior prevalence domain))))
+		
+
+
+			;(list prevalence salience)	
+			((qud-fn qud) prevalence salience)
+
+			;(equal? 
+			(meaning utterance prevalence prevalence-threshold)))))
+
+
+; not sure if speaker is communicating full world, or just QUDval
+(define speaker
+	(mem (lambda (val qud prevalence-threshold domain)
+		(enumeration-query
+			(define utterance (utterance-prior))
+
+			utterance
+
+			(equal? val;(list prevalence salience)
+				(apply multinomial
+					(literal-listener utterance qud prevalence-threshold domain))
+				)
+			)
+		)))
+
+
+(define listener
+	(mem (lambda (utterance domain qud)
+		(enumeration-query
+			(define prevalence (prevalence-prior domain))
+			;(define salience (salience-prior prevalence domain))
+			(define property (if (equal? utterance "generic")
+								domain
+								"no-domain"))
+
+;			(define salience (salience-prior prevalence property))
+			(define salience (if (equal? utterance "generic")
+				 				(salience-prior prevalence domain)
+				 				(not (salience-prior prevalence domain))))
+		
+
+
+			(define prevalence-threshold (uniform-draw '(0 20 40 60 80 90)))
+			;(define salience-threshold (uniform-draw '(0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9)))
+			;(define qud (qud-prior))
+			(define val ((qud-fn qud) prevalence salience))
+
+			(list prevalence salience)	
+			;val
+
+			(equal? utterance
+				(apply multinomial 
+					(speaker val qud prevalence-threshold domain)))))))
+
+
+
+
+(define truth-conditions
+	(mem (lambda (prevalence domain)
+		(enumeration-query
+
+
+			; flip for salience, depending on domain
+			(define salience (salience-prior prevalence domain))
+			; qud could be prevalence, is-salient?, or both
+			(define qud (qud-prior))
+			; this generic has an interpretation
+			(define utterance (utterance-prior))
+			(define val ((qud-fn qud) prevalence salience))
+
+
+			;salience
+			utterance
+			;qud
+
+
+			(equal? (list prevalence salience)
+					;val
+					(apply multinomial (listener utterance domain qud)))))))
+
+
+(define generic-listener
+	(mem (lambda (utterance)
+		(enumeration-query
+	;		(define domain (uniform-draw '(bare danger distinct)))
+			(define prevalence (prevalence-prior domain))
+			(define salience (salience-prior prevalence domain))
+			(define qud (qud-prior))
+
+			(define prevalence-threshold (uniform-draw '(0 20 40 60 80 90)))
+
+			(define val ((qud-fn qud) prevalence salience))
+
+			(list prevalence salience)
+			;qud
+			;domain
+		
+			(and (equal? qud "s")
+			(equal? utterance
+				(apply multinomial 
+					(speaker val qud prevalence-threshold domain))))))))
+	
+
+;; rounded to nearest 0.1
+(define (salience-value state domain)
+	(second
+	(case domain
+		(("bare") (assoc state (zip (list 10 30 50 70 90) 
+							(list 0.20 0.2 0.30 0.40 0.40))))
+		(("danger") (assoc state (zip (list 10 30 50 70 90) 
+							(list 0.80 0.80 0.80 0.90 0.90))))
+		(("distinct") (assoc state (zip (list 10 30 50 70 90) 
+							(list 0.30 0.40 0.50 0.50 0.50))))
+		(else (list "low-prior-on-salience" 0.001)))))
+
+
+(define (salience-prior prevalence domain) 
+		(flip (salience-value (nearest-soft prevalence) domain)))
+;	(uniform-draw '(0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1)))
+
+
+
+
+(define (utterance-prior) (uniform-draw (list "generic" "not-generic")))
+
+;(define (utterance-prior) (uniform-draw (list "generic" "not-generic" 10 20 30 40 50 60 70 80 90 100)))
+
+;(define domain "bare")
+; (define prior-probability-of-prevalence-reading
+; 	'(0.1 0.3 0.5 0.7 0.9))
+
+;(marginalize (generic-listener "generic"))
+
+;(truth-conditions 10 "bare")
+;(salience-value (nearest-soft 0) "bare")
+
+; (map (lambda (prevread)
+; 	(truth-conditions 10 prevread))
+; prior-probability-of-prevalence-reading)
+
+(map (lambda (prev)
+	(truth-conditions prev "bare"))
+'(10 30 50 70 90))
+
+;(define prevalence-reading 0.8)
+;(truth-conditions 10)
+;(literal-listener "generic" "p" 0 0)
+
+
