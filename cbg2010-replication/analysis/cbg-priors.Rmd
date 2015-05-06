@@ -761,5 +761,21 @@ qplot(data=d.culprits, x=roundval, geom='histogram')+
 ```
 
 
+# Prior 7: Two stage with instructions
 
+```{r prior5}
+setwd("~/Documents/research/generics/cbg2010-replication/analysis")
+d<-read.csv(file = '../turk/prior-7/cbg-prior7-trials.csv')
+
+d.summ<- d%>%
+  select(workerid, prevalence, nKinds, stimtype) %>%
+  rename(type = stimtype) %>%
+  group_by(type,workerid) %>%
+  summarise(ave_prev = mean(prevalence),
+            ave_kinds = mean(nKinds))
+
+qplot(x=ave_prev,y=ave_kinds, color=type,geom='point',data=d.summ)
+
+
+```
 
