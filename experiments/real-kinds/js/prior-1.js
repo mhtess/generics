@@ -19,10 +19,24 @@ function make_slides(f) {
     }
   });
 
+  slides.instructions2 = slide({
+    name : "instructions2",
+    button : function() {
+      exp.go(); //use exp.go() if and only if there is no "present" data.
+    }
+  });
+
+    slides.instructions3 = slide({
+    name : "instructions3",
+    button : function() {
+      exp.go(); //use exp.go() if and only if there is no "present" data.
+    }
+  });
+
   slides.priors = slide({
     name: "priors",
 
-    present : _.zip(["","A","B","C","D","E"],
+    present : _.zip(_.flatten(["",exp.columnNames]),
                     _.flatten(["animal",exp.properties])),
     //this gets run only at the beginning of the block
 
@@ -37,10 +51,10 @@ function make_slides(f) {
       this.property = stim[1]
 
       this.col!='' ? 
-      _.map(["A","B","C","D","E"].slice(["A","B","C","D","E"].indexOf(this.col)),
+      _.map(exp.columnNames.slice(exp.columnNames.indexOf(this.col)),
             function(x){
         $(".prop"+x).hide();
-      }) :  _.map(["A","B","C","D","E"],
+      }) :  _.map(exp.columnNames,
             function(x){
         $(".prop"+x).hide()})
 
@@ -60,6 +74,10 @@ function make_slides(f) {
 
       $("#head" + this.col).html(this.property);
 
+      this.col ==''?
+        $(".query").html("Listed below are 5 kinds of animals. Add 5 of your own to the list.") :
+        $(".query").html("For each kind of animal, what percentage of the species do you think " + this.property + "?")
+
 
       // load column names into page
       // _.zip(this.properties,this.columns).map(function(x){
@@ -77,7 +95,7 @@ function make_slides(f) {
 
       // figure out which columns are currently visible
       
-      var columnsOn = ["A","B","C","D","E"].filter(function(x){
+      var columnsOn = exp.columnNames.filter(function(x){
         return $(".prop"+x).is(":visible");
       })
 
@@ -276,13 +294,29 @@ function init() {
   exp.trials = [];
   exp.catch_trials = [];
 
-  exp.numberOfProperties = 5;
+  exp.numberOfProperties = 8;
   exp.numberOfGivenAnimals = 5;
 
-  exp.properties = _.sample(["are black","are red","lay eggs","have manes","attack swimmers",
-                    "carry malaria","are fast","are loyal","are male","are female"],exp.numberOfProperties)
+  exp.properties = _.shuffle(
+                    _.flatten(
+                      [_.sample(["is black","is red","lays eggs",
+                                  "has manes","attacks swimmers","carries malaria",
+                                  "is fast","is loyal"],exp.numberOfProperties-1),
+                        _.sample(["is male","is female"])
+                        ]
+                        )
+                    )
 
-  exp.animals = _.sample(["Ravens","Cardinals","Birds","Lions","Sharks","Mosquitos","Cheetahs","Dogs"],exp.numberOfGivenAnimals);
+  exp.properties = _.shuffle(["has wings","has spots",
+                              "lays eggs","has pouches",
+                              "carries malaria", "attack swimmers",
+                                  "is male","is female"]);
+
+  exp.columnNames = ["A","B","C","D","E","F","G","H"]
+
+
+//  exp.animals = _.sample(["Ravens","Cardinals","Birds","Lions","Sharks","Mosquitos","Cheetahs","Dogs"],exp.numberOfGivenAnimals);
+  exp.animals = _.shuffle(["Birds","Leopards","Ducks","Kangaroos","Mosquitos","Sharks"]);
 
   exp.system = {
       Browser : BrowserDetect.browser,
@@ -294,7 +328,7 @@ function init() {
     };
 
   //blocks of the experiment:
-   exp.structure=["priors", 'subj_info', 'thanks'];
+   exp.structure=["i0","instructions","instructions2","instructions3","priors", 'subj_info', 'thanks'];
  
   exp.data_trials = [];
   //make corresponding slides:
