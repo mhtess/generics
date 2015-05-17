@@ -1,0 +1,208 @@
+---
+title: "generics of natural kinds"
+author: "mht"
+date: "May 16, 2015"
+output: html_document
+---
+
+# Prior 1: Prevalence priors for 8 properties
+
+n = 30. 80 responses per subject. [Experiment here](http://stanford.edu/~mtessler/experiments/generics/experiments/real-kinds/prior-1.html)
+
+Subjects first see a list of 5 animals. They are asked to add 5 of their own to the list. Then, a column is revealed that asks them to estimate the % of each animal kind that has a property. Subjects fill out the column (rating prevalence for each animal). Upon hitting continue, the next column (hence, property) is revealed. There are 8 properties in total. They are:
+
+1. Have wings
+2. Have spots
+3. Have pouches
+4. Lay eggs
+5. Carry malaria
+6. Attack swimmers
+7. Are male
+8. Are female
+
+Subjects are permitted to "go back" and change their prevalence estimate for properties presented earlier in the sequence. The "Animal list" cannot be changed, however.
+
+Subjects are given 5 out of the following 6 animals to initialize the list.
+
+1. Birds
+2. Leopards
+3. Ducks
+4. Lions
+5. Mosquitos
+6. Sharks
+
+```{r echo=F}
+upperFirst <- function(name){
+  return (paste(toupper(substr(name, 1, 1)), substr(name, 2, nchar(name)), sep=""))
+}
+
+removeS <- function(name){
+  exceptions = c("Turtles", "Bees", "Horses", "Giraffes","Whales")
+  last<-substr(name,nchar(name),nchar(name))
+  last2<-substr(name,nchar(name)-1,nchar(name))
+  if (name%in%exceptions){
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else if (last2=='es') {
+    name.singular <- substr(name,1,nchar(name)-2)
+  } else if (last=='s') {
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else  {
+    name.singular <- name
+  }
+return(name.singular)
+}
+
+
+#setwd(dir = 'generics/analysis/')
+generics.of.interest <- data.frame(
+  animal=c("Bird","Leopard","Duck","Lion","Mosquito","Shark"),
+  property=c("lays eggs", "has spots","has wings","has manes","carries malaria",
+                                             "attack swimmers"))
+
+
+
+d<-read.csv(file = '../experiments/turk/real-kinds-1/real-kinds-1-trials.csv')
+
+d$animal.parsed<- factor(unlist(Map(removeS, upperFirst(as.character(d$animal)))))
+d$property<-factor(d$property, 
+                   levels=c("has spots", "has wings","has manes", "lays eggs",
+                            "attack swimmers", "carries malaria",
+                            "is male", "is female"))
+```
+
+
+# Response histogram
+
+```{r}
+ggplot(d, aes(x=prevalence))+geom_histogram(binwidth=5)+ggtitle('binwidth=5')
+```
+
+For each subject:
+
+```{r}
+ggplot(d, aes(x=prevalence))+
+  geom_histogram(binwidth=5)+
+  facet_wrap(~workerid)+
+  scale_x_continuous(breaks=c(0, 50, 100))
+
+```
+
+
+# Animal production data
+
+```{r exp1.newAnimals, fig.width=32}
+animals.given <- c("Bird","Leopard","Duck","Lion","Mosquito","Shark")
+
+# retrieve novel animals (and count only one instance per subject)
+animals.produced<-filter(d,
+                         (!(animal.parsed %in% animals.given)&
+                            (property_index==0)))
+
+
+ggplot(animals.produced, aes(x=animal.parsed))+
+  geom_histogram()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+# Prevalence distributions
+
+
+## Estimates for each animal.
+
+Some of these animals have very few responses, owing to the fact that they were produced by just one or a few subjects. Ordering is alphabetical by animal name. Light blue bars indicate the category of interest for each property (for the generic).
+
+```{r exp1.estimatesByAnimal, fig.height=15, fig.width=36}
+
+d.tidy<- d %>%
+  group_by(property,animal.parsed) %>%
+  summarise(prev = mean(prevalence))
+
+generics.of.interest$combined <- paste(generics.of.interest$property, 
+                                       generics.of.interest$animal)
+d.tidy$combined <- paste(d.tidy$property, d.tidy$animal.parsed)
+
+d.tidy$interest<-d.tidy$combined %in% generics.of.interest$combined
+
+ggplot(data=d.tidy, aes(x=animal.parsed, y=prev, fill=interest))+
+  geom_bar(stat='identity',position=position_dodge())+
+  facet_wrap(~property)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Reducing this plot to only the animals that were given to subjects (+ Dog and Cat, which over a third of subjects produced)
+
+```{r exp1.estimatesByAnimal.reduced, fig.height=10, fig.width=20}
+
+animals.with.at.least10.responses <- c(animals.given, c("Cat","Dog"))
+
+d.tidy.sub<- d.tidy %>% filter(animal.parsed %in%animals.with.at.least10.responses)
+
+ggplot(data=d.tidy.sub, aes(x=animal.parsed, y=prev, fill=interest))+
+  geom_bar(stat='identity',position=position_dodge())+
+  facet_wrap(~property)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+## Distribution by animal
+
+Here, I plot the distribution of prevalence after summarizing an average prevalence for each animal. Hence, a sample from this distribution is an animal category (with an associated prevalence of the property). Again note:: many of these categories have very few responses.
+
+Green line indicates prevalence for target category.
+```{r}
+ggplot(data=d.tidy, aes(x=prev))+
+  geom_vline(data=filter(d.tidy,interest), aes(xintercept=prev),
+             colour='#2ca25f',size=1.3)+
+  geom_histogram(binwidth=5)+
+  facet_wrap(~property)
+```
+
+
+## Distribution by response
+
+Here, I don't include the intermediate step of summarising by animal kind. Instead, I just plot the density directly from subjects' responses. Again, green line indicates prevalence for target categogry.
+
+```{r}
+
+d.interest<-d.tidy %>% filter(interest)
+
+ggplot(data = d, aes(x=prevalence))+
+  #geom_histogram()+
+  geom_density(adjust=0.5, fill='grey')+
+  facet_wrap(~property,scales='free')+
+  geom_vline(data=d.interest, aes(xintercept=prev), colour='#2ca25f',size=1.3)
+```
+
+
+Binned distributions (for model)
+
+```{r}
+d <- d %>% mutate(roundval=factor(round(prevalence/10)*10))
+
+d.bin<- d %>%
+  group_by(property, roundval) %>%
+  summarise(count = length(roundval)) %>%
+  ungroup() %>% group_by(property) %>%
+  mutate(prob = count/sum(count),
+         roundval = to.n(roundval))
+
+ggplot(d.bin, aes(x=roundval, y=prob))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~property)+
+  xlab("prevalence")+
+  ylab("proportion of responses\n")+
+  #scale_fill_brewer(palette='Pastel1',type='qual')+
+ # scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_discrete(breaks=c(0,20,40,60,80,100))+#,limits=c(-5,105))+
+ # theme_blackDisplay()+ 
+  guides(fill=guide_legend(title="property"))+
+#  theme(legend.key.size=unit(2, "lines"),
+#        legend.text.align=NULL)+
+  guides(fill=F)
+
+filter(d, property=='attack swimmers' & prevalence>90)$animal.parsed
+```
+
+Looks like "Mosquitos attack swimmers." is probably true.
+
