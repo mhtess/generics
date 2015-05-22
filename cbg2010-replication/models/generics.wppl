@@ -23,14 +23,14 @@
 // }
 
 var prevelancePrior = {
-       "has spots": [151, 24, 36, 14,  8,  19,  4,  2, 10,  3,  29],
-       "has wings": [206,  1,  1, 1, 1,   1, 1, 1,  3,  5,  83],
-       "has manes": [260,  6,  2,  4,  1,  18,  1, 1, 1, 1,   8],
-       "lays eggs": [161,  1,  6, 1,  2,  56,  5,  2,  4, 1,  63],
+       "have spots": [151, 24, 36, 14,  8,  19,  4,  2, 10,  3,  29],
+       "have wings": [206,  1,  1, 1, 1,   1, 1, 1,  3,  5,  83],
+       "have manes": [260,  6,  2,  4,  1,  18,  1, 1, 1, 1,   8],
+       "lay eggs": [161,  1,  6, 1,  2,  56,  5,  2,  4, 1,  63],
  "attack swimmers": [258,  9, 9,  3, 1,   2, 1,  1, 1,  3,  15],
- "carries malaria": [260, 15, 11, 1,  3,   3,  2,  2,  1, 1,   3],
-         "is male":  [12, 1,  8,  9, 24, 219, 17,  3,  3,  3,   2],
-       "is female":  [1, 13,  3,  2, 21, 215, 28, 10,  6, 1, 2]
+ "carry malaria": [260, 15, 11, 1,  3,   3,  2,  2,  1, 1,   3],
+         "are male":  [12, 1,  8,  9, 24, 219, 17,  3,  3,  3,   2],
+       "are female":  [1, 13,  3,  2, 21, 215, 28, 10,  6, 1, 2]
 }
 
 
@@ -43,18 +43,19 @@ var prevelancePrior = {
 
 
 var elicitedPrior = {
-	"has spots" : {"leopards": 9},
-	"lays eggs": {"ducks": 7},
-	"has wings": {"birds": 9},
-	"has manes": {"lions": 5},
-	"carries malaria":{"mosquitos":3},
+	"have spots" : {"leopards": 9},
+	"lay eggs": {"ducks": 7},
+	"have wings": {"birds": 9,
+					"lions":1},
+	"have manes": {"lions": 5},
+	"carry malaria":{"mosquitos":3},
 	"attack swimmers":{"sharks":3},
-	"is female":{"ducks":5},
-	"is male": {"ducks":5}
+	"are female":{"ducks":5},
+	"are male": {"ducks":5,
+				"lions":5}
 }
 
-// from Prasada et al. 2013
-// out of a 7 pt scale centered at 0
+
 var truthJudgments = {
 	"leopards have spots": 2.17,
 	"birds have wings":2.63,
@@ -67,8 +68,16 @@ var truthJudgments = {
 	"lions have wings":-2.5 // made up
 }
 
-var truthJudgeToPercent = function(x){
-	return ((x+3)/6)*100
+var getBinaryData = function(sentence){
+
+	// from Prasada et al. 2013
+	// out of a 7 pt scale centered at 0
+
+	var percent = ((truthJudgments[sentence]+3)/6)
+
+	var n = 25 // approximate from Prasada et al. 2013
+
+	return utils.fillArray("generic is true",Math.round(n*percent))
 }
 
 // 1 free response (n=30)
@@ -79,7 +88,8 @@ var truthJudgeToPercent = function(x){
 // }
 
 //var cognitiveModel = function(gamma, delta, domain, speakerOptimality, QUD, prevalence){
-var cognitiveModel = function(domain, speakerOptimality, QUD, prevalence){
+//var cognitiveModel = function(domain, speakerOptimality, QUD, prevalence){
+var cognitiveModel = function(sentence, speakerOptimality){
 
 	// var discretizeBeta = function(gamma, delta, bins){
 	// 	var shape_alpha = gamma * delta
@@ -91,9 +101,22 @@ var cognitiveModel = function(domain, speakerOptimality, QUD, prevalence){
 	// 	return map(betaPDF, bins)
 	// }
 
+	var parseGeneric = function(sentence){
+		var pieces = sentence.split(' ');
+		var kind = pieces[0];
+		pieces.shift();
+		var property = pieces.join(' ')
+		return [property, kind]
+	}
+
+	var parsed = parseGeneric(sentence);
+	var domain = parsed[0];
+	var kind = parsed[1];
+	var prevalence = elicitedPrior[domain][kind]
+
 	var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
 //	var bins = [0.01,0.05,0.15,0.25,0.35,0.45,0.55,0.65,0.75,0.85,0.95]
-	var quintileProbs = discretizeBeta(gamma,delta,bins)
+	// var quintileProbs = discretizeBeta(gamma,delta,bins)
 
 	var statePrior = function() {
 //	  var prevalence = 
@@ -189,17 +212,17 @@ var cognitiveModel = function(domain, speakerOptimality, QUD, prevalence){
 	  })
 	})
 
-	var speaker2_impliedPrevalence = cache(function(WHATSUP){
-		Enumerate(function(){
-			var utterance = numberUtterancePrior()
-			var wL1 = wordListener1(WHATSUP)
-			var state = sample(wL1)
+	// var speaker2_impliedPrevalence = cache(function(WHATSUP){
+	// 	Enumerate(function(){
+	// 		var utterance = numberUtterancePrior()
+	// 		var wL1 = wordListener1(WHATSUP)
+	// 		var state = sample(wL1)
 
-			var nL1 = numberListener1(utterance)
-			factor(nL1.score([], state))
-			return utterance
-		})
-	})
+	// 		var nL1 = numberListener1(utterance)
+	// 		factor(nL1.score([], state))
+	// 		return utterance
+	// 	})
+	// })
 
 	var speaker2_truthConditions = cache(function(prevalence){
 		Enumerate(function(){
@@ -270,70 +293,91 @@ var cognitiveModel = function(domain, speakerOptimality, QUD, prevalence){
 // sum(map2(function(x,y){return (y*x)/sum(prevelancePrior["bare"])},
 // 	prevelancePrior["bare"],
 // 	[0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99])
-)
+// )
 
-var tfbt = function(QUD, utterance){
-	MH(function(){
-		var queryStatement = function(context){
-			return [gamma(context), delta(context)]
-		}
+var dataAnalysis = function(){
 
-		var phiTC = sample(uniformERP, [0,1])
-		var phiIP = sample(uniformERP, [0,1])
+		//var phiTC = sample(uniformERP, [0,1])
+		//var phiIP = sample(uniformERP, [0,1])
 
-		var speakerOptimalityTC = sample(uniformERP,[0,10])
-		var speakerOptimalityIP = sample(uniformERP,[0,10])
+//		var speakerOptimality = sample(uniformERP,[0,10])
+		var speakerOptimality = 0.1+(randomInteger(10)/2)
+		//var speakerOptimalityIP = sample(uniformERP,[0,10])
+
+		var posteriorPredictive = 
+			map(
+				function(sentence){
+					var predictionERP = cognitiveModel(sentence,speakerOptimality)
+
+
+					var modelScore = function(modelERP, data){
+						return sum(map(function(d){return modelERP.score([],d)},data))
+					}
+
+			//		return modelScore(predictionERP, getBinaryData("leopards have spots"))
+					factor(modelScore(predictionERP, getBinaryData(sentence)))
+
+					return [sentence, Math.exp(predictionERP.score([], "generic is true"))]
+				},
+				_.keys(truthJudgments)
+			)
+
+		return _.object(posteriorPredictive)
 
 	//	var gamma = cache(function(context){return sample(uniformERP, [0,1])})
 	//	var delta = cache(function(context){return sample(uniformERP, [0,10])})
 
-		var tcPredictions = map2(function(prevalenceLevels,context){
-			return map(function(prevlev){
-				return cognitiveModel(gamma(context), delta(context), speakerOptimality,
-										"truth", prevlev/10)
-			}, prevalenceLevels)
-		}, prevalenceLevelsAllContexts, tcContexts)
+		// var tcPredictions = map2(function(prevalenceLevels,context){
+		// 	return map(function(prevlev){
+		// 		return cognitiveModel(gamma(context), delta(context), speakerOptimality,
+		// 								"truth", prevlev/10)
+		// 	}, prevalenceLevels)
+		// }, prevalenceLevelsAllContexts, tcContexts)
 
-		var ipPredictions = map(function(context){
-				return cognitiveModel(gamma(context), delta(context), speakerOptimality, 
-											"how many?", "generic is true")
-			}, ipContexts)
+		// var ipPredictions = map(function(context){
+		// 		return cognitiveModel(gamma(context), delta(context), speakerOptimality, 
+		// 									"how many?", "generic is true")
+		// 	}, ipContexts)
 
-
-	},10)
 }
 
-var tcPredictions = map2(function(prevalenceLevels,context){
-	return map(function(prevlev){
-		return cognitiveModel(0.3, 1, 1, "truth", prevlev/10)
-	}, prevalenceLevels)
-}, prevalenceLevelsAllContexts, tcContexts)
+var tfbt = Enumerate(dataAnalysis)
+var output = utils.expectation(tfbt, _.keys(truthJudgments))
+
+utils.writeCSV(output, 'generics_truthJudge_prasada1.csv')
+
+//cognitiveModel("has spots", 1, "qud", elicitedPrior["has spots"]["leopards"])
+
+// var tcPredictions = map2(function(prevalenceLevels,context){
+// 	return map(function(prevlev){
+// 		return cognitiveModel(0.3, 1, 1, "truth", prevlev/10)
+// 	}, prevalenceLevels)
+// }, prevalenceLevelsAllContexts, tcContexts)
 
 
-var ipPredictions = map(function(context){
-		return cognitiveModel(0.3, 1, 1, "how many?", "generic is true")
-	}, ipContexts)
+// var ipPredictions = map(function(context){
+// 		return cognitiveModel(0.3, 1, 1, "how many?", "generic is true")
+// 	}, ipContexts)
+
+// // map(function(x){
+// // 	return map(function(y){
+// // 		//return [y.support(), y.score()]
+// // 		return [y.support(), y.score()]
+// // 	}, x)
+// // }, tcPredictions)
+
+// //cognitiveModel(0.3,1,1,"truth",1)
+
+// var data = [1,1,1,2,4,1,1,1,1,9]
+
+// var modelScore = function(modelERP, data){
+// 	return sum(map(function(d){return modelERP.score([],d)},data))
+// }
+
+// factor(modelScore(ipPredictions, allmydata))
+
 
 // map(function(x){
-// 	return map(function(y){
-// 		//return [y.support(), y.score()]
-// 		return [y.support(), y.score()]
-// 	}, x)
-// }, tcPredictions)
-
-//cognitiveModel(0.3,1,1,"truth",1)
-
-var data = [1,1,1,2,4,1,1,1,1,9]
-
-var modelScore = function(modelERP, data){
-	return sum(map(function(d){return modelERP.score([],d)},data))
-}
-
-factor(modelScore(ipPredictions, allmydata))
-
-
-map(function(x){
-	return [x.support(), x.score()]
-}
-
-	,ipPredictions)
+// 	return [x.support(), x.score()]
+// }
+// 	,ipPredictions)

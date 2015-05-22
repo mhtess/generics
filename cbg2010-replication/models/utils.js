@@ -70,10 +70,34 @@ function readInBothTCIPDataSets(){
 
 };
 
+function fillArray(value, len) {
+  var arr = [];
+  for (var i = 0; i < len; i++) {
+    arr.push(value);
+  }
+  return arr;
+};
+
+
+function expectation(myERP, keys){
+	return _.map(keys,
+		function(sentence){
+			
+			var expectedProbs = _.map(myERP.support(),
+				function(supportValue){
+					var currScore = Math.exp(myERP.score([], supportValue));
+					var posteriorProb = supportValue[sentence]
+					return currScore*posteriorProb
+				})
+			return [sentence ,_.reduce(expectedProbs, function(memo, num){ return memo + num; }, 0)]
+		})
+}
 
 module.exports = {
   readCSV: readCSV,
   writeCSV: writeCSV,
   readInBothTCIPDataSets: readInBothTCIPDataSets,
-  isNumber: isNumber
+  isNumber: isNumber,
+  fillArray: fillArray,
+  expectation: expectation
 };
