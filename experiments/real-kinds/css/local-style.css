@@ -18,6 +18,15 @@
     padding-right: 150px
 }
 
+
+.generic{
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 25px;
+    padding-left: 150px;
+    padding-right: 150px
+}
+
+
 .err{
 	color: red;
 }
@@ -38,4 +47,49 @@
 td {
     border: 1px black;
     border-style: none dotted none none;
+}
+
+#agree-key, #disagree-key {
+  background-color: #e3e3e3;
+  padding: 2px;
+  border: 1px outset #cccccc;
+  font-family: Courier New;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+#Pkey-reminder, #Qkey-reminder{
+    margin-top:20px;
+}
+
+.reminder-key {
+  background-color: #e3e3e3;
+  padding: 2px;
+  border: 1px outset #cccccc;
+  font-family: Courier New;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+#p-reminder {
+    position: absolute;
+    right: 0;
+    width: 100px;
+}
+
+#q-reminder {
+    position: absolute;
+    left: 0;
+    width: 100px;
+}
+
+#reminders {
+    position: relative;
+    margin: 0 auto;
+    margin-top:100px;
+    width: 500px;
+}
+
+input[type="radio"]{
+  margin: 0 10px 10px 30px;
 }
