@@ -156,7 +156,7 @@ var cognitiveModel = function(gamma, delta, speakerOptimality, QUD, prevalence){
 
 
 
-//cognitiveModel(0.1, 0.1, 2, "implied", null)
+// var m = cognitiveModel(0.1, 0.1, 2, "implied", null)
 //cognitiveModel(null, null, 'lays eggs', 1, null, 5)
 //cognitiveModel(null, null, 'has wings', 1, null, 9)
 //cognitiveModel(null, null, 'has manes', 1, null, 5)
@@ -165,16 +165,13 @@ var cognitiveModel = function(gamma, delta, speakerOptimality, QUD, prevalence){
 //cognitiveModel(null, null, 'is female', 1, null, 5)
 //cognitiveModel(null, null, 'is male', 1, null, 5)
 
-// var writeERP = function(myERP){
-//   return map(
-//           function(value){
-//             value.concat(Math.exp(myERP.score([], value)))
-//           },
-// //          myERP.support([])
-//           ["some"]
-//           )
-// }
-
+var writeERP = function(myERP){
+  return _.object(
+  	map(
+  		function(val){
+  			return [val, Math.exp(myERP.score([],val))]
+  		}, myERP.support([])))
+}
 
 // //cognitiveModel(0.0003,100,'danger-distinct',1,"truth",5)
 
@@ -197,6 +194,7 @@ var dataAnalysis = function(){
 
 //		var speakerOptimality = sample(uniformERP,[0,10])
 		var speakerOptimality = 0.1+(randomInteger(10)/2)
+
 		//var speakerOptimalityIP = sample(uniformERP,[0,10])
 
 	//	var posteriorPredictive = function(){
@@ -206,12 +204,14 @@ var dataAnalysis = function(){
 			var modelScore = function(modelERP, data){
 				return sum(map(function(d){
 					var datum = getImpliedData(d)
-					console.log(datum)
 					return modelERP.score([],datum)
 				},data))
 			}
 
-			return modelScore(ipPredictions, impliedData)
+			factor(modelScore(ipPredictions, impliedData))
+			return writeERP(ipPredictions)
+
+		//	return [gamma, delta]
 	//	}
 //					return [sentence, Math.exp(predictionERP.score([], "generic is true"))]
 
@@ -233,8 +233,12 @@ var dataAnalysis = function(){
 		// 	}, ipContexts)
 
 }
+var tfbt = MH(dataAnalysis, 100)
+tfbt
 
-dataAnalysis()
+
+
+//Enumerate(dataAnalysis)
 // var tfbt = Enumerate(dataAnalysis)
 // var output = utils.expectation(tfbt, _.keys(truthJudgments))
 
