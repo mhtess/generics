@@ -21,6 +21,14 @@ var getImpliedData = function(datum){
 }
 
 
+var getTruthData = function(d){
+	var truthDict = {
+		"False":"mu",
+		"True":"generic is true"
+	};
+	return truthDict[d[d.length-2]]
+}
+
 
 var cognitiveModel = function(gamma, delta, speakerOptimality, QUD, prevalence){
 
@@ -173,6 +181,31 @@ var writeERP = function(myERP){
   		}, myERP.support([])))
 }
 
+
+var expectationIPERP = function(myERP){
+  return sum(
+  	map(
+  		function(val){
+  			return val * Math.exp(myERP.score([],val))
+  		}, myERP.support([])))
+}
+
+
+var averageTCERP = function(objectOfERPs){
+
+  	var probs = map(function(myERP){
+			  		return Math.exp(myERP.score([],"generic is true"))
+			  	}, objectOfERPs)
+  	var norm_probs = map(function(d){return d/sum(probs)}, probs)
+
+  	return sum(map2(function(prev,p){
+	  			return (prev * p)
+  				},
+  				[1,3,5,7,9],norm_probs)
+  		)
+}
+
+
 // //cognitiveModel(0.0003,100,'danger-distinct',1,"truth",5)
 
 // map(function(x)
@@ -199,18 +232,38 @@ var dataAnalysis = function(){
 
 	//	var posteriorPredictive = function(){
 			
-			var ipPredictions = cognitiveModel(gamma, delta, speakerOptimality, "how many?", null)
+		var ipPredictions = cognitiveModel(gamma, delta, speakerOptimality, "how many?", null)
 
-			var modelScore = function(modelERP, data){
-				return sum(map(function(d){
-					var datum = getImpliedData(d)
-					return modelERP.score([],datum)
-				},data))
-			}
+		var tcPredictions = map(function(prev){
+			return cognitiveModel(gamma, delta, speakerOptimality, "truth", prev)
+		}, [1,3,5,7,9])
 
-			factor(modelScore(ipPredictions, impliedData))
-			return writeERP(ipPredictions)
 
+		var impliedmodelScore = function(modelERP, data){
+			return sum(map(function(d){
+				var datum = getImpliedData(d)
+				return modelERP.score([],datum)
+			},data))
+		}
+
+		var truthmodelScore = function(modelERP, data){
+				sum(_.flatten(
+					map2(function(prevData, modelPred){
+						return map(function(d){
+							var datum = getTruthData(d)
+							return modelPred.score([], datum)
+						}, prevData)
+					}, truthData, tcPredictions)
+				))
+		}
+
+		 factor(impliedmodelScore(ipPredictions, impliedData) + 
+		 	truthmodelScore(tcPredictions, truthData))
+
+
+//			return writeERP(ipPredictions)
+		return [averageTCERP(tcPredictions), expectationIPERP(ipPredictions)]
+//		return tcPredictions
 		//	return [gamma, delta]
 	//	}
 //					return [sentence, Math.exp(predictionERP.score([], "generic is true"))]
@@ -236,8 +289,10 @@ var dataAnalysis = function(){
 var tfbt = MH(dataAnalysis, 100)
 tfbt
 
+//dataAnalysis()
 
 
+//truthData[0][0].length
 //Enumerate(dataAnalysis)
 // var tfbt = Enumerate(dataAnalysis)
 // var output = utils.expectation(tfbt, _.keys(truthJudgments))
