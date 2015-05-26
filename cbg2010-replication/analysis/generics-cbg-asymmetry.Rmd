@@ -1,0 +1,120 @@
+---
+title: "generics-cbg-asymmetry"
+author: "mht"
+date: "May 25, 2015"
+output: html_document
+---
+
+To do:
+
+Finish frowppl.Hist function. Needs to find "empty" bins (bins with no values inside them) and make prob = 0.
+
+```{r}
+setwd("~/Documents/research/generics/cbg2010-replication/models")
+a<- read.csv('generics_tfbt_cbg_bio_acc_asymmetry_mh100.csv', header=F)
+
+a.tidy<- a %>% 
+  rename(gamma_bio = V1,
+         gamma_acc = V2,
+         delta_bio = V3,
+         delta_acc = V4,
+         alpha_bio = V5,
+         alpha_acc = V6,
+         avetc_bio = V7,
+         aveip_bio = V8,
+         avetc_acc= V9, 
+         aveip_acc = V10,
+         prob = V11) %>%
+  gather(key,val,-prob) %>%
+  separate(key, into=c("parameter","property"), sep="_") %>%
+  group_by(parameter,property, val) %>%
+  summarise(total_prob = sum(prob)) %>%
+  ungroup() %>%
+  mutate(parameter = factor(parameter),
+         property = factor(property))
+  
+fromwppl.Hist<-function(values, n){
+  k<-range(values)
+  dif<- (k[2]-k[1])/n  
+  bin <- ceiling(values/dif)
+  return(bin*dif)
+}
+
+
+
+#   df<- df %>% 
+#     group_by(bin) %>%
+#     summarise(property = property[1],
+#               parameter = parameter[1],
+#                 val = val[1],
+#               prob = sum(total_prob))
+#   return(df)
+# }
+
+
+a.tidy1<-a.tidy %>% 
+  group_by(parameter,property) %>%
+  mutate(bin = fromwppl.Hist(val,10)) %>%
+  group_by(parameter, property, bin) %>%
+  summarise(val = val[1],
+    prob = sum(total_prob))
+
+
+
+ggplot(a.tidy1, aes(x=bin, y=prob, fill=property))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_grid(property~parameter, scales='free')
+
+
+for (i in levels(a.tidy$parameter)){
+  for (j in levels(a.tidy$property)){
+    print(i)
+    fromwppl.Hist(a.tidy%>% filter((parameter==i) & (property==j)),10)
+  }
+}
+
+asym.tidy<-filter(a.tidy,parameter  %in%c('aveip','avetc'))
+
+asym.summary<- asym.tidy %>%
+  group_by(parameter,property) %>%
+  summarise(expval = sum(val*total_prob))
+
+
+
+
+```
+
+
+
+
+```{r, echo=FALSE}
+
+alpha.tidy<-filter(a.tidy,parameter=='alpha')
+
+alpha.tidy %>% group_by(property) %>%
+  mutate(fromwppl.Hist)
+
+ggplot(alpha.tidy, aes(x=val, y=total_prob))+
+  geom_histogram(stat='identity', position=position_dodge())+
+  facet_wrap(~property)
+
+
+gamma.tidy<-filter(a.tidy,parameter=='gamma')
+
+ggplot(gamma.tidy, aes(x=val, y=total_prob))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~property)
+
+delta.tidy<-filter(a.tidy,parameter=='delta')
+
+ggplot(delta.tidy, aes(x=val, y=total_prob))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~property)
+
+
+
+```
+
+
+
+
