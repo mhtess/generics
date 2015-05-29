@@ -53,11 +53,13 @@ return(name.singular)
 }
 
 
-#setwd(dir = 'generics/analysis/')
+setwd(dir = 'generics/analysis/')
 generics.of.interest <- data.frame(
   animal=c("Bird","Leopard","Duck","Lion","Mosquito","Shark"),
   property=c("lays eggs", "has spots","has wings","has manes","carries malaria",
                                              "attack swimmers"))
+
+animals.given <- c("Bird","Leopard","Duck","Lion","Mosquito","Shark")
 
 
 
@@ -91,7 +93,6 @@ ggplot(d, aes(x=prevalence))+
 # Animal production data
 
 ```{r exp1.newAnimals, fig.width=32}
-animals.given <- c("Bird","Leopard","Duck","Lion","Mosquito","Shark")
 
 # retrieve novel animals (and count only one instance per subject)
 animals.produced<-filter(d,
@@ -116,7 +117,8 @@ Some of these animals have very few responses, owing to the fact that they were 
 
 d.tidy<- d %>%
   group_by(property,animal.parsed) %>%
-  summarise(prev = mean(prevalence))
+  summarise(prev = mean(prevalence),
+            sterr=sem(prevalence))
 
 generics.of.interest$combined <- paste(generics.of.interest$property, 
                                        generics.of.interest$animal)
@@ -135,11 +137,15 @@ Reducing this plot to only the animals that were given to subjects (+ Dog and Ca
 ```{r exp1.estimatesByAnimal.reduced, fig.height=10, fig.width=20}
 
 animals.with.at.least10.responses <- c(animals.given, c("Cat","Dog"))
+animals.with.at.least5.responses <- c(animals.given, c("Cat","Dog","Chicken","Turtle","Tiger","Monkey","Frog",
+                                                       "Bear"))
 
-d.tidy.sub<- d.tidy %>% filter(animal.parsed %in%animals.with.at.least10.responses)
+
+d.tidy.sub<- d.tidy %>% filter(animal.parsed %in%animals.with.at.least5.responses)
 
 ggplot(data=d.tidy.sub, aes(x=animal.parsed, y=prev, fill=interest))+
   geom_bar(stat='identity',position=position_dodge())+
+  geom_errorbar(aes(ymin=prev-2*sterr,ymax=prev+2*sterr),position=position_dodge(),width=0.5)+
   facet_wrap(~property)+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
@@ -205,4 +211,381 @@ filter(d, property=='attack swimmers' & prevalence>90)$animal.parsed
 ```
 
 Looks like "Mosquitos attack swimmers." is probably true.
+
+
+```{r}
+d.bin %>% select(-prob) %>% spread(roundval, count)
+
+```
+
+
+#### Markman's question: Is "lays eggs" affected by "are female"?
+
+```{r}
+
+d.femFirst<-d %>%
+  filter((animal.parsed %in% c("Duck","Bird","Mosquito")) & 
+           property %in% c("is female","lays eggs")) %>%
+  select(workerid, animal.parsed, property, property_index) %>%
+  mutate(property = factor(property, levels=c("is female","lays eggs"),
+                           labels=c("female","eggs"))) %>%
+  spread(property, property_index) %>%
+  mutate(femFirst = female<eggs)
+
+
+
+d.birds<- d %>%
+  filter((animal.parsed %in% c("Duck","Bird","Mosquito")) & 
+           property %in% c("is female","lays eggs")) 
+
+d.birds<-left_join(d.birds, d.femFirst, by="workerid")
+
+d.birds %>%
+  group_by(property, animal.parsed.x, femFirst) %>%
+  summarise(mean(prevalence))
+  
+
+
+```
+
+
+# lvRSA model predictions
+
+Doing TFBT with speaker optimality (at the S1 level) as a free parameter
+
+```{r}
+model.posteriorpred <-read.csv('generics_truthJudge_prasada1.csv',header=F,
+                               col.names=c("generic","posteriorPred"))
+
+prasada.data <-data.frame(generic = c("leopards have spots",
+                                    	"birds have wings",
+                                    	"lions have manes",
+                                    	"ducks lay eggs",
+                                    	"mosquitos carry malaria",
+                                    	"sharks attack swimmers",
+                                    	"lions are male",
+                                    	"ducks are female",
+                                    	"lions have wings"),
+                          truth_judgment = c( 2.17,2.63,1.46,2.04,1.63,1.5,-0.04,
+                                              -0.58,-2.5),
+                          prevalence = c(93,92, 57, 78, 30, 31, 50, 50, 0)
+
+)
+
+
+combined.model.data<- left_join(model.posteriorpred, prasada.data)
+
+with(combined.model.data, cor(posteriorPred, truth_judgment))
+with(combined.model.data, cor(prevalence, truth_judgment))
+
+
+qplot(data=combined.model.data,
+      x=posteriorPred,y=truth_judgment,
+      color=generic)+
+  geom_point(size=3)
+
+qplot(data=combined.model.data,
+      x=prevalence,y=truth_judgment,
+      color=generic)+
+  geom_point(size=3)
+
+
+```
+
+
+
+
+# Prior 2: Prevalence priors for 16 properties
+
+
+```{r echo=F}
+upperFirst <- function(name){
+  return (paste(toupper(substr(name, 1, 1)), substr(name, 2, nchar(name)), sep=""))
+}
+
+removeS <- function(name.in){
+  exceptions = c("Turtles", "Bees", "Horses", "Giraffes","Whales","Beetles","Eagles","Snakes","Moles")
+  bluejays =  c("Blue jay","Blue Jay","Bluejay")
+  fleas = c("Flea", "Fly")
+  name<-removeSpace(name.in)
+  last<-substr(name,nchar(name),nchar(name))
+  last2<-substr(name,nchar(name)-1,nchar(name))
+  if (name%in%exceptions){
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else if (name%in%bluejays){
+    name.singular <- "Bluejay"
+  } else if (name%in%fleas){
+    name.singular <- "Flea"
+  } else if (name=="Wolves") {
+    name.singular <- "Wolf"
+  } else if (name=='Dolpin') {
+    name.singular <- "Dolphin"
+  } else if (name=='Giraffs') {
+    name.singular <- "Giraffe"
+  }  else if (last2=='es') {
+    name.singular <- substr(name,1,nchar(name)-2)
+  } else if (last=='s') {
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else {
+    name.singular <- name
+  }
+  
+return(name.singular)
+}
+
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+
+removeSpace <- function(name){
+  if (substrRight(name,1)==' ') {
+    name.edit <- substr(name,1, nchar(name)-1)
+  } else {
+    name.edit <- name
+  }
+  return(name.edit)
+}
+
+setwd(dir = 'generics/analysis/')
+generics.of.interest <- data.frame(
+  animal=c("Robin","Leopard","Duck","Lion","Mosquito","Shark","Cardinal","Kangaroo","Peacock","Tiger","Tick","Swan"),
+  property=c("lay eggs", "have spots","have wings","have manes","carry malaria",
+              "attacks swimmers","are red","have pouches","have beautiful feathers","eat people","carry Lyme disease","are white"))
+
+d<-read.csv(file = '../experiments/turk/real-kinds-prior-2/real-kinds-2-trials.csv')
+d0<-read.csv(file='../experiments/turk/real-kinds-prior-2/real-kinds-2pilot5/real-kinds-2-trials.csv')
+
+d0$workerid = max(d$workerid) + d0$workerid+1
+d<-bind_rows(d,d0)
+
+d[d$property=='are juveline',]$property<-'are juvenile'
+
+d$animal.parsed<- factor(unlist(Map(removeS, upperFirst(as.character(d$animal)))))
+
+```
+
+
+# Response histogram
+
+```{r}
+ggplot(d, aes(x=prevalence))+geom_histogram(binwidth=5)+ggtitle('binwidth=5')
+```
+
+For each subject:
+
+```{r}
+ggplot(d, aes(x=prevalence))+
+  geom_histogram(binwidth=5)+
+  facet_wrap(~workerid)+
+  scale_x_continuous(breaks=c(0, 50, 100))
+
+```
+
+
+# Animal production data
+
+```{r exp2.newAnimals, fig.height=25, fig.width=16}
+
+# retrieve novel animals (and count only one instance per subject)
+animals.produced<-filter(d,
+                         (!(animal.parsed %in% generics.of.interest$animal)&
+                            (property_index==0)))
+
+
+ggplot(animals.produced, aes(x=animal.parsed))+
+  geom_histogram()+
+  #theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  coord_flip()
+
+```
+
+# Prevalence distributions
+
+
+## Estimates for each animal.
+
+Some of these animals have very few responses, owing to the fact that they were produced by just one or a few subjects. Ordering is alphabetical by animal name. Light blue bars indicate the category of interest for each property (for the generic).
+
+```{r exp2.estimatesByAnimal, fig.height=15, fig.width=36}
+
+d.tidy<- d %>%
+  group_by(property,animal.parsed) %>%
+  summarise(prev = mean(prevalence),
+            sterr=sem(prevalence)) %>%
+  filter(!(is.na(sterr)))
+
+generics.of.interest$combined <- paste(generics.of.interest$property, 
+                                       generics.of.interest$animal)
+d.tidy$combined <- paste(d.tidy$property, d.tidy$animal.parsed)
+
+d.tidy$interest<-d.tidy$combined %in% generics.of.interest$combined
+
+ggplot(data=d.tidy, aes(x=animal.parsed, y=prev, fill=interest))+
+  geom_bar(stat='identity',position=position_dodge())+
+  facet_wrap(~property)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Reducing this plot to only the animals that were given to subjects (+ Dog and Cat, which over a third of subjects produced)
+
+```{r exp1.estimatesByAnimal.reduced, fig.height=10, fig.width=20}
+
+animals.with.at.least10.responses <- c(animals.given, c("Cat","Dog"))
+animals.with.at.least5.responses <- c(animals.given, c("Cat","Dog","Chicken","Turtle","Tiger","Monkey","Frog",
+                                                       "Bear"))
+
+d.tidy.sub <- d.tidy %>% 
+  group_by(animal.parsed) %>%
+  mutate(count = length(animal.parsed)) %>%
+  filter(count > 4)
+
+ggplot(data=d.tidy.sub, aes(x=animal.parsed, y=prev, fill=interest))+
+  geom_bar(stat='identity',position=position_dodge())+
+  geom_errorbar(aes(ymin=prev-2*sterr,ymax=prev+2*sterr),
+                position=position_dodge(),width=0.5)+
+  facet_wrap(~property)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+## Distribution by animal
+
+Here, I plot the distribution of prevalence after summarizing an average prevalence for each animal. Hence, a sample from this distribution is an animal category (with an associated prevalence of the property). Again note:: many of these categories have very few responses.
+
+Green line indicates prevalence for target category.
+```{r}
+ggplot(data=d.tidy, aes(x=prev))+
+  geom_vline(data=filter(d.tidy,interest), aes(xintercept=prev),
+             colour='#2ca25f',size=1.3)+
+  geom_histogram(binwidth=5)+
+  facet_wrap(~property)
+```
+
+
+## Distribution by response
+
+Here, I don't include the intermediate step of summarising by animal kind. Instead, I just plot the density directly from subjects' responses. Again, green line indicates prevalence for target categogry.
+
+```{r}
+
+d.interest<-d.tidy %>% filter(interest)
+
+ggplot(data = d, aes(x=prevalence))+
+  #geom_histogram()+
+  geom_density(adjust=0.5, fill='grey')+
+  facet_wrap(~property,scales='free')+
+  geom_vline(data=d.interest, aes(xintercept=prev), colour='#2ca25f',size=1.3)
+```
+
+
+Binned distributions (for model)
+
+```{r}
+d <- d %>% mutate(roundval=factor(round(prevalence/10)*10))
+
+d.bin<- d %>%
+  group_by(property, roundval) %>%
+  summarise(count = length(roundval)) %>%
+  ungroup() %>% group_by(property) %>%
+  mutate(prob = count/sum(count),
+         roundval = to.n(roundval))
+
+ggplot(d.bin, aes(x=roundval, y=prob))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~property)+
+  xlab("prevalence")+
+  ylab("proportion of responses\n")+
+  #scale_fill_brewer(palette='Pastel1',type='qual')+
+ # scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_discrete(breaks=c(0,20,40,60,80,100))+#,limits=c(-5,105))+
+ # theme_blackDisplay()+ 
+  guides(fill=guide_legend(title="property"))+
+#  theme(legend.key.size=unit(2, "lines"),
+#        legend.text.align=NULL)+
+  guides(fill=F)
+
+filter(d, property=='attack swimmers' & prevalence>90)$animal.parsed
+```
+
+Looks like "Mosquitos attack swimmers." is probably true.
+
+
+```{r}
+d.bin %>% select(-prob) %>% spread(roundval, count)
+
+```
+
+
+#### Markman's question: Is "lays eggs" affected by "are female"?
+
+```{r}
+
+d.femFirst<-d %>%
+  filter((animal.parsed %in% c("Duck","Bird","Mosquito")) & 
+           property %in% c("is female","lays eggs")) %>%
+  select(workerid, animal.parsed, property, property_index) %>%
+  mutate(property = factor(property, levels=c("is female","lays eggs"),
+                           labels=c("female","eggs"))) %>%
+  spread(property, property_index) %>%
+  mutate(femFirst = female<eggs)
+
+
+
+d.birds<- d %>%
+  filter((animal.parsed %in% c("Duck","Bird","Mosquito")) & 
+           property %in% c("is female","lays eggs")) 
+
+d.birds<-left_join(d.birds, d.femFirst, by="workerid")
+
+d.birds %>%
+  group_by(property, animal.parsed.x, femFirst) %>%
+  summarise(mean(prevalence))
+  
+
+
+```
+
+
+# lvRSA model predictions
+
+Doing TFBT with speaker optimality (at the S1 level) as a free parameter
+
+```{r}
+model.posteriorpred <-read.csv('generics_truthJudge_prasada1.csv',header=F,
+                               col.names=c("generic","posteriorPred"))
+
+prasada.data <-data.frame(generic = c("leopards have spots",
+                                      "birds have wings",
+                                    	"lions have manes",
+                                    	"ducks lay eggs",
+                                    	"mosquitos carry malaria",
+                                    	"sharks attack swimmers",
+                                    	"lions are male",
+                                    	"ducks are female",
+                                    	"lions have wings"),
+                          truth_judgment = c( 2.17,2.63,1.46,2.04,1.63,1.5,-0.04,
+                                              -0.58,-2.5),
+                          prevalence = c(93,92, 57, 78, 30, 31, 50, 50, 0)
+
+)
+
+
+combined.model.data<- left_join(model.posteriorpred, prasada.data)
+
+with(combined.model.data, cor(posteriorPred, truth_judgment))
+with(combined.model.data, cor(prevalence, truth_judgment))
+
+
+qplot(data=combined.model.data,
+      x=posteriorPred,y=truth_judgment,
+      color=generic)+
+  geom_point(size=3)
+
+qplot(data=combined.model.data,
+      x=prevalence,y=truth_judgment,
+      color=generic)+
+  geom_point(size=3)
+
+
+```
 
