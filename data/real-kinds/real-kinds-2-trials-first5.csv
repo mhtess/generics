@@ -1,0 +1,881 @@
+workerid,trial_number,trial_type,property,prevalence,animal,rt,property_index,animal_index
+0,0,priors,attacks swimmers,0,Peacocks,49.148,0,0
+0,0,priors,attacks swimmers,100,Sharks,49.148,0,1
+0,0,priors,attacks swimmers,0,Robins,49.148,0,2
+0,0,priors,attacks swimmers,50,Mosquitos,49.148,0,3
+0,0,priors,attacks swimmers,5,Ducks,49.148,0,4
+0,0,priors,attacks swimmers,0,Tigers,49.148,0,5
+0,0,priors,attacks swimmers,0,cats,49.148,0,6
+0,0,priors,attacks swimmers,0,dogs,49.148,0,7
+0,0,priors,attacks swimmers,0,whales,49.148,0,8
+0,0,priors,attacks swimmers,15,fish,49.148,0,9
+0,0,priors,attacks swimmers,100,alligators,49.148,0,10
+0,0,priors,have beautiful feathers,100,Peacocks,19.561,1,0
+0,0,priors,have beautiful feathers,0,Sharks,19.561,1,1
+0,0,priors,have beautiful feathers,100,Robins,19.561,1,2
+0,0,priors,have beautiful feathers,0,Mosquitos,19.561,1,3
+0,0,priors,have beautiful feathers,100,Ducks,19.561,1,4
+0,0,priors,have beautiful feathers,0,Tigers,19.561,1,5
+0,0,priors,have beautiful feathers,0,cats,19.561,1,6
+0,0,priors,have beautiful feathers,0,dogs,19.561,1,7
+0,0,priors,have beautiful feathers,0,whales,19.561,1,8
+0,0,priors,have beautiful feathers,0,fish,19.561,1,9
+0,0,priors,have beautiful feathers,0,alligators,19.561,1,10
+0,0,priors,are female,50,Peacocks,14.421,2,0
+0,0,priors,are female,50,Sharks,14.421,2,1
+0,0,priors,are female,50,Robins,14.421,2,2
+0,0,priors,are female,50,Mosquitos,14.421,2,3
+0,0,priors,are female,50,Ducks,14.421,2,4
+0,0,priors,are female,50,Tigers,14.421,2,5
+0,0,priors,are female,50,cats,14.421,2,6
+0,0,priors,are female,50,dogs,14.421,2,7
+0,0,priors,are female,50,whales,14.421,2,8
+0,0,priors,are female,50,fish,14.421,2,9
+0,0,priors,are female,50,alligators,14.421,2,10
+0,0.333333333333,priors,lay eggs,50,Peacocks,24.431,3,0
+0,0.333333333333,priors,lay eggs,0,Sharks,24.431,3,1
+0,0.333333333333,priors,lay eggs,50,Robins,24.431,3,2
+0,0.333333333333,priors,lay eggs,50,Mosquitos,24.431,3,3
+0,0.333333333333,priors,lay eggs,50,Ducks,24.431,3,4
+0,0.333333333333,priors,lay eggs,0,Tigers,24.431,3,5
+0,0.333333333333,priors,lay eggs,0,cats,24.431,3,6
+0,0.333333333333,priors,lay eggs,0,dogs,24.431,3,7
+0,0.333333333333,priors,lay eggs,0,whales,24.431,3,8
+0,0.333333333333,priors,lay eggs,0,fish,24.431,3,9
+0,0.333333333333,priors,lay eggs,0,alligators,24.431,3,10
+0,0.166666666667,priors,eat people,0,Peacocks,108.231,4,0
+0,0.166666666667,priors,eat people,100,Sharks,108.231,4,1
+0,0.166666666667,priors,eat people,0,Robins,108.231,4,2
+0,0.166666666667,priors,eat people,0,Mosquitos,108.231,4,3
+0,0.166666666667,priors,eat people,0,Ducks,108.231,4,4
+0,0.166666666667,priors,eat people,30,Tigers,108.231,4,5
+0,0.166666666667,priors,eat people,0,cats,108.231,4,6
+0,0.166666666667,priors,eat people,0,dogs,108.231,4,7
+0,0.166666666667,priors,eat people,100,whales,108.231,4,8
+0,0.166666666667,priors,eat people,15,fish,108.231,4,9
+0,0.166666666667,priors,eat people,100,alligators,108.231,4,10
+0,0,priors,carry malaria,0,Peacocks,23.983,5,0
+0,0,priors,carry malaria,0,Sharks,23.983,5,1
+0,0,priors,carry malaria,0,Robins,23.983,5,2
+0,0,priors,carry malaria,100,Mosquitos,23.983,5,3
+0,0,priors,carry malaria,0,Ducks,23.983,5,4
+0,0,priors,carry malaria,15,Tigers,23.983,5,5
+0,0,priors,carry malaria,0,cats,23.983,5,6
+0,0,priors,carry malaria,0,dogs,23.983,5,7
+0,0,priors,carry malaria,0,whales,23.983,5,8
+0,0,priors,carry malaria,0,fish,23.983,5,9
+0,0,priors,carry malaria,0,alligators,23.983,5,10
+0,1,priors,are juveline,30,Peacocks,26.745,6,0
+0,1,priors,are juveline,30,Sharks,26.745,6,1
+0,1,priors,are juveline,30,Robins,26.745,6,2
+0,1,priors,are juveline,30,Mosquitos,26.745,6,3
+0,1,priors,are juveline,30,Ducks,26.745,6,4
+0,1,priors,are juveline,30,Tigers,26.745,6,5
+0,1,priors,are juveline,30,cats,26.745,6,6
+0,1,priors,are juveline,30,dogs,26.745,6,7
+0,1,priors,are juveline,30,whales,26.745,6,8
+0,1,priors,are juveline,30,fish,26.745,6,9
+0,1,priors,are juveline,30,alligators,26.745,6,10
+0,1,priors,have wings,100,Peacocks,15.667,7,0
+0,1,priors,have wings,0,Sharks,15.667,7,1
+0,1,priors,have wings,100,Robins,15.667,7,2
+0,1,priors,have wings,100,Mosquitos,15.667,7,3
+0,1,priors,have wings,100,Ducks,15.667,7,4
+0,1,priors,have wings,0,Tigers,15.667,7,5
+0,1,priors,have wings,0,cats,15.667,7,6
+0,1,priors,have wings,0,dogs,15.667,7,7
+0,1,priors,have wings,0,whales,15.667,7,8
+0,1,priors,have wings,0,fish,15.667,7,9
+0,1,priors,have wings,0,alligators,15.667,7,10
+0,1,priors,are white,50,Swans,23.789,8,0
+0,1,priors,are white,0,Leopards,23.789,8,1
+0,1,priors,are white,0,Ticks,23.789,8,2
+0,1,priors,are white,0,Lions,23.789,8,3
+0,1,priors,are white,0,Cardinals,23.789,8,4
+0,1,priors,are white,0,Kangaroos,23.789,8,5
+0,1,priors,are white,10,bear,23.789,8,6
+0,1,priors,are white,0,jaguar,23.789,8,7
+0,1,priors,are white,0,turkey,23.789,8,8
+0,1,priors,are white,0,butterflies,23.789,8,9
+0,1,priors,are white,80,rabbit,23.789,8,10
+0,1,priors,have pouches,0,Swans,12.408,9,0
+0,1,priors,have pouches,0,Leopards,12.408,9,1
+0,1,priors,have pouches,0,Ticks,12.408,9,2
+0,1,priors,have pouches,0,Lions,12.408,9,3
+0,1,priors,have pouches,0,Cardinals,12.408,9,4
+0,1,priors,have pouches,100,Kangaroos,12.408,9,5
+0,1,priors,have pouches,0,bear,12.408,9,6
+0,1,priors,have pouches,0,jaguar,12.408,9,7
+0,1,priors,have pouches,0,turkey,12.408,9,8
+0,1,priors,have pouches,0,butterflies,12.408,9,9
+0,1,priors,have pouches,0,rabbit,12.408,9,10
+0,1,priors,are male,50,Swans,11.952,10,0
+0,1,priors,are male,50,Leopards,11.952,10,1
+0,1,priors,are male,50,Ticks,11.952,10,2
+0,1,priors,are male,50,Lions,11.952,10,3
+0,1,priors,are male,50,Cardinals,11.952,10,4
+0,1,priors,are male,50,Kangaroos,11.952,10,5
+0,1,priors,are male,50,bear,11.952,10,6
+0,1,priors,are male,50,jaguar,11.952,10,7
+0,1,priors,are male,50,turkey,11.952,10,8
+0,1,priors,are male,50,butterflies,11.952,10,9
+0,1,priors,are male,50,rabbit,11.952,10,10
+0,1,priors,have spots,15,Swans,25.762,11,0
+0,1,priors,have spots,100,Leopards,25.762,11,1
+0,1,priors,have spots,0,Ticks,25.762,11,2
+0,1,priors,have spots,0,Lions,25.762,11,3
+0,1,priors,have spots,0,Cardinals,25.762,11,4
+0,1,priors,have spots,0,Kangaroos,25.762,11,5
+0,1,priors,have spots,0,bear,25.762,11,6
+0,1,priors,have spots,100,jaguar,25.762,11,7
+0,1,priors,have spots,10,turkey,25.762,11,8
+0,1,priors,have spots,100,butterflies,25.762,11,9
+0,1,priors,have spots,5,rabbit,25.762,11,10
+0,1,priors,are red,0,Swans,17.967,12,0
+0,1,priors,are red,0,Leopards,17.967,12,1
+0,1,priors,are red,0,Ticks,17.967,12,2
+0,1,priors,are red,0,Lions,17.967,12,3
+0,1,priors,are red,0,Cardinals,17.967,12,4
+0,1,priors,are red,0,Kangaroos,17.967,12,5
+0,1,priors,are red,0,bear,17.967,12,6
+0,1,priors,are red,0,jaguar,17.967,12,7
+0,1,priors,are red,0,turkey,17.967,12,8
+0,1,priors,are red,15,butterflies,17.967,12,9
+0,1,priors,are red,0,rabbit,17.967,12,10
+0,1,priors,carry Lyme disease,0,Swans,12.149,13,0
+0,1,priors,carry Lyme disease,0,Leopards,12.149,13,1
+0,1,priors,carry Lyme disease,100,Ticks,12.149,13,2
+0,1,priors,carry Lyme disease,0,Lions,12.149,13,3
+0,1,priors,carry Lyme disease,0,Cardinals,12.149,13,4
+0,1,priors,carry Lyme disease,0,Kangaroos,12.149,13,5
+0,1,priors,carry Lyme disease,0,bear,12.149,13,6
+0,1,priors,carry Lyme disease,0,jaguar,12.149,13,7
+0,1,priors,carry Lyme disease,0,turkey,12.149,13,8
+0,1,priors,carry Lyme disease,0,butterflies,12.149,13,9
+0,1,priors,carry Lyme disease,0,rabbit,12.149,13,10
+0,1,priors,have manes,0,Swans,17.492,14,0
+0,1,priors,have manes,0,Leopards,17.492,14,1
+0,1,priors,have manes,0,Ticks,17.492,14,2
+0,1,priors,have manes,100,Lions,17.492,14,3
+0,1,priors,have manes,0,Cardinals,17.492,14,4
+0,1,priors,have manes,0,Kangaroos,17.492,14,5
+0,1,priors,have manes,0,bear,17.492,14,6
+0,1,priors,have manes,0,jaguar,17.492,14,7
+0,1,priors,have manes,0,turkey,17.492,14,8
+0,1,priors,have manes,0,butterflies,17.492,14,9
+0,1,priors,have manes,0,rabbit,17.492,14,10
+0,1,priors,are full-grown,40,Swans,28.337,15,0
+0,1,priors,are full-grown,40,Leopards,28.337,15,1
+0,1,priors,are full-grown,40,Ticks,28.337,15,2
+0,1,priors,are full-grown,40,Lions,28.337,15,3
+0,1,priors,are full-grown,40,Cardinals,28.337,15,4
+0,1,priors,are full-grown,40,Kangaroos,28.337,15,5
+0,1,priors,are full-grown,40,bear,28.337,15,6
+0,1,priors,are full-grown,40,jaguar,28.337,15,7
+0,1,priors,are full-grown,40,turkey,28.337,15,8
+0,1,priors,are full-grown,100,butterflies,28.337,15,9
+0,1,priors,are full-grown,40,rabbit,28.337,15,10
+1,0,priors,carry malaria,0,Cardinals,90.314,0,0
+1,0,priors,carry malaria,10,Mosquitos,90.314,0,1
+1,0,priors,carry malaria,0,Sharks,90.314,0,2
+1,0,priors,carry malaria,0,Robins,90.314,0,3
+1,0,priors,carry malaria,0,Peacocks,90.314,0,4
+1,0,priors,carry malaria,0,Kangaroos,90.314,0,5
+1,0,priors,carry malaria,0,Snakes,90.314,0,6
+1,0,priors,carry malaria,0,Monkeys,90.314,0,7
+1,0,priors,carry malaria,0,Rabbits,90.314,0,8
+1,0,priors,carry malaria,0,Goldfish,90.314,0,9
+1,0,priors,carry malaria,0,Lions,90.314,0,10
+1,0,priors,have beautiful feathers,100,Cardinals,25.736,1,0
+1,0,priors,have beautiful feathers,0,Mosquitos,25.736,1,1
+1,0,priors,have beautiful feathers,0,Sharks,25.736,1,2
+1,0,priors,have beautiful feathers,100,Robins,25.736,1,3
+1,0,priors,have beautiful feathers,100,Peacocks,25.736,1,4
+1,0,priors,have beautiful feathers,0,Kangaroos,25.736,1,5
+1,0,priors,have beautiful feathers,0,Snakes,25.736,1,6
+1,0,priors,have beautiful feathers,0,Monkeys,25.736,1,7
+1,0,priors,have beautiful feathers,0,Rabbits,25.736,1,8
+1,0,priors,have beautiful feathers,0,Goldfish,25.736,1,9
+1,0,priors,have beautiful feathers,0,Lions,25.736,1,10
+1,0,priors,are red,100,Cardinals,76.712,2,0
+1,0,priors,are red,0,Mosquitos,76.712,2,1
+1,0,priors,are red,0,Sharks,76.712,2,2
+1,0,priors,are red,50,Robins,76.712,2,3
+1,0,priors,are red,0,Peacocks,76.712,2,4
+1,0,priors,are red,0,Kangaroos,76.712,2,5
+1,0,priors,are red,10,Snakes,76.712,2,6
+1,0,priors,are red,10,Monkeys,76.712,2,7
+1,0,priors,are red,0,Rabbits,76.712,2,8
+1,0,priors,are red,0,Goldfish,76.712,2,9
+1,0,priors,are red,0,Lions,76.712,2,10
+1,0.333333333333,priors,lay eggs,50,Cardinals,58.848,3,0
+1,0.333333333333,priors,lay eggs,50,Mosquitos,58.848,3,1
+1,0.333333333333,priors,lay eggs,50,Sharks,58.848,3,2
+1,0.333333333333,priors,lay eggs,50,Robins,58.848,3,3
+1,0.333333333333,priors,lay eggs,50,Peacocks,58.848,3,4
+1,0.333333333333,priors,lay eggs,0,Kangaroos,58.848,3,5
+1,0.333333333333,priors,lay eggs,50,Snakes,58.848,3,6
+1,0.333333333333,priors,lay eggs,0,Monkeys,58.848,3,7
+1,0.333333333333,priors,lay eggs,0,Rabbits,58.848,3,8
+1,0.333333333333,priors,lay eggs,50,Goldfish,58.848,3,9
+1,0.333333333333,priors,lay eggs,0,Lions,58.848,3,10
+1,0.166666666667,priors,are full-grown,95,Cardinals,30.947,4,0
+1,0.166666666667,priors,are full-grown,95,Mosquitos,30.947,4,1
+1,0.166666666667,priors,are full-grown,95,Sharks,30.947,4,2
+1,0.166666666667,priors,are full-grown,95,Robins,30.947,4,3
+1,0.166666666667,priors,are full-grown,95,Peacocks,30.947,4,4
+1,0.166666666667,priors,are full-grown,95,Kangaroos,30.947,4,5
+1,0.166666666667,priors,are full-grown,95,Snakes,30.947,4,6
+1,0.166666666667,priors,are full-grown,95,Monkeys,30.947,4,7
+1,0.166666666667,priors,are full-grown,95,Rabbits,30.947,4,8
+1,0.166666666667,priors,are full-grown,95,Goldfish,30.947,4,9
+1,0.166666666667,priors,are full-grown,95,Lions,30.947,4,10
+1,0,priors,attacks swimmers,0,Cardinals,43.137,5,0
+1,0,priors,attacks swimmers,0,Mosquitos,43.137,5,1
+1,0,priors,attacks swimmers,50,Sharks,43.137,5,2
+1,0,priors,attacks swimmers,0,Robins,43.137,5,3
+1,0,priors,attacks swimmers,0,Peacocks,43.137,5,4
+1,0,priors,attacks swimmers,0,Kangaroos,43.137,5,5
+1,0,priors,attacks swimmers,5,Snakes,43.137,5,6
+1,0,priors,attacks swimmers,0,Monkeys,43.137,5,7
+1,0,priors,attacks swimmers,0,Rabbits,43.137,5,8
+1,0,priors,attacks swimmers,5,Goldfish,43.137,5,9
+1,0,priors,attacks swimmers,25,Lions,43.137,5,10
+1,1,priors,have pouches,0,Cardinals,17.516,6,0
+1,1,priors,have pouches,0,Mosquitos,17.516,6,1
+1,1,priors,have pouches,0,Sharks,17.516,6,2
+1,1,priors,have pouches,0,Robins,17.516,6,3
+1,1,priors,have pouches,0,Peacocks,17.516,6,4
+1,1,priors,have pouches,50,Kangaroos,17.516,6,5
+1,1,priors,have pouches,0,Snakes,17.516,6,6
+1,1,priors,have pouches,0,Monkeys,17.516,6,7
+1,1,priors,have pouches,0,Rabbits,17.516,6,8
+1,1,priors,have pouches,0,Goldfish,17.516,6,9
+1,1,priors,have pouches,0,Lions,17.516,6,10
+1,1,priors,are male,50,Cardinals,14.971,7,0
+1,1,priors,are male,50,Mosquitos,14.971,7,1
+1,1,priors,are male,50,Sharks,14.971,7,2
+1,1,priors,are male,50,Robins,14.971,7,3
+1,1,priors,are male,50,Peacocks,14.971,7,4
+1,1,priors,are male,50,Kangaroos,14.971,7,5
+1,1,priors,are male,50,Snakes,14.971,7,6
+1,1,priors,are male,50,Monkeys,14.971,7,7
+1,1,priors,are male,50,Rabbits,14.971,7,8
+1,1,priors,are male,50,Goldfish,14.971,7,9
+1,1,priors,are male,50,Lions,14.971,7,10
+1,1,priors,have wings,0,Leopards,53.784,8,0
+1,1,priors,have wings,100,Ducks,53.784,8,1
+1,1,priors,have wings,0,Lions,53.784,8,2
+1,1,priors,have wings,0,Tigers,53.784,8,3
+1,1,priors,have wings,0,Ticks,53.784,8,4
+1,1,priors,have wings,100,Swans,53.784,8,5
+1,1,priors,have wings,0,Housecats,53.784,8,6
+1,1,priors,have wings,0,Squirrels,53.784,8,7
+1,1,priors,have wings,100,Eagles,53.784,8,8
+1,1,priors,have wings,100,Penguins,53.784,8,9
+1,1,priors,have wings,0,Polar Bears,53.784,8,10
+1,1,priors,eat people,5,Leopards,40.915,9,0
+1,1,priors,eat people,0,Ducks,40.915,9,1
+1,1,priors,eat people,5,Lions,40.915,9,2
+1,1,priors,eat people,5,Tigers,40.915,9,3
+1,1,priors,eat people,90,Ticks,40.915,9,4
+1,1,priors,eat people,0,Swans,40.915,9,5
+1,1,priors,eat people,0,Housecats,40.915,9,6
+1,1,priors,eat people,0,Squirrels,40.915,9,7
+1,1,priors,eat people,0,Eagles,40.915,9,8
+1,1,priors,eat people,0,Penguins,40.915,9,9
+1,1,priors,eat people,5,Polar Bears,40.915,9,10
+1,1,priors,are white,5,Leopards,50.206,10,0
+1,1,priors,are white,0,Ducks,50.206,10,1
+1,1,priors,are white,0,Lions,50.206,10,2
+1,1,priors,are white,5,Tigers,50.206,10,3
+1,1,priors,are white,0,Ticks,50.206,10,4
+1,1,priors,are white,50,Swans,50.206,10,5
+1,1,priors,are white,10,Housecats,50.206,10,6
+1,1,priors,are white,0,Squirrels,50.206,10,7
+1,1,priors,are white,0,Eagles,50.206,10,8
+1,1,priors,are white,0,Penguins,50.206,10,9
+1,1,priors,are white,100,Polar Bears,50.206,10,10
+1,1,priors,carry Lyme disease,0,Leopards,16.839,11,0
+1,1,priors,carry Lyme disease,0,Ducks,16.839,11,1
+1,1,priors,carry Lyme disease,0,Lions,16.839,11,2
+1,1,priors,carry Lyme disease,0,Tigers,16.839,11,3
+1,1,priors,carry Lyme disease,50,Ticks,16.839,11,4
+1,1,priors,carry Lyme disease,0,Swans,16.839,11,5
+1,1,priors,carry Lyme disease,0,Housecats,16.839,11,6
+1,1,priors,carry Lyme disease,0,Squirrels,16.839,11,7
+1,1,priors,carry Lyme disease,0,Eagles,16.839,11,8
+1,1,priors,carry Lyme disease,0,Penguins,16.839,11,9
+1,1,priors,carry Lyme disease,0,Polar Bears,16.839,11,10
+1,1,priors,have manes,0,Leopards,14.404,12,0
+1,1,priors,have manes,0,Ducks,14.404,12,1
+1,1,priors,have manes,50,Lions,14.404,12,2
+1,1,priors,have manes,0,Tigers,14.404,12,3
+1,1,priors,have manes,0,Ticks,14.404,12,4
+1,1,priors,have manes,0,Swans,14.404,12,5
+1,1,priors,have manes,0,Housecats,14.404,12,6
+1,1,priors,have manes,0,Squirrels,14.404,12,7
+1,1,priors,have manes,0,Eagles,14.404,12,8
+1,1,priors,have manes,0,Penguins,14.404,12,9
+1,1,priors,have manes,0,Polar Bears,14.404,12,10
+1,1,priors,are female,50,Leopards,10.073,13,0
+1,1,priors,are female,50,Ducks,10.073,13,1
+1,1,priors,are female,50,Lions,10.073,13,2
+1,1,priors,are female,50,Tigers,10.073,13,3
+1,1,priors,are female,50,Ticks,10.073,13,4
+1,1,priors,are female,50,Swans,10.073,13,5
+1,1,priors,are female,50,Housecats,10.073,13,6
+1,1,priors,are female,50,Squirrels,10.073,13,7
+1,1,priors,are female,50,Eagles,10.073,13,8
+1,1,priors,are female,50,Penguins,10.073,13,9
+1,1,priors,are female,50,Polar Bears,10.073,13,10
+1,1,priors,are juveline,10,Leopards,15.046,14,0
+1,1,priors,are juveline,10,Ducks,15.046,14,1
+1,1,priors,are juveline,10,Lions,15.046,14,2
+1,1,priors,are juveline,10,Tigers,15.046,14,3
+1,1,priors,are juveline,10,Ticks,15.046,14,4
+1,1,priors,are juveline,10,Swans,15.046,14,5
+1,1,priors,are juveline,10,Housecats,15.046,14,6
+1,1,priors,are juveline,10,Squirrels,15.046,14,7
+1,1,priors,are juveline,10,Eagles,15.046,14,8
+1,1,priors,are juveline,10,Penguins,15.046,14,9
+1,1,priors,are juveline,10,Polar Bears,15.046,14,10
+1,1,priors,have spots,90,Leopards,20.432,15,0
+1,1,priors,have spots,0,Ducks,20.432,15,1
+1,1,priors,have spots,0,Lions,20.432,15,2
+1,1,priors,have spots,0,Tigers,20.432,15,3
+1,1,priors,have spots,0,Ticks,20.432,15,4
+1,1,priors,have spots,0,Swans,20.432,15,5
+1,1,priors,have spots,25,Housecats,20.432,15,6
+1,1,priors,have spots,0,Squirrels,20.432,15,7
+1,1,priors,have spots,0,Eagles,20.432,15,8
+1,1,priors,have spots,0,Penguins,20.432,15,9
+1,1,priors,have spots,0,Polar Bears,20.432,15,10
+2,0,priors,have wings,0,Leopards,12.495,0,0
+2,0,priors,have wings,100,Cardinals,12.495,0,1
+2,0,priors,have wings,0,Tigers,12.495,0,2
+2,0,priors,have wings,0,Ticks,12.495,0,3
+2,0,priors,have wings,100,Ducks,12.495,0,4
+2,0,priors,have wings,0,Lions,12.495,0,5
+2,0,priors,have wings,0,Bears,12.495,0,6
+2,0,priors,have wings,0,Panthers,12.495,0,7
+2,0,priors,have wings,100,Geese,12.495,0,8
+2,0,priors,have wings,0,Dogs,12.495,0,9
+2,0,priors,have wings,0,Cats,12.495,0,10
+2,0,priors,eat people,15,Leopards,36.78,1,0
+2,0,priors,eat people,0,Cardinals,36.78,1,1
+2,0,priors,eat people,15,Tigers,36.78,1,2
+2,0,priors,eat people,50,Ticks,36.78,1,3
+2,0,priors,eat people,0,Ducks,36.78,1,4
+2,0,priors,eat people,15,Lions,36.78,1,5
+2,0,priors,eat people,20,Bears,36.78,1,6
+2,0,priors,eat people,15,Panthers,36.78,1,7
+2,0,priors,eat people,0,Geese,36.78,1,8
+2,0,priors,eat people,10,Dogs,36.78,1,9
+2,0,priors,eat people,0,Cats,36.78,1,10
+2,0,priors,are full-grown,40,Leopards,35.285,2,0
+2,0,priors,are full-grown,40,Cardinals,35.285,2,1
+2,0,priors,are full-grown,40,Tigers,35.285,2,2
+2,0,priors,are full-grown,75,Ticks,35.285,2,3
+2,0,priors,are full-grown,55,Ducks,35.285,2,4
+2,0,priors,are full-grown,40,Lions,35.285,2,5
+2,0,priors,are full-grown,40,Bears,35.285,2,6
+2,0,priors,are full-grown,40,Panthers,35.285,2,7
+2,0,priors,are full-grown,55,Geese,35.285,2,8
+2,0,priors,are full-grown,40,Dogs,35.285,2,9
+2,0,priors,are full-grown,40,Cats,35.285,2,10
+2,0.333333333333,priors,are female,55,Leopards,82.157,3,0
+2,0.333333333333,priors,are female,45,Cardinals,82.157,3,1
+2,0.333333333333,priors,are female,50,Tigers,82.157,3,2
+2,0.333333333333,priors,are female,50,Ticks,82.157,3,3
+2,0.333333333333,priors,are female,50,Ducks,82.157,3,4
+2,0.333333333333,priors,are female,55,Lions,82.157,3,5
+2,0.333333333333,priors,are female,45,Bears,82.157,3,6
+2,0.333333333333,priors,are female,55,Panthers,82.157,3,7
+2,0.333333333333,priors,are female,50,Geese,82.157,3,8
+2,0.333333333333,priors,are female,50,Dogs,82.157,3,9
+2,0.333333333333,priors,are female,55,Cats,82.157,3,10
+2,0.166666666667,priors,have manes,0,Leopards,25.34,4,0
+2,0.166666666667,priors,have manes,0,Cardinals,25.34,4,1
+2,0.166666666667,priors,have manes,0,Tigers,25.34,4,2
+2,0.166666666667,priors,have manes,0,Ticks,25.34,4,3
+2,0.166666666667,priors,have manes,0,Ducks,25.34,4,4
+2,0.166666666667,priors,have manes,80,Lions,25.34,4,5
+2,0.166666666667,priors,have manes,0,Bears,25.34,4,6
+2,0.166666666667,priors,have manes,0,Panthers,25.34,4,7
+2,0.166666666667,priors,have manes,0,Geese,25.34,4,8
+2,0.166666666667,priors,have manes,0,Dogs,25.34,4,9
+2,0.166666666667,priors,have manes,0,Cats,25.34,4,10
+2,0,priors,have spots,90,Leopards,17.908,5,0
+2,0,priors,have spots,0,Cardinals,17.908,5,1
+2,0,priors,have spots,0,Tigers,17.908,5,2
+2,0,priors,have spots,0,Ticks,17.908,5,3
+2,0,priors,have spots,0,Ducks,17.908,5,4
+2,0,priors,have spots,0,Lions,17.908,5,5
+2,0,priors,have spots,0,Bears,17.908,5,6
+2,0,priors,have spots,0,Panthers,17.908,5,7
+2,0,priors,have spots,0,Geese,17.908,5,8
+2,0,priors,have spots,20,Dogs,17.908,5,9
+2,0,priors,have spots,30,Cats,17.908,5,10
+2,1,priors,carry Lyme disease,0,Leopards,15.553,6,0
+2,1,priors,carry Lyme disease,0,Cardinals,15.553,6,1
+2,1,priors,carry Lyme disease,0,Tigers,15.553,6,2
+2,1,priors,carry Lyme disease,60,Ticks,15.553,6,3
+2,1,priors,carry Lyme disease,0,Ducks,15.553,6,4
+2,1,priors,carry Lyme disease,0,Lions,15.553,6,5
+2,1,priors,carry Lyme disease,0,Bears,15.553,6,6
+2,1,priors,carry Lyme disease,0,Panthers,15.553,6,7
+2,1,priors,carry Lyme disease,0,Geese,15.553,6,8
+2,1,priors,carry Lyme disease,10,Dogs,15.553,6,9
+2,1,priors,carry Lyme disease,10,Cats,15.553,6,10
+2,1,priors,are red,0,Leopards,13.68,7,0
+2,1,priors,are red,50,Cardinals,13.68,7,1
+2,1,priors,are red,0,Tigers,13.68,7,2
+2,1,priors,are red,0,Ticks,13.68,7,3
+2,1,priors,are red,0,Ducks,13.68,7,4
+2,1,priors,are red,0,Lions,13.68,7,5
+2,1,priors,are red,0,Bears,13.68,7,6
+2,1,priors,are red,0,Panthers,13.68,7,7
+2,1,priors,are red,0,Geese,13.68,7,8
+2,1,priors,are red,0,Dogs,13.68,7,9
+2,1,priors,are red,0,Cats,13.68,7,10
+2,1,priors,lay eggs,30,Sharks,31.255,8,0
+2,1,priors,lay eggs,50,Mosquitos,31.255,8,1
+2,1,priors,lay eggs,0,Kangaroos,31.255,8,2
+2,1,priors,lay eggs,50,Robins,31.255,8,3
+2,1,priors,lay eggs,50,Swans,31.255,8,4
+2,1,priors,lay eggs,50,Peacocks,31.255,8,5
+2,1,priors,lay eggs,0,Koalas,31.255,8,6
+2,1,priors,lay eggs,0,Zebras,31.255,8,7
+2,1,priors,lay eggs,0,Llamas,31.255,8,8
+2,1,priors,lay eggs,0,Camels,31.255,8,9
+2,1,priors,lay eggs,0,Dolphins,31.255,8,10
+2,1,priors,attacks swimmers,5,Sharks,15.308,9,0
+2,1,priors,attacks swimmers,0,Mosquitos,15.308,9,1
+2,1,priors,attacks swimmers,0,Kangaroos,15.308,9,2
+2,1,priors,attacks swimmers,0,Robins,15.308,9,3
+2,1,priors,attacks swimmers,2,Swans,15.308,9,4
+2,1,priors,attacks swimmers,0,Peacocks,15.308,9,5
+2,1,priors,attacks swimmers,0,Koalas,15.308,9,6
+2,1,priors,attacks swimmers,0,Zebras,15.308,9,7
+2,1,priors,attacks swimmers,0,Llamas,15.308,9,8
+2,1,priors,attacks swimmers,0,Camels,15.308,9,9
+2,1,priors,attacks swimmers,1,Dolphins,15.308,9,10
+2,1,priors,are male,50,Sharks,12.184,10,0
+2,1,priors,are male,50,Mosquitos,12.184,10,1
+2,1,priors,are male,50,Kangaroos,12.184,10,2
+2,1,priors,are male,50,Robins,12.184,10,3
+2,1,priors,are male,50,Swans,12.184,10,4
+2,1,priors,are male,50,Peacocks,12.184,10,5
+2,1,priors,are male,50,Koalas,12.184,10,6
+2,1,priors,are male,50,Zebras,12.184,10,7
+2,1,priors,are male,50,Llamas,12.184,10,8
+2,1,priors,are male,50,Camels,12.184,10,9
+2,1,priors,are male,50,Dolphins,12.184,10,10
+2,1,priors,have pouches,0,Sharks,24.188,11,0
+2,1,priors,have pouches,0,Mosquitos,24.188,11,1
+2,1,priors,have pouches,50,Kangaroos,24.188,11,2
+2,1,priors,have pouches,0,Robins,24.188,11,3
+2,1,priors,have pouches,0,Swans,24.188,11,4
+2,1,priors,have pouches,0,Peacocks,24.188,11,5
+2,1,priors,have pouches,50,Koalas,24.188,11,6
+2,1,priors,have pouches,0,Zebras,24.188,11,7
+2,1,priors,have pouches,0,Llamas,24.188,11,8
+2,1,priors,have pouches,0,Camels,24.188,11,9
+2,1,priors,have pouches,0,Dolphins,24.188,11,10
+2,1,priors,carry malaria,0,Sharks,11.667,12,0
+2,1,priors,carry malaria,50,Mosquitos,11.667,12,1
+2,1,priors,carry malaria,0,Kangaroos,11.667,12,2
+2,1,priors,carry malaria,0,Robins,11.667,12,3
+2,1,priors,carry malaria,0,Swans,11.667,12,4
+2,1,priors,carry malaria,0,Peacocks,11.667,12,5
+2,1,priors,carry malaria,0,Koalas,11.667,12,6
+2,1,priors,carry malaria,0,Zebras,11.667,12,7
+2,1,priors,carry malaria,0,Llamas,11.667,12,8
+2,1,priors,carry malaria,0,Camels,11.667,12,9
+2,1,priors,carry malaria,0,Dolphins,11.667,12,10
+2,1,priors,have beautiful feathers,0,Sharks,15.03,13,0
+2,1,priors,have beautiful feathers,0,Mosquitos,15.03,13,1
+2,1,priors,have beautiful feathers,0,Kangaroos,15.03,13,2
+2,1,priors,have beautiful feathers,10,Robins,15.03,13,3
+2,1,priors,have beautiful feathers,25,Swans,15.03,13,4
+2,1,priors,have beautiful feathers,50,Peacocks,15.03,13,5
+2,1,priors,have beautiful feathers,0,Koalas,15.03,13,6
+2,1,priors,have beautiful feathers,0,Zebras,15.03,13,7
+2,1,priors,have beautiful feathers,0,Llamas,15.03,13,8
+2,1,priors,have beautiful feathers,0,Camels,15.03,13,9
+2,1,priors,have beautiful feathers,0,Dolphins,15.03,13,10
+2,1,priors,are white,10,Sharks,22.708,14,0
+2,1,priors,are white,0,Mosquitos,22.708,14,1
+2,1,priors,are white,0,Kangaroos,22.708,14,2
+2,1,priors,are white,0,Robins,22.708,14,3
+2,1,priors,are white,80,Swans,22.708,14,4
+2,1,priors,are white,10,Peacocks,22.708,14,5
+2,1,priors,are white,0,Koalas,22.708,14,6
+2,1,priors,are white,15,Zebras,22.708,14,7
+2,1,priors,are white,0,Llamas,22.708,14,8
+2,1,priors,are white,0,Camels,22.708,14,9
+2,1,priors,are white,0,Dolphins,22.708,14,10
+2,1,priors,are juveline,20,Sharks,24.224,15,0
+2,1,priors,are juveline,20,Mosquitos,24.224,15,1
+2,1,priors,are juveline,20,Kangaroos,24.224,15,2
+2,1,priors,are juveline,20,Robins,24.224,15,3
+2,1,priors,are juveline,20,Swans,24.224,15,4
+2,1,priors,are juveline,20,Peacocks,24.224,15,5
+2,1,priors,are juveline,20,Koalas,24.224,15,6
+2,1,priors,are juveline,20,Zebras,24.224,15,7
+2,1,priors,are juveline,20,Llamas,24.224,15,8
+2,1,priors,are juveline,20,Camels,24.224,15,9
+2,1,priors,are juveline,20,Dolphins,24.224,15,10
+3,0,priors,have manes,50,Lions,21.844,0,0
+3,0,priors,have manes,0,Ticks,21.844,0,1
+3,0,priors,have manes,0,Kangaroos,21.844,0,2
+3,0,priors,have manes,0,Robins,21.844,0,3
+3,0,priors,have manes,0,Peacocks,21.844,0,4
+3,0,priors,have manes,0,Leopards,21.844,0,5
+3,0,priors,have manes,0,Tigers,21.844,0,6
+3,0,priors,have manes,0,Camels,21.844,0,7
+3,0,priors,have manes,0,Giraffes,21.844,0,8
+3,0,priors,have manes,0,Elephants,21.844,0,9
+3,0,priors,have manes,0,Rats,21.844,0,10
+3,0,priors,have spots,0,Lions,32.821,1,0
+3,0,priors,have spots,40,Ticks,32.821,1,1
+3,0,priors,have spots,0,Kangaroos,32.821,1,2
+3,0,priors,have spots,20,Robins,32.821,1,3
+3,0,priors,have spots,50,Peacocks,32.821,1,4
+3,0,priors,have spots,90,Leopards,32.821,1,5
+3,0,priors,have spots,0,Tigers,32.821,1,6
+3,0,priors,have spots,0,Camels,32.821,1,7
+3,0,priors,have spots,20,Giraffes,32.821,1,8
+3,0,priors,have spots,0,Elephants,32.821,1,9
+3,0,priors,have spots,0,Rats,32.821,1,10
+3,0,priors,are juveline,30,Lions,47.976,2,0
+3,0,priors,are juveline,30,Ticks,47.976,2,1
+3,0,priors,are juveline,30,Kangaroos,47.976,2,2
+3,0,priors,are juveline,30,Robins,47.976,2,3
+3,0,priors,are juveline,30,Peacocks,47.976,2,4
+3,0,priors,are juveline,30,Leopards,47.976,2,5
+3,0,priors,are juveline,30,Tigers,47.976,2,6
+3,0,priors,are juveline,30,Camels,47.976,2,7
+3,0,priors,are juveline,30,Giraffes,47.976,2,8
+3,0,priors,are juveline,30,Elephants,47.976,2,9
+3,0,priors,are juveline,30,Rats,47.976,2,10
+3,0.333333333333,priors,have beautiful feathers,0,Lions,17.607,3,0
+3,0.333333333333,priors,have beautiful feathers,0,Ticks,17.607,3,1
+3,0.333333333333,priors,have beautiful feathers,0,Kangaroos,17.607,3,2
+3,0.333333333333,priors,have beautiful feathers,50,Robins,17.607,3,3
+3,0.333333333333,priors,have beautiful feathers,50,Peacocks,17.607,3,4
+3,0.333333333333,priors,have beautiful feathers,0,Leopards,17.607,3,5
+3,0.333333333333,priors,have beautiful feathers,0,Tigers,17.607,3,6
+3,0.333333333333,priors,have beautiful feathers,0,Camels,17.607,3,7
+3,0.333333333333,priors,have beautiful feathers,0,Giraffes,17.607,3,8
+3,0.333333333333,priors,have beautiful feathers,0,Elephants,17.607,3,9
+3,0.333333333333,priors,have beautiful feathers,0,Rats,17.607,3,10
+3,0.166666666667,priors,carry Lyme disease,0,Lions,11.115,4,0
+3,0.166666666667,priors,carry Lyme disease,80,Ticks,11.115,4,1
+3,0.166666666667,priors,carry Lyme disease,0,Kangaroos,11.115,4,2
+3,0.166666666667,priors,carry Lyme disease,0,Robins,11.115,4,3
+3,0.166666666667,priors,carry Lyme disease,0,Peacocks,11.115,4,4
+3,0.166666666667,priors,carry Lyme disease,0,Leopards,11.115,4,5
+3,0.166666666667,priors,carry Lyme disease,0,Tigers,11.115,4,6
+3,0.166666666667,priors,carry Lyme disease,0,Camels,11.115,4,7
+3,0.166666666667,priors,carry Lyme disease,0,Giraffes,11.115,4,8
+3,0.166666666667,priors,carry Lyme disease,0,Elephants,11.115,4,9
+3,0.166666666667,priors,carry Lyme disease,0,Rats,11.115,4,10
+3,0,priors,lay eggs,0,Lions,19.526,5,0
+3,0,priors,lay eggs,0,Ticks,19.526,5,1
+3,0,priors,lay eggs,0,Kangaroos,19.526,5,2
+3,0,priors,lay eggs,50,Robins,19.526,5,3
+3,0,priors,lay eggs,50,Peacocks,19.526,5,4
+3,0,priors,lay eggs,0,Leopards,19.526,5,5
+3,0,priors,lay eggs,0,Tigers,19.526,5,6
+3,0,priors,lay eggs,0,Camels,19.526,5,7
+3,0,priors,lay eggs,0,Giraffes,19.526,5,8
+3,0,priors,lay eggs,0,Elephants,19.526,5,9
+3,0,priors,lay eggs,0,Rats,19.526,5,10
+3,1,priors,are female,50,Lions,11.297,6,0
+3,1,priors,are female,50,Ticks,11.297,6,1
+3,1,priors,are female,50,Kangaroos,11.297,6,2
+3,1,priors,are female,50,Robins,11.297,6,3
+3,1,priors,are female,50,Peacocks,11.297,6,4
+3,1,priors,are female,50,Leopards,11.297,6,5
+3,1,priors,are female,50,Tigers,11.297,6,6
+3,1,priors,are female,50,Camels,11.297,6,7
+3,1,priors,are female,50,Giraffes,11.297,6,8
+3,1,priors,are female,50,Elephants,11.297,6,9
+3,1,priors,are female,50,Rats,11.297,6,10
+3,1,priors,have pouches,0,Lions,17.869,7,0
+3,1,priors,have pouches,0,Ticks,17.869,7,1
+3,1,priors,have pouches,50,Kangaroos,17.869,7,2
+3,1,priors,have pouches,0,Robins,17.869,7,3
+3,1,priors,have pouches,0,Peacocks,17.869,7,4
+3,1,priors,have pouches,0,Leopards,17.869,7,5
+3,1,priors,have pouches,0,Tigers,17.869,7,6
+3,1,priors,have pouches,0,Camels,17.869,7,7
+3,1,priors,have pouches,0,Giraffes,17.869,7,8
+3,1,priors,have pouches,0,Elephants,17.869,7,9
+3,1,priors,have pouches,0,Rats,17.869,7,10
+3,1,priors,have wings,100,Swans,12.199,8,0
+3,1,priors,have wings,0,Tigers,12.199,8,1
+3,1,priors,have wings,100,Cardinals,12.199,8,2
+3,1,priors,have wings,0,Sharks,12.199,8,3
+3,1,priors,have wings,100,Mosquitos,12.199,8,4
+3,1,priors,have wings,100,Ducks,12.199,8,5
+3,1,priors,have wings,0,Lions,12.199,8,6
+3,1,priors,have wings,0,Bears,12.199,8,7
+3,1,priors,have wings,0,Elephants,12.199,8,8
+3,1,priors,have wings,0,Giraffes,12.199,8,9
+3,1,priors,have wings,0,Camels,12.199,8,10
+3,1,priors,are white,80,Swans,27.953,9,0
+3,1,priors,are white,20,Tigers,27.953,9,1
+3,1,priors,are white,10,Cardinals,27.953,9,2
+3,1,priors,are white,30,Sharks,27.953,9,3
+3,1,priors,are white,0,Mosquitos,27.953,9,4
+3,1,priors,are white,10,Ducks,27.953,9,5
+3,1,priors,are white,5,Lions,27.953,9,6
+3,1,priors,are white,5,Bears,27.953,9,7
+3,1,priors,are white,2,Elephants,27.953,9,8
+3,1,priors,are white,2,Giraffes,27.953,9,9
+3,1,priors,are white,2,Camels,27.953,9,10
+3,1,priors,carry malaria,0,Swans,14.541,10,0
+3,1,priors,carry malaria,0,Tigers,14.541,10,1
+3,1,priors,carry malaria,0,Cardinals,14.541,10,2
+3,1,priors,carry malaria,0,Sharks,14.541,10,3
+3,1,priors,carry malaria,90,Mosquitos,14.541,10,4
+3,1,priors,carry malaria,0,Ducks,14.541,10,5
+3,1,priors,carry malaria,0,Lions,14.541,10,6
+3,1,priors,carry malaria,0,Bears,14.541,10,7
+3,1,priors,carry malaria,0,Elephants,14.541,10,8
+3,1,priors,carry malaria,0,Giraffes,14.541,10,9
+3,1,priors,carry malaria,0,Camels,14.541,10,10
+3,1,priors,are male,50,Swans,15.607,11,0
+3,1,priors,are male,50,Tigers,15.607,11,1
+3,1,priors,are male,50,Cardinals,15.607,11,2
+3,1,priors,are male,50,Sharks,15.607,11,3
+3,1,priors,are male,50,Mosquitos,15.607,11,4
+3,1,priors,are male,50,Ducks,15.607,11,5
+3,1,priors,are male,50,Lions,15.607,11,6
+3,1,priors,are male,50,Bears,15.607,11,7
+3,1,priors,are male,50,Elephants,15.607,11,8
+3,1,priors,are male,50,Giraffes,15.607,11,9
+3,1,priors,are male,50,Camels,15.607,11,10
+3,1,priors,are red,1,Swans,18.884,12,0
+3,1,priors,are red,0,Tigers,18.884,12,1
+3,1,priors,are red,50,Cardinals,18.884,12,2
+3,1,priors,are red,0,Sharks,18.884,12,3
+3,1,priors,are red,0,Mosquitos,18.884,12,4
+3,1,priors,are red,5,Ducks,18.884,12,5
+3,1,priors,are red,0,Lions,18.884,12,6
+3,1,priors,are red,1,Bears,18.884,12,7
+3,1,priors,are red,0,Elephants,18.884,12,8
+3,1,priors,are red,0,Giraffes,18.884,12,9
+3,1,priors,are red,0,Camels,18.884,12,10
+3,1,priors,eat people,0,Swans,21.686,13,0
+3,1,priors,eat people,70,Tigers,21.686,13,1
+3,1,priors,eat people,0,Cardinals,21.686,13,2
+3,1,priors,eat people,40,Sharks,21.686,13,3
+3,1,priors,eat people,0,Mosquitos,21.686,13,4
+3,1,priors,eat people,0,Ducks,21.686,13,5
+3,1,priors,eat people,60,Lions,21.686,13,6
+3,1,priors,eat people,60,Bears,21.686,13,7
+3,1,priors,eat people,0,Elephants,21.686,13,8
+3,1,priors,eat people,0,Giraffes,21.686,13,9
+3,1,priors,eat people,0,Camels,21.686,13,10
+3,1,priors,are full-grown,60,Swans,14.624,14,0
+3,1,priors,are full-grown,60,Tigers,14.624,14,1
+3,1,priors,are full-grown,60,Cardinals,14.624,14,2
+3,1,priors,are full-grown,60,Sharks,14.624,14,3
+3,1,priors,are full-grown,60,Mosquitos,14.624,14,4
+3,1,priors,are full-grown,60,Ducks,14.624,14,5
+3,1,priors,are full-grown,60,Lions,14.624,14,6
+3,1,priors,are full-grown,60,Bears,14.624,14,7
+3,1,priors,are full-grown,60,Elephants,14.624,14,8
+3,1,priors,are full-grown,60,Giraffes,14.624,14,9
+3,1,priors,are full-grown,60,Camels,14.624,14,10
+3,1,priors,attacks swimmers,5,Swans,18.887,15,0
+3,1,priors,attacks swimmers,0,Tigers,18.887,15,1
+3,1,priors,attacks swimmers,0,Cardinals,18.887,15,2
+3,1,priors,attacks swimmers,60,Sharks,18.887,15,3
+3,1,priors,attacks swimmers,0,Mosquitos,18.887,15,4
+3,1,priors,attacks swimmers,2,Ducks,18.887,15,5
+3,1,priors,attacks swimmers,0,Lions,18.887,15,6
+3,1,priors,attacks swimmers,0,Bears,18.887,15,7
+3,1,priors,attacks swimmers,0,Elephants,18.887,15,8
+3,1,priors,attacks swimmers,0,Giraffes,18.887,15,9
+3,1,priors,attacks swimmers,0,Camels,18.887,15,10
+4,0,priors,carry malaria,0,Lions,38.649,0,0
+4,0,priors,carry malaria,2,Mosquitos,38.649,0,1
+4,0,priors,carry malaria,0,Tigers,38.649,0,2
+4,0,priors,carry malaria,0,Robins,38.649,0,3
+4,0,priors,carry malaria,0,Cardinals,38.649,0,4
+4,0,priors,carry malaria,2,Ticks,38.649,0,5
+4,0,priors,carry malaria,0,Panthers,38.649,0,6
+4,0,priors,carry malaria,0,Wasps,38.649,0,7
+4,0,priors,carry malaria,0,Bluejays,38.649,0,8
+4,0,priors,carry malaria,0,Cheetahs,38.649,0,9
+4,0,priors,carry malaria,2,Fleas,38.649,0,10
+4,0,priors,have manes,50,Lions,26.52,1,0
+4,0,priors,have manes,0,Mosquitos,26.52,1,1
+4,0,priors,have manes,0,Tigers,26.52,1,2
+4,0,priors,have manes,0,Robins,26.52,1,3
+4,0,priors,have manes,0,Cardinals,26.52,1,4
+4,0,priors,have manes,0,Ticks,26.52,1,5
+4,0,priors,have manes,0,Panthers,26.52,1,6
+4,0,priors,have manes,0,Wasps,26.52,1,7
+4,0,priors,have manes,0,Bluejays,26.52,1,8
+4,0,priors,have manes,0,Cheetahs,26.52,1,9
+4,0,priors,have manes,0,Fleas,26.52,1,10
+4,0,priors,eat people,100,Lions,32.614,2,0
+4,0,priors,eat people,100,Mosquitos,32.614,2,1
+4,0,priors,eat people,100,Tigers,32.614,2,2
+4,0,priors,eat people,0,Robins,32.614,2,3
+4,0,priors,eat people,0,Cardinals,32.614,2,4
+4,0,priors,eat people,0,Ticks,32.614,2,5
+4,0,priors,eat people,100,Panthers,32.614,2,6
+4,0,priors,eat people,0,Wasps,32.614,2,7
+4,0,priors,eat people,0,Bluejays,32.614,2,8
+4,0,priors,eat people,100,Cheetahs,32.614,2,9
+4,0,priors,eat people,100,Fleas,32.614,2,10
+4,0.333333333333,priors,lay eggs,0,Lions,28.781,3,0
+4,0.333333333333,priors,lay eggs,50,Mosquitos,28.781,3,1
+4,0.333333333333,priors,lay eggs,0,Tigers,28.781,3,2
+4,0.333333333333,priors,lay eggs,50,Robins,28.781,3,3
+4,0.333333333333,priors,lay eggs,50,Cardinals,28.781,3,4
+4,0.333333333333,priors,lay eggs,50,Ticks,28.781,3,5
+4,0.333333333333,priors,lay eggs,0,Panthers,28.781,3,6
+4,0.333333333333,priors,lay eggs,50,Wasps,28.781,3,7
+4,0.333333333333,priors,lay eggs,50,Bluejays,28.781,3,8
+4,0.333333333333,priors,lay eggs,0,Cheetahs,28.781,3,9
+4,0.333333333333,priors,lay eggs,50,Fleas,28.781,3,10
+4,0.166666666667,priors,are red,0,Lions,83.813,4,0
+4,0.166666666667,priors,are red,0,Mosquitos,83.813,4,1
+4,0.166666666667,priors,are red,0,Tigers,83.813,4,2
+4,0.166666666667,priors,are red,100,Robins,83.813,4,3
+4,0.166666666667,priors,are red,100,Cardinals,83.813,4,4
+4,0.166666666667,priors,are red,0,Ticks,83.813,4,5
+4,0.166666666667,priors,are red,0,Panthers,83.813,4,6
+4,0.166666666667,priors,are red,0,Wasps,83.813,4,7
+4,0.166666666667,priors,are red,0,Bluejays,83.813,4,8
+4,0.166666666667,priors,are red,0,Cheetahs,83.813,4,9
+4,0.166666666667,priors,are red,0,Fleas,83.813,4,10
+4,0,priors,carry Lyme disease,0,Lions,23.99,5,0
+4,0,priors,carry Lyme disease,2,Mosquitos,23.99,5,1
+4,0,priors,carry Lyme disease,0,Tigers,23.99,5,2
+4,0,priors,carry Lyme disease,0,Robins,23.99,5,3
+4,0,priors,carry Lyme disease,0,Cardinals,23.99,5,4
+4,0,priors,carry Lyme disease,2,Ticks,23.99,5,5
+4,0,priors,carry Lyme disease,0,Panthers,23.99,5,6
+4,0,priors,carry Lyme disease,0,Wasps,23.99,5,7
+4,0,priors,carry Lyme disease,0,Bluejays,23.99,5,8
+4,0,priors,carry Lyme disease,0,Cheetahs,23.99,5,9
+4,0,priors,carry Lyme disease,2,Fleas,23.99,5,10
+4,1,priors,are juveline,0,Lions,29.268,6,0
+4,1,priors,are juveline,0,Mosquitos,29.268,6,1
+4,1,priors,are juveline,0,Tigers,29.268,6,2
+4,1,priors,are juveline,0,Robins,29.268,6,3
+4,1,priors,are juveline,0,Cardinals,29.268,6,4
+4,1,priors,are juveline,0,Ticks,29.268,6,5
+4,1,priors,are juveline,0,Panthers,29.268,6,6
+4,1,priors,are juveline,0,Wasps,29.268,6,7
+4,1,priors,are juveline,0,Bluejays,29.268,6,8
+4,1,priors,are juveline,0,Cheetahs,29.268,6,9
+4,1,priors,are juveline,0,Fleas,29.268,6,10
+4,1,priors,are female,50,Lions,14.073,7,0
+4,1,priors,are female,50,Mosquitos,14.073,7,1
+4,1,priors,are female,50,Tigers,14.073,7,2
+4,1,priors,are female,50,Robins,14.073,7,3
+4,1,priors,are female,50,Cardinals,14.073,7,4
+4,1,priors,are female,50,Ticks,14.073,7,5
+4,1,priors,are female,50,Panthers,14.073,7,6
+4,1,priors,are female,50,Wasps,14.073,7,7
+4,1,priors,are female,50,Bluejays,14.073,7,8
+4,1,priors,are female,50,Cheetahs,14.073,7,9
+4,1,priors,are female,50,Fleas,14.073,7,10
+4,1,priors,have beautiful feathers,90,Swans,38.863,8,0
+4,1,priors,have beautiful feathers,0,Sharks,38.863,8,1
+4,1,priors,have beautiful feathers,0,Leopards,38.863,8,2
+4,1,priors,have beautiful feathers,70,Ducks,38.863,8,3
+4,1,priors,have beautiful feathers,100,Peacocks,38.863,8,4
+4,1,priors,have beautiful feathers,0,Kangaroos,38.863,8,5
+4,1,priors,have beautiful feathers,50,Geese,38.863,8,6
+4,1,priors,have beautiful feathers,0,Wallabys,38.863,8,7
+4,1,priors,have beautiful feathers,0,Panthers,38.863,8,8
+4,1,priors,have beautiful feathers,0,Cheetahs,38.863,8,9
+4,1,priors,have beautiful feathers,0,Dolphins,38.863,8,10
+4,1,priors,are white,100,Swans,15.727,9,0
+4,1,priors,are white,0,Sharks,15.727,9,1
+4,1,priors,are white,0,Leopards,15.727,9,2
+4,1,priors,are white,0,Ducks,15.727,9,3
+4,1,priors,are white,0,Peacocks,15.727,9,4
+4,1,priors,are white,0,Kangaroos,15.727,9,5
+4,1,priors,are white,100,Geese,15.727,9,6
+4,1,priors,are white,0,Wallabys,15.727,9,7
+4,1,priors,are white,0,Panthers,15.727,9,8
+4,1,priors,are white,0,Cheetahs,15.727,9,9
+4,1,priors,are white,0,Dolphins,15.727,9,10
+4,1,priors,are full-grown,50,Swans,51.054,10,0
+4,1,priors,are full-grown,50,Sharks,51.054,10,1
+4,1,priors,are full-grown,50,Leopards,51.054,10,2
+4,1,priors,are full-grown,50,Ducks,51.054,10,3
+4,1,priors,are full-grown,50,Peacocks,51.054,10,4
+4,1,priors,are full-grown,50,Kangaroos,51.054,10,5
+4,1,priors,are full-grown,50,Geese,51.054,10,6
+4,1,priors,are full-grown,50,Wallabys,51.054,10,7
+4,1,priors,are full-grown,50,Panthers,51.054,10,8
+4,1,priors,are full-grown,50,Cheetahs,51.054,10,9
+4,1,priors,are full-grown,50,Dolphins,51.054,10,10
+4,1,priors,attacks swimmers,0,Swans,22.359,11,0
+4,1,priors,attacks swimmers,3,Sharks,22.359,11,1
+4,1,priors,attacks swimmers,0,Leopards,22.359,11,2
+4,1,priors,attacks swimmers,0,Ducks,22.359,11,3
+4,1,priors,attacks swimmers,0,Peacocks,22.359,11,4
+4,1,priors,attacks swimmers,0,Kangaroos,22.359,11,5
+4,1,priors,attacks swimmers,0,Geese,22.359,11,6
+4,1,priors,attacks swimmers,0,Wallabys,22.359,11,7
+4,1,priors,attacks swimmers,0,Panthers,22.359,11,8
+4,1,priors,attacks swimmers,0,Cheetahs,22.359,11,9
+4,1,priors,attacks swimmers,1,Dolphins,22.359,11,10
+4,1,priors,have spots,1,Swans,30.971,12,0
+4,1,priors,have spots,0,Sharks,30.971,12,1
+4,1,priors,have spots,90,Leopards,30.971,12,2
+4,1,priors,have spots,1,Ducks,30.971,12,3
+4,1,priors,have spots,100,Peacocks,30.971,12,4
+4,1,priors,have spots,0,Kangaroos,30.971,12,5
+4,1,priors,have spots,0,Geese,30.971,12,6
+4,1,priors,have spots,0,Wallabys,30.971,12,7
+4,1,priors,have spots,0,Panthers,30.971,12,8
+4,1,priors,have spots,100,Cheetahs,30.971,12,9
+4,1,priors,have spots,0,Dolphins,30.971,12,10
+4,1,priors,are male,50,Swans,12.15,13,0
+4,1,priors,are male,50,Sharks,12.15,13,1
+4,1,priors,are male,50,Leopards,12.15,13,2
+4,1,priors,are male,50,Ducks,12.15,13,3
+4,1,priors,are male,50,Peacocks,12.15,13,4
+4,1,priors,are male,50,Kangaroos,12.15,13,5
+4,1,priors,are male,50,Geese,12.15,13,6
+4,1,priors,are male,50,Wallabys,12.15,13,7
+4,1,priors,are male,50,Panthers,12.15,13,8
+4,1,priors,are male,50,Cheetahs,12.15,13,9
+4,1,priors,are male,50,Dolphins,12.15,13,10
+4,1,priors,have pouches,0,Swans,16.422,14,0
+4,1,priors,have pouches,0,Sharks,16.422,14,1
+4,1,priors,have pouches,0,Leopards,16.422,14,2
+4,1,priors,have pouches,0,Ducks,16.422,14,3
+4,1,priors,have pouches,0,Peacocks,16.422,14,4
+4,1,priors,have pouches,100,Kangaroos,16.422,14,5
+4,1,priors,have pouches,0,Geese,16.422,14,6
+4,1,priors,have pouches,100,Wallabys,16.422,14,7
+4,1,priors,have pouches,0,Panthers,16.422,14,8
+4,1,priors,have pouches,0,Cheetahs,16.422,14,9
+4,1,priors,have pouches,0,Dolphins,16.422,14,10
+4,1,priors,have wings,100,Swans,23.842,15,0
+4,1,priors,have wings,0,Sharks,23.842,15,1
+4,1,priors,have wings,0,Leopards,23.842,15,2
+4,1,priors,have wings,100,Ducks,23.842,15,3
+4,1,priors,have wings,100,Peacocks,23.842,15,4
+4,1,priors,have wings,0,Kangaroos,23.842,15,5
+4,1,priors,have wings,100,Geese,23.842,15,6
+4,1,priors,have wings,0,Wallabys,23.842,15,7
+4,1,priors,have wings,0,Panthers,23.842,15,8
+4,1,priors,have wings,0,Cheetahs,23.842,15,9
+4,1,priors,have wings,0,Dolphins,23.842,15,10
