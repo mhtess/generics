@@ -22,16 +22,16 @@
 // 	"nondistinctive":[342,144,246,60,68,93,50,15,45,24,95]
 // }
 
-var prevelancePrior = {
-       "have spots": [151, 24, 36, 14,  8,  19,  4,  2, 10,  3,  29],
-       "have wings": [206,  1,  1, 1, 1,   1, 1, 1,  3,  5,  83],
-       "have manes": [260,  6,  2,  4,  1,  18,  1, 1, 1, 1,   8],
-       "lay eggs": [161,  1,  6, 1,  2,  56,  5,  2,  4, 1,  63],
- "attack swimmers": [258,  9, 9,  3, 1,   2, 1,  1, 1,  3,  15],
- "carry malaria": [260, 15, 11, 1,  3,   3,  2,  2,  1, 1,   3],
-         "are male":  [12, 1,  8,  9, 24, 219, 17,  3,  3,  3,   2],
-       "are female":  [1, 13,  3,  2, 21, 215, 28, 10,  6, 1, 2]
-}
+// var prevelancePrior = {
+//        "have spots": [151, 24, 36, 14,  8,  19,  4,  2, 10,  3,  29],
+//        "have wings": [206,  1,  1, 1, 1,   1, 1, 1,  3,  5,  83],
+//        "have manes": [260,  6,  2,  4,  1,  18,  1, 1, 1, 1,   8],
+//        "lay eggs": [161,  1,  6, 1,  2,  56,  5,  2,  4, 1,  63],
+//  "attack swimmers": [258,  9, 9,  3, 1,   2, 1,  1, 1,  3,  15],
+//  "carry malaria": [260, 15, 11, 1,  3,   3,  2,  2,  1, 1,   3],
+//          "are male":  [12, 1,  8,  9, 24, 219, 17,  3,  3,  3,   2],
+//        "are female":  [1, 13,  3,  2, 21, 215, 28, 10,  6, 1, 2]
+// }
 
 
 // Sharks attack swimmers = 31
@@ -42,31 +42,90 @@ var prevelancePrior = {
 // Birds lay eggs = 78
 
 
+
+// var elicitedPrior = {
+// 	"have spots" : {"leopards": 9},
+// 	"lay eggs": {"ducks": 7},
+// 	"have wings": {"birds": 9,
+// 					"lions":1},
+// 	"have manes": {"lions": 5},
+// 	"carry malaria":{"mosquitos":3},
+// 	"attack swimmers":{"sharks":3},
+// 	"are female":{"ducks":5},
+// 	"are male": {"ducks":5,
+// 				"lions":5}
+// }
+
+
+// var truthJudgments = {
+// 	"leopards have spots": 2.17,
+// 	"birds have wings":2.63,
+// 	"lions have manes":1.46,
+// 	"ducks lay eggs":2.04,
+// 	"mosquitos carry malaria":1.63,
+// 	"sharks attack swimmers":1.5, // not in data set, taking mean of "striking"
+// 	"lions are male":-0.04,
+// 	"ducks are female":-0.58,
+// 	"lions have wings":-2.5 // made up
+// }
+
+var prevelancePrior = utils.readInPrevalencePrior()
+var truthJudgments = utils.readTruthJudgements()
+
+
 var elicitedPrior = {
-	"have spots" : {"leopards": 9},
-	"lay eggs": {"ducks": 7},
-	"have wings": {"birds": 9,
-					"lions":1},
-	"have manes": {"lions": 5},
-	"carry malaria":{"mosquitos":3},
-	"attack swimmers":{"sharks":3},
-	"are female":{"ducks":5},
+	"have spots" : {"leopards":9.9,
+					"kangaroos":0.1},
+	"lay eggs": {"robins": 7,
+					"sharks":2,
+					"lions":0.1},
+	"have wings": {"ducks": 9.9,
+					"leopards":0.1},
+	"have manes": {"lions": 5,
+						"sharks":0.1},
+	"have pouches":{"kangaroos":7,
+					"tigers": 0.1},
+	"carry malaria":{"mosquitos":4,
+					"robins":0.1},
+	"attacks swimmers":{"sharks":4,
+						"mosquitos":2},
+	"are female":{"ducks":5,
+					'robins':5},
 	"are male": {"ducks":5,
-				"lions":5}
+				"lions":5},
+	"are full-grown":{"sharks":6,
+						"swans":6},
+	"are juvenile":{"sharks":3,
+					"leopards":3},
+	"are red": {"cardinals":8},
+	"are white": {"swans":7,
+					"sharks":3},
+	"carry lyme disease":{"ticks":5},
+	"eat people":{"tigers":3},
+	"have beautiful feathers":{"peacocks":9},
+
+	"dont carry malaria":{"mosquitos":6},
+	"dont attacks swimmers":{"sharks":6},
+	"dont carry lyme disease":{"ticks":5},
+	"dont eat people":{"tigers":7},
+	"dont have beautiful feathers":{"peacocks":1}
 }
 
 
-var truthJudgments = {
-	"leopards have spots": 2.17,
-	"birds have wings":2.63,
-	"lions have manes":1.46,
-	"ducks lay eggs":2.04,
-	"mosquitos carry malaria":1.63,
-	"sharks attack swimmers":1.5, // not in data set, taking mean of "striking"
-	"lions are male":-0.04,
-	"ducks are female":-0.58,
-	"lions have wings":-2.5 // made up
-}
+
+// var truthJudgments = {
+// 	"leopards have spots": 2.17,
+// 	"birds have wings":2.63,
+// 	"lions have manes":1.46,
+// 	"ducks lay eggs":2.04,
+// 	"mosquitos carry malaria":1.63,
+// 	"sharks attack swimmers":1.5, // not in data set, taking mean of "striking"
+// 	"lions are male":-0.04,
+// 	"ducks are female":-0.58,
+// 	"lions have wings":-2.5 // made up
+// }
+
+
 
 var getBinaryData = function(sentence){
 
@@ -89,7 +148,7 @@ var getBinaryData = function(sentence){
 
 //var cognitiveModel = function(gamma, delta, domain, speakerOptimality, QUD, prevalence){
 //var cognitiveModel = function(domain, speakerOptimality, QUD, prevalence){
-var cognitiveModel = function(sentence, speakerOptimality){
+var cognitiveModel = function(sentence, speakerOptimality,cost){
 
 	// var discretizeBeta = function(gamma, delta, bins){
 	// 	var shape_alpha = gamma * delta
@@ -102,11 +161,17 @@ var cognitiveModel = function(sentence, speakerOptimality){
 	// }
 
 	var parseGeneric = function(sentence){
-		var pieces = sentence.split(' ');
+		var attacksFunc = function(prop){
+			var x = prop == 'attack swimmers.' ? 'attacks swimmers.' : 
+					(prop == 'dont attack swimmers.') ? 'dont attacks swimmers.' : prop
+			return x
+		}
+
+		var pieces = sentence.toLowerCase().split(' ');
 		var kind = pieces[0];
 		pieces.shift();
-		var property = pieces.join(' ')
-		return [property, kind]
+		var property = attacksFunc(pieces.join(' '))
+		return [property.substring(0, property.length-1), kind]
 	}
 
 	var parsed = parseGeneric(sentence);
@@ -114,6 +179,7 @@ var cognitiveModel = function(sentence, speakerOptimality){
 	var kind = parsed[1];
 	var prevalence = elicitedPrior[domain][kind]
 
+	//console.log('here')
 	var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
 //	var bins = [0.01,0.05,0.15,0.25,0.35,0.45,0.55,0.65,0.75,0.85,0.95]
 	// var quintileProbs = discretizeBeta(gamma,delta,bins)
@@ -129,7 +195,7 @@ var cognitiveModel = function(sentence, speakerOptimality){
 	}
 
 	var thetaPrior = function() {
-	  var threshold = randomInteger(10)+0.1//something goes wonky if "generic is false" can never be false
+	  var threshold = randomInteger(10)//something goes wonky if "generic is false" can never be false
 	  return threshold
 	}
 	var numberUtterancePrior = function() {
@@ -148,10 +214,12 @@ var cognitiveModel = function(sentence, speakerOptimality){
 	   //var utterances = ["some",
 	    //                 "most"]
 	 var utterances = ["generic is true",
-	                   "mu"]                    
-	  var i = randomInteger(utterances.length)
-	  return utterances[i]
+	                   "mu"]        
+	 var cst = [1,cost]       
+	  return utterances[discrete(cst)]
+
 	}
+
 	var meaning = function(utt,state, theta) {
 	  return utils.isNumber(utt) ? state == utt :
 	  		utt=="generic is true"? state>theta :
@@ -286,7 +354,7 @@ var cognitiveModel = function(sentence, speakerOptimality){
 // 		{return writeERP(cognitiveModel(0.0003,100,d,1,"truth",x))},
 // 	["danger-distinct", "bare","nondistinctive"])},
 // [1,3,5,7,9])
-
+//cognitiveModel("mosquitos carry malaria",2)
 
 
 
@@ -302,49 +370,94 @@ var dataAnalysis = function(){
 
 //		var speakerOptimality = sample(uniformERP,[0,10])
 		var speakerOptimality = 0.1+(randomInteger(10)/2)
+		var cost = (randomInteger(3)+1)/2
 		//var speakerOptimalityIP = sample(uniformERP,[0,10])
 
 		var posteriorPredictive = 
 			map(
 				function(sentence){
-					var predictionERP = cognitiveModel(sentence,speakerOptimality)
+					var predictionERP = cognitiveModel(sentence,speakerOptimality, cost)
 
 
 					var modelScore = function(modelERP, data){
 						return sum(map(function(d){return modelERP.score([],d)},data))
 					}
 
-			//		return modelScore(predictionERP, getBinaryData("leopards have spots"))
-					factor(modelScore(predictionERP, getBinaryData(sentence)))
+					//return modelScore(predictionERP, truthJudgments[sentence])
+					factor(modelScore(predictionERP, truthJudgments[sentence]))
 
 					return [sentence, Math.exp(predictionERP.score([], "generic is true"))]
 				},
 				_.keys(truthJudgments)
 			)
 
-		return _.object(posteriorPredictive)
-
-	//	var gamma = cache(function(context){return sample(uniformERP, [0,1])})
-	//	var delta = cache(function(context){return sample(uniformERP, [0,10])})
-
-		// var tcPredictions = map2(function(prevalenceLevels,context){
-		// 	return map(function(prevlev){
-		// 		return cognitiveModel(gamma(context), delta(context), speakerOptimality,
-		// 								"truth", prevlev/10)
-		// 	}, prevalenceLevels)
-		// }, prevalenceLevelsAllContexts, tcContexts)
-
-		// var ipPredictions = map(function(context){
-		// 		return cognitiveModel(gamma(context), delta(context), speakerOptimality, 
-		// 									"how many?", "generic is true")
-		// 	}, ipContexts)
-
+	//	return _.object(posteriorPredictive)
+		return [speakerOptimality, cost]
+		//return posteriorPredictive
 }
 
-var tfbt = Enumerate(dataAnalysis)
-var output = utils.expectation(tfbt, _.keys(truthJudgments))
+ var tfbt = Enumerate(dataAnalysis)
+//tfbt
 
-utils.writeCSV(output, 'generics_truthJudge_prasada1.csv')
+  // var output = utils.expectation(tfbt, _.keys(truthJudgments))
+  // utils.writeCSV(output, 'generics_truthJudge_1.csv')
+
+// dataAnalysis()
+
+
+var writeERP = function(myERP){
+  return map(function(val){
+  	return [val, Math.exp(tfbt.score([],val))]
+  },tfbt.support())
+}
+// //console.log(output)
+var output = writeERP(tfbt)
+//output
+utils.writeCSV(output, 'generics_truthJudge_2_optimality_cost.csv')
+
+
+//prevelancePrior["have pouches"]
+//_.keys(truthJudgments)
+
+
+// map(function(sentence){
+// 	// return sentence},
+// 		console.log(sentence)
+
+// 	var preds = cognitiveModel(sentence,2)
+// 	return Math.exp(preds.score([],"generic is true"))},
+// ["leopards have spots",
+// "robins lay eggs",
+// "sharks lay eggs",
+// "ducks have wings",
+// "lions have wings",
+// "lions have manes",
+// "mosquitos carry malaria",
+// "sharks attacks swimmers",
+// "mosquitos attacks swimmers",
+// "ducks are female",
+// "ducks are male",
+// "lions are male",
+// "sharks are full-grown",
+// "sharks are juvenile",
+// "cardinals are red",
+// "swans are white",
+// "sharks are white",
+// "ticks carry Lyme disease",
+// "tigers eat people",
+// "peacocks have beautiful feathers",
+// "kangaroos have pouches",
+// "lions have pouches",
+// "mosquitos dont carry malaria",
+// "sharks dont attacks swimmers",
+// "ticks dont carry Lyme disease",
+// "tigers dont eat people"
+// ]
+// )
+
+
+
+ // cognitiveModel("robins lay eggs", 2)
 
 //cognitiveModel("has spots", 1, "qud", elicitedPrior["has spots"]["leopards"])
 

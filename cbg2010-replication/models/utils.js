@@ -14,6 +14,48 @@ function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+var writeERP = function(myERP){
+  return _.map(myERP.support([]),
+          function(value){
+            value.concat(Math.exp(myERP.score([], value)))
+          }
+          )
+};
+
+function readInPrevalencePrior(){
+	var filepath = 'prevalencePrior_16props.csv'
+	var priordata = readCSV(filepath).data;
+
+	var sortedData = _.object(
+		_.map(priordata.slice(1), function(lst){
+			return[lst[1], lst.slice(2)]
+		}))
+
+	_.extend(sortedData,
+		{"dont attacks swimmers": sortedData["attacks swimmers"].slice(0).reverse(),
+		"dont carry malaria": sortedData["carry malaria"].slice(0).reverse(),
+		"dont eat people": sortedData["eat people"].slice(0).reverse(),
+		"dont carry lyme disease": sortedData["carry lyme disease"].slice(0).reverse(),
+		"dont have beautiful feathers": sortedData["have beautiful feathers"].slice(0).reverse()
+			})
+
+	return sortedData
+};
+
+function readTruthJudgements(){
+	var filepath = "/Users/mht/Documents/research/generics/analysis/real-kinds-truth-1-trials-webpplfriendly.csv";
+	var gendata = readCSV(filepath).data;
+
+
+	var gdata = _.object(_.map(gendata.slice(1),
+		function(lst){return [lst[1], lst.slice(2)]})
+	)
+
+	return gdata
+
+
+}
+
 function readInBothTCIPDataSets(){
 	var dfilepath = "/Users/mht/Documents/research/generics/cbg2010-replication/data/";
 	var dfile = dfilepath + "cbgR-exp9-trials.csv";
@@ -137,6 +179,58 @@ function readInBareTCIPDataSets(){
 
 
 
+function readInAccidentalTCIPDataSets(){
+	var dfilepath = "/Users/mht/Documents/research/generics/cbg2010-replication/data/";
+	var dfile = dfilepath + "cbg-exp14-trials.csv";
+
+	var data = readCSV(dfile).data
+
+	var contextCol = data[0].indexOf('stim_type');
+	var prevalenceCol = data[0].indexOf("stim_prevalence");
+
+	var isTask = function(row, desired_task){
+		var taskCol = data[0].indexOf('trial_type');
+		return row[taskCol]==desired_task
+	}
+	var isQuantifier = function(row, desired_quantifier){
+		var quantifierCol = data[0].indexOf('stim_determiner');
+		return row[quantifierCol]==desired_quantifier
+	}
+	var isContext = function(row, desired_context){
+		return row[contextCol]==desired_context
+	}
+	var isPrevalence = function(x, desired_prevlev){
+		return x[prevalenceCol] == desired_prevlev
+	}
+	var filterByTaskPrevalence = function(dataArray, task, prevalence){
+		return _.filter(dataArray,
+			function(item){
+				return (isTask(item,task) & isPrevalence(item, prevalence));
+				})
+	};
+
+	var filterByTask = function(dataArray, task){
+		return _.filter(dataArray,
+			function(item){
+				return isTask(item,task);
+				})
+	};
+
+	var tcStructured = _.map([10,30,50,70,90],
+		function(prev)
+						{return filterByTaskPrevalence(data, 
+																'truth_conditions', 
+																prev)}
+						);
+	var ipStructured = filterByTask(data,'implied_prevalence');
+
+	return [tcStructured, ipStructured]
+
+};
+
+
+
+
 
 function fillArray(value, len) {
   var arr = [];
@@ -164,8 +258,12 @@ function expectation(myERP, keys){
 module.exports = {
   readCSV: readCSV,
   writeCSV: writeCSV,
+  writeERP:writeERP,
   readInBothTCIPDataSets: readInBothTCIPDataSets,
   readInBareTCIPDataSets:readInBareTCIPDataSets,
+  readInAccidentalTCIPDataSets:readInAccidentalTCIPDataSets,
+  readInPrevalencePrior:readInPrevalencePrior,
+  readTruthJudgements:readTruthJudgements,
   isNumber: isNumber,
   fillArray: fillArray,
   expectation: expectation
