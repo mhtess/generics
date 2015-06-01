@@ -284,6 +284,7 @@ Generic statements not only vary in acceptability, but also in how they are inte
 %How are we to understand these data? One interpretation is that context changes the truth-conditions for a generic statement, but that within a context, the truth-conditions are stable. A different sort of explanation is that context changes the nature of world somehow, and that generic meanings are inferred rationally from context. We draw on recent advances in probabilistic pragmatics and Bayesian data analysis to mediate between these two alternatives.
 
 \section{A lifted-threshold model of generic meaning}
+\label{sec:model}
 
 We view language understanding as a special case of social cognition, and language comprehension as deriving from an intuitive theory of language production.  We draw on recent work from probabilistic pragmatics to formalize how listeners arrive at interpretations of generic utterances. In particular, we draw on work from the Rational Speech-Act (RSA) theory of language understanding. In this framework, a listener infers the meaning of an utterance by considering the thought-processes of a speaker whose goal is to be informative. Variants of this theory have provided formal explanations for a number of linguistic phenomena including scalar implicature, hyperbole, and argument evaluation \cite{Kao2014, Tessler2014, Lassiter2014}. 
 
@@ -370,6 +371,7 @@ The lifted-threshold RSA model predicts different truth conditions for generics 
 
 \subsection{Experiment 1a: \emph{Empirical prior}}
 
+The goal of this experiment was to measure participants' beliefs about the distributions of the prevalence of various properties across categories.
 
 \subsubsection{Participants}
 
@@ -400,7 +402,7 @@ From the 300 free responses for the animal production part of the task, X distin
 \begin{figure}
 \centering
     \includegraphics[width=0.8\columnwidth]{priors-exp1a-4types}
-    \caption{Four example elicited prevalence priors. Density plots reveal qualitatively different distributions for different properties. Each sample from these distributions can be considered to correspond to a particular animal category, representing the prevalence of the property within that animal category.
+    \caption{Four example elicited prevalence priors. Density plots reveal qualitatively different distributions for different properties. Each sample from these distributions can be considered to correspond to a particular animal category, representing the prevalence of the property within that animal category.}
   \label{fig:priors1a}
 \end{figure}
 
@@ -409,15 +411,84 @@ We aggregated responses for each property by rounding responses to the nearest 1
 
 \subsection{Experiment 1b: \emph{Truth judgments}}
 
+The goal of this experiment was to measure participants' beliefs about the truth of a number of different generic sentences. 
+
+
 \subsubsection{Participants}
 
-We recruited X participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about X minutes and participants were compensated \$X.
+We recruited 100 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 3 minutes and participants were compensated \$0.35.
 
 \subsubsection{Procedure and materials}
 
+We used a two-alternative forced- choice (2AFC) paradigm to get at participants' belief about the truth of generic sentences. Data reported in \citeA{Prasada2013} revealed that participants assign midpoint ratings on a Likert scale to anomalous generics like ``Birds are female''. We hypothesized that these ``neither true nor false'' ratings would be translated into more graded responses across the population using the 2AFC (i.e. subjects would be closer to chance).
+
+Participants were asked to report whether they agreed or disagreed with simple sentences. Items were presented sequentially, and subjects reported whether or not they agreed with the sentence by pressing either ``P'' or ``Q'' (randomized between-subjects). 
+
+Generic sentences were selected to correspond with the prevalence distributions elicited in Experiment 1a. Approximately 10 true, 10 false, and 10 uncertain truth-value generics were selected (see Appendix \ref{sec:appendix} for full list of items).
+
+As a manipulation check, participants were asked which button corresponded to ``Agree''.
+
 \subsubsection{Results}
 
-\subsection{Model predictions}
+X subjects were excluded for failing to successfully report which button corresponded with ``Agree''. 
+
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{truhtjudge_n100}
+    \caption{Truth judgments from Expt.~1b for each item. Y-axis denotes deviations from chance in the 2AFC. There is large agreement for both generics which are true and generics which are false. There is considerable disagreement across participants for a number of ``neither true nor false'' generic statements. }
+  \label{fig:tj1b}
+\end{figure}
+
+
+The 30 generic sentences fell into 3 categories as predicted: definitely true, definitely false, and neither true nor false (Figure \red{fig:tj1b}).  \red{[Maybe code the generics a priori and do some simple logistic model for those 3 categories.]}
+
+Truth judgments for these generic sentences were correlated with the prevalence of the property for the target category elicited in Expt.~1a ($r = 0.71$, Figure \ref{fig:scatterprev}). This is, of course, expected given that high-prevalence true generics (e.g. ``Leopards have spots.'') and low-prevalence false generics (e.g. ``Leopards have wings.'') were used. Large deviations from a purely within-category prevalence account remain; examining only those generics with intermediate prevalence ($ 25\% < prevalence < 75\%$), the correlation drops to $r=0.1$. 
+
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.6\columnwidth]{tj_n50_tjVsPrevalence}
+    \caption{Truth judgments from Expt.~1b for each item vs. the prevalence of the property for the target item as measured in Expt.~1a. For example, ``Leopards have spots'' has a very high truth judgment (Expt.~1b; Y-axis), and ``has spots'' is a highly prevalent property for leopards (Expt.~1a; X-axis). Color spectrum corresponds to the rank ordering of the truth judgment data; similarly colored dots received similar truth judgments.}
+  \label{fig:scatterprev}
+\end{figure}
+
+
+
+
+\subsection{Lifted-threshold model predictions}
+
+We propose that a model of generics based on prevalence is tenable if the threshold is left underspecified. We explore the predictions of this model, using the empirical priors elicited in Experiment 1a. We compare these predictions to the truth judgment data observed in Experiment 1b.
+
+The model articulated in Section \ref{sec:model} is a model of a listener who upon hearing a generic, infers some prevalence. We extend this model to capture the truth judgment data from Expt. 1b by considering the speaker who is deciding whether or not to produce the generic. 
+
+
+\begin{equation} 
+P_{S_{2}}(g \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_{1}}(x \mid g))
+\label{eq:S2}
+\end{equation}
+
+This speaker in \eqref{eq:S2}, like $L_{1}$, doesn't actually have access to the threshold $\theta$, but knows that $L_{1}$ is thinking about it, and marginalizes over possible inferred values. The $S_{2}$ speaker has in mind a prevalence $x$ (or, equivalently here, a category--property pair corresponding to that prevalence; e.g. ``lions'' and those that ``have manes''). The speaker imagines the likely prevalence that the pragmatic listener $L_{1}$ will infer given the alternative utterances\footnote{In this implementation of the model, we stipulate the alternative to saying the generic as saying nothing (i.e. a null utterance). The qualitative results hold both when (1) the alternative is saying ````Lions have manes'' is false'' as well as (2) the alternative is saying the negation of the generic i.e. ``Lions do not have manes''. (1) is modeled as the logical negation of the generic, while (2) is modeled as a separate threshold. This distinction is analogous to the distinction found in gradable adjectives between saying ``John is not tall'' and ``John is short'' as possible alternatives to ``John is tall''.}. He then decides whether or not it would be good to say the generic in order to convey the prevalence (e.g. that almost all leopards have spots) to the listener.
+
+Here, the prevalence prior plays a critical role in determining where the generic-threshold $\theta$ (and, consequently, the resulting inferred prevalence $x$) is likely to fall (see Figure \ref{fig:priors1a} for examples of the relevant priors). In setting the threshold, the pragmatic listener $L_{1}$ balances the truth of the utterance with the informativeness of the utterance. If the pragmatic listener hears ``Lions haves manes.'', she will likely set the threshold $\theta$ below 50\%, as this is necessary to make the utterance true (Figure \ref{fig:priors1a} bottom left). At the same time, the listener believes the message to be informative, so she will set $\theta$ probably above 10\%. Since the prevalence has to be above the threshold in order to make the utterance true, the most likely inferred prevalence $x$ will be about 50\% (i.e. after ruling out everything below 10\%, the most probably prevalence will be 50\%). Since this matches the actual prevalence of having manes among lions, the speaker concludes this is a reasonable thing to say.
+
+
+\red{Add plots and model-data fit}
+%The speaker selects the utterance according to a soft-max decision rule governed by parameter $\lambda$\footnote{It's conceivable that this $\lambda$ is different from the parameter that governs the selection of $S_{1}$'s utterances. For simplicity here we assume they are the same.}.
+
+
+%To connect our model of generic interpretation to generic truth conditions, we include an additional component to the model: a speaker who can either say ``[[the generic]] is true'' or ``[[the generic]] is false'' \cite{Degen2014}:
+
+%\begin{equation} 
+%P_{S_{2}}(g \mid x) \propto \exp(\lambda \ln {P_{L_{1}}(x \mid g)}).
+%\label{eq:S2}
+%\end{equation}
+%
+%
+%This speaker in \eqref{eq:S2}, like $L_{1}$, doesn't know the threshold, but knows that $L_{1}$ is thinking about it, and marginalizes over possible values: $ P_{L_{1}}(x \mid g) = \sum_{\theta} P_{L_{1}}(x , \theta \mid g) $. The $S_{2}$ speaker has in mind a prevalence $x$ (or, equivalently here, a category--property pair corresponding to that prevalence), e.g. ``birds'' and those that ``lay eggs''. The speaker then reasons whether it would be better to say ```Birds lay eggs' is true''  or ```Birds lay eggs' is false'' in order to convey the state of the world, namely that about 50\% of birds lay eggs\footnote{Technically, the prevalence of birds laying eggs is closer to 35\%, as only \emph{adult}, female birds lay eggs. We gloss over this detail here.}. The speaker selects the utterance according to a soft-max decision rule governed by parameter $\lambda$\footnote{It's conceivable that this $\lambda$ is different from the parameter that governs the selection of $S_{1}$'s utterances. For simplicity here we assume they are the same.}.
+%
+%Continuing with this example, the speaker imagines the likely prevalence that the pragmatic listener $L_{1}$ will infer given either ```Birds lay eggs' is true''  or ```Birds lay eggs' is false''. Here, the prevalence prior plays a critical role in determining where the generic-threshold $\theta$ (and, consequently, the resulting inferred prevalence $x$) is likely to fall (Figure \ref{fig:schematic}). In setting the threshold, the pragmatic listener $L_{1}$ balances the truth of the utterance with the informativeness of the utterance. If ```Birds lay eggs' is true'', the pragmatic listener $L_{1}$ will likely set the threshold $\theta$ below 50\%, as this is necessary to make the utterance true (Figure \ref{fig:schematic}; red). At the same time, $L_{1}$ believes the message to be informative, so she will set $\theta$ probably above 10\%. Since the prevalence has to be above the threshold in order to make the utterance true, the most likely inferred prevalence $x$ will be about 50\% (i.e. after ruling out everything below 10\%, the most probably prevalence will be 50\%). On the other hand, if the speaker were to say ```Birds lay eggs' is false'', the prevalence would have to fall \emph{below} the threshold, which in this case would implicate the mass below 10\% and the pragmatic listener would infer something the speaker didn't intend. 
+
 
 \section{Experiment 2: Generics have strong implications}
 
