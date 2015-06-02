@@ -448,7 +448,7 @@ Truth judgments for these generic sentences were correlated with the prevalence 
 
 \begin{figure}
 \centering
-    \includegraphics[width=0.6\columnwidth]{tj_n50_tjVsPrevalence}
+    \includegraphics[width=0.8\columnwidth]{tj_n50_tjVsPrevalence}
     \caption{Truth judgments from Expt.~1b for each item vs. the prevalence of the property for the target item as measured in Expt.~1a. For example, ``Leopards have spots'' has a very high truth judgment (Expt.~1b; Y-axis), and ``has spots'' is a highly prevalent property for leopards (Expt.~1a; X-axis). Color spectrum corresponds to the rank ordering of the truth judgment data; similarly colored dots received similar truth judgments.}
   \label{fig:scatterprev}
 \end{figure}
@@ -472,8 +472,35 @@ This speaker in \eqref{eq:S2}, like $L_{1}$, doesn't actually have access to the
 
 Here, the prevalence prior plays a critical role in determining where the generic-threshold $\theta$ (and, consequently, the resulting inferred prevalence $x$) is likely to fall (see Figure \ref{fig:priors1a} for examples of the relevant priors). In setting the threshold, the pragmatic listener $L_{1}$ balances the truth of the utterance with the informativeness of the utterance. If the pragmatic listener hears ``Lions haves manes.'', she will likely set the threshold $\theta$ below 50\%, as this is necessary to make the utterance true (Figure \ref{fig:priors1a} bottom left). At the same time, the listener believes the message to be informative, so she will set $\theta$ probably above 10\%. Since the prevalence has to be above the threshold in order to make the utterance true, the most likely inferred prevalence $x$ will be about 50\% (i.e. after ruling out everything below 10\%, the most probably prevalence will be 50\%). Since this matches the actual prevalence of having manes among lions, the speaker concludes this is a reasonable thing to say.
 
+We compare the predictions of the lifted-threshold model in Eq. \ref{eq:S2} to the results of Expt. ~2. 
 
-\red{Add plots and model-data fit}
+\subsubsection{Posterior over model parameter}
+The model has one free parameter, the speaker rationality in Equation \ref{eq:S1}. We put a uniform prior over this variable, and infer its credible values using a Bayesian statistical model. To learn about the \emph{a posteriori} credible values of our model parameter, we used the probabilistic programming language WebPPL \cite{webppl} to collect X samples using the Metropolis-Hastings algorithm. The estimated posterior density of this parameter is shown in Figure \ref{fig:rationality}. This parameter represents the subject's belief is how rational the hypothetical listener believes he is when choosing an utterance. It's important to note that a rationality parameter below 1 would imply behavior closer to random guessing. The 95\% Credible Interval is \red{[ , ]}, consistent with parameter values used in fitting other models of the same class.  
+
+\subsubsection{Posterior predictive}
+
+
+Finally, we evaluate the model by examining the posterior predictive distribution of responses. The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the lifted-threshold model and the observed data. This is akin to fitting the parameters and is an important step in model validation as it shows what data is actually predicted by the model. Figure \ref{fig:modeldataScatter} shows the expected-values of the model predictions compared against the observed data. The model predicts graded endorsements for the generic statements used in Expt.~1b. 
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.8\columnwidth]{tj_n100_tjVsPostpred}
+    \caption{Truth judgments from Expt.~1b for each item vs. the posterior predictive expected value for the target item using the lifted-threshold model with the empirical priors elicited in Expt.~1a. Color spectrum corresponds to the rank ordering of the truth judgment data; similarly colored dots received similar truth judgments.}
+  \label{fig:modeldataScatter}
+\end{figure}
+
+The model captures the data well ($r=0.96$). Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (corners of Figure \ref{fig:modeldataScatter}). Unlike the model based on within-category prevalence alone, the lifted-threshold model does not break down for generics of categories with intermediate prevalence of the property; for $ 25\% < prevalence < 75\%$, the correlation is $r=0.94$. Indeed, the model captures the rank ordering of the truth judgments of these generics well ($r_{spearman} = 0.94$); the color gradient in Figure \ref{fig:modeldataScatter} is smooth, unlike what is observed when comparing the data against within-category prevalence alone (Figure \ref{fig:scatterprev}). 
+
+The largest deviations occur for the items with greatest variance (``neither true nor false'' generics). For example, ``Mosquitos attack swimmers'' was predicted to be a relatively good generic (expected value of model predictions: 0.62; observed proportion agreement: 0.38). This is because in Expt.~1a, participants estimated that on average approximately 20\% of mosquitos attack swimmers. This high prevalence (relative to the empirical distribution), produced this strong prediction. It's possible that the truth judgment task called to mind salient alternatives like ``Mosquitos bite swimmers'' whereas the prior elicitation task did not. Another item with large deviation is ``Swans are full-grown'' (expected value of model predictions: 0.37; observed proportion agreement: 0.70). Again, this may be due to uncertainty of the participants about whether or not there is a label for juvenile swans (akin to ``pups'' for ``dogs''). We return to this sort of uncertainty in the general discussion.
+
+
+\subsection{Discussion}
+
+In Experiment 1, we asked whether or not participants' judgments on a set of generic sentences with a range of truth values and covering a range of conceptual distinctions could be explained by a language understanding model with a truth-functional threshold sensitive to the prior distribution over prevalence. In Expt.~1a, we empirically measured the prior distribution of prevalence by asking participants about their beliefs of how prevalent certain properties in within a range of animal categories. Here, we observed qualitatively different distributions corresponding to properties that are common within-categories and common across-categories (e.g. ``are male''), common within-categories but rare across-categories (e.g. ``have manes''), rare within-categories and rare across-categories (e.g. ``carries malaria''). 
+
+These differences, coupled with an uncertain threshold for generic meaning, produce different acceptance probabilities for a range of generic sentences. For example, ``Mosquitos carry malaria'' is true, because the prevalence of malaria among mosquitos is higher than prevalence of malaria among most (possibly all) other animal species. ``Lions have manes'' is true for the same reasons. ``Lions are male'' is neither true nor false, because the prevalence of being male among lions is neither significantly more nor less than prevalence of being male among other animal species. The differences among these generic sentences can be explained by differences in the distribution of the prevalence of these categories, with a threshold on prevalence that is uncertain but resolved through communicative pressures.
+
+
 %The speaker selects the utterance according to a soft-max decision rule governed by parameter $\lambda$\footnote{It's conceivable that this $\lambda$ is different from the parameter that governs the selection of $S_{1}$'s utterances. For simplicity here we assume they are the same.}.
 
 
@@ -492,14 +519,14 @@ Here, the prevalence prior plays a critical role in determining where the generi
 
 \section{Experiment 2: Generics have strong implications}
 
-Generic statements are endorsed for a wide range of prevalence levels, which is predicted by the lifted-variable RSA model. Another puzzling aspect of generic statements is that while generic statements are acceptable for a range of prevalence levels, they are often interpreted as applying to most of the category.  \citeA{Cimpian2010} developed a paradigm aimed to examine this intuition empirically. To flesh out the motivation a little: consider sentences about novel categories with the quantifier ``All'' (e.g. ``All lorches have purple feathers''). Presumably, this sentence is true only when 100\% of lorches have purple feathers. Similarly, upon hearing such an utterance, one is likely to infer that 100\% of lorches have purple feathers.  \citeA{Cimpian2010} tested this relationship between truth judgments and implications with the quantifier ``most''---``the quantifier that comes closest to capturing generic meaning \cite{Carlson1977,Cimpian2010b}''---and found the most has similar behavior. Participants judged ``most'' sentences true when between 50-100\% of the category had the property (on average: 75\%). Similarly, upon hearing an utterance with ``most'', participants on average inferred a prevalence of about 75\%. Rather intriguingly, they found this symmetry does not hold for generic statements. Generic statements are judged true for a wide range of prevalence levels, but upon hearing a generic utterance, participants were wont to infer that \emph{all} or \emph{almost all} of the category had the property. Thus, the implications of generic statements go far beyond the evidence needed to accept them.
+Generic statements can be endorsed for a puzzlingly wide range of prevalence levels, depending on the distribution of that property within- and across- categories. Generic statements are additionally puzzling because while they are acceptable for a range of prevalence levels, they are often interpreted as applying to most of the category.  \citeA{Cimpian2010} developed a paradigm aimed to examine this intuition empirically. For example, consider sentences about novel categories with the quantifier ``All'' (e.g. ``All lorches have purple feathers''). Presumably, this sentence is true only when 100\% of lorches have purple feathers. Similarly, upon hearing such an utterance, one is likely to infer that 100\% of lorches have purple feathers.  \citeA{Cimpian2010} tested this relationship between truth judgments and interpretations with the quantifier ``most''---the quantifier that comes closest to capturing generic meaning \cite{Carlson1977,Cimpian2010b}---and found the ``most'' has similar behavior. Participants judged ``most'' sentences true when between 50-100\% of the category had the property (on average: 75\%). Similarly, upon hearing an utterance with ``most'', participants on average inferred a prevalence of about 75\%. Rather intriguingly, they found this symmetry does not hold for generic statements. Generic statements are judged true for a wide range of prevalence levels, but upon hearing a generic utterance, participants were wont to infer that \emph{all} or \emph{almost all} of the category had the property. Thus, the implications of generic statements go far beyond the evidence needed to accept them as valid.
 
- \citeA{Cimpian2010} further hypothesized that the implications of generic statements would be sensitive to people's beliefs about the properties in question. They observed that using a version of that the task where accidental properties were predicated (e.g. ``Lorches have muddy feathers.'') significantly reduced participants' judgments about the implications of these statements.
+These interpretations of generic statements are sensitive to people's beliefs about the properties in question. \citeA{Cimpian2010} observed that predicating with accidental properties (e.g. ``Lorches have muddy feathers.'') significantly reduced participants' judgments about the implied prevalence of these statements.
 
 
 %That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. 10\% of lorches had purple feathers) to assert that the generic statement was true.
 
-Experiment 2 attempted to replicate these findings of \citeA{Cimpian2010}: that there is an asymmetry between truth conditions and implications of the generic and that this asymmetry is sensitive to the type of property predicated (Expt. 2a). Further, in Expt.~2b, we measure participants' beliefs about the distribution of these types of properties using a paradigm similar to Expt.~1a. We show how the prevalence-based model predicts this asymmetry between truth conditions and implications, and how this asymmetry can be pushed around by differences in the prevalence distributions between properties.
+Experiment 2 attempted to replicate these findings of \citeA{Cimpian2010}: that there is an asymmetry between truth conditions and implied prevalence of the generic and that this asymmetry is sensitive to the type of property predicated (Expt. 2a). Further, in Expt.~2b, we measure participants' beliefs about the distribution of these types of properties using a paradigm similar to Expt.~1a. We show how the prevalence-based model predicts this asymmetry between truth conditions and implications, and how this asymmetry can be pushed around by differences in the prevalence distributions between properties.
 
 %Exp. 1a and 1b were conducted on separate sessions, one week apart. None of the participants completed both experiments.
 
@@ -562,12 +589,12 @@ Accidental &             &                                                      
 
 \begin{figure}
 \centering
-    \includegraphics[width=\columnwidth]{Xexp1data}
-    \caption{Replication of CBG. Left: \emph{truth conditions} vary by context (Exp. 1a). Right: \emph{implied prevalence} of the generic is greater than \emph{truth conditions} (Exp. 1b). Error bars denote bootstrapped 95\% confidence intervals.}
-  \label{fig:exp1}
+    \includegraphics[width=0.8\columnwidth]{exp3_asymmetry}
+    \caption{Replication of \protect\citeA{Cimpian2010}. Generic statements are accepted for a range of prevalences, resulting in an intermediate ``average prevalence'' (light bars). There is a small effect of participants' rejecting generics about accidental properties, resulting in a higher average prevalence for acceptance (difference between light bars). Upon hearing a generic statement about biological properties, participants' infer that a high proportion of the category has the property (dark bar, biological). Generics about accidental properties do not result in high implied prevalence.  Error bars denote bootstrapped 95\% confidence intervals.}
+  \label{fig:exp2a}
 \end{figure}
 
-Results are shown in Figure~\ref{fig:exp1}. We entered participants' truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and type as well as their interaction\footnote{This was the maximal mixed-effect structure supported by the data.}.  
+Results are shown in Figure~\ref{fig:exp2a}. We entered participants' truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and type as well as their interaction\footnote{This was the maximal mixed-effect structure supported by the data.}.  
 %
 %Our results replicated the finding of CBG that the generic statements were endorsed more with dangerous and distinctive properties than with plain properties (Figure \ref{fig:exp1}, left; $\beta=1.99; SE = .36; z = 5.52; p < .001$). 
 %%
@@ -577,7 +604,7 @@ We entered participants' implied prevalence responses into a mixed effects linea
 
 To compare the truth conditions data with the implied prevalence data, we followed the data analysis strategy of \citeauthor{Cimpian2010}. Using the truth conditions data, we computed, for each subject, an \emph{average prevalence level} that led to ``True'' responses. For example, if a participant said ``True'' whenever the prevalence was 70\% or 90\% and ``False'' to everything else, that participant received an \emph{average prevalence score} of 80\%; if a participant said ``False'' to everything, their \emph{average prevalence score} was 100\%, since they presumably were interpreting the generic statement as a universal (i.e. an ``all'' statement). This score was compared against the implied prevalence data.
 
-The prevalence scores from each task were entered into a linear mixed model with a by-participant random effect of intercept; the fixed effects were property-type, task, and their interaction. Our results replicated the asymmetry finding that the generic statement was interpreted as having a higher prevalence than its truth conditions entail (i.e. main effect of task; $\beta=28.8; SE = 4.3; t=6.6; p < 0.001$; see Fig.~\ref{fig:exp1}, right). \red{In the original study, this asymmetry was not observed for sentences using the quantifier ``most''; however, we did not replicate this effect here. [Maybe I'll add the ``most'' condition...]}
+The prevalence scores from each task were entered into a linear mixed model with a by-participant random effect of intercept; the fixed effects were property-type, task, and their interaction. Our results replicated the asymmetry finding that the generic statement was interpreted as having a higher prevalence than its truth conditions entail (i.e. main effect of task; $\beta=28.8; SE = 4.3; t=6.6; p < 0.001$; see Fig.~\ref{fig:exp2a}, right). \red{In the original study, this asymmetry was not observed for sentences using the quantifier ``most''; however, we did not replicate this effect here. [Maybe I'll add the ``most'' condition...]}
 
 
 \subsection{Experiment 2b: \emph{Prior elicitation}}
@@ -589,7 +616,7 @@ We recruited X participants over Amazon's crowd-sourcing platform Mechanical Tur
 
 \subsubsection{Procedure and materials}
 
-The procedure was very similar to that used in Experiment 1a. One change was that participants were told there would be some animal-names listed that they might not recognize and that this was because these animals came from a very remote island. Participants were free to add animal names they were familiar with or ones that they made up. Materials (properties and novel animal kinds) were those used in Expt.~1a.
+The procedure was similar to that used in Experiment 1a. One change was that participants were told scientists recently discovered a remote island with a lot of animals we didn't know existed. They were told they might not recognize some animal-names listed but to do their best to estimate the prevalence. Participants were free to add animal names they were familiar with or ones that they made up. Materials (properties and novel animal kinds) matches those used in Expt.~2a.
 
 \subsubsection{Results}
 
