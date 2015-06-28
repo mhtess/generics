@@ -1,0 +1,87 @@
+---
+title: "generics-asymmetry"
+author: "mht"
+date: "June 27, 2015"
+output: html_document
+---
+
+## Asymmetry 1. Truth conditions vs. Implied prevalence for 3 "property types".
+
+
+Properties are either: 
+
++ Color (e.g. red tails)
++ Vague (e.g. soft tails)
++ Accidental (e.g. broken tails)
+
+We expect to replicate the asymmetry for color, and the reverse asymmetry for accidental. 
+
+The prediction for the vague properties are less clear. Participants may construe them as *distinctive*, and thus may be more willing to endorse the generic. At the same time, they may not be as extendable as the color properties. They may pair with accidental in terms of implied prevalence. If this does pan out, this would be a third interesting case.
+
+```{r helperFunctions}
+sem.2AFC <- function(p, n){return(sqrt((p*(1-p))/n))}
+
+```
+
+```{r asym1.entry}
+d1<-read.csv('generics/experiments/turk/asymmetry-1/asymmetry-1-trials.csv')
+d2<-read.csv('generics/experiments/turk/asymmetry-1/asymmetry-1-truthjudge.csv')
+
+d2<-d2 %>%   mutate(response = as.numeric(response=='Agree'))
+d<-bind_rows(d1,d2)
+
+d.accept<- d %>% filter(trial_type=='truth_conditions')
+d.implied<- d %>% filter(trial_type=='implied_prevalence')
+```
+
+```{r asym1.truthconditions}
+# calculate proportion of "accepts" for each type and prevalence
+accept.summary <- d.accept %>%
+  #mutate(response = as.numeric(response=='Agree')) %>%
+  group_by(stim_type, stim_prevalence) %>%
+  summarise(prop = mean(response),
+            n = length(response)) %>%
+  mutate(sterr = sem.2AFC(prop,n))
+
+ggplot(accept.summary,aes(x=factor(stim_prevalence), y= prop, 
+                      group=stim_type, color=stim_type))+
+  geom_point(position=position_dodge())+
+  geom_line()+
+  geom_errorbar(aes(ymin=prop-2*sterr,
+                    ymax=prop+2*sterr),
+                width=0.1,
+                position=position_dodge())
+
+# calculate average acceptable prevalence for each workerid and type
+d.aveAccPrev <- d.accept %>%
+  group_by(workerid, stim_type) %>%
+  summarise(prev = mean(response*stim_prevalence)) %>%
+  mutate(type = "accept")
+```
+
+```{r asym1.impliedprev}
+# calculate average implied prevalence for each workerid and type
+d.aveImpPrev <- d.implied %>%
+  group_by(workerid, stim_type) %>%
+  summarise(prev = mean(response),
+            semImPrev = sem(response))%>%
+  mutate(type = "implied")
+
+
+
+d.asymmetry <- bind_rows(d.aveImpPrev,d.aveAccPrev)
+
+
+asymmetry.summary<- d.asymmetry %>%
+  group_by(type,stim_type) %>%
+  summarise(avePrev = mean(prev),
+            sterr = sem(prev))
+
+ggplot(asymmetry.summary,
+       aes(x=stim_type, y = avePrev, fill = type))+
+  geom_bar(position = position_dodge(), stat='identity')+
+  geom_errorbar(aes(ymin=avePrev-2*sterr,ymax=avePrev+2*sterr),
+                position=position_dodge(), width=0.5)
+
+```
+
