@@ -18,17 +18,24 @@ We expect to replicate the asymmetry for color, and the reverse asymmetry for ac
 
 The prediction for the vague properties are less clear. Participants may construe them as *distinctive*, and thus may be more willing to endorse the generic. At the same time, they may not be as extendable as the color properties. They may pair with accidental in terms of implied prevalence. If this does pan out, this would be a third interesting case.
 
+n = 100
+Accept task n = 47
+Implied task n = 53
+
 ```{r helperFunctions}
 sem.2AFC <- function(p, n){return(sqrt((p*(1-p))/n))}
-
+avePrevScore <- function(responses,prevalences){
+  avePrev<-if (sum(responses)>0){
+    sum(responses*prevalences)/sum(responses)
+  } else {
+    100
+  }
+  return(avePrev)
+}
 ```
 
 ```{r asym1.entry}
-d1<-read.csv('generics/experiments/turk/asymmetry-1/asymmetry-1-trials.csv')
-d2<-read.csv('generics/experiments/turk/asymmetry-1/asymmetry-1-truthjudge.csv')
-
-d2<-d2 %>%   mutate(response = as.numeric(response=='Agree'))
-d<-bind_rows(d1,d2)
+d<-read.csv('generics/experiments/turk/asymmetry-1/asymmetry-1-trials.csv')
 
 d.accept<- d %>% filter(trial_type=='truth_conditions')
 d.implied<- d %>% filter(trial_type=='implied_prevalence')
@@ -37,7 +44,7 @@ d.implied<- d %>% filter(trial_type=='implied_prevalence')
 ```{r asym1.truthconditions}
 # calculate proportion of "accepts" for each type and prevalence
 accept.summary <- d.accept %>%
-  #mutate(response = as.numeric(response=='Agree')) %>%
+  mutate(response = as.numeric(response=='Agree')) %>%
   group_by(stim_type, stim_prevalence) %>%
   summarise(prop = mean(response),
             n = length(response)) %>%
@@ -45,23 +52,29 @@ accept.summary <- d.accept %>%
 
 ggplot(accept.summary,aes(x=factor(stim_prevalence), y= prop, 
                       group=stim_type, color=stim_type))+
-  geom_point(position=position_dodge())+
-  geom_line()+
+  geom_point(position=position_dodge(0.3))+
+  geom_line(position=position_dodge(0.3),size=1.5,linetype=2)+
   geom_errorbar(aes(ymin=prop-2*sterr,
                     ymax=prop+2*sterr),
-                width=0.1,
-                position=position_dodge())
+                width=0.1, size=1.5,
+                position=position_dodge(0.3))
 
 # calculate average acceptable prevalence for each workerid and type
 d.aveAccPrev <- d.accept %>%
+  mutate(response = as.numeric(response=='Agree')) %>%
   group_by(workerid, stim_type) %>%
-  summarise(prev = mean(response*stim_prevalence)) %>%
+  summarise(prev = avePrevScore(response,stim_prevalence)) %>%
   mutate(type = "accept")
+
+
+rs.accept<-glmer(response ~ stim_type*stim_prevalence + (1 +stim_prevalence+stim_type | workerid), family='binomial', data=d.accept)
+summary(rs.accept)
 ```
 
 ```{r asym1.impliedprev}
 # calculate average implied prevalence for each workerid and type
 d.aveImpPrev <- d.implied %>%
+  mutate(response = to.n(response))%>%
   group_by(workerid, stim_type) %>%
   summarise(prev = mean(response),
             semImPrev = sem(response))%>%
@@ -79,9 +92,13 @@ asymmetry.summary<- d.asymmetry %>%
 
 ggplot(asymmetry.summary,
        aes(x=stim_type, y = avePrev, fill = type))+
-  geom_bar(position = position_dodge(), stat='identity')+
+  geom_bar(position = position_dodge(0.7), stat='identity', width = 0.7)+
   geom_errorbar(aes(ymin=avePrev-2*sterr,ymax=avePrev+2*sterr),
-                position=position_dodge(), width=0.5)
+                position=position_dodge(0.7), width=0.3)
 
+rs.asymmetry<-lmer(data=d.asymmetry, 
+                   prev~ + type*stim_type + (1 | workerid))
+
+summary(rs.asymmetry)
 ```
 
