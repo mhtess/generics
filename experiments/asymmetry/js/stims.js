@@ -347,6 +347,42 @@ var cbgstims = [
                 {type:"color", property: "yellow fur"}
                 ]
 
+var stimsForPrior = [
+                [
+                {type:"accidental", property: "broken legs"},
+                {type:"accidental", property: "cracked shells"},
+                {type:"accidental", property: "fungus-covered claws"},
+                {type:"accidental", property: "infected scales"},
+                {type:"accidental", property: "itchy skin"},
+                {type:"accidental", property: "muddy feathers"},
+                {type:"accidental", property: "rotting shells"},
+                {type:"accidental", property: "sore teeth"},
+                {type:"accidental", property:  "swollen ears"},
+                {type:"accidental", property: "wet fur"}
+                ],
+
+                [{type:"vague", property: "long teeth"},
+                {type:"vague", property: "sensitive spots"},
+                {type:"vague", property: "smooth feathers"},
+                {type:"vague", property: "small ears"},
+                {type:"vague", property: "long legs"},
+                {type:"vague", property: "light shells"},
+                {type:"vague", property: "thin stripes"},
+                {type:"vague", property: "long tails"},
+                {type:"vague", property: "soft scales"},
+                {type:"vague", property: "curly fur"}],
+
+                [{type:"color", property: "pink teeth"},
+                {type:"color", property: "gold spots"},
+                {type:"color", property: "purple feathers"},
+                {type:"color", property: "orange ears"},
+                {type:"color", property: "silver legs"},
+                {type:"color", property: "green shells"},
+                {type:"color", property: "copper stripes"},
+                {type:"color", property: "orange tails"},
+                {type:"color", property: "red scales"},
+                {type:"color", property: "yellow fur"}]
+                ]
 
 
 
