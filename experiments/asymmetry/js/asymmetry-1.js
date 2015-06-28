@@ -191,7 +191,7 @@ function make_slides(f) {
     log_responses : function() {
       exp.data_trials.push({
         "trial_type" : "truth_conditions",
-        "trialNum":this.trialNum,
+        "trial_num":this.trialNum,
         "response" : $("input:radio[name=radio_button]:checked").val(),
         "rt":this.rt,
         "stim_type": this.stim.type,
