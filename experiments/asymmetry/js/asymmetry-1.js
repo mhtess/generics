@@ -33,18 +33,20 @@ function make_slides(f) {
       this.stim = exp.stims[stim_num]; // allstims should be randomized, or stim_num should be
       this.trialNum = stim_num;
 
+      console.log(this.stim)
+
+
       //  the following commands work only because there are "3 lists" of stimuli, and there are 3 exp.stimtypes (also 3 exp.deteminers)
       //this.determiner = exp.determiner[this.stim.list] // exp.determiner already randomized, grab which stimtype corresponds to list #_this.stim
       this.determiner = exp.determiner[0] // exp.determiner between-subjects var
-      this.stimtype = null; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
       //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
 
-      var query_prompt = "What percentage of "  + this.stim.category + " do you think have " + this.stim.accidental + "?\n";
+      var query_prompt = "What percentage of "  + this.stim.category + " do you think have " + this.stim.property + "?\n";
 
 
       this.determiner=='generic' ?
-        this.evidence_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.accidental + ".\n" :
-        this.evidence_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n";
+        this.evidence_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.property + ".\n" :
+        this.evidence_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.stim.property + ".\n";
 
 
       $(".evidence").html(this.evidence_prompt);
@@ -82,9 +84,9 @@ function make_slides(f) {
         "trial_num": this.trialNum,
         "response" : $("#text_response").val(),
         "rt":this.rt,
-        "stim_type": "accidental",
+        "stim_type": this.stim.type,
         "stim_determiner": this.determiner,
-        "stim_property": this.stim.accidental,
+        "stim_property": this.stim.property,
         "stim_category": this.stim.category
       });
     }
@@ -114,25 +116,22 @@ function make_slides(f) {
       // BAD
       //this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
       // BETTER
-      this.stimtype = 'accidental'
-      this.prevalence = this.stim.prevalence
-      this.stim.part = this.stim.accidental
-
+      this.prevalence = this.stim.prev
     //  this.prevalence = exp.prev_levels[]
 
       //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
   //    this.prevalence = exp.prevalence_levels[this.stim.list].splice(0,1)[0] // grab prevalence level for this list
 
-      this.stimtype == 'bare' ? this.adjective = '' : null;      
-      this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;
-      this.stimtype == 'distinct' ? this.adjective = 'distinctive ': null;
-      this.stimtype == 'irrelevant' ? this.adjective = this.stim.extraneous + ' ': null;
-      this.stimtype == 'danger-distinct' ? this.adjective = 'dangerous ' : null;
-      this.stimtype == 'nondistinctive' ? this.adjective = this.stim.extraneous + ' ': null;
-      this.stimtype == 'accidental' ? this.adjective = '': null;
-      this.stimtype == 'accidental' ? this.stim.color = '': null;
+      // this.stimtype == 'bare' ? this.adjective = '' : null;      
+      // this.stimtype == 'danger' ? this.adjective = 'dangerous ' : null;
+      // this.stimtype == 'distinct' ? this.adjective = 'distinctive ': null;
+      // this.stimtype == 'irrelevant' ? this.adjective = this.stim.extraneous + ' ': null;
+      // this.stimtype == 'danger-distinct' ? this.adjective = 'dangerous ' : null;
+      // this.stimtype == 'nondistinctive' ? this.adjective = this.stim.extraneous + ' ': null;
+      // this.stimtype == 'accidental' ? this.adjective = '': null;
+      // this.stimtype == 'accidental' ? this.stim.color = '': null;
 
-      this.evidence_prompt = this.prevalence+ "% of "  + this.stim.category + " have " + this.adjective + this.stim.color + this.stim.part + ".\n";
+      this.evidence_prompt = this.prevalence+ "% of "  + this.stim.category + " have " + this.stim.property + ".\n";
 
       // if (this.determiner=='generic'){
       //   var query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.color + " " + this.stim.part + ".\n";
@@ -160,14 +159,14 @@ function make_slides(f) {
       //   );
 
       this.determiner=='generic' ?
-        this.query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.adjective + this.stim.color + this.stim.part + ".\n":
-        this.query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.adjective + this.stim.color + " " + this.stim.part + ".\n";
+        this.query_prompt = utils.upperCaseFirst(this.stim.category) + " have " + this.stim.property + ".\n":
+        this.query_prompt = utils.upperCaseFirst(this.determiner) + " " + this.stim.category +" have " + this.property + ".\n";
 
-      this.stimtype=='danger' ? this.evidence_prompt+=this.stim.dangerous:null;
-      this.stimtype=='distinct' ? this.evidence_prompt+=this.stim.distinctive:null;
-      this.stimtype=='irrelevant' ? this.evidence_prompt+=this.stim.irrelevant:null;
-      this.stimtype == 'danger-distinct' ? this.evidence_prompt+=(this.stim.dangerous + ' ' + this.stim.dangdistinctive):null;
-      this.stimtype=='nondistinctive' ? this.evidence_prompt+=(this.stim.irrelevant + ' ' + this.stim.nondistinctive):null;
+      // this.stimtype=='danger' ? this.evidence_prompt+=this.stim.dangerous:null;
+      // this.stimtype=='distinct' ? this.evidence_prompt+=this.stim.distinctive:null;
+      // this.stimtype=='irrelevant' ? this.evidence_prompt+=this.stim.irrelevant:null;
+      // this.stimtype == 'danger-distinct' ? this.evidence_prompt+=(this.stim.dangerous + ' ' + this.stim.dangdistinctive):null;
+      // this.stimtype=='nondistinctive' ? this.evidence_prompt+=(this.stim.irrelevant + ' ' + this.stim.nondistinctive):null;
 
       $(".evidence").html(this.evidence_prompt);
       $(".query").html(this.query_prompt);
@@ -195,127 +194,15 @@ function make_slides(f) {
         "trialNum":this.trialNum,
         "response" : $("input:radio[name=radio_button]:checked").val(),
         "rt":this.rt,
-        "stim_type": this.stimtype,
+        "stim_type": this.stim.type,
         "stim_prevalence": this.prevalence,
         "stim_determiner": this.determiner,
         "stim_category": this.stim.category,
-        "stim_property":this.stim.part
+        "stim_property":this.stim.property
       });
     }
   });
 
-  slides.one_slider = slide({
-    name : "one_slider",
-
-    /* trial information for this block
-     (the variable 'stim' will change between each of these values,
-      and for each of these, present_handle will be run.) */
-    present : [
-      {subject: "dog", object: "ball"},
-      {subject: "cat", object: "windowsill"},
-      {subject: "bird", object: "shiny object"},
-    ],
-
-    //this gets run only at the beginning of the block
-    present_handle : function(stim) {
-      $(".err").hide();
-
-      this.stim = stim; //I like to store this information in the slide so I can record it later.
-
-      $(".prompt").html(stim.subject + "s like " + stim.object + "s.");
-      this.init_sliders();
-      exp.sliderPost = null; //erase current slider value
-    },
-
-    button : function() {
-      if (exp.sliderPost == null) {
-        $(".err").show();
-      } else {
-        this.log_responses();
-
-        /* use _stream.apply(this); if and only if there is
-        "present" data. (and only *after* responses are logged) */
-        _stream.apply(this);
-      }
-    },
-
-    init_sliders : function() {
-      utils.make_slider("#single_slider", function(event, ui) {
-        exp.sliderPost = ui.value;
-      });
-    },
-
-    log_responses : function() {
-      exp.data_trials.push({
-        "trial_type" : "one_slider",
-        "response" : exp.sliderPost
-      });
-    }
-  });
-
-  slides.multi_slider = slide({
-    name : "multi_slider",
-    present : _.shuffle([
-      {"critter":"Wugs", "property":"fur"},
-      {"critter":"Blicks", "property":"fur"}
-    ]),
-    present_handle : function(stim) {
-      $(".err").hide();
-      this.stim = stim; //FRED: allows you to access stim in helpers
-
-      this.sentence_types = _.shuffle(["generic", "negation", "always", "sometimes", "usually"]);
-      var sentences = {
-        "generic": stim.critter + " have " + stim.property + ".",
-        "negation": stim.critter + " do not have " + stim.property + ".",
-        "always": stim.critter + " always have " + stim.property + ".",
-        "sometimes": stim.critter + " sometimes have " + stim.property + ".",
-        "usually": stim.critter + " usually have " + stim.property + "."
-      };
-
-      this.n_sliders = this.sentence_types.length;
-      $(".slider_row").remove();
-      for (var i=0; i<this.n_sliders; i++) {
-        var sentence_type = this.sentence_types[i];
-        var sentence = sentences[sentence_type];
-        $("#multi_slider_table").append('<tr class="slider_row"><td class="slider_target" id="sentence' + i + '">' + sentence + '</td><td colspan="2"><div id="slider' + i + '" class="slider">-------[ ]--------</div></td></tr>');
-        utils.match_row_height("#multi_slider_table", ".slider_target");
-      }
-
-      this.init_sliders(this.sentence_types);
-      exp.sliderPost = [];
-    },
-
-    button : function() {
-      if (exp.sliderPost.length < this.n_sliders) {
-        $(".err").show();
-      } else {
-        this.log_responses();
-        _stream.apply(this); //use _stream.apply(this); if and only if there is "present" data.
-      }
-    },
-
-    init_sliders : function(sentence_types) {
-      for (var i=0; i<sentence_types.length; i++) {
-        var sentence_type = sentence_types[i];
-        utils.make_slider("#slider" + i, this.make_slider_callback(i));
-      }
-    },
-    make_slider_callback : function(i) {
-      return function(event, ui) {
-        exp.sliderPost[i] = ui.value;
-      };
-    },
-    log_responses : function() {
-      for (var i=0; i<this.sentence_types.length; i++) {
-        var sentence_type = this.sentence_types[i];
-        exp.data_trials.push({
-          "trial_type" : "multi_slider",
-          "sentence_type" : sentence_type,
-          "response" : exp.sliderPost[i]
-        });
-      }
-    },
-  });
 
   slides.subj_info =  slide({
     name : "subj_info",
@@ -424,6 +311,7 @@ function init() {
   //     });
 
   exp.stims = zipstims
+  console.log(zipstims)
 
   // _.map(_.zip(exp.stims, 
   //             _.shuffle(accidental), 
