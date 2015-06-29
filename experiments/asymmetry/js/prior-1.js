@@ -239,7 +239,7 @@ function make_slides(f) {
                         "trial_type" : "priors",
                         "trial_number": (6%(1+_.flatten(exp.properties).indexOf(property)))/6,
                          "animal": y[0],
-                         "property": property,
+                         "property": property.property,
                          "prevalence": y[1],
                          "rt":rt/1000,
                          "animal_index": animals.indexOf(y[0]),
