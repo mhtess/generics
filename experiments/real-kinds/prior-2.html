@@ -31,8 +31,7 @@
     <link href="css/local-style.css" rel="stylesheet" type="text/css"/>
 
     <!-- experiment file -->
-    <script src="js/prior-1.js"></script>
-    <script src="js/stims.js"></script>
+    <script src="js/prior-2.js"></script>
   </head>
 
 <body onload="init();">
@@ -41,18 +40,18 @@
   <div class="slide" id="i0" >
     <img src="../../../_shared/images/cocologo.png" alt="Stanford CoCoLab" id="cocologo"></img>
     <p id="cocolab">Stanford CoCoLab</p>
-    <p id="instruct-text">You will be asked to list animal names and answer some questions about them. The HIT should take approximately 4 minutes. Please pay attention, thanks!</p>
+    <p id="instruct-text">You will be asked to list animal names and answer some questions about them. The HIT should take approximately 7-10 minutes. Please pay attention, thanks!</p>
     <button id="start_button" type="button">Start Experiment</button>
     <p id="legal">Legal information: By answering the following questions, you are participating in a study being performed by cognitive scientists in the Stanford Department of Psychology. If you have questions about this research, please contact M.H. Tessler at <a href="mailto://mhtessler@stanford.edu">mhtessler@stanford.edu</a> or Noah Goodman, at ngoodman@stanford.edu. You must be  at least 18 years old to participate. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</p>
   </div>
 
   <div class="slide" id="instructions">
     <h3>Instructions </h3>
-    <p>In this study, we are interested in how prevalent certain properties are within different kinds of animals. 
+    <p>In this study, we are interested in how prevalent certain properties are for different kinds of animals. 
       We will give you examples of the kinds of animals we have in mind and ask you to list a few of your own. </p>
-      <p>Then, you will estimate the <em>percentage of the individual members</em> of the animal species that have certain properties.
+      <p>Then, you will estimate the <em>percentage of the individual members</em> of the animal species that have the property.
     </p>
-    <p>There will be 8 properties in total. The properties will be revealed to you one at a time. You are allowed to go back and revise your answers, if you think there is a more realistic estimate you could give. Press Continue to begin.</p>
+    <p>On each trial, you will rate 8 properties. The properties will be revealed to you one at a time. Essentially, you will be filling out a big table. You are allowed to go back and revise your answers, if you think there is a more realistic estimate you could give. You will do this 2 times (2 big tables). Press Continue to begin.</p>
 
     <button onclick="_s.button()">Continue</button>
   </div>
@@ -247,6 +246,20 @@
           <td align='center' class='propF'><input type="text" id="text_response9f" tabindex="60" maxlength="3" size="3">%</input></td>  
           <td align='center' class='propG'><input type="text" id="text_response9g" tabindex="70" maxlength="3" size="3">%</input></td>  
           <td align='center' class='propH'><input type="text" id="text_response9h" tabindex="80" maxlength="3" size="3">%</input></td>  
+        </tr>
+
+        <tr>
+          <td align='center'><input type="text" id="text_response10" maxlength="14" size="10"></input> </td>   
+
+          <td align='center' class='propA'><input type="text" id="text_response10a" tabindex="10" maxlength="3" size="3">%</input></td>  
+          <td align='center' class='propB'><input type="text" id="text_response10b" tabindex="20" maxlength="3" size="3">%</input></td>  
+          <td align='center' class='propC'><input type="text" id="text_response10c" tabindex="30" maxlength="3" size="3">%</input></td>  
+          <td align='center' class='propD'><input type="text" id="text_response10d" tabindex="40" maxlength="3" size="3">%</input></td>  
+          <td align='center' class='propE'><input type="text" id="text_response10e" tabindex="50" maxlength="3" size="3">%</input></td>  
+
+          <td align='center' class='propF'><input type="text" id="text_response10f" tabindex="60" maxlength="3" size="3">%</input></td>  
+          <td align='center' class='propG'><input type="text" id="text_response10g" tabindex="70" maxlength="3" size="3">%</input></td>  
+          <td align='center' class='propH'><input type="text" id="text_response10h" tabindex="80" maxlength="3" size="3">%</input></td>  
         </tr>
 
     </table>

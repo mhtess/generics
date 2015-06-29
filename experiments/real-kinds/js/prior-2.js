@@ -36,8 +36,7 @@ function make_slides(f) {
   slides.priors = slide({
     name: "priors",
 
-    present : _.zip(_.flatten(["",exp.columnNames]),
-                    _.flatten(["animal",exp.properties])),
+    present :exp.stims.shift(),
     //this gets run only at the beginning of the block
 
     present_handle : function(stim) {
@@ -49,7 +48,9 @@ function make_slides(f) {
       // hide columns
       this.col = stim[0]
       this.property = stim[1]
+      this.animals = stim[2]
 
+      // first trial? hide the rest of the columns : otherwise, hide all of them
       this.col!='' ? 
       _.map(exp.columnNames.slice(exp.columnNames.indexOf(this.col)),
             function(x){
@@ -58,24 +59,38 @@ function make_slides(f) {
             function(x){
         $(".prop"+x).hide()})
 
+      //erase current columns enetries
+
+      var column = this.col
+      _.map([0,1,2,3,4,5,6,7,8,9,10], 
+                  function(y){return $("#text_response"+y+column.toLowerCase()).val("")
+                });
 
       $(".prop"+this.col).show();
 
 
       // fix certain animal names in the table
-      _.map(_.range(exp.numberOfGivenAnimals),
+      this.col == '' ? 
+      _.map(_.zip(_.range(exp.numberOfGivenAnimals), this.animals),
         function(x){
-          $("#text_response"+x).val(exp.animals[x]);
-          document.getElementById('text_response'+x).disabled=true;})
+          $("#text_response"+x[0]).val(
+            x[1]
+            );
+          document.getElementById('text_response'+x[0]).disabled=true;}) : null
 
-
+      this.col == '' ? 
+      _.map([6,7,8,9,10],
+        function(x){
+          document.getElementById('text_response'+x).disabled=false;
+                  $("#text_response"+x).val("");
+                }) : null
 
       this.startTime = Date.now();
 
       $("#head" + this.col).html(this.property);
 
       this.col ==''?
-        $(".query").html("Listed below are 5 kinds of animals. Add 5 of your own to the list.") :
+        $(".query").html("Listed below are " +exp.numberOfGivenAnimals + " kinds of animals. Add 5 of your own to the list.") :
         $(".query").html("For each kind of animal, what percentage of the species do you think " + this.property + "?")
 
 
@@ -105,13 +120,13 @@ function make_slides(f) {
 //      if (columnsOn.length==0) {
       if (column=='') {
         
-        var responses = _.map([0,1,2,3,4,5,6,7,8,9], 
+        var responses = _.map([0,1,2,3,4,5,6,7,8,9,10], 
           function(y){return $("#text_response"+y).val()
         })
 
         if (isComplete(responses)){
             // freeze column
-            _.map([0,1,2,3,4,5,6,7,8,9],
+            _.map([0,1,2,3,4,5,6,7,8,9, 10],
               function(x){document.getElementById('text_response'+x).disabled=true;}
               )
             // get next column to reveal
@@ -141,7 +156,7 @@ function make_slides(f) {
         //   })
         // }))
 
-        var responses = _.map([0,1,2,3,4,5,6,7,8,9], 
+        var responses = _.map([0,1,2,3,4,5,6,7,8,9,10], 
             function(y){return $("#text_response"+y+column.toLowerCase()).val()
           });
 
@@ -195,7 +210,7 @@ function make_slides(f) {
 
     log_responses : function() {
 
-    var animals = _.map([0,1,2,3,4,5,6,7,8,9], 
+    var animals = _.map([0,1,2,3,4,5,6,7,8,9,10], 
 
       function(y){return $("#text_response"+y).val()
     
@@ -207,7 +222,7 @@ function make_slides(f) {
     var property = this.property;
     var rt = this.rt;
 
-    var responses = _.map([0,1,2,3,4,5,6,7,8,9], 
+    var responses = _.map([0,1,2,3,4,5,6,7,8,9,10], 
 
         function(y){return $(("#text_response"+y+column.toLowerCase())).val()
       
@@ -219,12 +234,13 @@ function make_slides(f) {
         
           function(y){exp.data_trials.push({
                         "trial_type" : "priors",
+                        "trial_number": (6%(1+_.flatten(exp.properties).indexOf(property)))/6,
                          "animal": y[0],
                          "property": property,
                          "prevalence": y[1],
                          "rt":rt/1000,
-                         "animal_index":animals.indexOf(y[0]),
-                         "property_index":exp.properties.indexOf(property)
+                         "animal_index": animals.indexOf(y[0]),
+                         "property_index": _.flatten(exp.properties).indexOf(property)
           })}) : 
 
     null;
@@ -246,8 +262,11 @@ function make_slides(f) {
     
 
 
-    }
+    },
 
+    end : function() {
+      this.present = exp.stims.shift();
+    }
 
   });
 
@@ -295,7 +314,8 @@ function init() {
   exp.catch_trials = [];
 
   exp.numberOfProperties = 8;
-  exp.numberOfGivenAnimals = 5;
+  exp.numberOfGivenAnimals = 6;
+  exp.nTrials = 2;
 
   // exp.properties = _.shuffle(
   //                   _.flatten(
@@ -307,16 +327,63 @@ function init() {
   //                       )
   //                   )
 
-  exp.properties = _.shuffle(["has wings","has spots",
-                              "lays eggs","has manes",
-                              "carries malaria", "attack swimmers",
-                                  "is male","is female"]);
+  // exp.properties = _.shuffle(["have wings","have spots","are white","are red",
+  //                             "have pouches","lay eggs","have manes",
+  //                             "carry malaria", "attacks swimmers","carry Lyme disease","eat people",
+  //                             "have beautiful feathers",
+  //                             "are adults","are juvelines","are male","are female",
+  //                             "don't carry malaria","don't carry Lyme disease",
+  //                             "don't attack swimmers", "don't have beautiful feathers"]);
+
+  var stims = [{"Ducks":"have wings"},
+                {"Leopards":"have spots"},
+                {"Swans":"are white"},
+                {"Cardinals":"are red"},
+                {"Kangaroos":"have pouches"},
+                {"Robins":"lay eggs"},
+                {"Lions":"have manes"}, 
+                {"Mosquitos":"carry malaria"}, 
+                {"Sharks":"attacks swimmers"},
+                {"Ticks":"carry Lyme disease"},
+                {"Tigers":"eat people"},
+                {"Peacocks":"have beautiful feathers"}]
+
+
+  var otherStims = [
+                  [{"Leopards":"are full-grown"},
+                    {"Kangaroos":"are juvenile"}],
+
+                 [{"Lions":"are male"},
+                 {"Robins":"are female"}]]
+
+  //  each trial will have 1 gender and 1 age category, not explicitly paired with animal kind of interest
+  var otherShuf = _.map(otherStims, function(lst){
+    return _.shuffle(_.flatten(_.map(lst, function(y){return _.values(y)})))
+  })
+
+  var uniqAnimals = _.shuffle(_.uniq(_.flatten(_.map(stims,_.keys))))
+  exp.animals = [uniqAnimals.splice(0,6), uniqAnimals]
+
 
   exp.columnNames = ["A","B","C","D","E","F","G","H"]
 
 
-//  exp.animals = _.sample(["Ravens","Cardinals","Birds","Lions","Sharks","Mosquitos","Cheetahs","Dogs"],exp.numberOfGivenAnimals);
-  exp.animals = _.shuffle(["Birds","Leopards","Ducks","Lions","Mosquitos","Sharks"]);
+  exp.properties = _.map(
+    _.zip(exp.animals,  _.zip(otherShuf[0],otherShuf[1])),
+      function(y){return _.shuffle(_.flatten(
+        _.map(_.filter(stims, function(x){return y[0].indexOf(_.keys(x)[0]) > -1}),
+        function(z){return _.values(z)}).concat(y[1])
+      ))
+    })
+
+  exp.stims = [_.zip(_.flatten(["",exp.columnNames]),
+                            _.flatten(["animal",exp.properties[0]]),
+                            [exp.animals[0]]),
+
+                  _.zip(_.flatten(["",exp.columnNames]),
+                         _.flatten(["animal",exp.properties[1]]),
+                         [exp.animals[1]])]
+
 
   exp.system = {
       Browser : BrowserDetect.browser,
@@ -328,7 +395,7 @@ function init() {
     };
 
   //blocks of the experiment:
-   exp.structure=["i0","instructions","priors", 'subj_info', 'thanks'];
+   exp.structure=["i0","instructions","priors", "priors",'subj_info', 'thanks'];
  
   exp.data_trials = [];
   //make corresponding slides:
