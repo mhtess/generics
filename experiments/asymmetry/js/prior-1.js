@@ -40,6 +40,7 @@ function make_slides(f) {
     //this gets run only at the beginning of the block
 
     present_handle : function(stim) {
+      console.log(exp.stims)
       $(".err").hide();
 
       console.log(stim);
@@ -236,13 +237,13 @@ function make_slides(f) {
         
           function(y){exp.data_trials.push({
                         "trial_type" : "priors",
-                        "trial_number": (6%(1+exp.properties.indexOf(property)))/6,
+                        "trial_number": (6%(1+_.flatten(exp.properties).indexOf(property)))/6,
                          "animal": y[0],
                          "property": property,
                          "prevalence": y[1],
                          "rt":rt/1000,
                          "animal_index": animals.indexOf(y[0]),
-                         "property_index": exp.properties.indexOf(property)
+                         "property_index": _.flatten(exp.properties).indexOf(property)
           })}) : 
 
     null;
@@ -262,7 +263,6 @@ function make_slides(f) {
     //                    "property_index":exp.properties.indexOf(y[1])
     //     })})})
     
-
 
     },
 
@@ -314,7 +314,6 @@ function init() {
 
   exp.trials = [];
   exp.catch_trials = [];
-
   exp.numberOfProperties = 6;
   exp.numberOfGivenAnimals = 8;
   exp.nTrials = 2;
@@ -368,7 +367,7 @@ function init() {
                                 knownCreatures.splice(0,3)]))],
                     [_.shuffle(_.flatten([creatures, knownCreatures]))]]
 
-  exp.properties = _.map(_.flatten(properties),function(x){return x.property})
+  exp.properties = properties;
 
   exp.columnNames = ["A","B","C","D","E","F"]
 
