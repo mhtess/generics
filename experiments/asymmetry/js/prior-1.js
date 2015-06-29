@@ -372,7 +372,7 @@ function init() {
 
   exp.columnNames = ["A","B","C","D","E","F"]
 
-  exp.stims = _.map(_.zip(expanimals,exp.properties),function(x){return _.zip(_.flatten(x,true),
+  exp.stims = _.map(_.zip(expanimals,properties),function(x){return _.zip(_.flatten(x,true),
     _.flatten(["",exp.columnNames]))})
 
 
