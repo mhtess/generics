@@ -76,7 +76,7 @@ function make_slides(f) {
       _.map(_.zip(_.range(exp.numberOfGivenAnimals), this.animals),
         function(x){
           $("#text_response"+x[0]).val(
-            utils.upperCaseFirst(x[1].category)
+            utils.upperCaseFirst(x[1])
             );
           document.getElementById('text_response'+x[0]).disabled=true;}) : null
 
@@ -92,7 +92,7 @@ function make_slides(f) {
       $("#head" + this.col).html(this.property.property);
 
       this.col ==''?
-        $(".query").html("Listed below are " +exp.numberOfGivenAnimals + " kinds of animals. Add 3 of your own to the list.") :
+        $(".query").html("Listed below are " +exp.numberOfGivenAnimals + " kinds of animals. Some of these animals were recently discovered from a remote island. Add 3 of your own to the list.") :
         $(".query").html("For each kind of animal, what percentage of the species do you think have " + this.property.property + "?")
 
 
@@ -236,13 +236,13 @@ function make_slides(f) {
         
           function(y){exp.data_trials.push({
                         "trial_type" : "priors",
-                        "trial_number": (6%(1+_.flatten(exp.properties).indexOf(property)))/6,
+                        "trial_number": (6%(1+exp.properties.indexOf(property)))/6,
                          "animal": y[0],
                          "property": property,
                          "prevalence": y[1],
                          "rt":rt/1000,
                          "animal_index": animals.indexOf(y[0]),
-                         "property_index": _.flatten(exp.properties).indexOf(property)
+                         "property_index": exp.properties.indexOf(property)
           })}) : 
 
     null;
@@ -361,14 +361,18 @@ function init() {
   var properties = _.map(_.zip(ant[0],ant[1],ant[2]),
     function(x){return _.shuffle(_.flatten(x))})
 
-  var creatures = _.shuffle(creatureNames).slice(0,8*2)
-  var expanimals = [[creatures.splice(0,8)],[creatures]]
+  var creatures = _.map(_.shuffle(creatureNames).slice(0,(8-3)*2),
+    function(x){return x.category})
+  var knownCreatures = _.shuffle(realAnimals).slice(0,6)
+  var expanimals = [[_.shuffle(_.flatten([creatures.splice(0,5),
+                                knownCreatures.splice(0,3)]))],
+                    [_.shuffle(_.flatten([creatures, knownCreatures]))]]
 
-
+  exp.properties = _.map(_.flatten(properties),function(x){return x.property})
 
   exp.columnNames = ["A","B","C","D","E","F"]
 
-  exp.stims = _.map(_.zip(expanimals,properties),function(x){return _.zip(_.flatten(x,true),
+  exp.stims = _.map(_.zip(expanimals,exp.properties),function(x){return _.zip(_.flatten(x,true),
     _.flatten(["",exp.columnNames]))})
 
 

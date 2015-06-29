@@ -384,5 +384,16 @@ var stimsForPrior = [
                 {type:"color", property: "yellow fur"}]
                 ]
 
-
+var realAnimals = [
+                    "Tigers",
+                    "Turtles",
+                    "Clams",
+                    "Falcons",
+                    "Robins",
+                    "Dogs",
+                    "Cats",
+                    "Lions",
+                    "Frogs",
+                    "Sharks"
+                    ]
 
