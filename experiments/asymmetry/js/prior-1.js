@@ -53,6 +53,7 @@ function make_slides(f) {
 
       this.property = this.col ==''? "animal": stim[0];
 
+
       // hide columns
       // first trial? hide the rest of the columns : otherwise, hide all of them
       this.col!='' ? 
@@ -240,6 +241,7 @@ function make_slides(f) {
                         "trial_number": (6%(1+_.flatten(exp.properties).indexOf(property)))/6,
                          "animal": y[0],
                          "property": property.property,
+                         "type":property.type,
                          "prevalence": y[1],
                          "rt":rt/1000,
                          "animal_index": animals.indexOf(y[0]),
@@ -319,6 +321,8 @@ function init() {
   exp.nTrials = 2;
   exp.propTypes = 3; // accidental, color, vague
 
+
+
   // exp.properties = _.shuffle(
   //                   _.flatten(
   //                     [_.sample(["is black","is red","lays eggs",
@@ -373,7 +377,6 @@ function init() {
 
   exp.stims = _.map(_.zip(expanimals,properties),function(x){return _.zip(_.flatten(x,true),
     _.flatten(["",exp.columnNames]))})
-
 
   exp.system = {
       Browser : BrowserDetect.browser,
