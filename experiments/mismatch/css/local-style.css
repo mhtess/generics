@@ -1,0 +1,43 @@
+.slider {
+  /* default is width 400 and margin 10 */
+	width: 400;
+	margin: 10px;
+}
+
+.evidence{
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 18px;
+   	text-align: justify;
+   	padding-left: 120px;
+   	padding-right: 120px;
+}
+
+.query{
+	font-family: ‘Times New Roman’, Times, serif;
+    font-size: 20px;
+}
+
+.slider_number{
+	font-family: ‘Times New Roman’, Times, serif;
+	font-size:24px;
+}
+
+.err{
+	color: red;
+}
+
+.kind{
+	font-size: 16px;
+	font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.vertical_slider {
+	width: 10px;
+	height: 300px;
+	margin-left: 35px;
+	margin-right: 35px
+}
+
+.bin_label{
+	text-align: center;
+}
