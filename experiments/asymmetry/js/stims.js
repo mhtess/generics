@@ -301,12 +301,13 @@ var creatureNames =
     {list:0,category: "lorches", exemplar:"lorch"},
     {list:1, category: "plovs", exemplar:"plov"},
     {list:2, category: "grinks", exemplar:"grink"},
-    {list:0,category: "glippets", exemplar:"glippet"},
-    {list:1, category: "sapers", exemplar:"saper"},
-    {list:2, category: "stups", exemplar:"stup"},
-    {list:0,category: "krivels", exemplar:"krivel"},
+    // {list:0,category: "glippets", exemplar:"glippet"},
+    // {list:1, category: "sapers", exemplar:"saper"},
+    // {list:2, category: "stups", exemplar:"stup"},
+    // {list:0,category: "krivels", exemplar:"krivel"},
     {list:1, category: "zoovs", exemplar:"zoov"},
-    {list:2, category: "thups", exemplar:"thup"}]
+    {list:2, category: "thups", exemplar:"thup"}
+    ]
 
     // ,
     // {list:3, category: "crullets", exemplar:"crullet"},
@@ -381,8 +382,42 @@ var stimsForPrior = [
                 {type:"color", property: "copper stripes"},
                 {type:"color", property: "orange tails"},
                 {type:"color", property: "red scales"},
-                {type:"color", property: "yellow fur"}]
+                {type:"color", property: "yellow fur"}],
+
+
+
+                [{type:"part", property: "teeth"},
+                {type:"part", property: "spots"},
+                {type:"part", property: "feathers"},
+                {type:"part", property: "ears"},
+                {type:"part", property: "legs"},
+                {type:"part", property: "shells"},
+                {type:"part", property: "stripes"},
+                {type:"part", property: "tails"},
+                {type:"part", property: "scales"},
+                {type:"part", property: "fur"}]
+
+
                 ]
+
+var stimsForPrior2 = 
+
+                [
+                {part: "teeth", accidental:"sore", color:"pink", vague:"long"},
+                {part: "spots", accidental:"dirty", color:"gold", vague:"sensitive"},
+                {part: "feathers", accidental:"muddy", color:"purple", vague:"smooth"},
+                {part: "ears", accidental:"swollen", color:"orange", vague:"small"},
+                {part: "legs", accidental:"broken", color:"silver", vague:"long"},
+                {part: "shells", accidental:"rotting", color:"green", vague:"light"},
+                {part: "stripes", accidental:"faded", color:"copper", vague:"thin"},
+                {part: "tails", accidental:"itchy", color:"orange", vague:"long"},
+                {part: "scales", accidental:"infected", color:"red", vague:"soft"},
+                {part: "fur", accidental:"wet", color:"yellow", vague:"curly"},
+                {part: "claws", accidental:"cracked", color:"blue", vague:"big"},
+                {part: "skin", accidental:"swollen", color:"violet", vague:"rough"}
+                ]
+
+
 
 var realAnimals = [
                     "Tigers",
@@ -396,4 +431,10 @@ var realAnimals = [
                     "Frogs",
                     "Sharks"
                     ]
+
+var practiceCreatures = [
+    {list:0,category: "glippets", exemplar:"glippet"},
+    {list:1, category: "sapers", exemplar:"saper"},
+    {list:2, category: "stups", exemplar:"stup"},
+    {list:0,category: "krivels", exemplar:"krivel"},]
 
