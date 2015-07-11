@@ -49,22 +49,17 @@
   <div class="slide" id="instructions">
     <h3>Instructions </h3>
 
-  You are part of a team of scientists deployed on a remote island. The island has a lot of new animals that were recently discovered. Satellite imagery tells us that this island is very large and has many different animals on it.
+  You are part of a team of scientists deployed on a remote island. The island has a lot of new animals that were recently discovered. 
 
-  <p>One day, you are roaming through the Library of Discovered Animals. As you are going through the library, you encounter a data-collection robot. The robot is very young and doesn't know very much. It is asking you questions about randomly-selected animals from the library. The robot wants to know the likely percentage of an animal species that has a given property. 
+  <p>One day, you are roaming through the Library of Discovered Animals. As you are going through the library, you encounter a data-collection robot. The robot is very young and doesn't know very much. It is asking you questions about animals randomly selected from its memory. The robot is trying to learn about different properties, and is generating questions by randomly pairing a property with an animal. </em>
   </p>
-  <p>At the moment, the robot would like to know the percentage of things that <em>are female</em>. The robot also wants to know about a particular animal species from the library, called blickets. Of course, you don't know anything about blickets --- but you do know, in general, how many of a particular species is female. Given what you know about the property, what percentage of blickets would you guess <em>are female</em>?
-
-  <label><input type="radio"  name="train" value="0"/>0-5%</label>
-  <label><input type="radio"  name="train" value="1"/>5-25%</label>
-  <label><input type="radio"  name="train" value="2"/>25-40%</label>
-  <label><input type="radio"  name="train" value="3"/>40-60%</label>
-  <label><input type="radio"  name="train" value="4"/>60-80%</label>
-  <label><input type="radio"  name="train" value="5"/>80-95%</label>
-  <label><input type="radio"  name="train" value="6"/>95-100%</label>
 
 
-<p> On each trial, the robot will ask you about a property and an unknown animal. Since you don't know anything about the animal, focus on the property and tell the robot what % of the species you think is likely to have the property.</p>
+<!-- <p> On each trial, the robot will ask you about a property and an animal. You are new to the island and don't know anything about the particular animals. Instead, you will have to think about the property to answer the questions.</p> -->
+
+  <p>We will walk you through 1 practice trial to familiarize yourself with the format. You will then complete 32 trials. Please pay attention.</p>
+
+
 
 <!--       We want you to think hard about the property, and realistically estimate the percentage of animals <em>of the same species</em> that have the property.</p>
 
@@ -114,6 +109,34 @@ In this study, we are interested in how many animals have certain properties.
   </div>
 
 
+  <div class="slide" id="twostep_prevalence">
+    <br>
+    <br>
+    <p class="question0"></p>
+
+    <table id="slider_table0" class="slider_table">
+      <tr><td class="left">unlikely</td><td class="right">likely</td></tr>
+      <tr><td colspan="2"><div id="single_slider0" class="slider"></div></td></tr>
+    </table>
+
+    <p class="question1"> </p>
+
+    <p class="slider_number"></p>
+    <table id="slider_table1" class="slider_table">
+      <tr><td class="left">0%</td><td class="right">100%</td></tr>
+      <tr><td colspan="2"><div id="single_slider1" class="slider"></div></td></tr>
+    </table>
+
+    <button onclick="_s.button()">Continue</button>
+    <p class="err">Please respond to both questions.</p>
+    <p class="training_err">Please place the slider near the middle of the bar.</p>
+
+  </div>
+
+
+
+
+
 
   <div class="slide" id="vertical_sliders">
       <p id="vertical_question">{{}}</p>
@@ -129,6 +152,7 @@ In this study, we are interested in how many animals have certain properties.
     <button onclick="_s.button()">Continue</button>
     <p id="vertical_reminder">{{}}</p>
     <div class="err">Please adjust all the sliders before continuing.</div>
+    <div class="warning">Please adjust the sliders so they accurately reflect the likelihood of that % of the species having the property.</div>
   </div>
 
   <div class="slide" id="slider_training">
