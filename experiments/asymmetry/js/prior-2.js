@@ -124,14 +124,14 @@ function make_slides(f) {
       exemplar:"glippet",
       property:"are female",
       question0:"<strong>This is a practice trial. (1 of 1)</strong><br>"+ 
-      'The robot begins by randomly picking an animal name from the animals on the island it knows. The robot will say: <em>We recently discovered animals called glippets.</em> The robot will ask you two questions in order to learn about properties of animals. ' +
+      'The robot begins by randomly picking an animal name from the animals on the island it knows. <br>The robot will say: <em>We recently discovered animals called glippets.</em> The robot will ask you two questions in order to learn about animal properties. ' +
       ' The 1st question is about how likely it is that <em>at least one</em> of this animal species has the property. <br>Suppose the robot wants to learn about the property "female"; it would ask you:' + 
-      '<br> How likely is it that <strong><em>there is a glippet that is female</strong></em>?' +
+      '<br> <strong><em>How likely is it that there is a glippet that is female</strong></em>?' +
       // " Since you don't know anything about glippets (except that they are a kind of animal), base your judgment on the property: <em>is female</em>.</p>"+
-      "<br> We are showing how you might respond below. Even though we don't know anything about this particular animal, we know that basically all animals have female members. So we would say it's very likely.",
-      question1:'The 2nd question is about how many of this kind of animal have the property, assuming that at least one does. The robot says: <em>Suppose there is a glippet that is female.</em>' +
+      "<br> We are showing how you might respond below. Even though we don't know anything about glippets, we know that basically all animals have female members. So we would say it's very likely.",
+      question1:'The 2nd question is about how many of this kind of animal have the property, assuming that at least one does. <br>The robot says: <em>Suppose there is a glippet that is female.</em>' +
           "<br><strong><em>What percentage of glippets do you think are female?</strong></em><br>"+
-          "Not knowing about the particular species, you will have to base your judgments on the property. Since we know that approximately half of every species is female, the best repsonse is likely to be about half. Set this slider to reflect this."
+          "Not knowing about the particular species, you will have to base your judgments on the property. Since we know that approximately half of every species is female, the best response is likely to be about half. Set this slider to reflect this."
     }]
     ,
     //this gets run only at the beginning of the block
