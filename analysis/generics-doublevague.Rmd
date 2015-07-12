@@ -391,8 +391,8 @@ d<-d %>% group_by(workerid) %>%
 
 c<- read.csv('generalization-3-catch_trials.csv')
  
-#umabiguous.pass.catch<-c(0,2,6,7,10,11,12,13,15,16,17,18,19,21,23,25,26,27,28,29)
-#d<- d %>% filter(workerid%in% umabiguous.pass.catch)
+pass.catch<-c[c$debrief==1,]$workerid
+d<- d %>% filter(workerid%in% pass.catch)
 subj.info<-read.csv('generalization-3-subject_information.csv')
 View(subj.info)
 View(c)
@@ -415,7 +415,9 @@ Response histograms
 
 ```{r rt, echo=FALSE}
 responses.tidy <- d %>%
-  select(qud, word,query,response) 
+  ungroup() %>%
+  select(qud, word,prevalence,salience) %>% 
+  gather(query, response, -qud, -word)
 
 qplot(data=responses.tidy, x=response, fill=qud, 
       geom='histogram', position=position_dodge(),
@@ -423,11 +425,13 @@ qplot(data=responses.tidy, x=response, fill=qud,
   facet_wrap(~query)
 ```
 
-Main results
+Main plots
 
 ```{r}
 
-d.tidy <- d %>% select(workerid,qud, word, query, stimtype, response, prevalence.first) %>%
+d.tidy <- d %>% ungroup() %>%
+  select(workerid,qud, word, stimtype,prevalence,salience) %>%
+    gather(query, response, prevalence, salience) %>%
   group_by(workerid) %>%
   mutate(z_score = scale(response)[,1]) %>%
   ungroup() 
@@ -445,10 +449,22 @@ d.tidy<-d.tidy%>%
 
 
 
-d.tidy$qud <- factor(d.tidy$qud, labels=c("tell me about [category]","name animal with [property]"))
+d.tidy$qud <- factor(d.tidy$qud, levels=c("category","property"), 
+                     labels=c("what are K like?","what has F?"))
+
+ggplot(d.tidy, aes(x=qud, y=average, color=query, group=query))+
+  geom_point(position=position_dodge(0),size=2)+
+  geom_line(position=position_dodge(0),size=2)+
+#  facet_wrap(~query)+
+  geom_errorbar(aes(ymin=ciLo, ymax = ciHi),width=0.1,size=2, 
+                position=position_dodge(0))+
+  ylab("average response (unnormalized)\n")+
+  theme_blackDisplay()+
+  scale_color_brewer(type='qual',palette='Set3')
+```
 
 
-
+```{r}
 ggplot(d.tidy, aes(x=qud, y=average.z, color=query, group=query))+
   geom_point(position=position_dodge(0))+
   geom_line(position=position_dodge(0))+
@@ -458,18 +474,15 @@ ggplot(d.tidy, aes(x=qud, y=average.z, color=query, group=query))+
   ylab("average response (z-scored)")
 
 
+d.tidy <- d %>% ungroup() %>%
+  select(workerid,qud, word, stimtype,prevalence,salience) %>%
+    gather(query, response, prevalence, salience) 
 
-ggplot(d.tidy, aes(x=qud, y=average, color=query, group=query))+
-  geom_point(position=position_dodge(0))+
-  geom_line(position=position_dodge(0))+
-#  facet_wrap(~query)+
-  geom_errorbar(aes(ymin=ciLo, ymax = ciHi),width=0.1, 
-                position=position_dodge(0))+
-  ylab("average response (unnormalized)")
-
-rs<-lmer(data=d, response~query*qud + (1 + query*qud | workerid))
+rs<-lmer(data=d.tidy, response~query*qud + (1 + query | workerid))
 summary(rs)
-rs<-lmer(data=filter(d, query=='salience'), response~qud + (1 + qud| workerid))
+
+
+rs<-lmer(data=filter(d.tidy, query=='salience'), response~qud + (1 + qud| workerid))
 summary(rs)
 
 
@@ -490,12 +503,18 @@ Split by half
 
 ```{r}
 
-d.tidy <- d %>% select(workerid,qud, word, query, stimtype, response, prevalence.first) %>%
-  group_by(workerid, query) %>%
-  mutate(z_score = scale(response)) %>%
+
+d.tidy <- d %>%   
+  select(workerid,qud, word, stimtype,prevalence,salience,half,prevalenceFirst) %>%
+  gather(query, response, prevalence, salience) %>%
+  mutate(z_score = scale(response)[,1]) %>%
   ungroup() %>%
-  mutate(block.first=factor(prevalence.first, levels=c("TRUE","FALSE"),labels=c("block 1: prevalence","block 1: salience")))%>%
-  group_by(qud, word, query, block.first) %>%
+  mutate(block.first=factor(half, 
+                            levels=c("TRUE","FALSE"),labels=c("half 1","half 2")))
+
+d.tidy <- d.tidy %>%
+  #group_by(qud, word, query, block.first) %>%
+  group_by(qud, word, query, prevalenceFirst) %>%
   summarise(average.z = mean(z_score),
             ciHi.z = mean(z_score)+2*sem(z_score),
             ciLo.z = mean(z_score)-2*sem(z_score),
@@ -515,7 +534,8 @@ d.tidy$qud <- factor(d.tidy$qud, labels=c("tell me about [category]","name anima
 ggplot(d.tidy, aes(x=qud, y=average, color=query, group=query))+
   geom_point(position=position_dodge(0))+
   geom_line(position=position_dodge(0))+
-  facet_wrap(~block.first)+
+  #facet_wrap(~block.first)+
+  facet_wrap(~prevalenceFirst) +
   geom_errorbar(aes(ymin=ciLo, ymax = ciHi),width=0.1, 
                 position=position_dodge(0))+
   ylab("average response (unnormalized)")

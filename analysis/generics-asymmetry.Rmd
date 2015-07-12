@@ -102,3 +102,272 @@ rs.asymmetry<-lmer(data=d.asymmetry,
 summary(rs.asymmetry)
 ```
 
+## Item effects
+
+```{r}
+head(d.implied)
+
+d.impItems<-d.implied %>%
+  group_by(stim_property) %>%
+  summarise(ave = mean(to.n(response)),
+            type = stim_type[1])
+
+ggplot(d.impItems,aes(x=ave,fill=type))+
+  geom_histogram(position=position_dodge())
+
+```
+
+
+# Prior 1
+
+```{r echo=F}
+upperFirst <- function(name){
+  return (paste(toupper(substr(name, 1, 1)), substr(name, 2, nchar(name)), sep=""))
+}
+
+removeS <- function(name.in){
+  exceptions = c("Turtles", "Bees", "Horses", "Giraffes","Whales","Beetles","Eagles","Snakes","Moles")
+  bluejays =  c("Blue jay","Blue Jay","Bluejay")
+  fleas = c("Flea", "Fly")
+  name<-removeSpace(name.in)
+  last<-substr(name,nchar(name),nchar(name))
+  last2<-substr(name,nchar(name)-1,nchar(name))
+  if (name%in%exceptions){
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else if (name%in%bluejays){
+    name.singular <- "Bluejay"
+  } else if (name%in%fleas){
+    name.singular <- "Flea"
+  } else if (name=="Wolves") {
+    name.singular <- "Wolf"
+  } else if (name=='Dolpin') {
+    name.singular <- "Dolphin"
+  } else if (name=='Giraffs') {
+    name.singular <- "Giraffe"
+  }  else if (last2=='es') {
+    name.singular <- substr(name,1,nchar(name)-2)
+  } else if (last=='s') {
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else {
+    name.singular <- name
+  }
+  
+return(name.singular)
+}
+
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+
+removeSpace <- function(name){
+  if (substrRight(name,1)==' ') {
+    name.edit <- substr(name,1, nchar(name)-1)
+  } else {
+    name.edit <- name
+  }
+  return(name.edit)
+}
+
+
+d<-read.csv('generics/experiments/turk/asymmetry-prior-1/asymmetry-prior-1-trials.csv')
+
+
+
+d$animal.parsed<- factor(unlist(Map(removeS, upperFirst(as.character(d$animal)))))
+
+```
+
+
+# Response histogram
+
+```{r}
+ggplot(d, aes(x=prevalence))+geom_histogram(binwidth=5)+ggtitle('binwidth=5')
+```
+
+For each subject:
+
+```{r}
+ggplot(d, aes(x=prevalence))+
+  geom_histogram(binwidth=5)+
+  facet_wrap(~workerid)+
+  scale_x_continuous(breaks=c(0, 50, 100))
+
+```
+
+
+# Animal production data
+
+```{r prior.newAnimals, fig.height=25, fig.width=16}
+
+# retrieve novel animals (and count only one instance per subject)
+animals.produced<-filter(d,
+                         (!(animal.parsed %in% generics.of.interest$animal)&
+                            (property_index==0)|(property_index==8)))
+
+
+animals.produced$animal_parsed<-with(animals.produced, 
+                                     reorder(sentence, response, function(x) -x))
+
+sort(table(animals.produced$animal.parsed))[sort(table(animals.produced$animal.parsed))>10]
+
+# ggplot(animals.produced, aes(x=animal.parsed))+
+#   geom_histogram()+
+#   #theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+#   coord_flip()
+
+```
+
+# Prevalence distributions
+
+
+## Estimates for each type
+
+```{r}
+ggplot(d,aes(x=prevalence, fill=type))+
+  geom_histogram(position=position_dodge(), binwidth = 10)
+
+```
+
+
+```{r prior.estimatesByType, fig.height=15, fig.width=36}
+
+d.tidy<- d %>%
+  group_by(type) %>%
+```
+
+Reducing this plot to only the animals that were given to subjects
+
+```{r exp2.estimatesByAnimal.reduced, fig.height=10, fig.width=20}
+
+d.tidy.sub <- d.tidy %>% 
+  filter(animal.parsed %in% generics.of.interest$animal)
+#   group_by(animal.parsed) %>%
+#   mutate(count = length(animal.parsed)) %>%
+#   filter(count > 10)
+
+ggplot(data=d.tidy.sub, aes(x=animal.parsed, y=prev, fill=interest))+
+  geom_bar(stat='identity',position=position_dodge())+
+  geom_errorbar(aes(ymin=prev-2*sterr,ymax=prev+2*sterr),
+                position=position_dodge(),width=0.5)+
+  facet_wrap(~property)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+d.tidy.sub %>%
+  filter(combined %in% generics.of.interest$combined)
+
+
+```
+
+
+## Distribution by animal
+
+Here, I plot the distribution of prevalence after summarizing an average prevalence for each animal. Hence, a sample from this distribution is an animal category (with an associated prevalence of the property). Again note:: many of these categories have very few responses.
+
+Green line indicates prevalence for target category.
+```{r}
+ggplot(data=d.tidy, aes(x=prev))+
+  geom_vline(data=filter(d.tidy,interest), aes(xintercept=prev),
+             colour='#2ca25f',size=1.3)+
+  geom_histogram(binwidth=5)+
+  facet_wrap(~property)
+```
+
+Binned distributions (for model)
+
+```{r}
+d.tidy<- d.tidy %>% mutate(roundval=round(prev/10)*10) 
+
+d.anim.bin<- d.tidy %>%
+  group_by(property, roundval) %>%
+  summarise(count = length(roundval)) %>%
+  ungroup() %>% group_by(property) %>%
+  mutate(prob = count/sum(count),
+         roundval = to.n(roundval))
+
+ggplot(d.anim.bin, aes(x=roundval, y=prob))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~property)+
+  xlab("prevalence")+
+  ylab("proportion of responses\n")+
+  #scale_fill_brewer(palette='Pastel1',type='qual')+
+ # scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_discrete(breaks=c(0,20,40,60,80,100))+#,limits=c(-5,105))+
+ # theme_blackDisplay()+ 
+  guides(fill=guide_legend(title="property"))+
+#  theme(legend.key.size=unit(2, "lines"),
+#        legend.text.align=NULL)+
+  guides(fill=F)
+
+d.anim.bin %>% select(-prob) %>% spread(roundval, count)
+
+
+
+```
+
+
+
+## Distribution by response
+
+Here, I don't include the intermediate step of summarising by animal kind. Instead, I just plot the density directly from subjects' responses. Again, green line indicates prevalence for target categogry.
+
+```{r}
+
+d.interest<-d.tidy %>% filter(interest)
+
+selection <-c("are female", "have wings", "have manes", "carry malaria")
+
+ggplot(data = filter(d,property%in%selection), aes(x=prevalence))+
+  #geom_histogram()+
+  geom_density(adjust=0.5, fill='grey')+
+  facet_wrap(~property,scales='free')+
+  xlim(0,100)
+
++
+ # geom_vline(data=d.interest, aes(xintercept=prev), colour='#2ca25f',size=1.3)
+```
+
+
+Binned distributions (for model)
+
+```{r}
+d <- d %>% mutate(roundval=factor(round(prevalence/10)*10))
+
+d.bin<- d %>%
+  group_by(property, roundval) %>%
+  summarise(count = length(roundval)) %>%
+  ungroup() %>% group_by(property) %>%
+  mutate(prob = count/sum(count),
+         roundval = to.n(roundval))
+
+
+# Filter out given animals.
+
+
+#filter(animal.parsed %in% generics.of.interest$animal)
+
+ggplot(d.bin, aes(x=roundval, y=prob))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~property)+
+  xlab("prevalence")+
+  ylab("proportion of responses\n")+
+  #scale_fill_brewer(palette='Pastel1',type='qual')+
+ # scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_discrete(breaks=c(0,20,40,60,80,100))+#,limits=c(-5,105))+
+ # theme_blackDisplay()+ 
+  guides(fill=guide_legend(title="property"))+
+#  theme(legend.key.size=unit(2, "lines"),
+#        legend.text.align=NULL)+
+  guides(fill=F)
+
+filter(d, property=='attack swimmers' & prevalence>90)$animal.parsed
+```
+
+Looks like "Mosquitos attack swimmers." is probably true.
+
+
+```{r}
+# d.out<-d.bin %>% select(-prob) %>% spread(roundval, count)
+# d.out[is.na(d.out)] <- 1 # remove NAs (which are 0s); set to 1 so there is some probability mass...
+# write.csv(d.out,file='../cbg2010-replication/models/prevalencePrior_16props.csv')
+```
+

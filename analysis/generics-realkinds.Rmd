@@ -389,13 +389,18 @@ ggplot(d, aes(x=prevalence))+
 # retrieve novel animals (and count only one instance per subject)
 animals.produced<-filter(d,
                          (!(animal.parsed %in% generics.of.interest$animal)&
-                            (property_index==0)))
+                            (property_index==0)|(property_index==8)))
 
 
-ggplot(animals.produced, aes(x=animal.parsed))+
-  geom_histogram()+
-  #theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-  coord_flip()
+animals.produced$animal_parsed<-with(animals.produced, 
+                                     reorder(sentence, response, function(x) -x))
+
+sort(table(animals.produced$animal.parsed))[sort(table(animals.produced$animal.parsed))>10]
+
+# ggplot(animals.produced, aes(x=animal.parsed))+
+#   geom_histogram()+
+#   #theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+#   coord_flip()
 
 ```
 
@@ -426,18 +431,15 @@ ggplot(data=d.tidy, aes(x=animal.parsed, y=prev, fill=interest))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Reducing this plot to only the animals that were given to subjects (+ Dog and Cat, which over a third of subjects produced)
+Reducing this plot to only the animals that were given to subjects
 
-```{r exp1.estimatesByAnimal.reduced, fig.height=10, fig.width=20}
-
-animals.with.at.least10.responses <- c(animals.given, c("Cat","Dog"))
-animals.with.at.least5.responses <- c(animals.given, c("Cat","Dog","Chicken","Turtle","Tiger","Monkey","Frog",
-                                                       "Bear"))
+```{r exp2.estimatesByAnimal.reduced, fig.height=10, fig.width=20}
 
 d.tidy.sub <- d.tidy %>% 
-  group_by(animal.parsed) %>%
-  mutate(count = length(animal.parsed)) %>%
-  filter(count > 4)
+  filter(animal.parsed %in% generics.of.interest$animal)
+#   group_by(animal.parsed) %>%
+#   mutate(count = length(animal.parsed)) %>%
+#   filter(count > 10)
 
 ggplot(data=d.tidy.sub, aes(x=animal.parsed, y=prev, fill=interest))+
   geom_bar(stat='identity',position=position_dodge())+
@@ -445,6 +447,11 @@ ggplot(data=d.tidy.sub, aes(x=animal.parsed, y=prev, fill=interest))+
                 position=position_dodge(),width=0.5)+
   facet_wrap(~property)+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+d.tidy.sub %>%
+  filter(combined %in% generics.of.interest$combined)
+
+
 ```
 
 
@@ -461,6 +468,39 @@ ggplot(data=d.tidy, aes(x=prev))+
   facet_wrap(~property)
 ```
 
+Binned distributions (for model)
+
+```{r}
+d.tidy<- d.tidy %>% mutate(roundval=round(prev/10)*10) 
+
+d.anim.bin<- d.tidy %>%
+  group_by(property, roundval) %>%
+  summarise(count = length(roundval)) %>%
+  ungroup() %>% group_by(property) %>%
+  mutate(prob = count/sum(count),
+         roundval = to.n(roundval))
+
+ggplot(d.anim.bin, aes(x=roundval, y=prob))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~property)+
+  xlab("prevalence")+
+  ylab("proportion of responses\n")+
+  #scale_fill_brewer(palette='Pastel1',type='qual')+
+ # scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_discrete(breaks=c(0,20,40,60,80,100))+#,limits=c(-5,105))+
+ # theme_blackDisplay()+ 
+  guides(fill=guide_legend(title="property"))+
+#  theme(legend.key.size=unit(2, "lines"),
+#        legend.text.align=NULL)+
+  guides(fill=F)
+
+d.anim.bin %>% select(-prob) %>% spread(roundval, count)
+
+
+
+```
+
+
 
 ## Distribution by response
 
@@ -470,11 +510,16 @@ Here, I don't include the intermediate step of summarising by animal kind. Inste
 
 d.interest<-d.tidy %>% filter(interest)
 
-ggplot(data = d, aes(x=prevalence))+
+selection <-c("are female", "have wings", "have manes", "carry malaria")
+
+ggplot(data = filter(d,property%in%selection), aes(x=prevalence))+
   #geom_histogram()+
   geom_density(adjust=0.5, fill='grey')+
   facet_wrap(~property,scales='free')+
-  geom_vline(data=d.interest, aes(xintercept=prev), colour='#2ca25f',size=1.3)
+  xlim(0,100)
+
++
+ # geom_vline(data=d.interest, aes(xintercept=prev), colour='#2ca25f',size=1.3)
 ```
 
 
@@ -489,6 +534,12 @@ d.bin<- d %>%
   ungroup() %>% group_by(property) %>%
   mutate(prob = count/sum(count),
          roundval = to.n(roundval))
+
+
+# Filter out given animals.
+
+
+#filter(animal.parsed %in% generics.of.interest$animal)
 
 ggplot(d.bin, aes(x=roundval, y=prob))+
   geom_bar(stat='identity', position=position_dodge())+
@@ -511,39 +562,127 @@ Looks like "Mosquitos attack swimmers." is probably true.
 
 
 ```{r}
-d.bin %>% select(-prob) %>% spread(roundval, count)
+# d.out<-d.bin %>% select(-prob) %>% spread(roundval, count)
+# d.out[is.na(d.out)] <- 1 # remove NAs (which are 0s); set to 1 so there is some probability mass...
+# write.csv(d.out,file='../cbg2010-replication/models/prevalencePrior_16props.csv')
+```
+
+# Truth judgment: Experiment 1
+
+Process for webppl
+```{r}
+# tj<-read.csv(file = '../experiments/turk/real-kinds-truth-1/real-kinds-truth-1-trials.csv')
+# tj$response<-factor(tj$response,levels=c("disagree-key","agree-key"),
+#        labels=c("mu","generic is true"))
+# tj$sentence <- gsub('&quotechar','', tj$sentence)
+# tj$sentence <- gsub('lyme','Lyme', tj$sentence)
+# 
+# tj.d<-tj%>% select(sentence, response, workerid) %>%
+#   spread(workerid, response)
+# 
+# write.csv(tj.d,'real-kinds-truth-1-trials-n100-webpplfriendly.csv')
+```
+
+```{r tj1}
+
+setwd(dir = 'generics/analysis/')
+tj<-read.csv(file = '../experiments/turk/real-kinds-truth-1/real-kinds-truth-1-trials.csv')
+c <- read.csv(file = '../experiments/turk/real-kinds-truth-1/real-kinds-truth-1-catch_trials.csv')
+
+### bootstrap CI
+bootstrap.ci <- function(x){
+  agr = aggregate(response ~ sentence, data=x, FUN=mean)
+  agr$CILow = aggregate(response ~ sentence, data=x, FUN=ci.low)$response
+  agr$CIHigh = aggregate(response ~ sentence, data=x, FUN=ci.high)$response
+  agr$YMin = agr$response - agr$CILow
+  agr$YMax = agr$response + agr$CIHigh
+  return(agr)
+}
+
+
+tj.bs<-bootstrap.ci(tj %>% mutate(response = as.numeric(response=='agree-key')))
+
+tj.bs$sentence <- gsub('&quotechar','', tj.bs$sentence)
+tj.bs$sentence <- gsub('lyme','Lyme', tj.bs$sentence)
+tj.bs$sentence<-with(tj.bs, reorder(sentence, response, function(x) -x))
+
+
+ggplot(data=tj.bs, aes(x=sentence, y=response-0.5))+
+  geom_bar(stat='identity',position=position_dodge(), alpha=0.8)+
+  geom_errorbar(aes(ymin=YMin-0.5,ymax=YMax-0.5), width=0.5)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,
+                                   vjust=1))+
+  ylim(-.5,0.5)+
+  xlab("")+
+  ylab("endorsment")
+
+# ggsave(file='../manuscript/figures/cogsci/truhtjudge_n100.png',
+#        width=24,height=6)
+
+tj.tidy <- tj %>%
+  group_by(sentence) %>%
+  summarise(prop = sum(as.numeric(response=='agree-key'))/length(response),
+            n = length(response)) %>%
+  mutate(sterr = sqrt(prop*(1-prop)/n),
+         endorse = prop-0.5)
+
+
+tj.tidy$sentence <- gsub('&quotechar','', tj.tidy$sentence)
+tj.tidy$sentence <- gsub('lyme','Lyme', tj.tidy$sentence)
+
+tj.tidy$sentence<-with(tj.tidy, reorder(sentence, prop, function(x) -x))
+
+
+ggplot(data=tj.tidy, aes(x=sentence, y=endorse))+
+  geom_bar(stat='identity',position=position_dodge(), alpha=0.8)+
+  geom_errorbar(aes(ymin=endorse-2*sterr,ymax=endorse+2*sterr), width=0.5)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  ylim(-.5,0.5)
 
 ```
 
+Boring renaming of properties, and getting prior estimations for negations by subtracting positive form from 100
 
-#### Markman's question: Is "lays eggs" affected by "are female"?
+Scatterplot of raw prevalence vs. proportion of "agree" responses
 
 ```{r}
 
-d.femFirst<-d %>%
-  filter((animal.parsed %in% c("Duck","Bird","Mosquito")) & 
-           property %in% c("is female","lays eggs")) %>%
-  select(workerid, animal.parsed, property, property_index) %>%
-  mutate(property = factor(property, levels=c("is female","lays eggs"),
-                           labels=c("female","eggs"))) %>%
-  spread(property, property_index) %>%
-  mutate(femFirst = female<eggs)
+d.tidy.sub[d.tidy.sub$property == 'attacks swimmers',]$property <- 'attack swimmers'
+d.tidy.sub$sentence <- with(d.tidy.sub, paste(paste(animal.parsed,'s',sep=''), paste(property,'.',sep='')))
 
+m.tidy<-left_join(tj.bs,d.tidy.sub, by="sentence")
 
+m.tidy[m.tidy$sentence=='Mosquitos dont carry malaria.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Mosquitos carry malaria.',]$prev
 
-d.birds<- d %>%
-  filter((animal.parsed %in% c("Duck","Bird","Mosquito")) & 
-           property %in% c("is female","lays eggs")) 
+m.tidy[m.tidy$sentence=='Sharks dont attack swimmers.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Sharks attack swimmers.',]$prev
 
-d.birds<-left_join(d.birds, d.femFirst, by="workerid")
+m.tidy[m.tidy$sentence=='Peacocks dont have beautiful feathers.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Peacocks have beautiful feathers.',]$prev
 
-d.birds %>%
-  group_by(property, animal.parsed.x, femFirst) %>%
-  summarise(mean(prevalence))
-  
+m.tidy[m.tidy$sentence=='Ticks dont carry Lyme disease.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Ticks carry Lyme disease.',]$prev
+
+m.tidy[m.tidy$sentence=='Tigers dont eat people.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Tigers eat people.',]$prev
+
+m.tidy<-m.tidy %>%
+  filter(!is.na(prev))
+
+ggplot(m.tidy,aes(x=prev,y=response))+
+  geom_point()
+
+with(m.tidy, cor(prev,response))
+
+quantile(m.tidy$prev)
+
+with(filter(m.tidy,(prev > quantile(m.tidy$prev)["25%"] & 
+                      prev < quantile(m.tidy$prev)["75%"])), cor(prev,response))
 
 
 ```
+
 
 
 # lvRSA model predictions
@@ -551,41 +690,62 @@ d.birds %>%
 Doing TFBT with speaker optimality (at the S1 level) as a free parameter
 
 ```{r}
-model.posteriorpred <-read.csv('generics_truthJudge_prasada1.csv',header=F,
-                               col.names=c("generic","posteriorPred"))
-
-prasada.data <-data.frame(generic = c("leopards have spots",
-                                      "birds have wings",
-                                    	"lions have manes",
-                                    	"ducks lay eggs",
-                                    	"mosquitos carry malaria",
-                                    	"sharks attack swimmers",
-                                    	"lions are male",
-                                    	"ducks are female",
-                                    	"lions have wings"),
-                          truth_judgment = c( 2.17,2.63,1.46,2.04,1.63,1.5,-0.04,
-                                              -0.58,-2.5),
-                          prevalence = c(93,92, 57, 78, 30, 31, 50, 50, 0)
-
-)
+model.posteriorpred <-read.csv('../cbg2010-replication/models/model_predictions/generics_truthJudge_3_postpred_n100_mh1000.csv',header=F,
+                               col.names=c("sentence","posteriorPred"))
 
 
-combined.model.data<- left_join(model.posteriorpred, prasada.data)
 
-with(combined.model.data, cor(posteriorPred, truth_judgment))
-with(combined.model.data, cor(prevalence, truth_judgment))
+combined.model.data<- left_join(model.posteriorpred, m.tidy, by='sentence')
+
+with(combined.model.data, cor(posteriorPred, response))
+with(filter(combined.model.data,
+            (prev>25 & prev < 75)), cor(posteriorPred, response))
+
+with(filter(combined.model.data,
+            (prev > quantile(m.tidy$prev)["25%"] & 
+            prev < quantile(m.tidy$prev)["75%"])), cor(posteriorPred,response))
+
+
+
+
+with(combined.model.data, cor(posteriorPred, response, method='spearman'))
+
+
+with(combined.model.data, cor(prev, response))
+with(combined.model.data, cor(prev, response, method='spearman'))
+
+
+combined.model.data$sentence<-with(combined.model.data, reorder(sentence, response, function(x) -x))
+
 
 
 qplot(data=combined.model.data,
-      x=posteriorPred,y=truth_judgment,
-      color=generic)+
-  geom_point(size=3)
+      x=posteriorPred,y=response,
+      color=sentence)+
+  geom_point(size=3)+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                position=position_dodge())+
+  geom_abline(intercept=0,slope=1,linetype=2)+
+  xlab("model posterior predictive: P(generic)")+
+  ylab("proportion of agree's")+
+  guides(color=F)+
+  coord_fixed()
+  
 
 qplot(data=combined.model.data,
-      x=prevalence,y=truth_judgment,
-      color=generic)+
-  geom_point(size=3)
+      x=prev,y=response,
+      color=sentence)+
+  geom_point(size=3)+
+    geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                position=position_dodge())+
+  geom_abline(intercept=0,slope=0.01,linetype=2)+
+  xlab("(raw) prevalence")+
+  ylab("proportion of agree's")+
+  guides(color=F)+
+  coord_fixed(ratio=100)
 
 
 ```
+
+
 
