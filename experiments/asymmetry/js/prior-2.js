@@ -131,7 +131,7 @@ function make_slides(f) {
       "<br> We are showing how you might respond below. Even though we don't know anything about glippets, we know that basically all animals have female members. So we would say it's very likely.",
       question1:'The 2nd question is about how many of this kind of animal have the property, assuming that at least one does. <br>The robot says: <em>Suppose there is a glippet that is female.</em>' +
           "<br><strong><em>What percentage of glippets do you think are female?</strong></em><br>"+
-          "Not knowing about the particular species, you will have to base your judgments on the property. Since we know that approximately half of every species is female, the best response is likely to be about half. Set this slider to reflect this."
+          "Since we know that approximately half of every species is female, the best response is likely to be about half. <br>Set this slider to reflect this."
     }]
     ,
     //this gets run only at the beginning of the block
@@ -705,8 +705,6 @@ function init() {
   exp.trials = [];
   exp.catch_trials = [];
   exp.nTrials = 12;
-  exp.numberOfProperties = 6;
-  exp.numberOfGivenAnimals = 8;
   exp.propTypes = ["accidental", "color", "vague", "part"]
 
   exp.bins = [
@@ -754,7 +752,6 @@ function init() {
                 {"Tigers":"eat people"},
                 {"Peacocks":"have beautiful feathers"}]
 
-
 var i,j,chunk = exp.nTrials/exp.propTypes.length;
 var stimArray=[]
 var shufStims = _.shuffle(stimsForPrior2)
@@ -786,22 +783,6 @@ exp.stims =_.map(_.zip(creatures, properties),
   function(cp){
     return _.extend(cp[1], cp[0])
   })
-
-  // var ant = _.map(stimsForPrior, 
-  //   function(lst){
-  //     var b = _.shuffle(lst)
-  //     return [b.slice(0,2), b.slice(2,4)]//(exp.numberOfProperties*exp.nTrials)/exp.propTypes)
-  // })
-
-  // var properties = _.map(_.zip(ant[0],ant[1],ant[2]),
-  //   function(x){return _.shuffle(_.flatten(x))})
-
-
-  // var knownCreatures = _.shuffle(realAnimals).slice(0,6)
-  // var expanimals = [[_.shuffle(_.flatten([creatures.splice(0,5),
-  //                               knownCreatures.splice(0,3)]))],
-  //                   [_.shuffle(_.flatten([creatures, knownCreatures]))]]
-
 
 
   exp.system = {

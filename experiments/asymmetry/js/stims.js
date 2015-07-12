@@ -404,7 +404,7 @@ var stimsForPrior2 =
 
                 [
                 {part: "teeth", accidental:"sore", color:"pink", vague:"long"},
-                {part: "spots", accidental:"dirty", color:"gold", vague:"sensitive"},
+                // {part: "spots", accidental:"dirty", color:"gold", vague:"sensitive"},
                 {part: "feathers", accidental:"muddy", color:"purple", vague:"smooth"},
                 {part: "ears", accidental:"swollen", color:"orange", vague:"small"},
                 {part: "legs", accidental:"broken", color:"silver", vague:"long"},
@@ -414,7 +414,8 @@ var stimsForPrior2 =
                 {part: "scales", accidental:"infected", color:"red", vague:"soft"},
                 {part: "fur", accidental:"wet", color:"yellow", vague:"curly"},
                 {part: "claws", accidental:"cracked", color:"blue", vague:"big"},
-                {part: "skin", accidental:"swollen", color:"violet", vague:"rough"}
+                {part: "skin", accidental:"swollen", color:"violet", vague:"rough"},
+                {part: "eyes", accidental:"dirty", color:"yellow", vague:"sensitive"}           
                 ]
 
 
