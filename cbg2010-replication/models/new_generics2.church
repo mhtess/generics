@@ -1,0 +1,192 @@
+(define (get-indices needle haystack)
+  (define (loop rest-of-haystack index)
+    (if (null? rest-of-haystack) '()
+        (let ((rest-of-indices (loop (rest rest-of-haystack) (+ index 1))))
+          (if (equal? (first rest-of-haystack) needle)
+              (pair index rest-of-indices)
+              rest-of-indices))))
+  (loop haystack 1))
+
+
+
+(define (marginalize output)
+  (let ([states (first output)])
+    (map (lambda (sub-output) 
+           (let* ([probs (second output)]
+                  [unique-states (unique sub-output)]
+                  [unique-state-indices 
+                   (map 
+                    (lambda (x) (list x (get-indices x sub-output))) 
+                    unique-states)])
+
+             (list (map first unique-state-indices)
+                   (map 
+                    (lambda (y) (sum (map 
+                                      (lambda (x) (list-elt probs x)) 
+                                      (second y)))) 
+                    unique-state-indices))))
+         (transpose states))))
+
+
+(define nearest-soft (lambda (p)
+            (if (= p 100)
+                90
+                (if (= (mod p 20) 0)
+                    (+  p 10)
+                    p))))
+
+; following schema of Kao et al. 2014 hyperbole
+
+(define states 
+ (list 0 10 30 50 70 90))
+
+; (define (state-prior) (uniform-draw states))
+
+;(define (state-prior) (multinomial states '(40 30 1 1 1 1)))
+
+(define (state-prior domain) 
+  (multinomial '(0 10 20 30 40 50 60 70 80 90 100)
+    (case domain
+    ;  (("bare") '(448 157 199 59 59 80 38 33 26 15 68))
+      (("danger-distinct") '(690 159 94 24 21 39 21 12 26 14 127))
+      (("nondistinctive") '(342 144 246 60 68 93 50 15 45 24 95))
+      (("accidental") '(283 176 186 116 120 87 95 52 56 8 21))
+      (("birds lay eggs") '(100 10 2 2 2 20 2 2 2 2 2))
+      (("birds are female") '(2 2 2 2 2 1000 2 2 2 2 2))
+      (("mosquito") '(140 90 1 1 1 1 1 1 1 1 1))
+      (("pollution") '(1 2 4 8 4 2 1 1 1 1 1))
+      (("oxygen") '(1 1 1 1 1 1 20 40 80 40 20))
+	  (("bare") '(564 155 80 35 21 41 14  6 15 15  54))
+	  (("danger") '(617 139 69 26 19 33 17 10 20 16  34))
+	  (("distinct") '(735 96 52 10 10 20 6 2 9 8 52)))))
+
+
+;(define (theta-prior) (uniform-draw '(0 10 20 40 60 80 100)))
+(define (theta-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
+
+; justine has states --> is-expensive? (which for her is valance)
+
+; for mosquitos with wnv, any prevalence would be worrisome, because it's so bad
+; could be formulated as "how surprising would it be"
+
+; here: the more the scarrier
+; (define (valence-prior state domain) ;(flip (abs (- (/ state 100) 0.01))))
+; 	(case domain
+; 		(("bare") (flip (/ (abs (- (/ state 100) 0.01)) 10)))
+; 		(("danger-distinct") (flip (abs (- (/ state 100) 0.01))))
+; 		(else false)))
+
+
+(define (valence-prior state domain)
+	(flip (second
+	(case domain
+		(("bare") (assoc state (zip (list 10 30 50 70 90) (list 0.2081667 0.2586667 0.3123333 0.4056667 0.3875000))))
+		(("danger") (assoc state (zip (list 10 30 50 70 90) (list 0.8068333 0.8345000 0.8650000 0.8971667 0.9291667))))
+		(("distinct") (assoc state (zip (list 10 30 50 70 90) (list 0.3435000 0.4360000 0.4971667 0.4853333 0.5420000))))))))
+
+
+;	(flip (abs (- (/ state 100) 0.01))))
+
+
+(define (qud-prior) (uniform-draw (list 's 'v 'sv)))
+;(define (qud-prior) (uniform-draw (list 's 's)))
+
+(define (qud-fn qud)
+	(case qud
+		(("s") (lambda (state valence) state))
+		(("v") (lambda (state valence) valence))
+		(("sv") (lambda (state valence) (list state valence)))
+		(else "error")
+		)
+	)
+
+
+(define utterances (list "generic" "not-generic" "mu" 0 100 10 30 50 70 90))
+
+;(define (true-false) (uniform-draw (list "generic" "not generic")))
+
+
+;(define (true-false) (uniform-draw (list "generic" "not-generic")))
+
+(define (options) (uniform-draw (list (list "generic" "danger")
+									;  (list "not-generic" "danger")
+									 ; (list "generic" "bare")
+									  (list "not-generic" "bare"))))
+
+(define (utterance-prior) (multinomial utterances '(1 1 1 1 1 1 1 1 1 1))) ; subject to revision
+
+(define (meaning utterance state theta1 theta2)
+	(case utterance
+		(("generic") (> state theta1))
+		(("not-generic") (<= state theta2))
+		(("mu") true)
+		(else (equal? utterance state))))
+
+
+(define S2
+	(mem (lambda (state domain)
+		(enumeration-query
+			(define utterance (options))
+			(define valence (valence-prior state domain))
+
+			utterance
+
+			(equal? (list state valence) 
+				(apply multinomial (L1 utterance)))))))
+
+
+(define L1 
+	(mem (lambda (utterance)
+		(enumeration-query
+			(define domain (second utterance))
+			(define state (state-prior domain))
+			(define valence (valence-prior (nearest-soft state) domain))
+;			(define valence true)
+			(define theta1 (theta-prior))
+			(define theta2 theta1)
+			(define qud (qud-prior))
+;			(define qud "s")
+			(define val ((qud-fn qud) state valence))
+
+			(list state valence)
+;			qud
+
+			(equal? utterance
+				(apply multinomial (S1 val qud theta1 theta2)))))))
+
+(define S1
+	(mem (lambda (val qud theta1 theta2)
+		(enumeration-query
+		;	(define utterance (true-false))
+			(define utterance (options))
+			;(define x (display utterance))
+			;(define domain (uniform-draw '(bare danger distinct)))
+
+			utterance
+
+;			true))))
+			(equal? val (apply multinomial (L0 utterance qud theta1 theta2)))))))
+
+(define L0
+	(mem (lambda (utterance qud theta1 theta2)
+		(enumeration-query
+			(define domain (second utterance))
+			(define state (state-prior domain))
+			(define valence (valence-prior (nearest-soft state) domain))
+;			(define valence true)
+
+			((qud-fn qud) state valence)
+
+			(meaning (first utterance) state theta1 theta2)))))
+
+;(define domain "danger")
+
+;(L0 100 "s" 0 0 "danger")
+;(S1 (list 10 #t) "sv" 0 0 "danger")
+;(marginalize (L1 (list "generic" "danger")))
+;(state-prior domain)
+
+;(S2 (list 10 true))
+(S2 10 "danger")
+
+;(valence-prior 10 "bare")

@@ -43,7 +43,9 @@ function readInPrevalencePrior(){
 };
 
 function readTruthJudgements(){
-	var filepath = "/Users/mht/Documents/research/generics/analysis/real-kinds-truth-1-trials-webpplfriendly.csv";
+	var filepath = "/Users/mht/Documents/research/generics/analysis/real-kinds-truth-1-trials-n100-webpplfriendly.csv";
+//	var filepath = "/Users/mht/Documents/research/generics/analysis/real-kinds-truth-1-trials-webpplfriendly.csv";
+
 	var gendata = readCSV(filepath).data;
 
 

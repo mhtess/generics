@@ -68,6 +68,11 @@
 // 	"ducks are female":-0.58,
 // 	"lions have wings":-2.5 // made up
 // }
+var writeERP = function(myERP){
+  return map(function(val){
+  	return [val, Math.exp(myERP.score([],val))]
+  },myERP.support())
+}
 
 var prevelancePrior = utils.readInPrevalencePrior()
 var truthJudgments = utils.readTruthJudgements()
@@ -368,9 +373,10 @@ var dataAnalysis = function(){
 		//var phiTC = sample(uniformERP, [0,1])
 		//var phiIP = sample(uniformERP, [0,1])
 
-//		var speakerOptimality = sample(uniformERP,[0,10])
-		var speakerOptimality = 0.1+(randomInteger(10)/2)
-		var cost = (randomInteger(3)+1)/2
+		var speakerOptimality = sample(uniformERP,[0,10])
+//		var speakerOptimality = 0.1+(randomInteger(20)/4)
+//		var cost = (randomInteger(3)+1)/2
+		var cost = 1
 		//var speakerOptimalityIP = sample(uniformERP,[0,10])
 
 		var posteriorPredictive = 
@@ -378,42 +384,44 @@ var dataAnalysis = function(){
 				function(sentence){
 					var predictionERP = cognitiveModel(sentence,speakerOptimality, cost)
 
-
+					//console.log(sentence)
 					var modelScore = function(modelERP, data){
 						return sum(map(function(d){return modelERP.score([],d)},data))
 					}
-
 					//return modelScore(predictionERP, truthJudgments[sentence])
 					factor(modelScore(predictionERP, truthJudgments[sentence]))
 
 					return [sentence, Math.exp(predictionERP.score([], "generic is true"))]
 				},
-				_.keys(truthJudgments)
+				_.shuffle(_.keys(truthJudgments)) // factor in random order
 			)
 
 	//	return _.object(posteriorPredictive)
-		return [speakerOptimality, cost]
-		//return posteriorPredictive
+//		return [speakerOptimality, cost]
+	//	return speakerOptimality
+//		return _.object(posteriorPredictive)
+		return speakerOptimality
 }
 
- var tfbt = Enumerate(dataAnalysis)
-//tfbt
+//var tfbt = Enumerate(dataAnalysis)
+var tfbt = MH(dataAnalysis,1000)
+// //tfbt
 
-  // var output = utils.expectation(tfbt, _.keys(truthJudgments))
-  // utils.writeCSV(output, 'generics_truthJudge_1.csv')
+//tfbt
+// cognitiveModel("Tigers have pouches.",2,1)
+
+//dataAnalysis()
+//var output = utils.expectation(tfbt, _.keys(truthJudgments))
+var output = writeERP(tfbt)
+//output
+utils.writeCSV(output, 'generics_truthJudge_3_rationality_n100_mh1000.csv')
 
 // dataAnalysis()
 
 
-var writeERP = function(myERP){
-  return map(function(val){
-  	return [val, Math.exp(tfbt.score([],val))]
-  },tfbt.support())
-}
+
 // //console.log(output)
-var output = writeERP(tfbt)
 //output
-utils.writeCSV(output, 'generics_truthJudge_2_optimality_cost.csv')
 
 
 //prevelancePrior["have pouches"]

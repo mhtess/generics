@@ -445,6 +445,7 @@ function init() {
                   "additional":x[context_allocation[2]].dangerous}
     var accidentstim = {"property_type":"accidental",
                         "property":y,
+                        "propshort":y,
                         "additional":""}
     return [plainstim,distinctstim,dangerstim, accidentstim]
   })

@@ -1,5 +1,5 @@
 
-# Generics experiments
+# CBG Follow-up experiments
 
 Experiment name | Type | Domains | DepMeas | n  | notes | finding
 --------------- | ---- | ------- | ------- | -- | ----- | --------
@@ -35,3 +35,10 @@ prior3a | Priors | DD, NN, P | 10 numbers | 40 |
 prior4a | Priors | DD, NN, P | 5 sliders |  40 |
 prior5 | Priors | Accidental | 5 sliders | 40 |
 prior6 | Priors | D, D, P | 10 numbers | 100 |
+
+
+# Asymmetry experiments
+
+Experiment name | Type | Domains | DepMeas | n  | $ | notes | finding
+--------------- | ---- | ------- | ------- | -- | -- | ---- | --------
+asymmetry1 | accept / implied | generic, plain, 3 properties (color, vague, accidental) | accept / implied between | 100 | 0.5 | |

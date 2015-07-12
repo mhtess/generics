@@ -1,0 +1,255 @@
+; example call
+
+; time church -u tfbt_cbg.church
+
+(define empirical-prior #t)
+(define speaker-optimality 1)
+(define context 'all)
+(define task 'truth_conditions) ;;; depracated, but still need this
+
+
+(define QUD (lambda (task quantifier)
+              (case task
+                    (('implied_prevalence) 'how-many)
+                    (('truth_conditions) 'truth))))
+
+(define uniform-score (lambda (lowerbound upperbound)
+                        (- 0 (log (- upperbound lowerbound))))) ;;assuming values are in the range
+
+(define all-true (lambda (lst) (apply and lst)))
+
+(define string->boolean (lambda (str)
+                          (equal? str 'True)))
+
+
+;; background
+;(define (state-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90 100)))
+(define (theta-prior) (uniform-draw '(0 10 20 30 40 50 60 70 80 90)))
+;(define (state-prior) (uniform-draw '(0 5 10 15 20 25 30 35 40 45 50)))
+(define (qud-prior) (uniform-draw (list 'is-lorch 'who-is-it)))
+
+(define (all state threshold) (= 100 state))
+(define (relaxed-all state threshold) (<= 90 state))
+
+(define (some state some-threshold) (< some-threshold state))
+(define (none state some-threshold) (>= some-threshold state))
+
+(define (most state most-threshold) (< most-threshold state))
+(define (anti-most state most-threshold) (>= most-threshold state))
+
+(define (generic state generic-threshold) (<= generic-threshold state))
+(define (anti-generic state generic-threshold) (> generic-threshold state))
+
+(define (mu state dummy) true)
+(define (how-many state dummy) state)
+
+(define who-is-it? (lambda (state theta) (flip state)))
+
+(define (raise-to-power dist alph)
+  (list (first dist) (map (lambda (x) (pow x alph)) (second dist))))
+
+
+
+(define (meaning word)
+  (case word
+        (('all) all)
+        (('some) some)
+        (('none) none)
+        (('most) most)
+        (('anti-most) anti-most)
+        (('how-many) how-many)
+        (('generic) generic)
+        (('anti-generic) anti-generic)
+        (('mu) mu)
+        (('is-lorch) generic?)
+        (('who-is-it) who-is-it?)))
+
+
+(define cognitive-model 
+  (mem 
+  ; (lambda (generic-theta most-theta some-theta QUD evidence) ;; fixed treshold model (obviously wrong)
+   (lambda (prevalence-prior QUD evidence)
+     ;; input could be utterance (for listener / implied_prevalence)
+     ;; or state (for speaker / truth_conditions)
+
+     (define (theta-meaning word)
+       (case word
+             (('most-theta) most-theta)
+             (('some-theta) some-theta)
+             (('generic-theta) generic-theta)
+             (('how-many-theta) 'null)
+             (('anti-generic-theta) generic-theta)
+             (('none-theta) some-theta)
+             (('anti-most-theta) anti-most)))
+     
+     (define (theta words)
+       (theta-meaning (string-append words '-theta)))
+
+    ;; can't enumerate over continuous state-prior, so bin 
+    ; (define pseudocount_alpha (* gamma delta))
+    ; (define pseudocount_beta (* (- 1 gamma) delta))
+    ; (define (beta-rv) (* 10 (beta pseudocount_alpha pseudocount_beta))) ;; multiplied by 10 so i can use floor to bin
+    ; (define beta-samples (repeat 1000 beta-rv))
+    ; (define bins '(0 1 2 3 4 5 6 7 8 9 10))
+    ; (define quintile-hist (lambda (x bins nsamp)
+    ;                         (map (lambda (n) (/ (length (filter (lambda (i) 
+    ;                           (= (floor i) n)) x)) nsamp)) bins)))
+
+    ; (define quintile-probs (map (lambda (x) (+ 0.0001 x)) (quintile-hist beta-samples bins 1000)))
+    ; ; multiply by 10 to be consistent with other state prior above
+;    (define (state-prior) (* (multinomial bins quintile-probs) 10))
+
+    (define prevalence-bins '(0 10 20 30 40 50 60 70 80 90 100))
+    (define (state-prior) (multinomial prevalence-bins prevalence-prior))
+
+    (define speaker2
+      (mem (lambda (state)
+      (enumeration-query
+
+        (define words (uniform-draw (list 'generic 'anti-generic)))
+
+       words
+
+       (equal? state (apply multinomial (listener1 words)))))))
+
+
+     (define listener1
+       (mem (lambda (words) ;; listener1 does do inference over theta
+              (enumeration-query
+               (define state (state-prior))
+               (define generic-theta (theta-prior))
+;               (define QUD-val ((meaning QUD) state (theta QUD)))
+          ;      (define blah (display generic-theta))
+
+ ;              generic-theta
+                state
+
+               (equal? words 
+                (apply multinomial (raise-to-power (speaker1 state generic-theta) 
+                   speaker-optimality)))))))
+
+     (define speaker1
+       (mem (lambda (state generic-theta)
+              (enumeration-query
+               
+      ;          (define words (uniform-draw (list 'generic 'mu)))
+              (define words (if (equal? QUD 'truth)
+                              (uniform-draw (list 'generic 'anti-generic))
+                              (uniform-draw (list 'generic 'mu))))
+
+                ;(define words (uniform-draw (list 'generic-lorch 'generic-other)))
+
+               ; (define words
+               ;   (case QUD
+               ;         (('generic)  (uniform-draw (list 'generic 'anti-generic)))
+               ;         (('some) (uniform-draw (list 'some 'none)))
+               ;         (('most) (uniform-draw (list 'most 'anti-most)))
+               ;         (('how-many) (uniform-draw (list 'most 'some 'generic)))))
+               ;(define QUD-val ((meaning QUD) state (theta QUD)))
+
+               words
+
+;               (equal? QUD-val
+               (equal? state
+                       (apply multinomial (listener0 words generic-theta)))))))
+
+     (define listener0
+       (mem (lambda (words generic-theta) 
+              (enumeration-query
+               (define state (state-prior))
+              ; (define QUD-val ((meaning QUD) state (theta QUD)))
+
+               ;QUD-val
+               state
+
+               (case words
+                (('generic) ((meaning words) state generic-theta))
+                (('most) ((meaning words) state 50))
+                (('some) ((meaning words) state 1))
+                (('anti-generic) ((meaning words) state generic-theta))
+                (('mu) ((meaning words) state null)))))))
+
+
+     (if (equal? QUD 'truth)
+          (speaker2 evidence)
+          (listener1 'generic)))))
+
+
+
+ (define (prevalence-prior context)
+  (case context
+   ; (('bare) (list 146 29 47 5 8 17 6 4 11 5 22)) first 30 subjectst
+    (("bare") (list 465  87 220  33  26  40  20  14  20  10  65))
+   ; (('danger-distinct) (list  182 23  34   4   4   7   3   2   4   2  35))
+    (("danger-distinct") (list 633  49 144  11  10  17  10   2  10   3 111))
+    (("nondistinctive") (list 384  85 252  31  30  63  14  10  26   6  99))))
+
+    ; (('nondistinctive) (list 96  29  70  12   9  26   8   5  12   2  31))
+    ; (('mosquitos) (list 0.53 0.22 0.0058 0.0032 0.0024 0.002 0.0018 0.0018 0.002 0.002 0.0032))
+    ; (('accidental) (list 0.01 0.09 0.15 0.18 0.17 0.15 0.11 0.08 0.04 0.01 0.0001))))
+
+
+; 1  0.01 5.293587e-01   mosquito
+; 2  0.10 2.165580e-01   mosquito
+; 3  0.20 5.806339e-02   mosquito
+; 4  0.30 3.204766e-02   mosquito
+; 5  0.40 2.383300e-02   mosquito
+; 6  0.50 2.025270e-02   mosquito
+; 7  0.60 1.876588e-02   mosquito
+; 8  0.70 1.870665e-02   mosquito
+; 9  0.80 2.018974e-02   mosquito
+; 10 0.90 2.443320e-02   mosquito
+; 11 0.99 3.779106e-02   mosquito
+; 1  0.01 0.0117391304 accidental
+; 2  0.10 0.0970176069 accidental
+; 3  0.20 0.1533117739 accidental
+; 4  0.30 0.1760689903 accidental
+; 5  0.40 0.1724757456 accidental
+; 6  0.50 0.1497185292 accidental
+; 7  0.60 0.1149838304 accidental
+; 8  0.70 0.0754581387 accidental
+; 9  0.80 0.0383279435 accidental
+; 10 0.90 0.0107797341 accidental
+; 11 0.99 0.0001185771 accidental
+
+(define context "bare")
+(define truthconds
+(map 
+  (lambda (e) 
+    (first (second (cognitive-model (prevalence-prior context) 'truth e))))
+  '(10 30 50 70 90)))
+
+
+(define normed_truth (map (lambda (x) (/ x (sum truthconds))) truthconds))
+
+(define truth_prevalence (sum (map (lambda (p v) (* p v)) normed_truth '(10 30 50 70 90))))
+
+(define implied (cognitive-model (prevalence-prior context) 'howmany 'generic))
+
+(define implied_prevalence (sum (map (lambda (p v) (* p v)) (first implied) (second implied))))
+
+
+(list (list truth_prevalence implied_prevalence) truthconds)
+
+;(cognitive-model 0.3 1 'truth 30)
+
+; (define samples (transpose (list (tfbt-model (QUD task quantifier) quantifier))))
+
+; (define output-path
+;   (if (equal? serv 'home)
+;    '/Users/mht/Documents/research/generics/cbg2010-replication/models/bayesian_analysis/
+;    '/home/mht/research/generics/cbg2010-replication/models/bayesian_analysis/))
+
+; (define output-file-name (string-append  output-path 
+;   'lvRSAemp_condition2_expts 
+;   expnum '_ exp2num
+;   '_ quantifier 
+;   '_mh mh_samples 
+;   '_ mh_lag 
+;   '_alpha (number->string speaker-optimality) '.csv))
+
+;  (write-csv samples output-file-name)
+;  (define complete? 'complete)
+;  complete?
+
+

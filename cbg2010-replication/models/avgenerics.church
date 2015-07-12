@@ -223,30 +223,31 @@
 			(list prevalence salience)	
 			;qud
 		
+			;(and (equal? qud "p")
 			(equal? utterance
 				(apply multinomial 
 					(speaker val prevalence salience qud prevalence-threshold salience-threshold)))))))
+	
 
 
+(define (utterance-prior) (uniform-draw (list "generic" "not-generic")))
 
-;(define (utterance-prior) (uniform-draw (list "generic" "not-generic")))
-
-(define (utterance-prior) (uniform-draw (list "generic" "not-generic" 10 20 30 40 50 60 70 80 90 100)))
+;(define (utterance-prior) (uniform-draw (list "generic" "not-generic" 10 20 30 40 50 60 70 80 90 100)))
 
 (define domain "bare")
 ; (define prior-probability-of-prevalence-reading
 ; 	'(0.1 0.3 0.5 0.7 0.9))
 
 
-(marginalize (generic-listener 90 0.5))
+;(marginalize (generic-listener 100 0.5))
 
 ; (map (lambda (prevread)
 ; 	(truth-conditions 10 prevread))
 ; prior-probability-of-prevalence-reading)
 
-; (map (lambda (prev)
-; 	(truth-conditions prev 0.9))
-; '(10 30 50 70 90))
+(map (lambda (prev)
+	(truth-conditions prev 0.5))
+'(10 30 50 70 90))
 
 ;(define prevalence-reading 0.8)
 ;(truth-conditions 10)

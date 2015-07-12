@@ -1,0 +1,31 @@
+diff --git a/cogsci-2015/paper/generics-cogsci15.tex b/cogsci-2015/paper/generics-cogsci15.tex
+index 8661ccf..38768e6 100644
+--- a/cogsci-2015/paper/generics-cogsci15.tex
++++ b/cogsci-2015/paper/generics-cogsci15.tex
+@@ -1,15 +1,19 @@
+-
+-%todo:
+-% - write abstract
+ % questions from Judith that MH wants help on
+ %% paragraph1: "... we will see the context and the effort in producing this statement." [technically, we don't consider cost; however, also technically, the speaker models have an alternative set of generic + "mu".] so can we talk about the effort? [i've removed it but we can add it back in]
+ %% start of paragraph3 : "why do these effects pose a puzzle for formal semantics"? in response to our "Both context and asymmetry effects pose a puzzle for formal semantics."
+ %% 
+ %
+-%
+-%
+-%
+-%
++%todo:
++% - write abstract
++% - posterior over hyperparameter plots
++% - posterior predictives for prevalence prior
++% - spearman prophecy for prior correlations
++%  - plots of schematic prior and simulation results
++% - make figures 1 & 2 as pretty as 3 & 4
++
++
++
++
+ % - try rationality parameter in tfbt model
+ % - look at "order effect" in prior elicitation (taboo sampling hypothesis... first sample is 0, second is 100, third - fifth are meh)
+ % - try an S2 model of prevalence judgement task, too. does it reduce to the L1 model?

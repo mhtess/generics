@@ -130,10 +130,10 @@
 								domain
 								"no-domain"))
 
-		;	(define salience (salience-prior prevalence property))
-			(define salience (if (equal? utterance "generic")
-				 				(salience-prior prevalence domain)
-				 				(not (salience-prior prevalence domain))))
+			(define salience (salience-prior prevalence property))
+			; (define salience (if (equal? utterance "generic")
+			; 	 				(salience-prior prevalence domain)
+			; 	 				(not (salience-prior prevalence domain))))
 		
 
 
@@ -163,16 +163,16 @@
 (define listener
 	(mem (lambda (utterance domain qud)
 		(enumeration-query
-			(define prevalence (prevalence-prior domain))
 			;(define salience (salience-prior prevalence domain))
 			(define property (if (equal? utterance "generic")
 								domain
-								"no-domain"))
+								"bare"))
+			(define prevalence (prevalence-prior domain))
 
-;			(define salience (salience-prior prevalence property))
-			(define salience (if (equal? utterance "generic")
-				 				(salience-prior prevalence domain)
-				 				(not (salience-prior prevalence domain))))
+			(define salience (salience-prior prevalence property))
+			; (define salience (if (equal? utterance "generic")
+			; 	 				(salience-prior prevalence domain)
+			; 	 				(not (salience-prior prevalence domain))))
 		
 
 
@@ -247,7 +247,7 @@
 							(list 0.80 0.80 0.80 0.90 0.90))))
 		(("distinct") (assoc state (zip (list 10 30 50 70 90) 
 							(list 0.30 0.40 0.50 0.50 0.50))))
-		(else (list "low-prior-on-salience" 0.001)))))
+		(else (list "low-prior-on-salience" 0.2)))))
 
 
 (define (salience-prior prevalence domain) 
@@ -257,7 +257,7 @@
 
 
 
-(define (utterance-prior) (uniform-draw (list "generic" "not-generic")))
+(define (utterance-prior) (uniform-draw (list "generic" "mu")))
 
 ;(define (utterance-prior) (uniform-draw (list "generic" "not-generic" 10 20 30 40 50 60 70 80 90 100)))
 
@@ -275,7 +275,7 @@
 ; prior-probability-of-prevalence-reading)
 
 (map (lambda (prev)
-	(truth-conditions prev "bare"))
+	(truth-conditions prev "distinct"))
 '(10 30 50 70 90))
 
 ;(define prevalence-reading 0.8)

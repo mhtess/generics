@@ -4585,7 +4585,7 @@ d.tidy0 %>%
 ```{r priors1}
 
 setwd("~/Documents/research/generics/cbg2010-replication/data")
-d<-read.csv('cbg-prior1a-trials.csv',header=T)
+d<-read.csv('cbg-prior1b-trials.csv',header=T)
 d$item <- paste(d$stim_color,d$stim_part,sep="_")
 #table(d$stim_type,d$item)
 #table(d$stim_type,d$stim_part)
@@ -5130,7 +5130,7 @@ imp.church <- d.imp %>%
   select(prev_score)
 
 
-sebootstrap.ci.tc <- function(x){
+bootstrap.ci.tc <- function(x){
   agr = aggregate(boolresp ~ prev , data=x, FUN=mean)
   agr$CILow = aggregate(boolresp ~ prev, data=x, FUN=ci.low)$boolresp
   agr$CIHigh = aggregate(boolresp ~ prev, data=x, FUN=ci.high)$boolresp
@@ -5164,11 +5164,11 @@ d.imp <- d %>%
   summarise(prev_score = mean(response)) %>%
   mutate(task = "implied")
 
-imp.church <-d.imp <- d %>%
-  filter(trial_type=='implied_prevalence') %>%
-  select(response) 
-
-write.csv(imp.church,'../../data/accidental_ip_long.csv')
+# imp.church <-d.imp <- d %>%
+#   filter(trial_type=='implied_prevalence') %>%
+#   select(response) 
+# 
+# write.csv(imp.church,'../../data/accidental_ip_long.csv')
 
 
 
@@ -5198,47 +5198,102 @@ d.bs<- d.bs %>%
                        labels=c("truth conditions", "implied prevalence"))) %>%
   rename(imp_subj = prev_score)
 
+
+# dm.bs$context<- factor(dm.bs$context, levels = c("distinctive & dangerous",
+#                                                   "nondistinctive & nondangerous",                                                
+#                                                   "plain",
+#                                                   "accidental"),
+#                        labels=c("distinctive &\n dangerous",
+#                                 "nondistinctive &\n nondangerous",                                                
+#                                                   "plain",
+#                                                   "accidental"))
+# dm.bs$type<-'k'
+# dm.bs[dm.bs$context=='accidental',]$type = 'accidental'
+# dm.bs[dm.bs$context!='accidental',]$type = 'biological'
+
+setwd("~/Documents/research/generics/cbg2010-replication/data")
+
+d<-read.table('cbgR-exp9-trials.tsv',header=T)
+d$item <- paste(d$stim_color,d$stim_part,sep="_")
+d$rt <- d$rt/1000
+d$truth_conditions <- factor(as.logical(levels(d$response)[d$response]), 
+                              levels=c("TRUE","FALSE"))
+d$truth_num <-as.numeric(d$truth_conditions==TRUE)
+
+f<-read.table('cbgR-exp12-trials.tsv',header=T)
+
+f.tidy <- f %>%
+  select(workerid,rt,stim_type,response)%>%
+  rename(context=stim_type)
+
+f.stats<-ddply(f.tidy, 
+       .(workerid,context), summarise, 
+       imp_subj = mean(response),
+       context=context[1])
+f.stats$task<-'implied'
+
+d.tidy <- d %>%
+  select(workerid,rt,stim_type,stim_prevalence,truth_num)%>%
+  rename(context=stim_type,
+         prevalence=stim_prevalence,
+         response=truth_num)
+
+d.stats<-ddply(d.tidy,
+      .(workerid,context), summarise,
+      imp_subj = sum(prevalence*response)/sum(response),
+      context=context[1])
+d.stats$workerid <- d.stats$workerid+30
+d.stats$task<-'truth'
+bootstrap.ci.ip <- function(x){
+  agr = aggregate(imp_subj ~ context, data=x, FUN=mean)
+  agr$CILow = aggregate(imp_subj ~ context, data=x, FUN=ci.low)$imp_subj
+  agr$CIHigh = aggregate(imp_subj ~ context, data=x, FUN=ci.high)$imp_subj
+  agr$YMin = agr$imp_subj - agr$CILow
+  agr$YMax = agr$imp_subj + agr$CIHigh
+  return(agr)
+}
+
+f.bs<-bootstrap.ci.ip(f.stats)
+f.bs$task<-'impliedprevalence'
+e.bs<-bootstrap.ci.ip(d.stats)
+e.bs$task<-'truthconditions'
+
+m<-rbind(f.bs,e.bs)
+
+m<-m %>% mutate(task = factor(task, levels=c("truthconditions","impliedprevalence"),
+                       labels=c("truth conditions", "implied prevalence")))
 dm.bs<-rbind(d.bs,m)
 
-dm.bs$context<- factor(dm.bs$context, levels = c("distinctive & dangerous",
-                                                  "nondistinctive & nondangerous",                                                
-                                                  "plain",
-                                                  "accidental"),
-                       labels=c("distinctive &\n dangerous",
-                                "nondistinctive &\n nondangerous",                                                
-                                                  "plain",
-                                                  "accidental"))
-dm.bs$type<-'k'
-dm.bs[dm.bs$context=='accidental',]$type = 'accidental'
-dm.bs[dm.bs$context!='accidental',]$type = 'biological'
 
-dm.bs<-filter(dm.bs, context%in%c("accidental","plain"))
 
+
+
+
+
+dm.bs<-filter(dm.bs, context%in%c("accidental","bare"))
+dm.bs$type<-c("accidental","accidental","biological","biological")
 dm.bs$type<-factor(dm.bs$type,levels=c("biological","accidental"),
-                   labels=c("biological (Exp. 1)", "accidental (Exp. 3)"))
+                   labels=c("biological \n (Exp. 1)", "accidental \n (Exp. 3)"))
 
 ggplot(dm.bs, aes(x=type,y=imp_subj,fill=type,alpha=task, group=task))+
-  geom_bar(stat='identity',fill='black',
-           position=position_dodge(0.5), width=0.5,color='black')+
+  geom_bar(stat='identity',
+           position=position_dodge(0.5), width=0.5,color='white')+
   geom_errorbar(aes(ymin=YMin,ymax=YMax),
                 width=0.2,
                 size=1,
-                color='black',
+                color='grey',
                 alpha=1,
                 position=position_dodge(0.5))+
   #theme_blackDisplay()+
   ylab("average prevalence")+
-  scale_fill_brewer(type='qual',palette='Set1')+
   scale_alpha_manual(values=c(0.4,0.85))+
   xlab("")+
-  theme(#legend.position='bottom',
-        #legend.direction='horizontal',
-        #legend.box = 'horizontal',
-        #axis.text.x=element_blank()
-        )+
   guides(fill = F,#guide_legend(order = 1), 
-          alpha = guide_legend(order = 2))
-
+          alpha = guide_legend(order = 2))+
+  scale_fill_brewer(type='qual',palette='Pastel1')+
+  #scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  #scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_blackDisplay()
 
 
 
@@ -5266,13 +5321,17 @@ ggplot(d.tidy5,aes(x=value))+
 d.tidy5$roundval<-round(d.tidy5$value*10)*10
 
 d.sum<-data.frame(table(d.tidy5$roundval)) %>%
-  mutate(Var1 = to.n(Var1))
+  mutate(Var1 = to.n(Var1),
+         prob = Freq/sum(Freq))
 
-ggplot(data=d.sum, aes(x=Var1,y=Freq))+
-  geom_bar(stat='identity',position=position_dodge())+
-  ylab('frequency')+
-  xlab('prevalence')+
-  scale_x_continuous(breaks=seq(0,100,20))
+ggplot(data=d.sum, aes(x=Var1,y=prob))+
+  geom_bar(stat='identity',fill='grey',position=position_dodge())+
+  ylab('proportion of responses \n')+
+  xlab('\n prevalence')+
+  scale_x_continuous(breaks=seq(0,100,20))+
+  scale_y_continuous(breaks=seq(0,0.2,0.1))+
+  theme_blackDisplay()
+
 
 
 
@@ -5361,13 +5420,13 @@ ggplot(tc.sum, aes(x=prev,y=boolresp, color=type, group=type))+
               width=5,
               size=0.8,
               position=position_dodge(6))+
-  scale_colour_brewer(type='qual',palette='Dark2')+
+  theme_blackDisplay()+
+  scale_colour_brewer(type='qual',palette='Set3')+
   #theme(strip.text.x = element_text(size=14,color='black'))+
   scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
   scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
-  theme_paper()+ 
-  xlab("prevalence")+
-  ylab('proportion of "true" responses')+
+  xlab("\n prevalence")+
+  ylab('proportion "true"\n')+
   coord_fixed(100)
 ```
 
@@ -5424,19 +5483,30 @@ d.tidy$roundval<-round(d.tidy$value/10)*10
 out<-data.frame(table(d.tidy$context, d.tidy$roundval))
 out$Var2<-to.n(out$Var2)
 
+out<- out %>%
+  group_by(Var1) %>%
+  mutate(Freq=Freq/sum(Freq))
+
 
 ggplot(out,aes(x=Var2,y=Freq, fill=Var1))+
   geom_bar(stat='identity')+
   facet_grid(.~Var1)+
-  scale_fill_brewer(type='qual',palette='Dark2')+
-  xlab('\n % of kind with feature')+
+  #scale_fill_brewer(type='qual',palette='Dark2')+
+  xlab('\n prevalence')+
+  ylab('proportion of responses \n')+
   #  theme_blackDisplay()+
-    theme(strip.background = element_blank(),
+  theme_blackDisplay()+
+  theme(strip.background = element_blank(),
        strip.text.y = element_text(angle=0),
         legend.position='bottom',
         legend.direction='horizontal')+
   guides(fill=F)+
-  scale_x_continuous(breaks=seq(0,100,20))
+  scale_x_continuous(breaks=seq(0,100,20))+
+  scale_fill_brewer(type='qual',palette='Set3')
+
+
+ggsave('../../talks/frisem_5815/figures/ddp_1priors.png',width=16, height=6)
+
 
 #ggsave('../../semfest-2015/figures/exp2.png',width=20, height=10)
 
@@ -5518,10 +5588,10 @@ ggplot(d.tidy,aes(x=value))+
   xlim(0,100)
 
 ## add counts to certain bins to fill out responses
-d.tidy6<-bind_rows(d.tidy6,
-data.frame(workerid=1000, context='danger',item='blank',key='hand',value=85, roundval=85),
-data.frame(workerid=1000, context='distinct',item='blank',key='hand',value=55, roundval=55)
-)
+# d.tidy6<-bind_rows(d.tidy6,
+# data.frame(workerid=1000, context='danger',item='blank',key='hand',value=85, roundval=85),
+# data.frame(workerid=1000, context='distinct',item='blank',key='hand',value=55, roundval=55)
+# )
 
 d.tidy<-data.frame(table(filter(d.tidy6,context=='bare')$roundval),
            table(filter(d.tidy6,context=='danger')$roundval),
@@ -5532,17 +5602,25 @@ d.tidy<-data.frame(table(filter(d.tidy6,context=='bare')$roundval),
          danger = Freq.1,
          distinct = Freq.2) %>%
   gather(type, value, -prev) %>%
-  mutate(prev = to.n(prev))
+  mutate(prev = to.n(prev)) %>%
+  group_by(type) %>%
+  mutate(value = value/sum(value))
 
 ggplot(d.tidy, aes(x=prev, y=value, fill=type))+
   geom_bar(stat='identity', position=position_dodge())+
   facet_wrap(~type)+
-    scale_fill_brewer(type='qual',palette='Dark2')+
-  xlab("prevalence")+
-  ylab("count")
-
+    #scale_fill_brewer(type='qual',palette='Dark2')+
+  xlab("\n prevalence")+
+  ylab("proportion of responses \n")+
+  theme_blackDisplay()+
+  scale_fill_brewer(type='qual',palette='Set3')+
+  guides(fill=F)
 
   
+ggsave('../../../talks/frisem_5815/figures/ddp_10priors.png',width=16, height=6)
+
+
+
 ```
 
 # Bootstrap priors for model
@@ -5642,15 +5720,21 @@ m.tidy$type <- factor(m.tidy$type, levels=c("danger","nondistinct","bare"),
                       labels =c("dangerous & distinct",
                              "nondangerous & nondistinct", "plain"))
 
-#m.tidy$type <- factor(m.tidy$type, labels=c("plain","danger","distinct"))
+
+
+m.tidy$type <- factor(m.tidy$type, 
+                      levels=c("bare","danger","distinct"),
+                      labels=c("plain","danger","distinct"))
+
+
 ggplot(data=m.tidy,aes(x=prev,y=expected.value,color=type,group=type))+
   geom_point(size=2.5, position=position_dodge(6))+
-  geom_line(size=1,position=position_dodge(6), linetype=3, alpha=0.5)+
+  geom_line(size=1,position=position_dodge(6), linetype=3, alpha=1)+
   geom_errorbar(aes(ymin=CIlow,ymax=CIhigh,colour=type),
               width=5,
               size=1,
               position=position_dodge(6))+
-  scale_colour_brewer(type='qual',palette='Set1')+
+ # scale_colour_brewer(type='qual',palette='Set1')+
   #theme(strip.text.x = element_text(size=14,color='black'))+
   scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
   scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
@@ -5658,10 +5742,22 @@ ggplot(data=m.tidy,aes(x=prev,y=expected.value,color=type,group=type))+
   #guides(color=guide_legend(title="Context"))+
   #guides(color=F)+
   xlab("prevalence")+
-  ylab('P("generic is true" | prevalence) \n')+
+ # ylab('P("generic is true" | prevalence) \n')+
   coord_fixed(100)+
   theme(legend.key.size=unit(2, "lines"),
-        legend.text.align=NULL)
+        legend.text.align=NULL)+
+  xlab("\n prevalence")+
+  ylab("proportion of responses\n")+
+  scale_colour_brewer(palette='Set3',type='qual')+
+  theme_blackDisplay()+ 
+  guides(fill=guide_legend(title="property type"))
+
+
+ggsave('../../../../talks/frisem_5815/figures/empiricalbootstrap_truthconditions_ddp.png',width=10, height=12)
+
+
+
+m<-read.csv(file = 'truthconditions_exp1_S2_bootstrap_alpha1_alpha2.csv',header=F)
 
 
 a.tidy<- m %>%
@@ -5695,35 +5791,41 @@ rename(tc = V7,
 
 sum.tidy<-bind_rows(a.tidy,acc.tidy)
 
-sum.tidy$type<-factor(sum.tidy$type,levels=c("biological","accidental"),
-                   labels=c("biological (Exp. 1)", "accidental (Exp. 3)"))
+sum.tidy$type<-factor(sum.tidy$type,levels=c("biological","accidental"))
+
+#,
+ #                  labels=c("biological (Exp. 1)", "accidental (Exp. 3)"))
 
 sum.tidy$task<-factor(sum.tidy$task,levels=c("tc","ip"),
                       labels=c("truth conditions","implied prevalence"))
 
-ggplot(sum.tidy, aes(x=type,y=expected.value,fill=type,alpha=task, group=task))+
-  geom_bar(stat='identity',fill='black',
-           position=position_dodge(0.5), width=0.5,color='black')+
+sum.tidy<-sum.tidy[c(1,2),]
+
+ggplot(sum.tidy, aes(x=type,y=expected.value,
+                     fill=type,alpha=task, group=task))+
+  geom_bar(stat='identity',
+           position=position_dodge(0.5), width=0.5,color='white')+
   geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
                 width=0.2,
                 size=1,
-                color='black',
+                color='white',
                 alpha=1,
                 position=position_dodge(0.5))+
-  #theme_blackDisplay()+
   ylab("model predicted prevalence")+
-  scale_fill_brewer(type='qual',palette='Set1')+
+  #scale_fill_brewer(type='qual',palette='Set1')+
   scale_alpha_manual(values=c(0.4,0.85))+
   xlab("")+
-  theme(#legend.position='bottom',
+  guides(fill = F,#guide_legend(order = 1), 
+          alpha = guide_legend(order = 2))+
+    scale_fill_brewer(palette='Pastel1',type='qual')+
+  theme_blackDisplay()+
+    theme(#legend.position='bottom',
         #legend.direction='horizontal',
         #legend.box = 'horizontal',
-        #axis.text.x=element_blank()
-        )+
-  guides(fill = F,#guide_legend(order = 1), 
-          alpha = guide_legend(order = 2))
+       # axis.text.x=element_blank()
+        )
 
-
+ggsave('../../../../talks/frisem_5815/figures/empiricalbootstrap_asym_ddnnp_withAcc.png',width=12, height=7)
 
 ```
 
@@ -5742,6 +5844,15 @@ d.tidy <- d %>%
          trial = trialNum,
          prev = stim_prevalence)
 
+d.item <- d.tidy %>%
+  group_by(type,prev,item) %>%
+  summarise(ave = mean(response))
+
+ggplot(d.item, aes(x=ave, fill=type))+
+  geom_histogram(position=position_dodge(), binwidth=0.025)
+   # scale_fill_brewer(type='qual',palette='Dark2')#+
+  #geom_density(alpha=0.1, adjust=0.5)
+
 
 qplot(data=d.tidy,x=response,geom='histogram')+
   facet_grid()
@@ -5754,6 +5865,8 @@ d.tidy$prev_centered <- scale(d.tidy$prev, scale=F)
 rs<-lmer(data=d.tidy, 100*response~prev_centered*type + (1 | workerid))
 summary(rs)
 
+d.ave$type<-factor(d.ave$type, labels=c("plain","danger","distinct"))
+
 ggplot(d.ave, aes(x=prev,y=ave, color=type, group=type))+
   geom_point(size=3, position=position_dodge(8))+
   geom_line(size=0.8,position=position_dodge(8),linetype=3)+
@@ -5761,13 +5874,13 @@ ggplot(d.ave, aes(x=prev,y=ave, color=type, group=type))+
               width=12,
               size=1.5,
               position=position_dodge(8))+
-  scale_colour_brewer(type='qual',palette='Dark2')+
+  theme_blackDisplay()+
+  scale_colour_brewer(type='qual',palette='Set3')+
   #theme(strip.text.x = element_text(size=14,color='black'))+
   scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
   scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
-  theme_paper()+ 
-  xlab("prevalence")+
-  ylab('"importance"')+
+  xlab("\nprevalence")+
+  ylab('"importance"\n')+
   coord_fixed(100)
 
 

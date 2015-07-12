@@ -1,0 +1,75 @@
+var speakerOptimality = 2
+
+
+
+var discretizeBeta = function(gamma, delta, bins){
+	var shape_alpha = gamma * delta
+	var shape_beta = (1-gamma) * delta
+	var betaPDF = function(x){
+		return Math.pow(x,shape_alpha-1)*
+				Math.pow((1-x),shape_beta-1)
+	}
+	return map(betaPDF, bins)
+}
+
+var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+// var quintileProbs = discretizeBeta(gamma,delta,bins)
+
+var statePrior = function() {
+//  var prevalence = 100*bins[discrete([28,46,77,110,125,128,131,112,76,58,33,13])]
+//  var prevalence = 100*bins[discrete([13,173,290,270,168,66,16,4,3,3,3])]
+  var prevalence = 100*bins[discrete([100,1,2,2,1,1,1,1,3,3,300])]
+
+  return prevalence
+}
+
+var thetaPrior = function() {
+  var threshold = 10*randomInteger(10)//something goes wonky if "generic is false" can never be false
+  return threshold
+}
+
+var wordUtterancePrior = function() {
+ var utterances = ["generic is true", "mu"]
+//  var i = randomInteger(utterances.length)
+  var i = discrete([1,30])
+  return utterances[i]
+}
+
+var meaning = function(utt,state, theta) {
+  return utt=="generic is true"? state>theta :
+         utt=="generic is false"? state<=theta :
+         utt=='mu'? true:
+         true
+}
+var listener0 = cache(function(utterance, theta) {
+  Enumerate(function(){
+    var state = statePrior()
+    var m = meaning(utterance, state, theta)
+    factor(m?0:-Infinity)
+    return state
+  })
+})
+
+var wordSpeaker1 = cache(function(state, theta) {
+  Enumerate(function(){
+    var utterance = wordUtterancePrior()
+    var L0 = listener0(utterance, theta)
+    factor(L0.score([],state))
+    return utterance
+  })
+})
+
+var wordListener1 = cache(function(utterance) {
+  Enumerate(function(){
+    var state = statePrior()
+    var theta = thetaPrior()
+    var S1 = wordSpeaker1(state, theta)
+    factor(speakerOptimality*S1.score([],utterance))
+//	    return state
+    return state
+  })
+})
+
+wordListener1("generic is true")
+// wordListener1("generic is true")
+

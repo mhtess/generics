@@ -274,3 +274,39 @@ var accidental = [
     "wet feathers",
     "wet fur"
 ]
+
+
+var creatureNames = 
+    [{list:0,category: "morseths", exemplar:"morseth"},
+    {list:1, category: "ollers", exemplar:"oller"},
+    {list:2, category: "kweps", exemplar:"kwep"},
+    {list:0,category: "blins", exemplar:"blin"},
+    {list:1, category: "reesles", exemplar:"reesle"},
+    {list:2, category: "dorbs", exemplar:"dorb"},
+    {list:0,category: "zorbs", exemplar:"zorb"},
+    {list:1, category: "taifels", exemplar:"taifel"},
+    {list:2, category: "trufts", exemplar:"truft"},
+    {list:0,category: "daiths", exemplar:"daith"},
+    {list:1, category: "mooks", exemplar:"mook"},
+    {list:2, category: "frams", exemplar:"fram"},
+    {list:0,category: "moxes", exemplar:"mox"},
+    {list:1, category: "luzaks", exemplar:"luzak"},
+    {list:2, category: "javs", exemplar:"jav"},
+    {list:0,category: "pangolins", exemplar:"pangolin"},
+    {list:1, category: "ackles", exemplar:"ackle"},
+    {list:2, category: "wugs", exemplar:"wug"},
+    {list:0,category: "cheebas", exemplar:" cheeba"},
+    {list:1, category: "elleps", exemplar:"ellep"},
+    {list:2, category: "kazzes", exemplar:"kaz"},
+    {list:0,category: "lorches", exemplar:"lorch"},
+    {list:1, category: "plovs", exemplar:"plov"},
+    {list:2, category: "grinks", exemplar:"grink"},
+    {list:0,category: "glippets", exemplar:"glippet"},
+    {list:1, category: "sapers", exemplar:"saper"},
+    {list:2, category: "stups", exemplar:"stup"},
+    {list:0,category: "krivels", exemplar:"krivel"},
+    {list:1, category: "zoovs", exemplar:"zoov"},
+    {list:2, category: "thups", exemplar:"thup"},
+    {list:3, category: "crullets", exemplar:"crullet"},
+    {list:3, category: "feps", exemplar:"fep"}]
+
