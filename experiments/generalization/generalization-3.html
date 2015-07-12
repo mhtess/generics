@@ -42,7 +42,7 @@
   <div class="slide" id="i0" >
     <img src="../../../_shared/images/cocologo.png" alt="Stanford CoCoLab" id="cocologo"></img>
     <p id="cocolab">Stanford CoCoLab</p>
-    <p id="instruct-text">You will read <span id="total-num">{{}}</span> prompts about animals on an alien planet and be asked some questions about them. The HIT should take approximately 7 minutes. Please pay attention, thanks!</p>
+    <p id="instruct-text">You will read <span id="total-num">{{}}</span> prompts about animals on an alien planet and be asked some questions about them. The HIT should take approximately 6 minutes. Please pay attention, thanks!</p>
     <button id="start_button" type="button">Start Experiment</button>
     <p id="legal">Legal information: By answering the following questions, you are participating in a study being performed by cognitive scientists in the Stanford Department of Psychology. If you have questions about this research, please contact M.H. Tessler at <a href="mailto://mhtessler@stanford.edu">mhtessler@stanford.edu</a> or Noah Goodman, at ngoodman@stanford.edu. You must be  at least 18 years old to participate. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</p>
   </div>
@@ -81,14 +81,14 @@
 
       <p>In this experiment, two different questions were asked <em>of the teacher / expert</em> in the exchange.
         Pick the best summary of these questions below.</p>
-        <p>(<strong>Important!</strong> These were the requests that <em>the teacher / expert</em> in the exchange answered. These were <strong>not the questions that you answered</strong>.) </p>
+        <p>(<strong>Important!</strong> These were the questions that <em>the teacher / expert</em> in the exchange answered. <br>These were <strong>not the questions that you answered</strong>.) </p>
 
       <select id="check">
         <label><option value="99"></option></label>
-        <label><option value="0">"All animals have ___."; "Some animals have ____."</option></label>
+        <label><option value="-2">"All animals have ___."; "Some animals have ____."</option></label>
         <label><option value="0" >"Judge these statements."; "Perceive these statements."</option></label>
         <label><option value="1">"What are __ like?"; "What has ___?"</option></label>
-        <label><option value="0">"What % has ___?"; "How important is ____?"</option></label>
+        <label><option value="-1">"What % has ___?"; "How important is ____?"</option></label>
       </select>
 
 

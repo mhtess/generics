@@ -8,7 +8,6 @@ function make_slides(f) {
      name : "i0",
      start: function() {
       exp.startT = Date.now();
-      $("#total-num").html(exp.numTrials);  
      }
   });
 
@@ -16,24 +15,23 @@ function make_slides(f) {
     name : "instructions",     
     start: function() {
       $(".err").hide();
+      $("#total-num").html(exp.nTrials);  
      },
     button : function() {
-      if (!($('input[name="train"]:checked').val() == 3)) {
-        $(".err").show();
-        exp.catch_trials.push({
-          "trial_type" : "instructions",
-          "error" : $('input[name="train"]:checked').val()
-         })
-      } else {
         exp.go();
-      }
     }
   });
 
   slides.instructions2 = slide({
     name : "instructions2",
     button : function() {
+      this.log_responses();
       exp.go(); //use exp.go() if and only if there is no "present" data.
+    },
+    log_responses : function() {
+      exp.catch_trials.push({
+        "training_feedback" : $("#feedback").val()
+      });
     }
   });
 
@@ -44,6 +42,173 @@ function make_slides(f) {
     }
   });
 
+  slides.twostep_prevalence = slide({
+    name: "twostep_prevalence",
+
+   // present : _.shuffle(_.range(numTrials)),
+    present : exp.stims,
+    //this gets run only at the beginning of the block
+    present_handle : function(stim) {
+      // debugger;
+      this.startTime = Date.now();
+      $(".err").hide();
+      $(".training_err").hide();
+
+      $(".question0").css({"font-size":"20px"});
+      $(".question1").css({"font-size":"20px"});
+
+      this.stim =  stim; // allstims should be randomized, or stim_num should be
+      this.trialNum = exp.stims.indexOf(stim);
+
+     // this.determiner = exp.determiner[0] // exp.determiner between-subjects var
+      var existential_question = 'The robot says: "We recently discovered animals called ' + stim.category +'.' +
+          '<br> How likely is it that there is a ' +stim.exemplar + ' that has <strong><em>' + stim.property + '</strong></em>?"'
+
+      var prevalence_question = 'The robot says: "Suppose there is a ' + stim.exemplar +' that has ' + stim.property + '.' +
+          "<br>What percentage of "  + this.stim.category + " do you think have <strong><em>" + this.stim.property + "</strong></em>?\n";
+
+      $(".question0").html(existential_question);
+      $(".question1").html(prevalence_question);
+
+      this.n_sliders = 2;
+
+      this.init_sliders(this.n_sliders);
+      // exp.sliderPost = [];
+      exp.sliderPost = utils.fillArray(-1,this.n_sliders);//[];
+      $(".slider_number").html("---")
+
+    },
+
+    init_sliders : function(n_sliders) {
+      for (var i=0; i<n_sliders; i++) {
+        utils.make_slider("#single_slider" + i, this.make_slider_callback(i));
+      }
+    },
+    make_slider_callback : function(i) {
+      return function(event, ui) {
+        exp.sliderPost[i] = ui.value;
+        (i==1) ? $(".slider_number").html(Math.round(exp.sliderPost[i]*100)+"%") : null
+      };
+    },
+
+    button : function() {
+      if (exp.sliderPost.indexOf(-1)>-1) {
+        $(".err").show();
+      } else {
+        this.rt = Date.now() - this.startTime;
+        this.log_responses();
+        _stream.apply(this);
+      }
+    },
+
+    log_responses : function() {
+      exp.data_trials.push({
+        "trial_type" : "implied_prevalence",
+        "trial_num": this.trialNum,
+        "response0" : exp.sliderPost[0],
+        "response1" : exp.sliderPost[1],
+        "rt":this.rt,
+        "stim_type": this.stim.type,
+        "stim_determiner": this.determiner,
+        "stim_property": this.stim.property,
+        "stim_category": this.stim.category
+      });
+    }
+  });
+
+  slides.twostep_training = slide({
+    name: "twostep_prevalence",
+
+   // present : _.shuffle(_.range(numTrials)),
+    present :  [ { 
+      category:"glippets",
+      exemplar:"glippet",
+      property:"are female",
+      question0:"<strong>This is a practice trial. (1 of 1)</strong><br>"+ 
+      'The robot begins by randomly picking an animal name from the animals on the island it knows. The robot will say: <em>We recently discovered animals called glippets.</em> The robot will ask you two questions in order to learn about properties of animals. ' +
+      ' The 1st question is about how likely it is that <em>at least one</em> of this animal species has the property. <br>Suppose the robot wants to learn about the property "female"; it would ask you:' + 
+      '<br> How likely is it that <strong><em>there is a glippet that is female</strong></em>?' +
+      // " Since you don't know anything about glippets (except that they are a kind of animal), base your judgment on the property: <em>is female</em>.</p>"+
+      "<br> We are showing how you might respond below. Even though we don't know anything about this particular animal, we know that basically all animals have female members. So we would say it's very likely.",
+      question1:'The 2nd question is about how many of this kind of animal have the property, assuming that at least one does. The robot says: <em>Suppose there is a glippet that is female.</em>' +
+          "<br><strong><em>What percentage of glippets do you think are female?</strong></em><br>"+
+          "Not knowing about the particular species, you will have to base your judgments on the property. Since we know that approximately half of every species is female, the best repsonse is likely to be about half. Set this slider to reflect this."
+    }]
+    ,
+    //this gets run only at the beginning of the block
+    present_handle : function(stim) {
+      // debugger;
+      this.startTime = Date.now();
+      $(".training_err").hide();
+
+      $(".err").hide();
+      this.stim =  stim; // allstims should be randomized, or stim_num should be
+
+      $(".question0").html(stim.question0);
+      $(".question0").css({"font-size":"16px"});
+
+      $(".question1").html(stim.question1);
+      $(".question1").css({"font-size":"16px"});
+
+      this.n_sliders = 2;
+
+      this.init_sliders(this.n_sliders);
+      // exp.sliderPost = [];
+      exp.sliderPost = utils.fillArray(-1,this.n_sliders);//[];
+      $(".slider_number").html("---")
+
+      var label = "#single_slider0";
+
+      $(label+ ' .ui-slider-handle').show();
+      $(label).slider({value:0.99});
+      $(label).css({"background":"#99D6EB"});
+      $(label + ' .ui-slider-handle').css({
+        "background":"#667D94",
+        "border-color": "#001F29"
+      })
+      // $(label).unbind("mousedown");
+
+
+
+    },
+
+    init_sliders : function(n_sliders) {
+      for (var i=0; i<n_sliders; i++) {
+        utils.make_slider("#single_slider" + i, this.make_slider_callback(i));
+      }
+    },
+    make_slider_callback : function(i) {
+      return function(event, ui) {
+        exp.sliderPost[i] = ui.value;
+        (i==1) ? $(".slider_number").html(Math.round(exp.sliderPost[i]*100)+"%") : null
+      };
+    },
+
+    button : function() {
+      if (!(exp.sliderPost[1] < 0.70 & exp.sliderPost[1]>0.20)) {
+        $(".training_err").show();
+      } else {
+        this.rt = Date.now() - this.startTime;
+        // this.log_responses();
+        _stream.apply(this);
+      }
+    }
+
+    // log_responses : function() {
+    //   exp.data_trials.push({
+    //     "trial_type" : "implied_prevalence",
+    //     "trial_num": this.trialNum,
+    //     "response0" : exp.sliderPost[0],
+    //     "response1" : exp.sliderPost[1],
+    //     "rt":this.rt,
+    //     "stim_type": this.stim.type,
+    //     "stim_determiner": this.determiner,
+    //     "stim_property": this.stim.property,
+    //     "stim_category": this.stim.category
+    //   });
+    // }
+  });
+
   slides.slider_training = slide({
     name : "vertical_sliders",
     present : [
@@ -52,22 +217,34 @@ function make_slides(f) {
       exemplar:"glippet",
       property:"are female",
       bins:exp.bins,
-      question:"<strong>This is a practice trial.</strong><br>"+ 
+      question:"<strong>This is a practice trial. (1 of 2)</strong><br>"+ 
       'The robot comes up to you and says: "There is an animal on the island called a glippet."' +
       ' The robot wants to learn about glippets, and asks you:' + 
       '"What % of glippets do you think <strong><em>are female</strong></em>?"' +
       '<p>Below are 7 slider bars, corresponding to 7 different <em>percentages</em> of glippets that could be female.' +
-      "Since you don't know anything about glippets (except that they are an animal), you will have to base your judgment on the property: <em>are female</em>.</p>"+
+      " Since you don't know anything about glippets (except that they are an animal), you will have to base your judgment on the property: <em>are female</em>.</p>"+
       '<p>We filled out two bars for you: First consider "40-60%". This bar represents '+
       "how likely we think it is that about half of glippets are female. We think this is very likely (all the animals we know about are about half female) so we place the slider bar high."+
-      'Next, think about "95-100%". This is the statement that almost all glippets are female. We think this is very unlikely so we place the slider bar low. ' +
-      'Go through in fill in the remaining slider bars.</p>'
+      ' Next, think about "95-100%". This is the statement that almost all glippets are female. We think this is very unlikely so we place the slider bar low. ' +
+      ' Go through in fill in the remaining slider bars with realisitic values.</p>',
+      bars: [3,6],
+      vals: [0.99, 0.01]
     },
     {
       category:"sapers",
       exemplar:"saper",
       property:"have fins",
-      bins:exp.bins
+      bins:exp.bins,
+      question:"<strong>This is a practice trial. (2 of 2)</strong><br>"+ 
+      'The robot comes up to you and says: "There is an animal on the island called a saper."' +
+      ' The robot wants to learn about sapers, and asks you:' + 
+      '"What % of glippets do you think <strong><em>have fins</strong></em>?"' +
+      "<p>Again, since we do not know anything about sapers, we need to think about the property: <em>have fins</em>.</p> First, fish have fins, and within a species of fish (like goldfish), 100% of those fish have fins, so we put the rightmost bar high."+
+      ' Now, there are plenty of animals, like dogs, who do not have fins. In fact, 0% of dogs have fins. So we also put that bar high.'+
+      ' Finally, note that we put the 0% bar a little higher than the 100% bar. This is because we believe it is a litte more likely for a species to not have fins than to have fins.'+
+      ' Go through in fill in the remaining slider bars.</p>',
+      bars: [0,6],
+      vals: [0.99, 0.7]
     }
     // ,
     // { 
@@ -79,6 +256,8 @@ function make_slides(f) {
     ],
     present_handle : function(stim) {
       $(".err").hide();
+
+      $(".warning").hide();
       this.stim = stim;
 
       $("#vertical_question").html(stim.question);
@@ -104,22 +283,44 @@ function make_slides(f) {
 
       $("#vertical_reminder").html(reminder)
 
-        var label = "#vslider3";
-        $(label).slider({value:0.9});
-        $(label+ ' .ui-slider-handle').show();
-        $(label).css({"background":"#99D6EB"});
-        $(label + ' .ui-slider-handle').css({
-          "background":"#667D94",
-          "border-color": "#001F29"
-        })
-
       this.init_sliders(stim);
-      exp.sliderPost = [];
+      exp.sliderPost = utils.fillArray(-1,7);//[];
+
+      var label = "#vslider"+stim.bars[0];
+      $(label+ ' .ui-slider-handle').show();
+      $(label).slider({value:stim.vals[0]});
+      $(label).css({"background":"#99D6EB"});
+      $(label + ' .ui-slider-handle').css({
+        "background":"#667D94",
+        "border-color": "#001F29"
+      })
+      $("#vslider"+stim.bars[0]).unbind("mousedown");
+
+
+      var label = "#vslider"+stim.bars[1];
+      $(label+ ' .ui-slider-handle').show();
+      $(label).slider({value:stim.vals[1]});
+      $(label).css({"background":"#99D6EB"});
+      $(label + ' .ui-slider-handle').css({
+        "background":"#667D94",
+        "border-color": "#001F29"
+      })
+      $("#vslider"+stim.bars[1]).unbind("mousedown");
+
+      exp.sliderPost[stim.bars[0]]=0
+      exp.sliderPost[stim.bars[1]]=0
     },
 
     button : function() {
-      if (exp.sliderPost.length < this.n_sliders) {
+      var overTen = function(val){
+        return val > 0.2
+      }
+
+      if (exp.sliderPost.indexOf(-1)>-1) {
         $(".err").show();
+      } else if (_.filter(exp.sliderPost, overTen).length > 0) {
+          $(".err").hide();
+        $(".warning").show();
       } else {
         this.log_responses();
         _stream.apply(this); //use _stream.apply(this); if and only if there is "present" data.
@@ -614,7 +815,7 @@ exp.stims =_.map(_.zip(creatures, properties),
     };
 
   //blocks of the experiment:
-   exp.structure=["slider_training","instructions","vertical_sliders","i0","priors", "priors",'subj_info', 'thanks'];
+   exp.structure=["i0","instructions","twostep_training","instructions2","twostep_prevalence",'subj_info', 'thanks'];
  
   exp.data_trials = [];
   //make corresponding slides:

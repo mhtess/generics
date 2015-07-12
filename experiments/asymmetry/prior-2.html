@@ -49,54 +49,32 @@
   <div class="slide" id="instructions">
     <h3>Instructions </h3>
 
-  You are part of a team of scientists deployed on a remote island. The island has a lot of new animals that were recently discovered. 
+  You are part of a team of scientists deployed on a remote island. The island has a lot of animals that we did not know existed. 
 
-  <p>One day, you are roaming through the Library of Discovered Animals. As you are going through the library, you encounter a data-collection robot. The robot is very young and doesn't know very much. It is asking you questions about animals randomly selected from its memory. The robot is trying to learn about different properties, and is generating questions by randomly pairing a property with an animal. </em>
+  <p>One day, you are roaming through the Library of Discovered Animals. As you are going through the library, you encounter a data-collection robot. The robot doesn't know very much and is asking you questions to learn more. It is randomly selecting an animal from its memory and a property from its memory, and asking you if the animal is likely to have the property. </em>
   </p>
 
 
 <!-- <p> On each trial, the robot will ask you about a property and an animal. You are new to the island and don't know anything about the particular animals. Instead, you will have to think about the property to answer the questions.</p> -->
 
-  <p>We will walk you through 1 practice trial to familiarize yourself with the format. You will then complete 32 trials. Please pay attention.</p>
+  <p>We will walk you through 1 practice trial to familiarize yourself with the questions. You will then complete <span id="total-num">{{}}</span> trials. Please pay attention.</p>
 
-
-
-<!--       We want you to think hard about the property, and realistically estimate the percentage of animals <em>of the same species</em> that have the property.</p>
-
- Since the island is so recently discovered, nobody knows the answers to these questions (yet!), but your expert knowledge makes you the most trustworthy source on these matters.
-In this study, we are interested in how many animals have certain properties. 
-
-      <p>For example, if the property were <em>are female</em>
-
-      In particular, we are interested in how many animals <em>of the same species</em> have a certain property.
-
-
-    <p>On each trial, you will an animal with a property. You will then be asked to estimate the <em>percentage of the individual members</em> of that animal species that have the property listed. You will then be asked to estimate that same quantity for other species that you haven't observed. It may be difficult but just try to do your best.</p>
- -->
-<!--       The properties will be revealed to you one at a time. Essentially, you will be filling out a big table. You are allowed to go back and revise your answers, if you think there is a more realistic estimate you could give. You will do this 2 times (2 big tables). Press Continue to begin.</p>
-
-
-
-      <p>We will give you examples of the kinds of animals we have in mind. Some of these will be familiar animals. Others are from a a recently discovered remote island, and so these will be new to you. We will ask you to list a few of your own. </p>
-
-      <p>Then, you will estimate the <em>percentage of the individual members</em> of the animal species that have the property listed. For the unfamiliar animals, just try to do your best.</p>
-
-    <p>On each trial, you will rate 6 properties. The properties will be revealed to you one at a time. Essentially, you will be filling out a big table. You are allowed to go back and revise your answers, if you think there is a more realistic estimate you could give. You will do this 2 times (2 big tables). Press Continue to begin.</p> -->
 
     <button onclick="_s.button()">Continue</button>
-    <div class="err">Please select the most likely percentage of this animal species that is female.</div>
+    <div class="err">Please select the a percentage closer to the middle, since about 50% of animal species are female.</div>
 
 
   </div>
 
 
     <div class="slide" id="instructions2">
-    <h3>Instructions: 2 of 3</h3>
+      <br>
+      <br>
+      <p>Is it clear from the practice trial how the two questions are different? <br>(Please put any comments here.)</p>
+      <textarea id="feedback" rows="2" cols="50"></textarea>
 
-    <p>Please keep in mind, we are interested in the <em>percentage of individuals</em> that have the properties; not the <em>percentage of subtypes</em>. To illustrate the difference between "subtypes" and "individuals", let's pretend you're asked abouth humans (you won't be asked about humans in this experiment):<br> "What percentage of humans do you think crawl?"</p>
-    <p>One answer would be 100% since all <em>cultures</em> have babies that crawl. This would be considering the "subtypes" of humans and not the individuals. <strong>This is not the type of answer we are looking for.</strong> </p>
-    <p>Instead, we'd want to you to say something like 10%, since only babies crawl. </p>
-
+  <p>We're now ready to begin. Click continue to start.</p>
+  
     <button onclick="_s.button()">Continue</button>
   </div>
 
@@ -129,7 +107,7 @@ In this study, we are interested in how many animals have certain properties.
 
     <button onclick="_s.button()">Continue</button>
     <p class="err">Please respond to both questions.</p>
-    <p class="training_err">Please place the slider near the middle of the bar.</p>
+    <p class="training_err">Please select the a percentage closer to the middle, since about 50% of animal species are female.</p>
 
   </div>
 

@@ -92,7 +92,7 @@ function make_slides(f) {
       exp.catch_trials.push({
         "trial_type" : "catch",
         "response" : response,
-        "pass": response == exp.judgeButtons["disagree-key"],
+        "pass": response == exp.judgeButtons["disagree-key"] ? 1 : 0,
         "rt":this.rt
       });
     }
@@ -157,10 +157,14 @@ function init() {
                "Sharks attack swimmers.",
                "Ticks carry lyme disease.",
                "Tigers eat people.",
+               "Peacocks have beautiful feathers.",
                "Swans are white.",
                "Cardinals are red.",
-               "Birds are female.",
-              "Lions are male.",
+               
+               "Robins are female.",
+               "Lions are male.",
+               "Leopards are juvenile.",
+               "Swans are full-grown.",
 
                "Leopards have wings.",
                "Kangaroos have spots.",
@@ -168,14 +172,16 @@ function init() {
                "Robins carry malaria.",
                "Sharks have manes.",
                "Lions lay eggs.",
-               "Swans attack swimmers.",
 
                "Mosquitos attack swimmers.",
                "Sharks lay eggs.",
-               "Frogs have spots.",
+               "Sharks are white.",
 
-               "Robins are female.",
-               "Lions are male."]);
+               "Mosquitos don't carry malaria.",
+               "Ticks don't carry Lyme disease.",
+               "Sharks don't attack swimmers.",
+               "Tigers don't eat people.",
+               "Peacocks don't have beautiful feathers."]);
 
 
   exp.numTrials = exp.stims.length;

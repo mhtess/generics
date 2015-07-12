@@ -22,3 +22,14 @@
 	font-size: 16px;
 	font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
+
+.vertical_slider {
+	width: 10px;
+	height: 300px;
+	margin-left: 35px;
+	margin-right: 35px
+}
+
+.bin_label{
+	text-align: center;
+}

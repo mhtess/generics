@@ -100,6 +100,8 @@ Butterflies have bright wings.
 
 n = 50. ($0.35) 5/29/15
 
+n + 50 = 100 on 5/30/15
+
 ## Truth judgment 1 
 
 1. Ducks have wings

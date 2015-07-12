@@ -21,3 +21,16 @@
 .err{
 	color: red;
 }
+
+
+.slider_table .left {
+    display: inline;
+    text-align: center;
+    float: left;
+}
+
+.slider_table .right {
+    display: inline;
+    text-align: center;
+    float: left;
+}

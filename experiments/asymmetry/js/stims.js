@@ -432,9 +432,5 @@ var realAnimals = [
                     "Sharks"
                     ]
 
-var practiceCreatures = [
-    {list:0,category: "glippets", exemplar:"glippet"},
-    {list:1, category: "sapers", exemplar:"saper"},
-    {list:2, category: "stups", exemplar:"stup"},
-    {list:0,category: "krivels", exemplar:"krivel"},]
+
 

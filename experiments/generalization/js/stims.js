@@ -336,3 +336,30 @@ var creatureNames =
     {list:2, category: "thups", exemplar:"thup"},
     {list:3, category: "crullets", exemplar:"crullet"},
     {list:3, category: "feps", exemplar:"fep"}]
+
+var novelProperties = [
+["eina fur",
+"draug scales",
+"bired teeth",
+"peredin spots",
+"asca feathers",
+"brith legs",
+"parma ears",
+"tinco tails",
+"faroth shells",
+"gwador stripes",
+"drego skin"
+],
+["calen fur",
+"carca scales",
+"anga teeth",
+"numen spots",
+"daro feathers",
+"tengwa legs",
+"durk ears",
+"valdra tails",
+"grith shells",
+"nimdrin stripes",
+"fustel skin"
+]
+]

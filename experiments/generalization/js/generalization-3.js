@@ -171,7 +171,7 @@ function make_slides(f) {
 
 
       var queries = {"prevalence":"Other animals have "+ this.stim.property+ ".<br> What percentage of "  + this.stim.category + " do you think have " + this.stim.property + "?\n",
-      "salience":utils.upperCaseFirst(this.stim.category) + " have other properties.<br> How important of a property do you think " + this.stim.property + " " + isare + "?"//" <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
+      "salience":utils.upperCaseFirst(this.stim.category) + " have other properties.<br> How important of a property do you think " + this.stim.property + " " + isare + " for "+this.stim.category+"?"//" <em>"+ this.stim.property + "</em> rank among all the other characteristics in terms of <em>importance</em>?"
     };
 
       var endpoints = {"prevalence":["0%","100%"],
@@ -275,7 +275,7 @@ function make_slides(f) {
         "stimtype": this.stimtype,
         "category": this.stim.category,
         "property": this.stim.property,
-        "prevalenceFirst": exp.query_order[0]=='prevalence'
+        "prevalenceFirst": exp.query_order[0]=='prevalence' ? 1 : 0
       }
 
       trial_data[response_label0] =  exp.sliderPost[0]; // slider dependent measure
@@ -544,6 +544,7 @@ function init() {
   var speakerPairs = split(speakers, totalStims)
 
   var vague = _.shuffle(vagueProperties)
+  var vague = _.shuffle(novelProperties)
 
   // 2 sets of (totalStims/2) stimuli each, everything shuffled
   var shuffledslicedVague = _.flatten([_.shuffle(vague[0]).slice(0,totalStims/2), _.shuffle(vague[1]).slice(0,totalStims/2)])
@@ -594,7 +595,7 @@ function init() {
                            // "query":pieces[0].query,
                             "category":pieces[1].category,
                             "exemplar":pieces[1].exemplar,
-                            "property_type":"vague",
+                            "property_type":"novel",
                             "property":pieces[2],
                             "speaker1":pieces[3][0],
                             "speaker2":pieces[3][1]}});
