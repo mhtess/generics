@@ -1,0 +1,65 @@
+{
+    "ApprovalTime": "2015-03-04T22:47:28Z",
+    "AutoApprovalTime": "2015-03-04T22:51:55Z",
+    "AssignmentId": "3JAOYWH7VI4DM2SV0ZYQE94VNET9LJ",
+    "WorkerId": "A22MX7O9QOX4MB",
+    "answers": {
+        "keyBindings": {
+            "q": "odd",
+            "p": "even"
+        },
+        "trials": [],
+        "data": [
+            {
+                "stimulus": 1,
+                "rt": 462,
+                "accuracy": 1
+            },
+            {
+                "stimulus": 3,
+                "rt": 216,
+                "accuracy": 1
+            },
+            {
+                "stimulus": 2,
+                "rt": 209,
+                "accuracy": 1
+            },
+            {
+                "stimulus": 5,
+                "rt": 258,
+                "accuracy": 0
+            },
+            {
+                "stimulus": 4,
+                "rt": 225,
+                "accuracy": 0
+            },
+            {
+                "stimulus": 9,
+                "rt": 250,
+                "accuracy": 0
+            },
+            {
+                "stimulus": 8,
+                "rt": 193,
+                "accuracy": 0
+            },
+            {
+                "stimulus": 7,
+                "rt": 185,
+                "accuracy": 1
+            },
+            {
+                "stimulus": 6,
+                "rt": 625,
+                "accuracy": 1
+            }
+        ]
+    },
+    "AcceptTime": "2015-03-04T22:46:23Z",
+    "HITId": "3X878VYTIEIKL8WC9PU0M5MGL1O7FE",
+    "Assignment": "",
+    "AssignmentStatus": "Approved",
+    "SubmitTime": "2015-03-04T22:46:55Z"
+}
