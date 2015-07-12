@@ -1,0 +1,53 @@
+
+
+
+
+
+
+var shape_alpha = function(gamma,delta){return gamma * delta}
+var shape_beta = function(gamma,delta){return (1-gamma) * delta}
+
+
+// webppl FBT-hierarchicalPrior.wppl --require-js ./priorutils.js
+
+
+var data = priorutils.readCSV("../../data/asymmetry/asymmetry-prior-2-trials.csv").data
+
+var df = map(
+	function(lst){
+		return _.object(_.zip(data[0],lst))
+	},
+	data.slice(1))
+
+
+var dataGeneratingModel = function(a0,b0,a1,b1){
+	var kindHasProperty = beta(a0,b0)
+	var animalHasProperty = kindHasProperty ? beta(a1,b1) : 0
+	return animalHasProperty
+}
+
+var dataAnalysisModel = function(){
+	var gamma0 = uniform(0,1) 
+	var delta0 = uniform(0,10)
+	var gamma1 = uniform(0,1)
+	var delta1 = uniform(0,10)
+
+	var responseERP = MH(function(){
+							dataGeneratingModel(
+								shape_alpha(gamma0,delta0),
+								shape_beta(gamma0,delta0),
+								shape_alpha(gamma1,delta1),
+								shape_beta(gamma1,delta1)
+							)},100)
+
+
+	var score = responseERP.score([], )
+
+
+
+
+}
+
+
+
+df
