@@ -17,12 +17,14 @@ var marginalize = function(myERP, index){
   })
 }
 
+var subset = function(df, field, value){
+	return filter(function(d){
+		return (d[field]==value)
+	},df)
+}
 
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
-
-
-
 
 var data = priorutils.readCSV("../../data/asymmetry/asymmetry-prior-2-trials.csv").data
 
@@ -34,6 +36,7 @@ var df = map(
 
 
 var conditions = _.uniq(_.pluck(df,"stim_type"))
+var responseTypes = ["response0","response1"]
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
@@ -44,54 +47,41 @@ var dataAnalysisModel = function(){
 	foreach(conditions,
 		function(c){
 
-			var gamma0 = uniform(0,1) 
-			var delta0 = uniform(0,10)
-			var gamma1 = uniform(0,1)
-			var delta1 = uniform(0,10)
-			var conditionData = filter(function(d){
-								return (d["stim_type"]==c)
-							},df)
+			var conditionData = subset(df, "stim_type", c)
 
-			foreach(conditionData,
-				function(d){
-					var scr0 = betaERP.score([
-									shape_alpha(gamma0,delta0),
-									shape_beta(gamma0,delta0)
-									], avoidEnds(d["response0"]))
-					var scr1 = betaERP.score([
-									shape_alpha(gamma1,delta1),
-									shape_beta(gamma1,delta1)
-									], avoidEnds(d["response1"]))
-					factor(scr0+scr1)
+			foreach(responseTypes,
+				function(r){
+
+					var gamma = uniform(0,1)
+					var delta = uniform(0,10)
+					var responseData = _.pluck(conditionData,r)
+					var scr = reduce(function(dataPoint, memo) {
+									    return memo + betaERP.score([
+																	shape_alpha(gamma,delta),
+																	shape_beta(gamma,delta)
+																	], avoidEnds(dataPoint))
+										}, 0, responseData)
+					factor(scr)
+
+					query.add([c, r], [gamma, delta])
 				}
 			)
-
-			query.add(c, [gamma0, delta0, gamma1, delta1])
-
 		}
 	)
-
 	return query
 }
 
 
-// var resultsERP = IncrementalMH(dataAnalysisModel, 100)
 
-// var unwrapERP = function(myERP, condition){
-// 	console.log(condition + " gamma0 = " + expectation(marginalize(marginalize(myERP, condition),0)))
-// 	console.log(condition + " delta0 = " + expectation(marginalize(marginalize(myERP, condition),1)))
-// 	console.log(condition + " gamma1 = " + expectation(marginalize(marginalize(myERP, condition),2)))
-// 	console.log(condition + " delta1 = " + expectation(marginalize(marginalize(myERP, condition),3)))
-// }
+var resultsERP = IncrementalMH(dataAnalysisModel, 10000)
 
-// map(function(c){unwrapERP(resultsERP, c)}, conditions)
-
-// console.log("done.")
-
-
-
-
-
+foreach(_.keys(resultsERP.support()[0]),
+	function(key){
+		var m = marginalize(resultsERP, key)
+		console.log(key + ' gamma = ' + expectation(marginalize(m, 0)))
+		console.log(key + ' delta = ' + expectation(marginalize(m, 1)))
+	}
+)
 
 
 
