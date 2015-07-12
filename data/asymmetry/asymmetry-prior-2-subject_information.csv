@@ -1,0 +1,31 @@
+workerid,language,enjoyment,gender,age,problems,comments,asses,fairprice,education
+0,English,0,Male,27,No,No comment,Yes,0.90,4
+1,English,1,Male,29,No.,"It was fun, thank you.",Yes,.75,2
+2,English,1,Female,27,"There were no problems, nor bugs.","Interesting survey, I enjoyed taking it, thanks!",Yes,.75,4
+3,English,1,Male,34,No,No comments,Yes,0.75,3
+4,English,1,Female,31,,,No,$.75,3
+5,English,0,Female,50,no,,Yes,.40,4
+6,English,0,Female,27,no,,Yes,.50,3
+7,English,0,Male,28,no,,Yes,yes,2
+8,English,1,Female,56,no problems,,Yes,0.75,3
+9,English,1,Male,47,None,n/a,Yes,.75,3
+10,English,1,Female,25,No,This was a lot of fun!,Yes,.75,3
+11,English,1,Male,26,No,,Yes,.75,3
+12,English,0,Female,19,No,,Yes,.75,2
+13,English,1,Male,36,no,none,Yes,.75,2
+14,english,0,Female,39,no,,Yes,1.00,4
+15,english,1,Male,36,no,,Yes,0.75,2
+16,English,1,Female,39,no,thank you,Yes,.50,2
+17,English,1,Female,24,No.,Thank you for providing a progress bar!!,Yes,Yes.,2
+18,English,0,Male,30,no,,Yes,$0.75,2
+19,English,1,Male,20,No.,Really fun HIT.,Yes,1.00,1
+20,english,0,Female,26,no,,Yes,.75,1
+21,English,1,Male,38,no,,Confused,.75,1
+22,english,1,Male,28,no,,Yes,$0.75,2
+23,English,1,Male,24,None,Would be really interested to see what this HIT is examining,Yes,$.75,3
+24,english,1,Male,42,none,,Yes,0.75,1
+25,English,1,Male,32,no,no,Yes,yes,3
+26,english,1,Female,45,no,I really enjoyed this hit. Please post more in the future. I loved it. ,Yes,1.00,2
+27,English,1,Female,42,No.,It was unusual.I really gave my best estimates based on what I already know about animals. Thanks!,Yes,.75,2
+28,English,1,Female,52,no,,Yes,1.00,1
+29,Korean,0,Female,20,No,,Yes,Yes,2

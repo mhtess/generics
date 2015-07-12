@@ -1,0 +1,361 @@
+workerid,rt,trial_type,stim_type,trial_num,response0,response1,stim_property,stim_category
+0,17959,twostep_elicitation,accidental,0,0.23,0.25,rotting shells,blins
+0,11416,twostep_elicitation,accidental,1,0.5,0.33,dirty eyes,kazzes
+0,9505,twostep_elicitation,part,2,1,1,skin,cheebas
+0,10096,twostep_elicitation,part,3,1,1,ears,wugs
+0,15185,twostep_elicitation,vague,4,0.83,0.75,thin stripes,dorbs
+0,10337,twostep_elicitation,color,5,0.71,0.67,yellow fur,pangolins
+0,9312,twostep_elicitation,color,6,0.39,0.27,orange tails,ackles
+0,14906,twostep_elicitation,vague,7,0.78,0.5,long legs,javs
+0,19786,twostep_elicitation,part,8,0.74,0.8,scales,lorches
+0,10042,twostep_elicitation,vague,9,0.96,0.6,long teeth,plovs
+0,15313,twostep_elicitation,color,10,0.15,0.1,purple feathers,luzaks
+0,9777,twostep_elicitation,accidental,11,0.28,0.2,cracked claws,reesles
+1,19894,twostep_elicitation,vague,0,0.71,0.84,smooth feathers,kweps
+1,9973,twostep_elicitation,part,1,1,1,ears,morseths
+1,13196,twostep_elicitation,vague,2,0.75,0.3,long teeth,taifels
+1,13484,twostep_elicitation,accidental,3,0.22,0.1,faded stripes,lorches
+1,10991,twostep_elicitation,color,4,0.13,0.08,blue claws,ollers
+1,15927,twostep_elicitation,color,5,0.55,0.4,orange tails,luzaks
+1,24943,twostep_elicitation,accidental,6,0.79,0.2,swollen skin,elleps
+1,5945,twostep_elicitation,part,7,1,1,legs,ackles
+1,11190,twostep_elicitation,accidental,8,0.71,0.1,infected scales,plovs
+1,15096,twostep_elicitation,color,9,0.78,0.35,yellow eyes,reesles
+1,6920,twostep_elicitation,vague,10,0.82,0.61,light shells,zoovs
+1,9144,twostep_elicitation,part,11,0.96,0.95,fur,moxes
+2,15926,twostep_elicitation,vague,0,0.6,0.6,long teeth,pangolins
+2,10969,twostep_elicitation,part,1,1,1,skin,ollers
+2,13684,twostep_elicitation,accidental,2,0.11,0.04,broken legs,reesles
+2,11889,twostep_elicitation,color,3,0.18,0.1,blue claws,wugs
+2,11354,twostep_elicitation,part,4,0.66,1,fur,zorbs
+2,8921,twostep_elicitation,vague,5,0.51,0.92,sensitive eyes,kweps
+2,6378,twostep_elicitation,color,6,0.3,0.53,red scales,thups
+2,12459,twostep_elicitation,color,7,0.11,0.15,orange tails,elleps
+2,10803,twostep_elicitation,part,8,0.53,0.33,stripes,trufts
+2,5689,twostep_elicitation,vague,9,0.49,0.37,light shells,luzaks
+2,5329,twostep_elicitation,accidental,10,0.29,0.18,swollen ears,daiths
+2,6132,twostep_elicitation,accidental,11,0.29,0.22,muddy feathers,zoovs
+3,39472,twostep_elicitation,color,0,0.09,1,copper stripes,ackles
+3,20209,twostep_elicitation,part,1,0.05,1,scales,taifels
+3,18784,twostep_elicitation,color,2,0.03,0.25,yellow fur,grinks
+3,24802,twostep_elicitation,vague,3,0.48,0.9,long legs,ollers
+3,18142,twostep_elicitation,color,4,0.06,0.95,yellow eyes,lorches
+3,19140,twostep_elicitation,vague,5,0.49,0.97,long tails,plovs
+3,15367,twostep_elicitation,part,6,0.73,1,skin,kweps
+3,14048,twostep_elicitation,accidental,7,0.1,0.2,swollen ears,dorbs
+3,19111,twostep_elicitation,vague,8,0.35,1,smooth feathers,javs
+3,17121,twostep_elicitation,accidental,9,0.04,0.1,cracked claws,elleps
+3,12617,twostep_elicitation,accidental,10,0.02,0.03,rotting shells,wugs
+3,10913,twostep_elicitation,part,11,0.86,0.95,teeth,mooks
+4,11593,twostep_elicitation,accidental,0,0.17,0.18,rotting shells,zoovs
+4,7061,twostep_elicitation,color,1,0.2,0.31,purple feathers,dorbs
+4,5514,twostep_elicitation,vague,2,0.2,0.23,thin stripes,ollers
+4,9044,twostep_elicitation,part,3,0.39,1,tails,luzaks
+4,7375,twostep_elicitation,vague,4,0.2,0.99,curly fur,grinks
+4,7002,twostep_elicitation,color,5,0.25,1,yellow eyes,elleps
+4,5568,twostep_elicitation,vague,6,0.23,0.57,big claws,blins
+4,5792,twostep_elicitation,accidental,7,0.15,0.13,broken legs,frams
+4,6336,twostep_elicitation,part,8,1,0.99,skin,trufts
+4,5898,twostep_elicitation,color,9,0.16,1,pink teeth,morseths
+4,4378,twostep_elicitation,accidental,10,0.11,0.08,infected scales,javs
+4,5937,twostep_elicitation,part,11,1,1,ears,kweps
+5,29303,twostep_elicitation,vague,0,0.5,0.95,rough skin,frams
+5,8943,twostep_elicitation,vague,1,0.52,0.95,smooth feathers,thups
+5,9616,twostep_elicitation,accidental,2,0.5,0.95,dirty eyes,luzaks
+5,8967,twostep_elicitation,part,3,0.51,0.95,stripes,pangolins
+5,10896,twostep_elicitation,color,4,0.5,0.95,silver legs,taifels
+5,8527,twostep_elicitation,accidental,5,0.49,0.95,cracked claws,lorches
+5,5303,twostep_elicitation,part,6,0.49,0.95,scales,blins
+5,8279,twostep_elicitation,vague,7,0.53,0.95,small ears,daiths
+5,9816,twostep_elicitation,part,8,0.51,0.99,tails,grinks
+5,7936,twostep_elicitation,color,9,0.51,0.95,yellow fur,plovs
+5,14832,twostep_elicitation,accidental,10,0.5,0.75,rotting shells,wugs
+5,6855,twostep_elicitation,color,11,0.48,0.95,pink teeth,zorbs
+6,11176,twostep_elicitation,color,0,0.25,0.16,orange tails,taifels
+6,7614,twostep_elicitation,accidental,1,0.46,0.26,dirty eyes,kweps
+6,13965,twostep_elicitation,part,2,0.18,1,shells,mooks
+6,14250,twostep_elicitation,part,3,0.89,1,skin,ollers
+6,11431,twostep_elicitation,vague,4,0.21,1,soft scales,zorbs
+6,9646,twostep_elicitation,accidental,5,0.13,0.51,swollen ears,moxes
+6,9713,twostep_elicitation,color,6,0.2,0.28,silver legs,ackles
+6,9173,twostep_elicitation,part,7,0.22,1,feathers,thups
+6,6412,twostep_elicitation,vague,8,0.32,0.37,curly fur,cheebas
+6,11295,twostep_elicitation,color,9,0.31,0.29,copper stripes,frams
+6,5666,twostep_elicitation,vague,10,0.28,0.45,long teeth,pangolins
+6,8220,twostep_elicitation,accidental,11,0.35,0.75,cracked claws,dorbs
+7,10558,twostep_elicitation,vague,0,0.5,0.75,thin stripes,morseths
+7,10687,twostep_elicitation,part,1,0.49,0.73,claws,luzaks
+7,9312,twostep_elicitation,color,2,0.51,0.63,orange tails,plovs
+7,6207,twostep_elicitation,vague,3,0.49,0.74,small ears,thups
+7,6031,twostep_elicitation,accidental,4,0.19,0.22,sore teeth,pangolins
+7,4753,twostep_elicitation,accidental,5,0.18,0.13,dirty eyes,dorbs
+7,4104,twostep_elicitation,color,6,0.48,0.77,silver legs,elleps
+7,3665,twostep_elicitation,part,7,0.75,0.76,feathers,grinks
+7,6333,twostep_elicitation,part,8,1,1,fur,frams
+7,3785,twostep_elicitation,vague,9,0.5,0.72,soft scales,taifels
+7,3903,twostep_elicitation,color,10,0.51,0.66,violet skin,moxes
+7,3288,twostep_elicitation,accidental,11,0.07,0.09,rotting shells,daiths
+8,17174,twostep_elicitation,part,0,0.92,1,ears,cheebas
+8,14877,twostep_elicitation,part,1,0.5,0.99,tails,daiths
+8,13214,twostep_elicitation,color,2,0.32,0.71,yellow fur,taifels
+8,12294,twostep_elicitation,vague,3,0.38,0.95,light shells,moxes
+8,9131,twostep_elicitation,color,4,0.11,0.96,pink teeth,morseths
+8,10647,twostep_elicitation,accidental,5,0.39,0.45,muddy feathers,ollers
+8,8585,twostep_elicitation,vague,6,0.53,0.82,rough skin,thups
+8,9397,twostep_elicitation,accidental,7,0.25,0.21,dirty eyes,mooks
+8,7604,twostep_elicitation,part,8,0.36,0.97,scales,luzaks
+8,7335,twostep_elicitation,color,9,0.29,0.56,copper stripes,reesles
+8,9037,twostep_elicitation,accidental,10,0.61,0.06,broken legs,kazzes
+8,8390,twostep_elicitation,vague,11,0.31,0.75,big claws,kweps
+9,16976,twostep_elicitation,accidental,0,0.39,0.73,cracked claws,blins
+9,19882,twostep_elicitation,vague,1,0.16,0.8,thin stripes,mooks
+9,19569,twostep_elicitation,color,2,0.09,0.8,purple feathers,morseths
+9,14841,twostep_elicitation,vague,3,0.32,0.6,long legs,lorches
+9,19082,twostep_elicitation,part,4,0.17,1,scales,ackles
+9,16274,twostep_elicitation,accidental,5,0.25,0.5,wet fur,javs
+9,16009,twostep_elicitation,part,6,0.67,1,ears,moxes
+9,205853,twostep_elicitation,vague,7,0.31,0.65,sensitive eyes,daiths
+9,15640,twostep_elicitation,color,8,0.15,0.7,green shells,kweps
+9,15338,twostep_elicitation,accidental,9,0.52,0.35,sore teeth,dorbs
+9,27762,twostep_elicitation,part,10,0.05,0.1,tails,zorbs
+9,12881,twostep_elicitation,color,11,0.08,0.06,violet skin,thups
+10,15412,twostep_elicitation,vague,0,0.71,0.96,long tails,moxes
+10,11199,twostep_elicitation,accidental,1,0.31,0.15,rotting shells,ackles
+10,56273,twostep_elicitation,part,2,0.84,0.95,fur,zorbs
+10,12366,twostep_elicitation,accidental,3,0.2,0.1,infected scales,kazzes
+10,6160,twostep_elicitation,accidental,4,0.29,0.25,faded stripes,wugs
+10,12656,twostep_elicitation,color,5,0.52,0.4,yellow eyes,lorches
+10,21376,twostep_elicitation,color,6,0.15,0.85,pink teeth,cheebas
+10,7054,twostep_elicitation,vague,7,0.46,0.9,rough skin,luzaks
+10,5744,twostep_elicitation,color,8,0.28,0.7,blue claws,taifels
+10,11816,twostep_elicitation,vague,9,0.72,0.75,small ears,mooks
+10,11304,twostep_elicitation,part,10,1,1,legs,trufts
+10,8553,twostep_elicitation,part,11,0.72,1,feathers,thups
+11,24508,twostep_elicitation,part,0,0.42,0.63,skin,blins
+11,11815,twostep_elicitation,color,1,0.22,0.81,red scales,trufts
+11,9108,twostep_elicitation,accidental,2,0.06,0.2,itchy tails,luzaks
+11,32597,twostep_elicitation,color,3,0.19,0.6,blue claws,taifels
+11,10567,twostep_elicitation,part,4,0.85,0.9,eyes,daiths
+11,30254,twostep_elicitation,color,5,0.07,0.75,purple feathers,morseths
+11,38054,twostep_elicitation,vague,6,0.35,0.56,long teeth,ollers
+11,32056,twostep_elicitation,accidental,7,0.12,0.79,rotting shells,cheebas
+11,7246,twostep_elicitation,vague,8,0.08,0.9,thin stripes,javs
+11,13537,twostep_elicitation,part,9,0.67,0.9,ears,plovs
+11,16847,twostep_elicitation,vague,10,0.1,0.6,curly fur,kweps
+11,13475,twostep_elicitation,accidental,11,0.08,0.06,broken legs,kazzes
+12,45050,twostep_elicitation,accidental,0,0.67,0.4,cracked claws,blins
+12,16450,twostep_elicitation,part,1,0.49,0.99,fur,zoovs
+12,17212,twostep_elicitation,accidental,2,0.49,0.3,faded stripes,plovs
+12,49564,twostep_elicitation,vague,3,0.48,0.7,smooth feathers,kweps
+12,30291,twostep_elicitation,color,4,0.51,0.59,red scales,grinks
+12,20355,twostep_elicitation,part,5,1,0.99,ears,kazzes
+12,17076,twostep_elicitation,vague,6,0.64,0.75,sensitive eyes,reesles
+12,24033,twostep_elicitation,accidental,7,0.84,0.25,itchy tails,javs
+12,14021,twostep_elicitation,part,8,1,0.99,teeth,elleps
+12,13580,twostep_elicitation,vague,9,0.33,0.78,light shells,daiths
+12,5864,twostep_elicitation,color,10,0.65,0.38,silver legs,zorbs
+12,19743,twostep_elicitation,color,11,0.48,0.5,violet skin,ollers
+13,19715,twostep_elicitation,color,0,0.24,0.5,pink teeth,moxes
+13,17161,twostep_elicitation,part,1,0.45,1,shells,reesles
+13,11095,twostep_elicitation,part,2,0.73,1,claws,mooks
+13,16123,twostep_elicitation,color,3,0.22,0.5,purple feathers,ackles
+13,13267,twostep_elicitation,accidental,4,0.32,0.32,swollen skin,blins
+13,12966,twostep_elicitation,vague,5,0.54,0.75,small ears,cheebas
+13,10784,twostep_elicitation,part,6,0.3,0.5,stripes,daiths
+13,11548,twostep_elicitation,accidental,7,0.14,1,itchy tails,ollers
+13,20848,twostep_elicitation,vague,8,0.57,1,curly fur,trufts
+13,11252,twostep_elicitation,accidental,9,0.19,0.2,infected scales,javs
+13,16049,twostep_elicitation,vague,10,0.6,1,sensitive eyes,kazzes
+13,9467,twostep_elicitation,color,11,0.13,0.5,silver legs,luzaks
+14,23302,twostep_elicitation,vague,0,0.5,0.56,small ears,morseths
+14,14607,twostep_elicitation,color,1,0.34,0.3,orange tails,moxes
+14,11546,twostep_elicitation,color,2,0.29,0.32,green shells,ollers
+14,10591,twostep_elicitation,vague,3,0.49,0.65,big claws,thups
+14,11488,twostep_elicitation,part,4,0.92,0.99,skin,elleps
+14,11086,twostep_elicitation,part,5,0.57,0.79,stripes,kweps
+14,11305,twostep_elicitation,accidental,6,0.44,0.45,muddy feathers,blins
+14,5691,twostep_elicitation,vague,7,0.66,0.36,sensitive eyes,dorbs
+14,12729,twostep_elicitation,accidental,8,0.69,0.29,wet fur,ackles
+14,6636,twostep_elicitation,color,9,0.87,0.38,red scales,mooks
+14,12060,twostep_elicitation,accidental,10,1,0.02,broken legs,luzaks
+14,9451,twostep_elicitation,part,11,0.97,1,teeth,zorbs
+15,32360,twostep_elicitation,accidental,0,0.36,0.82,muddy feathers,plovs
+15,17360,twostep_elicitation,vague,1,0.43,0.9,long legs,frams
+15,18122,twostep_elicitation,color,2,0.29,1,green shells,lorches
+15,11078,twostep_elicitation,accidental,3,0.47,1,wet fur,wugs
+15,10699,twostep_elicitation,part,4,0.57,1,tails,ackles
+15,11336,twostep_elicitation,color,5,0.13,0.99,pink teeth,elleps
+15,18203,twostep_elicitation,accidental,6,0.15,0.5,infected scales,pangolins
+15,8119,twostep_elicitation,color,7,0.13,0.81,yellow eyes,kazzes
+15,10458,twostep_elicitation,vague,8,0.58,1,small ears,mooks
+15,9697,twostep_elicitation,vague,9,0.37,0.99,thin stripes,dorbs
+15,8506,twostep_elicitation,part,10,0.57,0.99,claws,blins
+15,10817,twostep_elicitation,part,11,0.96,1,skin,morseths
+16,20069,twostep_elicitation,vague,0,0.49,0.5,small ears,reesles
+16,15871,twostep_elicitation,vague,1,0.72,0.5,smooth feathers,mooks
+16,30041,twostep_elicitation,part,2,0.99,1,skin,ollers
+16,24678,twostep_elicitation,accidental,3,0.23,0.23,broken legs,grinks
+16,15399,twostep_elicitation,accidental,4,0.19,0.5,rotting shells,wugs
+16,16481,twostep_elicitation,part,5,0.44,0.3,claws,zoovs
+16,18084,twostep_elicitation,color,6,0.04,0.03,orange tails,zorbs
+16,10371,twostep_elicitation,vague,7,0.26,0.09,thin stripes,trufts
+16,9366,twostep_elicitation,color,8,0.01,0.01,pink teeth,elleps
+16,13669,twostep_elicitation,part,9,0.36,0.87,scales,cheebas
+16,11844,twostep_elicitation,accidental,10,0.53,0.75,wet fur,ackles
+16,14688,twostep_elicitation,color,11,0.54,0.96,yellow eyes,plovs
+17,14471,twostep_elicitation,vague,0,0.85,0.81,long tails,reesles
+17,10618,twostep_elicitation,part,1,1,1,eyes,blins
+17,8392,twostep_elicitation,vague,2,0,0,soft scales,wugs
+17,8151,twostep_elicitation,accidental,3,0.1,0.05,swollen ears,thups
+17,7918,twostep_elicitation,accidental,4,0.12,0.08,wet fur,ackles
+17,9607,twostep_elicitation,color,5,0.89,0.82,green shells,luzaks
+17,5972,twostep_elicitation,color,6,0.04,0.05,violet skin,zorbs
+17,6122,twostep_elicitation,vague,7,1,0.98,thin stripes,zoovs
+17,5022,twostep_elicitation,color,8,0,0,pink teeth,taifels
+17,8176,twostep_elicitation,part,9,1,0.82,legs,lorches
+17,6379,twostep_elicitation,part,10,1,0.96,feathers,daiths
+17,5841,twostep_elicitation,accidental,11,0,0.02,cracked claws,grinks
+18,46390,twostep_elicitation,color,0,0.19,0.8,copper stripes,elleps
+18,18914,twostep_elicitation,accidental,1,0.14,0.25,swollen skin,javs
+18,33225,twostep_elicitation,color,2,0.5,0.8,orange ears,reesles
+18,21886,twostep_elicitation,accidental,3,0.12,0.5,itchy tails,pangolins
+18,18832,twostep_elicitation,vague,4,0.84,0.95,curly fur,mooks
+18,17996,twostep_elicitation,color,5,0.78,0.95,purple feathers,wugs
+18,13039,twostep_elicitation,part,6,1,1,eyes,blins
+18,14613,twostep_elicitation,vague,7,0.61,1,long legs,dorbs
+18,15777,twostep_elicitation,part,8,0.12,0.98,shells,morseths
+18,14734,twostep_elicitation,vague,9,0.45,0.98,soft scales,luzaks
+18,9233,twostep_elicitation,accidental,10,0.05,0.05,sore teeth,zoovs
+18,8172,twostep_elicitation,part,11,0.87,0.99,claws,thups
+19,28466,twostep_elicitation,accidental,0,1,0.15,swollen ears,trufts
+19,24344,twostep_elicitation,part,1,0.28,1,feathers,zoovs
+19,12717,twostep_elicitation,vague,2,1,0.2,rough skin,ackles
+19,13242,twostep_elicitation,accidental,3,1,0.05,infected scales,pangolins
+19,20221,twostep_elicitation,part,4,0.11,0.95,shells,lorches
+19,18687,twostep_elicitation,vague,5,0.84,0.1,long legs,daiths
+19,13427,twostep_elicitation,vague,6,0.75,0.25,big claws,moxes
+19,20714,twostep_elicitation,color,7,0.83,0.95,orange tails,kazzes
+19,14521,twostep_elicitation,part,8,0.28,0.99,fur,mooks
+19,18569,twostep_elicitation,color,9,0.25,0.99,pink teeth,reesles
+19,12319,twostep_elicitation,accidental,10,1,0.03,dirty eyes,elleps
+19,12046,twostep_elicitation,color,11,0.27,0.65,copper stripes,zorbs
+20,15028,twostep_elicitation,part,0,0.79,0.94,skin,morseths
+20,5552,twostep_elicitation,part,1,0.71,0.98,fur,kazzes
+20,6803,twostep_elicitation,accidental,2,0.38,0.8,infected scales,luzaks
+20,102422,twostep_elicitation,part,3,0.7,0.95,stripes,daiths
+20,4895,twostep_elicitation,vague,4,0.74,1,long legs,mooks
+20,3060,twostep_elicitation,vague,5,0.35,0.64,sensitive eyes,frams
+20,4870,twostep_elicitation,color,6,0.77,1,green shells,taifels
+20,6793,twostep_elicitation,color,7,0.31,0.72,blue claws,trufts
+20,3306,twostep_elicitation,vague,8,0.86,1,small ears,ackles
+20,4516,twostep_elicitation,accidental,9,0.29,0.67,itchy tails,grinks
+20,6354,twostep_elicitation,color,10,0.2,0.61,pink teeth,blins
+20,3266,twostep_elicitation,accidental,11,0.32,0.55,muddy feathers,cheebas
+21,16625,twostep_elicitation,vague,0,0.77,0.88,long tails,luzaks
+21,16798,twostep_elicitation,accidental,1,0.8,0.13,rotting shells,trufts
+21,18561,twostep_elicitation,vague,2,0.85,0.88,soft scales,javs
+21,11824,twostep_elicitation,vague,3,0.9,0.92,long legs,blins
+21,7453,twostep_elicitation,part,4,0.99,1,stripes,pangolins
+21,10884,twostep_elicitation,accidental,5,0.41,0.15,cracked claws,ackles
+21,7913,twostep_elicitation,color,6,0.8,1,purple feathers,zorbs
+21,8755,twostep_elicitation,color,7,0.13,0.09,pink teeth,lorches
+21,6325,twostep_elicitation,accidental,8,0.14,0.06,dirty eyes,zoovs
+21,6865,twostep_elicitation,part,9,1,1,skin,grinks
+21,4431,twostep_elicitation,color,10,0.78,1,yellow fur,taifels
+21,4475,twostep_elicitation,part,11,1,0.97,ears,ollers
+22,17046,twostep_elicitation,vague,0,0.36,1,rough skin,cheebas
+22,11944,twostep_elicitation,part,1,0.2,1,scales,morseths
+22,12320,twostep_elicitation,accidental,2,0.11,0.5,faded stripes,daiths
+22,9512,twostep_elicitation,part,3,0.88,1,legs,thups
+22,12575,twostep_elicitation,color,4,0.32,0.33,yellow eyes,plovs
+22,12039,twostep_elicitation,color,5,0.14,0.54,orange ears,wugs
+22,10528,twostep_elicitation,accidental,6,0.8,0.11,cracked claws,taifels
+22,11136,twostep_elicitation,vague,7,0.29,0.48,curly fur,trufts
+22,12040,twostep_elicitation,color,8,0.3,0.54,green shells,dorbs
+22,11656,twostep_elicitation,vague,9,0.51,0.98,long teeth,blins
+22,19880,twostep_elicitation,accidental,10,0.1,0.08,itchy tails,elleps
+22,16128,twostep_elicitation,part,11,0.35,1,feathers,kweps
+23,22633,twostep_elicitation,vague,0,0.34,0.85,light shells,luzaks
+23,16132,twostep_elicitation,accidental,1,0.16,0.15,dirty eyes,cheebas
+23,33345,twostep_elicitation,accidental,2,0.29,0.15,muddy feathers,blins
+23,33660,twostep_elicitation,color,3,0.59,1,silver legs,wugs
+23,62629,twostep_elicitation,part,4,1,1,tails,reesles
+23,10226,twostep_elicitation,accidental,5,0.18,0.1,sore teeth,trufts
+23,30600,twostep_elicitation,vague,6,0.34,1,soft scales,morseths
+23,11464,twostep_elicitation,color,7,0.43,0.7,copper stripes,dorbs
+23,8359,twostep_elicitation,part,8,1,1,ears,ollers
+23,11204,twostep_elicitation,color,9,0.23,0.8,blue claws,thups
+23,7942,twostep_elicitation,part,10,1,1,skin,kazzes
+23,16087,twostep_elicitation,vague,11,0.3,0.5,curly fur,plovs
+24,40423,twostep_elicitation,vague,0,0.29,0.97,sensitive eyes,zoovs
+24,21634,twostep_elicitation,vague,1,0.2,0.9,light shells,elleps
+24,24688,twostep_elicitation,accidental,2,0.14,0.05,itchy tails,plovs
+24,9199,twostep_elicitation,color,3,0.06,1,blue claws,grinks
+24,23987,twostep_elicitation,part,4,0.74,1,fur,reesles
+24,6232,twostep_elicitation,part,5,0.99,1,skin,morseths
+24,9528,twostep_elicitation,vague,6,0.24,1,soft scales,pangolins
+24,11520,twostep_elicitation,accidental,7,0.15,1,faded stripes,luzaks
+24,7328,twostep_elicitation,color,8,0.06,1,silver legs,trufts
+24,6936,twostep_elicitation,part,9,0.98,1,teeth,taifels
+24,11467,twostep_elicitation,accidental,10,0.1,0.09,swollen ears,cheebas
+24,6016,twostep_elicitation,color,11,0.04,1,purple feathers,blins
+25,10156,twostep_elicitation,vague,0,0.21,0.82,long tails,plovs
+25,10566,twostep_elicitation,part,1,0.08,0.9,shells,cheebas
+25,6713,twostep_elicitation,vague,2,0.21,0.94,big claws,ackles
+25,9460,twostep_elicitation,color,3,0.3,0.57,red scales,zoovs
+25,8278,twostep_elicitation,vague,4,0.41,0.88,thin stripes,thups
+25,6140,twostep_elicitation,color,5,0.27,0.9,violet skin,dorbs
+25,6064,twostep_elicitation,part,6,0.81,0.97,teeth,taifels
+25,5458,twostep_elicitation,part,7,0.91,0.94,ears,zorbs
+25,9431,twostep_elicitation,accidental,8,0.38,0.48,dirty eyes,wugs
+25,6287,twostep_elicitation,color,9,0.45,0.82,silver legs,grinks
+25,6657,twostep_elicitation,accidental,10,0.36,0.5,muddy feathers,lorches
+25,9272,twostep_elicitation,accidental,11,0.39,0.87,wet fur,pangolins
+26,14596,twostep_elicitation,accidental,0,0.05,0.04,swollen skin,ollers
+26,11157,twostep_elicitation,vague,1,0.84,0.64,small ears,daiths
+26,5207,twostep_elicitation,part,2,0.88,0.61,claws,dorbs
+26,5328,twostep_elicitation,color,3,0.03,0.01,orange tails,morseths
+26,3951,twostep_elicitation,color,4,0.23,0.04,yellow fur,blins
+26,20390,twostep_elicitation,part,5,0.42,0.19,feathers,lorches
+26,4840,twostep_elicitation,part,6,0.26,0.11,stripes,moxes
+26,5760,twostep_elicitation,color,7,0.01,0.01,silver legs,zoovs
+26,4062,twostep_elicitation,vague,8,0.9,0.95,sensitive eyes,grinks
+26,3833,twostep_elicitation,accidental,9,0.27,0.04,sore teeth,pangolins
+26,5080,twostep_elicitation,accidental,10,0.06,0,infected scales,kazzes
+26,3088,twostep_elicitation,vague,11,0.23,0.07,light shells,plovs
+27,26878,twostep_elicitation,color,0,1,0.4,green shells,ackles
+27,28561,twostep_elicitation,part,1,0.5,0.5,fur,wugs
+27,32623,twostep_elicitation,color,2,0.26,0.25,violet skin,taifels
+27,13799,twostep_elicitation,accidental,3,1,0.3,infected scales,plovs
+27,18815,twostep_elicitation,accidental,4,1,1,itchy tails,morseths
+27,19160,twostep_elicitation,accidental,5,1,0.1,broken legs,moxes
+27,21880,twostep_elicitation,color,6,0.44,0.07,orange ears,dorbs
+27,9073,twostep_elicitation,vague,7,1,0.6,sensitive eyes,javs
+27,11415,twostep_elicitation,vague,8,1,0.5,smooth feathers,pangolins
+27,31584,twostep_elicitation,vague,9,1,1,thin stripes,trufts
+27,14391,twostep_elicitation,part,10,1,0.8,claws,luzaks
+27,5183,twostep_elicitation,part,11,1,1,teeth,thups
+28,20204,twostep_elicitation,vague,0,0.52,0.93,long legs,thups
+28,12034,twostep_elicitation,vague,1,0.51,0.96,smooth feathers,zoovs
+28,18421,twostep_elicitation,accidental,2,0.52,0.25,itchy tails,pangolins
+28,12552,twostep_elicitation,part,3,0.98,0.98,skin,moxes
+28,15738,twostep_elicitation,color,4,0.51,1,yellow fur,kazzes
+28,15456,twostep_elicitation,vague,5,0.51,1,soft scales,trufts
+28,14064,twostep_elicitation,part,6,1,1,eyes,zorbs
+28,16076,twostep_elicitation,accidental,7,0.12,0.05,rotting shells,frams
+28,25137,twostep_elicitation,part,8,1,1,ears,cheebas
+28,14155,twostep_elicitation,color,9,0.51,0.97,copper stripes,grinks
+28,11412,twostep_elicitation,color,10,0.2,0.99,pink teeth,luzaks
+28,10206,twostep_elicitation,accidental,11,0.19,0.06,cracked claws,kweps
+29,18617,twostep_elicitation,part,0,0.5,1,shells,dorbs
+29,7600,twostep_elicitation,vague,1,0.5,0.5,soft scales,thups
+29,11384,twostep_elicitation,accidental,2,0.49,0.1,wet fur,lorches
+29,8947,twostep_elicitation,vague,3,0.49,0.75,long legs,kweps
+29,8070,twostep_elicitation,part,4,1,1,eyes,kazzes
+29,7982,twostep_elicitation,accidental,5,0.25,0.1,sore teeth,moxes
+29,7614,twostep_elicitation,color,6,0.49,0.49,purple feathers,frams
+29,5416,twostep_elicitation,part,7,0.5,1,stripes,zoovs
+29,7860,twostep_elicitation,accidental,8,0.25,0.11,swollen skin,luzaks
+29,3709,twostep_elicitation,color,9,0.5,0.51,orange tails,wugs
+29,5265,twostep_elicitation,color,10,0.2,0.5,blue claws,taifels
+29,5751,twostep_elicitation,vague,11,0.49,0.78,small ears,elleps
