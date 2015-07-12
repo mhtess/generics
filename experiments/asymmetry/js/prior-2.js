@@ -103,13 +103,12 @@ function make_slides(f) {
 
     log_responses : function() {
       exp.data_trials.push({
-        "trial_type" : "implied_prevalence",
+        "trial_type" : "twostep_elicitation",
         "trial_num": this.trialNum,
         "response0" : exp.sliderPost[0],
         "response1" : exp.sliderPost[1],
         "rt":this.rt,
         "stim_type": this.stim.type,
-        "stim_determiner": this.determiner,
         "stim_property": this.stim.property,
         "stim_category": this.stim.category
       });
