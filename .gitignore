@@ -1,7 +1,16 @@
 *csv
 *tsv
 *.gz
-*.sty
+*aiff
+*aup
+*bbl
+*blg
+*log
+*aux
+*lof
+*synctex
+*toc
+*pdf
 *.RData
 *.Rhistory
 cogsci-2015/paper/CogSci_Template.bib
@@ -34,3 +43,5 @@ cbg2010-replication/models/tfbt_kinds.church
 bgh2014-replication/mturk/
 *auth.json
 *mturk-and-gmail.txt
+*key
+experiments/turk*
