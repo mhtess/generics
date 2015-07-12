@@ -103,7 +103,7 @@ check.zero <- function(prev,val){
 ```{r 1a.stats}
 setwd("~/Documents/research/generics/cbg2010-replication/data")
 
-s <- read.table('../turk/exp9/cbgR-exp9-subject_information.tsv',header=T)
+#s <- read.table('../turk/exp9/cbgR-exp9-subject_information.tsv',header=F)
 
 d<-read.table('cbgR-exp9-trials.tsv',header=T)
 
@@ -111,7 +111,7 @@ d$item <- paste(d$stim_color,d$stim_part,sep="_")
 d$rt <- d$rt/1000
 d$truth_conditions <- factor(as.logical(levels(d$response)[d$response]), 
                               levels=c("TRUE","FALSE"))
-d$truth_num <- bool.tonum(d$truth_conditions)
+d$truth_num <-as.numeric(d$truth_conditions==TRUE)
 d$prev_centered <- scale(d$stim_prevalence, scale=F)
 
 #contrasts(d$stim_type) = cbind(quad = c(-1,2,-1), lin = c(-1, 0, 1))
@@ -450,9 +450,9 @@ c<-ggplot(d.tidy,aes(x=value,fill=context,color=context))+
 
 ```{r fig4.lvRSApostpreds}
 setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
-d<-read.csv('lvRSA_cnts_c1_expts9_12_generic_mh1000_50_alpha1.csv',header=F)
-f<-read.csv('lvRSA_cnts_c2_expts9_12_generic_mh1000_50_alpha1.csv',header=F)
-g<-read.csv('lvRSA_cnts_c3_expts9_12_generic_mh1000_50_alpha1.csv',header=F)
+#d<-read.csv('lvRSA_cnts_c1_expts9_12_generic_mh1000_50_alpha1.csv',header=F)
+#f<-read.csv('lvRSA_cnts_c2_expts9_12_generic_mh1000_50_alpha1.csv',header=F)
+#g<-read.csv('lvRSA_cnts_c3_expts9_12_generic_mh1000_50_alpha1.csv',header=F)
 d<-read.csv('lvRSA_2alphas_expts10e_12_generic_mh1000_10a.csv',header=F)
 f<-read.csv('lvRSA_2alphas_expts10e_12_generic_mh1000_10b.csv',header=F)
 g<-read.csv('lvRSA_2alphas_expts10e_12_generic_mh1000_10c.csv',header=F)
@@ -506,13 +506,13 @@ d.stats$context<-factor(d.stats$context,
 d.stats$prevalence<-as.numeric(d.stats$prevalence)
 
 ## append mosquitos
-mosquitos<- data.frame(prevalence=c(10,30,50,70,90),
-                       response = c(0.5961676991787926,0.7974369474622407,
-                                    0.898555969744128,0.9593832867224066,1))
-mosquitos<-rename(mosquitos, mean=response)
-mosquitos$context <- 'mosquitos'
-mosquitos$CIlow<-mosquitos$mean
-mosquitos$CIhigh<-mosquitos$mean
+# mosquitos<- data.frame(prevalence=c(10,30,50,70,90),
+#                        response = c(0.5961676991787926,0.7974369474622407,
+#                                     0.898555969744128,0.9593832867224066,1))
+# mosquitos<-rename(mosquitos, mean=response)
+# mosquitos$context <- 'mosquitos'
+# mosquitos$CIlow<-mosquitos$mean
+# mosquitos$CIhigh<-mosquitos$mean
 
 #d.stats<-rbind(d.stats,mosquitos)
 
@@ -1082,7 +1082,8 @@ qplot(data =xf, x=bins, y=probs,geom='bar',stat='identity')
 #               gendered = c(rbeta(3000,50,50),rbeta(7000,100,10000)),
 #               rare = c(rbeta(3000,100,900),rbeta(7000,100,10000)))
 
-s<-data.frame(eggs = c(rbeta(3000,50,50),rbeta(7000,100,10000)),
+s<-data.frame(nzhikes=rbeta(10000,3,3),
+        eggs = c(rbeta(3000,50,50),rbeta(7000,100,10000)),
               female = c(rbeta(9500,50,50),rbeta(500,100,10000)),
               rare = c(rbeta(3000,100,900),rbeta(7000,100,10000)))
 
@@ -1098,9 +1099,37 @@ s.tidy<- s %>%
 #                   labels=c("typical","biological","gendered","rare"))
 
 s.tidy$key<-factor(s.tidy$key,
-                   labels=c("birds lay eggs",
-                            "birds are female",
-                            "mosquitos carry wNV"))
+                   labels=c("X are cold",
+                            "X lay eggs",
+                            "X are female",
+                            "X carry wNV"))
+
+
+ggplot(s.tidy,aes(x=value*100, fill=key, color=key)) +
+  geom_density(size=2,adjust=1.5,alpha=0.5)+
+  scale_color_brewer(palette='Set3',type='qual')+
+  scale_fill_brewer(palette="Set3",type='qual')+
+  facet_grid(key~.,scales='free')+
+  #facet_wrap(~key)+
+  xlim(0,100)+
+  #ylim(0,0.1)+
+  theme_blackDisplay()+
+  xlab("\n prevalence")+
+  ylab("probability \n")+
+  theme(strip.background = element_blank(),
+       strip.text.y = element_text(angle=0),
+      #  legend.position='bottom',#
+       #legend.direction='horizontal',
+        axis.text.y = element_blank()
+       )+
+  guides(fill=F,
+         color=F)
+
+ggsave('../../talks/frisem_5815//figures/schematic_priors.png',width=10, height=10)
+
+
+
+
 
 post.theta = data.frame(x=seq(0,100,10),
                        acc =c(0.1,0.1,0.15,0.2,0.2,0.1,0.05,0.04,0.03,0.01,0.01),
@@ -1172,12 +1201,6 @@ p + stat
 
 ### Truth conditions simulations
 ```{r schematic.tc}
-tc.sims<- data.frame(prevlev = c(10,30,50,70,90),
-              eggs=c(0.40, 0.72,0.85,0.93,0.98),
-              # acc=c(0.25,0.56,0.75,0.875,0.964),
-              #gendered=c(0.30, 0.63, 0.75, 0.87, 0.96),
-              female=c(0.10,0.30,0.50,0.70,0.90),
-               rare=c(0.67,0.89,0.95,0.98,0.994))
 
 tc.sims<- data.frame(prevlev = c(10,30,50,70,90),
               nzhikes=c(0.10, 0.299,0.5,0.70,0.9),
@@ -1193,45 +1216,85 @@ tc.tidy$key<-factor(tc.tidy$key,
                    labels=c("typical","biological","gendered","rare"))
 
 tc.tidy$key<-factor(tc.tidy$key,
-                   labels=c("birds lay eggs",
-                            "birds are female",
-                            "mosquitos carry wNV"))
+                   labels=c("X are cold",
+                            "X lay eggs",
+                            "X are female",
+                            "X carry wNV"))
 
 ggplot(tc.tidy, aes(x=prevlev,y=value,
                   colour=key, group=key))+
   geom_point(size=3, position=position_dodge(5))+
   geom_line(size=2,position=position_dodge(5))+
- # scale_colour_brewer(type='qual',palette=8)+
+  scale_color_brewer(palette='Set3',type='qual')+
   scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
   scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
- # theme_blackDisplay()+ 
-  guides(color=guide_legend(title="Property type"))+
+  theme_blackDisplay()+ 
+  guides(color=guide_legend(title="property"))+
   xlab("\n prevalence")+
-  ylab('P("true" | generic)\n')+
+  ylab('P(generic is true)\n')+
   coord_fixed(100)+
   theme(legend.key.size=unit(2, "lines"),
         legend.text.align=NULL)
+ggsave('../../talks/frisem_5815//figures/schematic_tc_allPrev.png',width=10, height=10)
 
-ggsave('../../semfest-2015/figures/schematic_priors_TCdata.png',width=10, height=10)
+
+#ggsave('../../semfest-2015/figures/schematic_priors_TCdata.png',width=10, height=10)
 
 tc.tidy<-tc.tidy %>% filter(prevlev%in%c(10,50))
 tc.tidy$prevlev<-factor(tc.tidy$prevlev,labels=c("low","medium"))
 
-ggplot(tc.tidy, aes(x=prevlev,y=value,
-                  fill=key, group=key))+
-  geom_bar(position=position_dodge(),stat='identity',color='black', alpha=0.8)+
-  geom_hline(yintercept=0.5, linetype=2)+
+tc.sims<- data.frame(prevlev = c(10,30,50,70,90),
+              nzhikes=c(0.10, 0.299,0.5,0.70,0.9),        
+              eggs=c(0.40, 0.72,0.85,0.93,0.98),
+              # acc=c(0.25,0.56,0.75,0.875,0.964),
+              #gendered=c(0.30, 0.63, 0.75, 0.87, 0.96),
+              female=c(0.10,0.30,0.50,0.70,0.90),
+               rare=c(0.67,0.89,0.95,0.98,0.994))
+
+tc.tidy<- gather(tc.sims, key, value, -prevlev)
+
+
+tc.tidy<-tc.tidy[c(3,5,8,13,17),]
+tc.tidy$generic <- factor(c("hikes are cold", "movie theaters are cold",
+                      "birds lay eggs",
+                     "birds are female","mosquitos carry wNV"),
+                     levels=c("mosquitos carry wNV",
+                              "birds are female",
+                              "birds lay eggs",
+                              "hikes are cold", "movie theaters are cold"),
+                     labels=c("(10%) mosquitos carry wNV",
+                              "(50%) birds are female",
+                              "(50%) birds lay eggs",
+                              "(50%) hikes are cold", 
+                              "(90%) movie theaters are cold"),                     
+                     )
+tc.tidy$valid<- factor(c(0,1,1,0,1))
+
+ggplot(tc.tidy, aes(x=generic,y=value,
+                  fill=generic, group=key,alpha=valid))+
+  geom_bar(position=position_dodge(),stat='identity',color='white')+
+  scale_alpha_manual(values=c(0.6,1))+
+  geom_hline(yintercept=0.5, linetype=1,size=2, color='white')+
  # scale_colour_brewer(type='qual',palette=8)+
   scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
 #  scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
- # theme_blackDisplay()+ 
-  guides(fill=guide_legend(title="Property type"))+
-  xlab("\n prevalence")+
-  ylab('P("[[generic]] is true" | prevalence)\n')+
+  scale_color_brewer(palette='Set3',type='qual')+
+  scale_fill_manual(values=c("#fb8072","#bebada",
+                             "#ffffb3","#8dd3c7","#8dd3c7"))+
+  theme_blackDisplay()+ 
+  guides(fill=guide_legend(title="Generic statement"))+
+  xlab("")+
+  ylab('\n P(saying generic)')+
   #coord_fixed(100)+
   theme(legend.key.size=unit(2, "lines"),
         legend.text.align=NULL,
-        legend.key=element_rect())
+        legend.key=element_rect(),
+        axis.text.x = element_text(angle = 0, hjust = 1))+
+  guides(fill=F,
+         alpha=F)+
+  coord_flip()
+
+ggsave('~/Dropbox/talks/frisem_5815//figures/schematic_tc.png',width=16, height=8)
 
 
 
@@ -1291,10 +1354,16 @@ ggsave('../../semfest-2015/figures/schematic_priors_ASYMdata.png',width=15, heig
 
 ```{r tall.frodo}
 
-s<-data.frame(hobbits=rnorm(10000,mean=3.6,sd=0.5),
-              ents = rnorm(10000,mean=20,sd=1.5),
-              creatures = rnorm(10000, mean = 10, sd = 5))
-              
+# s<-data.frame(hobbits=rnorm(10000,mean=5.8,sd=0.5),
+#               
+#               ents = rnorm(10000,mean=20,sd=1.5),
+#               creatures = rnorm(10000, mean = 10, sd = 5))
+
+s<-data.frame(people=rnorm(10000,mean=5.8,sd=0.5),
+              buildings = c(100*rbeta(10000,shape1=3,shape2=5),
+                1000*rbeta(10000,shape1=1,shape2=3))
+                )
+
 s.tidy<- s %>%
   gather(key,value)
 
@@ -1308,17 +1377,18 @@ ggplot(s.tidy, aes(x=value,color=key,fill=key)) +
   scale_fill_brewer(palette="Pastel2",type='qual')+
  # facet_grid(key~.,scales='free')+
   theme_blackDisplay()+
-  xlim(0,30)+
-  xlab("\n height (ft)")+
+  #xlim(0,30)+
+  xlab("\n height (log ft)")+
   ylab("schematic prior probability \n")+
   theme(strip.background = element_blank(),
        strip.text.y = element_text(angle=0),
      #   legend.position='bottom',
     #    legend.direction='horizontal',
       legend.title = element_blank(),
-        axis.text.y = element_blank())
+        axis.text.y = element_blank())+
+  scale_x_log10(limits=c(1,1000))
 
-ggsave('../../semfest-2015/figures/schematic_height.png',width=10, height=7)
+ggsave('~/Documents/research/generics/talks/frisem_5815/figures/schematic_height.png',width=10, height=7)
 
 ```
 
@@ -1377,8 +1447,8 @@ ggplot(tc.tidy, aes(x=prevlev,y=value,
 
 
 ```{r acc.postpred}
+setwd("~/Documents/research/generics/cbg2010-replication/models/bayesian_analysis")
 
-d<-read.csv('bootstrap//lvRSAemprior_ACCIDENTAL_mh1000_10.csv',header=F)
 
 
 d.tidy<-d %>% select(V1,V2,V62,V63) %>%
@@ -1410,6 +1480,43 @@ d.tidy <- d %>%
   summarise(mn = mean(response))
 ggplot(d.tidy,aes(x=prevalence,y=mn))+geom_bar(stat='identity',
                                                position=position_dodge())
+
+
+```
+
+```{r acc.bootstrap.emprior}
+
+d<-read.csv('bootstrap//truthconditions_exp1_S2_accidental_bootstrap_alpha1_alpha2.csv',header=F)
+
+d.tidy <- d %>% select(V7, V8) %>%
+  rename(truth_conditions = V7,
+         implied_prevalence = V8) %>%
+  gather(task, response) %>%
+  group_by(task) %>%
+  summarise(mn=mean(response),
+          CIlow=quantile(response,probs=0.025),
+      CIhigh=quantile(response,probs=0.975))
+
+
+ggplot(d.tidy, aes(x=task,y=mn,alpha=task, group=task))+
+  geom_bar(stat='identity',fill='white',
+           position=position_dodge(0.5), width=0.5,color='white')+
+  geom_errorbar(aes(ymin=CIlow,ymax=CIhigh),
+                width=0.2,
+                size=1,
+                color='grey',
+                alpha=1,
+                position=position_dodge(0.5))+
+  #theme_blackDisplay()+
+  ylab("average prevalence")+
+  scale_alpha_manual(values=c(0.4,0.85))+
+  xlab("")+
+  guides(fill = F,#guide_legend(order = 1), 
+          alpha = guide_legend(order = 2))+
+  scale_fill_brewer(type='qual',palette='Pastel1')+
+  #scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  #scale_x_continuous(breaks=c(10,30,50,70,90),limits=c(0,100))+
+  theme_blackDisplay()
 
 
 ```
