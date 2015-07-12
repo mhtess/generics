@@ -56,10 +56,8 @@ function make_slides(f) {
 
       $(".question0").css({"font-size":"20px"});
       $(".question1").css({"font-size":"20px"});
-
       this.stim =  stim; // allstims should be randomized, or stim_num should be
-      this.trialNum = exp.stims.indexOf(stim);
-
+      this.trialNum = exp.stimscopy.indexOf(stim);
      // this.determiner = exp.determiner[0] // exp.determiner between-subjects var
       var existential_question = 'The robot says: "We recently discovered animals called ' + stim.category +'.' +
           '<br> How likely is it that there is a ' +stim.exemplar + ' that has <strong><em>' + stim.property + '</strong></em>?"'
@@ -783,6 +781,8 @@ exp.stims =_.map(_.zip(creatures, properties),
   function(cp){
     return _.extend(cp[1], cp[0])
   })
+
+  exp.stimscopy = exp.stims.slice(0);
 
 
   exp.system = {
