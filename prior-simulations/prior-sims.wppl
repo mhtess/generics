@@ -1,0 +1,30 @@
+// var kindHasProperty = beta(1,1)
+// var animalHasProperty = kindHasProperty ? beta(1,1) : 0
+
+// technically: this is p(kind has at least one member with X), which for experimental reasons, we will assume p(any creature has X) 
+// has legs
+// var propertyDistributionKindLevel = [1,1,1,10,1,1,1,1,1,1]
+// has broken legs
+// var propertyDistributionKindLevel = [1,10,1,1,1,1,1,1,1,1]
+// are female
+var propertyDistributionKindLevel = [1,1,1,1,1,1,1,1,1,100]
+
+
+// technically: this is p(exemplar has X | kind has at least one member with X)
+// has legs
+// var propertyDistributionAnimalGivenKind = [1,1,1,1,1,1,1,1,1,100]
+// has broken legs
+// var propertyDistributionAnimalGivenKind = [1,20,10,1,1,1,1,1,1,1]
+// are female
+var propertyDistributionAnimalGivenKind = [1,1,1,1,10,50,10,1,1,1]
+
+
+var model = function(){
+	var kindHasPropertyPrior = discrete(propertyDistributionKindLevel)
+	var kindHasProperty = flip(kindHasPropertyPrior/10)
+	var animalHasProperty = kindHasProperty ? discrete(propertyDistributionAnimalGivenKind) : 0
+	return animalHasProperty
+}
+
+
+Enumerate(model)
