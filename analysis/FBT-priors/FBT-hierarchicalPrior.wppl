@@ -75,13 +75,23 @@ var dataAnalysisModel = function(){
 
 var resultsERP = IncrementalMH(dataAnalysisModel, 10000)
 
-foreach(_.keys(resultsERP.support()[0]),
-	function(key){
+var writeReady = map(function(key){
 		var m = marginalize(resultsERP, key)
-		console.log(key + ' gamma = ' + expectation(marginalize(m, 0)))
-		console.log(key + ' delta = ' + expectation(marginalize(m, 1)))
-	}
+		return [key, expectation(marginalize(m, 0)), expectation(marginalize(m, 1))]
+	},
+	_.keys(resultsERP.support()[0])
 )
+writeReady.unshift(["key","gamma","delta"])
+
+priorutils.writeCSV(writeReady, "results/expVal_betas_prior2_incrMH10k.csv")
+
+// foreach(_.keys(resultsERP.support()[0]),
+// 	function(key){
+// 		var m = marginalize(resultsERP, key)
+// 		console.log(key + ' gamma = ' + expectation(marginalize(m, 0)))
+// 		console.log(key + ' delta = ' + expectation(marginalize(m, 1)))
+// 	}
+// )
 
 
 
