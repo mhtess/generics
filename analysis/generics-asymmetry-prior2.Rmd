@@ -1,0 +1,205 @@
+---
+title: "generics-hierarchicalprior"
+author: "mht"
+date: "July 12, 2015"
+output: html_document
+---
+
+
+# Hierarchical prior elicitation
+
+Two question prior elicitation task. 
+
+1. How likely is it that *glippet* has F?
+2. Given that there is a glippet with F, what % of glippets have F?
+
+The idea is that question 1 gets us the prevalence *across categories* and question 2 gets us the prevalence *within categories*.
+
+I decided upon this design as opposed to our previous design because of customer satisfaction. The earlier design was very confusing (as evident in the self-report). This design I believe is a lot less confusing (and in the "Do you understand?" question, everyone said "Yes").
+
+The experiment can be viewed [here](http://stanford.edu/~mtessler/generics/experiments/asymmetry/prior-2.html).
+
+I used 4 types of properties:
+
+1. Accidental (e.g. broken legs)
+2. Color (e.g. yellow legs)
+3. Part (e.g. legs)
+4. Vague (e.g. long legs)
+
+#### Sanity check
+
+Do participants answer the 2 questions differently?
+
+Plotted below are the trial-wise responses to the 2 questions (question 1 on x-axis, question 2 on y-axis). I added some jitter to the points to see more clearly what's going on.
+
+```{r prior2}
+library(VGAM)
+d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-prior-2/asymmetry-prior-2-trials.csv')
+
+ggplot(data=d,aes(x=response0,y=response1))+
+  geom_point()+
+  geom_jitter(position = position_jitter())+
+  facet_wrap(~stim_type)+
+  xlab("Question 1 (across categories)")+
+  ylab("Question 2 (within categories)")
+
+```
+
+As expected for "part", the answers to question 2 are at ceiling (parts are highly generalizable), while there is still good variance for question 2 (lots of animals have legs, not many animals have fins).
+
+Accidental properties are showing a bit of a correlation in the responses, but this is perhaps expected.
+
+One concern overall is that answers to question 1 aren't low enough (most things don't have most things), but it's hard to say. Even so, it could be a miscalibration with the slider bar that a linking function could resolve.
+
+### Raw data density plots
+
+```{r rawDensity}
+d.tidy <- d %>% 
+  select(stim_type,response0,response1,stim_property) %>%
+  gather(resp, val, response0,response1)
+
+ggplot(d.tidy, aes(x=val,fill=stim_type))+
+  geom_histogram(alpha=0.5)+
+  geom_density(alpha=0.5)+
+  facet_grid(stim_type~resp, scales='free')
+```
+
+**Note: scales='free' so the y-axis is different across plots. This is to improve visual clarity but be careful doing visual-quantitative comparisons across plots.**
+
+This also looks reasonable. 
+
+Parts are highly generalizable, though less so across categories (response0 vs. response1).
+
+Accidental properties are rare both within and across categories.
+
+Color properties are rare across categories (response0) but pretty generalizable within (response1).
+
+Vague properties are somewhat more common across categories than the color and accidental properties, and also pretty generalizable within categories.
+
+## Inferred betas
+
+
+I wrote a bayesian data analysis model in webppl, found [here](https://github.com/mhtess/generics/blob/master/analysis/FBT-priors/FBT-hierarchicalPrior.wppl).
+
+The model infers the parameters of a beta distribution, one for each question X property_type. (Analagous to the raw distribution seen above.) Here are the results.
+
+Below, I'm doing *the poor man's posterior predictive*. I took the expected value of the posteriors over parameters, and am using those values to generate each plot. 
+
+These expected values are highly replicable. (done with 10,000 iterations on IncrementalMH)
+
+
+```{r fbt.prior2.posterior, echo=FALSE}
+p<-read.csv('~/Documents/research/generics/analysis/FBT-priors/results/expVal_betas_prior2_incrMH10k.csv')
+p<-p %>% separate(key, into=c("condition", "response"))
+shape1 = function(gamma,delta){return (gamma * delta)}
+shape2= function(gamma,delta){return ((1-gamma) * delta)}
+
+
+p<-p %>%
+  group_by(condition,response) %>%
+  mutate(a = shape1(gamma,delta),
+         b = shape2(gamma, delta))
+
+print("expected values of posteriors")
+print(p)
+
+f<-bind_rows(
+    data.frame(condition = 'accidental',
+                response = 'response0',
+                prev = with(p[1,], rbeta(1000,a,b))),
+    data.frame(condition = 'accidental',
+                response = 'response1',
+                prev = with(p[2,], rbeta(1000,a,b))),
+    data.frame(condition = 'part',
+                response = 'response0',
+                prev = with(p[3,], rbeta(1000,a,b))),
+    data.frame(condition = 'part',
+                response = 'response1',
+                prev = with(p[4,], rbeta(1000,a,b))),
+    data.frame(condition = 'vague',
+                response = 'response0',
+                prev = with(p[5,], rbeta(1000,a,b))),
+    data.frame(condition = 'vague',
+                response = 'response1',
+                prev = with(p[6,], rbeta(1000,a,b))),
+    data.frame(condition = 'color',
+                response = 'response0',
+                prev = with(p[7,], rbeta(1000,a,b))),
+    data.frame(condition = 'color',
+                response = 'response1',
+                prev = with(p[8,], rbeta(1000,a,b))))
+    
+ggplot(f,aes(x=prev, fill=condition))+
+  geom_histogram(alpha=0.5)+
+  facet_grid(condition~response, scales='free')  
+
+```
+**Note: scales='free' so the y-axis is different across plots. This is to improve visual clarity but be careful doing visual-quantitative comparisons across plots.**
+
+
+This looks like a cleaned-up version of the raw data.
+
+
+#### Generated prevalence priors
+
+Using again the expected values of the posteriors over parameters, I generate the prevalence priors that we've been using in the RSA model.
+
+The logic is:
+
+1. Sample an *across-category prevalence* (response 0)
+2. flip that coin
+3. If heads (the category has at least one member with the property), sample a *within-category prevalence* (response 1)
+4. If tails, return 0
+
+```{r generate.prevPrior, echo=FALSE}
+p.tidy<- p %>%select(condition,response, a, b) %>%
+  gather(key, val, a, b, -condition) %>%
+  mutate(var = paste(response,key, sep='')) %>%
+  select(-response,-key) %>% 
+  spread(var, val) %>%
+  rename(a0 = response0a,
+         b0 = response0b,
+         a1 = response1a,
+         b1 = response1b)
+
+generatePrev <- function(a0,b0,a1,b1){
+  prev = if (rbetabinom.ab(1,1,a0,b0)) {
+      rbeta(1,a1,b1)
+    } else {
+      #rbeta(1,a1,b1)
+      0
+    }
+  return(prev)
+}
+
+d.1<-data.frame(condition = 'accidental',
+                prev = replicate(10000,
+                        with(p.tidy[1,], generatePrev(a0,b0,a1,b1))))
+d.2<-data.frame(condition = 'color',
+                prev = replicate(10000,
+                        with(p.tidy[2,], generatePrev(a0,b0,a1,b1))))
+d.3<-data.frame(condition = 'part',
+                prev = replicate(10000,
+                        with(p.tidy[3,], generatePrev(a0,b0,a1,b1))))
+d.4<-data.frame(condition = 'vague',
+                prev = replicate(10000,
+                        with(p.tidy[4,], generatePrev(a0,b0,a1,b1))))
+d.all<- bind_rows(d.1,d.2,d.3,d.4)
+
+ggplot(d.all, aes(x=prev,fill=condition))+
+  geom_histogram()+
+  #geom_density()+
+  facet_wrap(~condition, scales='free')
+
+```
+
+Again, we see the parts are highly generalizable. Vague properties a little less so. Color properties a little less so. And accidental properties not at all. Let's remove the 0 responses to zoom in the non-zero part of the distribution.
+
+```{r prevPrior.nonzero, echo=F}
+ggplot(filter(d.all, prev!=0), aes(x=prev,fill=condition))+
+  geom_histogram()+
+  #geom_density()+
+  facet_wrap(~condition, scales='free')
+```
+
+
