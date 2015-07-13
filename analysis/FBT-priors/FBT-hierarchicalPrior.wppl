@@ -57,9 +57,9 @@ var dataAnalysisModel = function(){
 					var responseData = _.pluck(conditionData,r)
 					var scr = reduce(function(dataPoint, memo) {
 									    return memo + betaERP.score([
-																	shape_alpha(gamma,delta),
-																	shape_beta(gamma,delta)
-																	], avoidEnds(dataPoint))
+											shape_alpha(gamma,delta),
+											shape_beta(gamma,delta)
+											], avoidEnds(dataPoint))
 										}, 0, responseData)
 					factor(scr)
 
