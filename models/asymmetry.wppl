@@ -1,0 +1,145 @@
+// webppl asymmetry.wppl --require-js ./asymutils.js --require-wppl ./lvrsa.wppl
+
+var foreach = function(lst, fn) {
+    var foreach_ = function(i) {
+        if (i < lst.length) {
+            fn(lst[i]);
+            foreach_(i + 1);
+        }
+    };
+    foreach_(0);
+};
+
+var marginalize = function(myERP, index){
+  Enumerate(function(){
+    var x = sample(myERP)
+    return x[index]
+  })
+}
+
+var subset = function(df, field, value){
+	return filter(function(d){
+		return (d[field]==value)
+	},df)
+}
+
+var shape_alpha = function(gamma,delta){return gamma * delta}
+var shape_beta = function(gamma,delta){return (1-gamma) * delta}
+
+var Priordata = asymutils.readCSV("data/asymmetry-prior-2-trials.csv").data
+
+var df = map(
+	function(lst){
+		return _.object(_.zip(Priordata[0],lst))
+	},
+	Priordata.slice(1))
+
+
+var conditions = _.uniq(_.pluck(df,"stim_type"))
+var responseTypes = ["response0","response1"]
+
+var avoidEnds = function(response){
+	return response==0 ? 0.01 : response==1 ? 0.99 : response
+}
+
+var priorModel = function(){
+
+	foreach(conditions,
+		function(c){
+
+			var conditionData = subset(df, "stim_type", c)
+
+			foreach(responseTypes,
+				function(r){
+
+					var gamma = uniform(0,1)
+					var delta = uniform(0,10)
+					var responseData = _.pluck(conditionData,r)
+					var scr = reduce(function(dataPoint, memo) {
+									    return memo + betaERP.score([
+											shape_alpha(gamma,delta),
+											shape_beta(gamma,delta)
+											], avoidEnds(dataPoint))
+										}, 0, responseData)
+					factor(scr)
+
+					query.add([c, r], [gamma, delta])
+				}
+			)
+		}
+	)
+	return query
+}
+
+
+
+// var resultsERP = IncrementalMH(dataAnalysisModel, 1000)
+
+// var writeReady = map(function(key){
+// 		var m = marginalize(resultsERP, key)
+// 		return [key, expectation(marginalize(m, 0)), expectation(marginalize(m, 1))]
+// 	},
+// 	_.keys(resultsERP.support()[0])
+// )
+// writeReady.unshift(["key","gamma","delta"])
+
+// asymutils.writeCSV(writeReady, "results/expVal_betas_prior2_incrMH10k.csv")
+
+
+var data = asymutils.readCSV("data/asymmetry-1-trials.csv").data
+
+var df_asym = map(
+	function(lst){
+		return _.object(_.zip(data[0],lst))
+	},
+	data.slice(1))
+
+
+var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
+var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
+
+var df_accepted = subset(df_asym, "trial_type", "truth_conditions")
+var df_implied = subset(df_asym, "trial_type", "implied_prevalence")
+
+var prevalenceLevels = _.uniq(_.pluck(df_truth, "stim_prevalence"))
+
+var dataModel = function(){
+
+	foreach(tasks,
+		function(task){
+
+
+			foreach(stimTypes, 
+				function(type){
+
+					if (task=="truth_conditions") {
+
+						foreach(prevalenceLevels,
+							function(prevalence){
+
+								var df_accepted_prev = _.pluck(subset(df_accepted, "stim_prevalence", prevalence), "response")
+								var predictiveERP = truthSpeaker(prevalence, s1opt, number_s1opt)
+
+								var scr = reduce(function(response, memo) {
+												    return memo + predictiveERP.score([], response)
+													}, 0, df_accepted_prev)
+								factor(scr)
+
+								query.add(,)
+
+
+							})
+
+					}
+
+				})
+
+		})
+}
+
+stimTypes
+
+
+
+
+

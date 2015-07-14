@@ -1,0 +1,117 @@
+var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+
+var statePrior = function() {
+  var prevalence = 10*bins[discrete(prevelancePrior[domain])]
+  return prevalence
+}
+
+var thetaPrior = function() {
+  var threshold = randomInteger(10)//something goes wonky if "generic is false" can never be false
+  return threshold
+}
+
+var numberUtterancePrior = function() {
+  var utterances = map(function(x){return 10*x}, bins)           
+  var i = randomInteger(utterances.length)
+  return utterances[i]
+}
+
+var wordUtterancePrior = function() {
+   //var utterances = ["generic is true",
+   //                  "generic is false"]
+ var utterances = ["generic is true",
+                   "mu"]        
+ var cst = [1,cost]       
+  return utterances[discrete(cst)]
+
+}
+
+var meaning = function(utt,state, theta) {
+  return utils.isNumber(utt) ? state == utt :
+  		utt=="generic is true"? state>theta :
+         utt=="generic is false"? state<=theta :
+         utt=="some is true"? state>0 :
+         utt=="some is false"? state==0 :
+         utt=='mu'? true:
+         utt=='some'? state>0:
+         utt=='most'? state>= 0.5:
+         utt=='all'? state == 1:
+         true
+}
+
+var listener0 = cache(function(utterance, theta) {
+  Enumerate(function(){
+    var state = statePrior()
+    var m = meaning(utterance, state, theta)
+    factor(m?0:-Infinity)
+    return state
+  })
+})
+
+var speaker1 = cache(function(state, theta) {
+  Enumerate(function(){
+    var utterance = wordUtterancePrior()
+    var L0 = listener0(utterance, theta)
+    factor(L0.score([],state))
+    return utterance
+  })
+})
+
+var numberSpeaker1 = cache(function(state, theta) {
+  Enumerate(function(){
+    var utterance = numberUtterancePrior()
+    var L0 = listener0(utterance, theta)
+    factor(L0.score([],state))
+    return utterance
+  })
+})
+
+
+
+var listener1 = function(utterance, s1optimality) {
+  Enumerate(function(){
+    var state = statePrior()
+    var theta = thetaPrior()
+    var S1 = speaker1(state, theta)
+    factor(s1optimality*S1.score([],utterance))
+    return state
+  })
+}
+
+
+var numberListener1 = function(numberWord, number_s1optimality) {
+  Enumerate(function(){
+    var state = statePrior()
+    var theta = thetaPrior()
+    var S1 = numberSpeaker1(state, theta)
+    factor(number_s1optimality*S1.score([],numberWord))
+    return state
+  })
+}
+
+var truthSpeaker2 = function(prevalence, s1optimality, number_s1optimality){
+	Enumerate(function(){
+		var nL1 = numberListener1(prevalence,number_s1optimality)
+		var state = sample(nL1)
+
+		var utterance = wordUtterancePrior()
+		var wL1 = listener1(utterance,s1optimality)
+
+		 factor(wL1.score([], state))
+		return utterance
+	})
+}
+
+
+var numberSpeaker2 = function(generic, s1optimality, number_s1optimality){
+	Enumerate(function(){
+		var numberWord = numberUtterancePrior()
+		var utteranceInterpretation = listener1(generic, s1optimality)
+		var state = sample(utteranceInterpretation)
+
+		// what would a listener think if I said this number word?
+		var nL1 = numberListener1(numberWord, number_s1optimality)
+		factor(nL1.score([], state))
+		return numberWord
+	})
+}
