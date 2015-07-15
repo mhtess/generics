@@ -63,7 +63,7 @@ animals.given <- c("Bird","Leopard","Duck","Lion","Mosquito","Shark")
 
 
 
-d<-read.csv(file = '../experiments/turk/real-kinds-1/real-kinds-1-trials.csv')
+d<-read.csv(file = '~/Documents/research/generics/data/real-kinds/real-kinds-1-trials.csv')
 
 d$animal.parsed<- factor(unlist(Map(removeS, upperFirst(as.character(d$animal)))))
 d$property<-factor(d$property, 
@@ -249,12 +249,12 @@ d.birds %>%
 ```
 
 
-# lvRSA model predictions
+### lvRSA simultation (with scraped Prasada data)
 
 Doing TFBT with speaker optimality (at the S1 level) as a free parameter
 
 ```{r}
-model.posteriorpred <-read.csv('generics_truthJudge_prasada1.csv',header=F,
+model.posteriorpred <-read.csv('~/Documents/research/generics/cbg2010-replication/models/model_predictions/generics_truthJudge_prasada1.csv',header=F,
                                col.names=c("generic","posteriorPred"))
 
 prasada.data <-data.frame(generic = c("leopards have spots",
@@ -346,7 +346,7 @@ removeSpace <- function(name){
   return(name.edit)
 }
 
-setwd(dir = 'generics/analysis/')
+setwd(dir = '~/Documents/research/generics/analysis/')
 generics.of.interest <- data.frame(
   animal=c("Robin","Leopard","Duck","Lion","Mosquito","Shark","Cardinal","Kangaroo","Peacock","Tiger","Tick","Swan"),
   property=c("lay eggs", "have spots","have wings","have manes","carry malaria",
@@ -585,7 +585,7 @@ Process for webppl
 
 ```{r tj1}
 
-setwd(dir = 'generics/analysis/')
+setwd(dir = '~/Documents/research/generics/analysis/')
 tj<-read.csv(file = '../experiments/turk/real-kinds-truth-1/real-kinds-truth-1-trials.csv')
 c <- read.csv(file = '../experiments/turk/real-kinds-truth-1/real-kinds-truth-1-catch_trials.csv')
 
@@ -604,20 +604,26 @@ tj.bs<-bootstrap.ci(tj %>% mutate(response = as.numeric(response=='agree-key')))
 
 tj.bs$sentence <- gsub('&quotechar','', tj.bs$sentence)
 tj.bs$sentence <- gsub('lyme','Lyme', tj.bs$sentence)
-tj.bs$sentence<-with(tj.bs, reorder(sentence, response, function(x) -x))
+
+tj.bs$sentence<-with(tj.bs, reorder(sentence, response, function(x) x))
 
 
 ggplot(data=tj.bs, aes(x=sentence, y=response-0.5))+
-  geom_bar(stat='identity',position=position_dodge(), alpha=0.8)+
-  geom_errorbar(aes(ymin=YMin-0.5,ymax=YMax-0.5), width=0.5)+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1,
-                                   vjust=1))+
-  ylim(-.5,0.5)+
+  geom_bar(stat='identity',position=position_dodge(), alpha=0.8,
+           fill='grey89')+
+  geom_errorbar(aes(ymin=YMin-0.5,ymax=YMax-0.5), width=0.5, size = 1.5,
+                color='white')+
+  theme_blackDisplay()+
+  #theme(axis.text.x = element_text(angle = 45, hjust = 1,
+   #                                vjust=1))+
+ # ylim(-.5,0.5)+
   xlab("")+
-  ylab("endorsment")
+  ylab("\n proportion of subjects who agree")+
+  scale_y_continuous(breaks=c(-0.5,0,0.5),labels=c("0","0.5","1"))+
+  coord_flip()
 
-# ggsave(file='../manuscript/figures/cogsci/truhtjudge_n100.png',
-#        width=24,height=6)
+ggsave(file='~/Box Sync/talks/esslli-2015-generics/truhtjudge_n100.pdf',
+       width=24,height=20)
 
 tj.tidy <- tj %>%
   group_by(sentence) %>%
@@ -685,7 +691,7 @@ with(filter(m.tidy,(prev > quantile(m.tidy$prev)["25%"] &
 
 
 
-# lvRSA model predictions
+## lvRSA model predictions
 
 Doing TFBT with speaker optimality (at the S1 level) as a free parameter
 
@@ -722,28 +728,34 @@ combined.model.data$sentence<-with(combined.model.data, reorder(sentence, respon
 qplot(data=combined.model.data,
       x=posteriorPred,y=response,
       color=sentence)+
-  geom_point(size=3)+
+  geom_point(size=4)+
   geom_errorbar(aes(ymin=YMin, ymax=YMax),
-                position=position_dodge())+
-  geom_abline(intercept=0,slope=1,linetype=2)+
-  xlab("model posterior predictive: P(generic)")+
-  ylab("proportion of agree's")+
+                position=position_dodge(), size =2)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=2,color='white')+
+  xlab("\n model posterior predictive")+
+  ylab("proportion of agree's \n")+
   guides(color=F)+
-  coord_fixed()
+  coord_fixed()+
+  theme_blackDisplay()
   
+ggsave(file='~/Box Sync/talks/esslli-2015-generics/scatter-lvrsa.pdf',
+       width=13,height=13)
 
 qplot(data=combined.model.data,
       x=prev,y=response,
       color=sentence)+
-  geom_point(size=3)+
+  geom_point(size=4)+
     geom_errorbar(aes(ymin=YMin, ymax=YMax),
-                position=position_dodge())+
-  geom_abline(intercept=0,slope=0.01,linetype=2)+
-  xlab("(raw) prevalence")+
-  ylab("proportion of agree's")+
+                position=position_dodge(), size =2)+
+  geom_abline(intercept=0,slope=0.01,linetype=2, size =2,color='white')+
+  xlab("\n (raw) prevalence")+
+  ylab("proportion of agree's \n")+
   guides(color=F)+
-  coord_fixed(ratio=100)
+  coord_fixed(ratio=100)+
+  theme_blackDisplay()
 
+ggsave(file='~/Box Sync/talks/esslli-2015-generics/scatter-prevalence.pdf',
+       width=13,height=13)
 
 ```
 
