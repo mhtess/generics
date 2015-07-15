@@ -1,3 +1,5 @@
+// webppl prior.wppl --require-js ./asymutils.js 
+
 var foreach = function(lst, fn) {
     var foreach_ = function(i) {
         if (i < lst.length) {
@@ -38,7 +40,6 @@ var conditions = _.uniq(_.pluck(df,"stim_type"))
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
 }
-
 var priorModel = function(c){
 
 	var conditionData = subset(df, "stim_type", c)
@@ -58,6 +59,7 @@ var priorModel = function(c){
 								}, 0, responseData)
 
 			factor(scr)
+			// console.log(scr)
 
 			query.add(r, [gamma, delta])
 		}
@@ -70,7 +72,7 @@ var priorModel = function(c){
 var getPriorERP = cache(function(condition){
 
 	// do BDA on prior elicitation
-	var heirarchicalERP = IncrementalMH(function(){return priorModel(condition)}, 1000)
+	var heirarchicalERP = IncrementalMH(function(){return priorModel(condition)}, 100)
 
 	Enumerate(function(){
 
@@ -117,7 +119,3 @@ var getPriorERP = cache(function(condition){
 	})
 
 })
-
-var priorERP = getPriorERP("accidental")
-
-console.log('prior made')

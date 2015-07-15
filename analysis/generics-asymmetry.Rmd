@@ -67,7 +67,7 @@ d.aveAccPrev <- d.accept %>%
   mutate(type = "accept")
 
 
-rs.accept<-glmer(response ~ stim_type*stim_prevalence + (1 +stim_prevalence+stim_type | workerid), family='binomial', data=d.accept)
+rs.accept<-glmer(response ~ stim_type*stim_prevalence + (1 +stim_prevalence | workerid), family='binomial', data=d.accept)
 summary(rs.accept)
 ```
 
@@ -241,6 +241,169 @@ d.tidy<- d %>%
 
 d<-read.csv('generics/experiments/turk/asymmetry-prior-2/asymmetry-prior-2-trials.csv')
 
+qplot(data=d,x=response0,y=response1)+
+  facet_wrap(~stim_type)+
+  geom_jitter()
+
+d.tidy <- d %>% 
+  select(stim_type,response0,response1,stim_property) %>%
+  gather(resp, val, response0,response1)
+
+
+ggplot(d.tidy, aes(x=val,fill=stim_type))+
+  geom_density(position=position_dodge(),alpha=0.5)+
+  facet_wrap(~resp, scales='free')
 
 ```
 
+## Inferred betas
+
+```{r fbt.prior2.posterior}
+p<-read.csv('generics/analysis/FBT-priors/results/expVal_betas_prior2_incrMH10k.csv')
+p<-p %>% separate(key, into=c("condition", "response"))
+shape1 = function(gamma,delta){return (gamma * delta)}
+shape2= function(gamma,delta){return ((1-gamma) * delta)}
+
+
+p<-p %>%
+  group_by(condition,response) %>%
+  mutate(a = shape1(gamma,delta),
+         b = shape2(gamma, delta))
+
+
+
+x <- seq(0, 1, len = 100)
+qplot(x, geom = "blank")+
+  stat_function(aes(x = x, y = ..y..), 
+                    fun = dbeta, colour="red", n = length(x),
+                    args = list(shape1 = p[[1,"a"]], 
+                                shape2 = p[[1,"b"]]))+
+  stat_function(aes(x = x, y = ..y..), 
+                    fun = dbeta, colour="blue", n = length(x),
+                    args = list(shape1 = p[[3,"a"]], 
+                                shape2 = p[[3,"b"]]))+
+    stat_function(aes(x = x, y = ..y..), 
+                    fun = dbeta, colour="green", n = length(x),
+                    args = list(shape1 = p[[5,"a"]], 
+                                shape2 = p[[5,"b"]]))+
+    stat_function(aes(x = x, y = ..y..), 
+                    fun = dbeta, colour="orange", n = length(x),
+                    args = list(shape1 = p[[7,"a"]], 
+                                shape2 = p[[7,"b"]]))
+
+
+
+qplot(x, geom = "blank")+
+  stat_function(aes(x = x, y = ..y..), 
+                    fun = dbeta, colour="red", n = length(x),
+                    args = list(shape1 = p[[2,"a"]], 
+                                shape2 = p[[2,"b"]]))+
+  stat_function(aes(x = x, y = ..y..), 
+                    fun = dbeta, colour="blue", n = length(x),
+                    args = list(shape1 = p[[4,"a"]], 
+                                shape2 = p[[4,"b"]]))+
+    stat_function(aes(x = x, y = ..y..), 
+                    fun = dbeta, colour="green", n = length(x),
+                    args = list(shape1 = p[[6,"a"]], 
+                                shape2 = p[[6,"b"]]))+
+    stat_function(aes(x = x, y = ..y..), 
+                    fun = dbeta, colour="orange", n = length(x),
+                    args = list(shape1 = p[[8,"a"]], 
+                                shape2 = p[[8,"b"]]))
+
+```
+
+Generate prevalence prior distributions
+
+```{r}
+
+
+p.tidy<- p %>%select(condition,response, a, b) %>%
+  gather(key, val, a, b, -condition) %>%
+  mutate(var = paste(response,key, sep='')) %>%
+  select(-response,-key) %>% 
+  spread(var, val) %>%
+  rename(a0 = response0a,
+         b0 = response0b,
+         a1 = response1a,
+         b1 = response1b)
+
+generatePrev <- function(a0,b0,a1,b1){
+  prev = if (rbetabinom.ab(1,1,a0,b0)) {
+      rbeta(1,a1,b1)
+    } else {
+      rbeta(1,a1,b1)
+      #0
+    }
+  return(prev)
+}
+
+d.1<-data.frame(condition = 'accidental',
+                prev = replicate(1000,
+                        with(p.tidy[1,], generatePrev(a0,b0,a1,b1))))
+d.2<-data.frame(condition = 'color',
+                prev = replicate(1000,
+                        with(p.tidy[2,], generatePrev(a0,b0,a1,b1))))
+d.3<-data.frame(condition = 'part',
+                prev = replicate(1000,
+                        with(p.tidy[3,], generatePrev(a0,b0,a1,b1))))
+d.4<-data.frame(condition = 'vague',
+                prev = replicate(1000,
+                        with(p.tidy[4,], generatePrev(a0,b0,a1,b1))))
+d.all<- bind_rows(d.1,d.2,d.3,d.4)
+
+ggplot(d.all, aes(x=prev,fill=condition))+
+  geom_histogram()+
+  #geom_density()+
+  facet_wrap(~condition, scales='free')
+
+```
+
+
+# Full bayesian analysis of prior elicitation data and truth conditions / implied prevalence data
+
+```{r tfbt}
+d<-read.csv("~/Documents/research/generics/models/generics-hashmh1000_prior-incrmh1000.csv")
+
+d.params <- d %>% filter(!(Parameter%in%c("truth_conditions", 
+                                          "implied_prevalence")))
+samples = 1000
+d.params <- data.frame(Parameter = rep(d.params$Parameter, 
+                                       1+samples*d.params$Probability),
+                       Response = rep(d.params$Value, 
+                                      1+samples*d.params$Probability))
+
+ggplot(d.params, aes(x=Response))+
+  geom_histogram()+
+  xlim(0,1)
+
+
+d.pp <- d %>% filter(Parameter%in%c("truth_conditions", 
+                                    "implied_prevalence")) %>%
+  group_by(Parameter,Item, Prevalence) %>%
+  summarise(expectation = sum(Value*Probability))
+
+d.aveprev <- 
+  bind_rows(d.pp %>%  
+                    filter(Parameter=='implied_prevalence') %>%
+                    select(-Prevalence),
+            d.pp %>%
+            filter(Parameter=='truth_conditions') %>%
+            group_by(Item) %>%
+            mutate(norm_exp = expectation/sum(expectation)) %>%
+            summarise(Parameter = "truth_conditions",
+                      expectation = sum(Prevalence*norm_exp)/100)) %>%
+  rename(type = Parameter,
+         stim_type = Item,
+         avePrev = expectation) %>%
+  mutate(type = factor(type, labels = c("implied", "accept")),
+         src = "model",
+         avePrev=avePrev*100)
+
+d.modeldata<-bind_rows(d.aveprev, asymmetry.summary%>%mutate(src='data'))
+
+
+ggplot(d.modeldata, aes(x=stim_type, y=avePrev, fill = type))+
+  geom_bar(position=position_dodge(), stat='identity')+
+  facet_wrap(~src)
+```

@@ -10,7 +10,8 @@ var df_asym = map(
 	data.slice(1))
 
 var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
-var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
+//var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
+var stimTypes = ["accidental","color"]
 
 var df_accepted = subset(df_asym, "trial_type", "truth_conditions")
 var df_implied = subset(df_asym, "trial_type", "implied_prevalence")
@@ -27,6 +28,9 @@ var impliedLink = function(number){
 
 var dataModel = function(){
 
+	var s1opt = uniform(0,10)
+	var number_s1opt = s1opt
+
 	foreach(tasks,
 		function(task){
 
@@ -41,7 +45,8 @@ var dataModel = function(){
 							function(prevalence){
 
 								var df_accepted_prev = _.pluck(subset(df_accept_type,"stim_prevalence", prevalence), "response")
-								var agreeERP = truthSpeaker2(prevalence, s1opt, number_s1opt)
+								// console.log(prevalence, type, s1opt, number_s1opt)
+								var agreeERP = truthSpeaker2(prevalence/100, type, s1opt, number_s1opt)
 
 								// condition on both agree and disagree, or just agree?
 								// right now, it's both.
@@ -50,6 +55,7 @@ var dataModel = function(){
 												    return memo + agreeERP.score([], agreeLink[response])
 													}, 0, df_accepted_prev)
 								factor(scr)
+								// console.log(scr)
 
 								query.add([task,type,prevalence],Math.exp(agreeERP.score([], "generic is true")))
 
@@ -61,12 +67,13 @@ var dataModel = function(){
 
 						var df_implied_type = subset(df_implied, "stim_type", type)
 						var df_implied_prev = _.pluck(df_implied_type, "response")
-						var impliedERP = numberSpeaker2("generic is true", s1opt, number_s1opt)
+						var impliedERP = numberSpeaker2("generic is true", type, s1opt, number_s1opt)
 
 						var scr = reduce(function(response, memo) {
 										    return memo + impliedERP.score([], impliedLink(response))
-											}, 0, df_accepted_prev)
+											}, 0, df_implied_prev)
 						factor(scr)
+						// console.log(scr)
 
 						query.add([task,type,"NA"], expectation(impliedERP))
 
@@ -76,11 +83,26 @@ var dataModel = function(){
 
 		})
 
+	query.add(["speakerOptimality","NA","NA"], s1opt)
+	return query
 }
 
+
+var resultsERP = HashMH(dataModel,1000)
+asymutils.erpWriter(resultsERP, "generics-hashmh1000_prior-incrmh1000.csv")
+
+
+// getPriorERP("accidental")
+//////// writing prior
+
+
+
+//truthSpeaker2(0.1, "accidental", 1, 1)
+//numberSpeaker1(0.1, "accidental", 0.1)
+//numberListener1(0.1, "accidental", 0.1)
 // // stimTypes
-var df_implied_prev = _.pluck(df_implied, "response")
-_.uniq(map(impliedLink,_.uniq(df_implied_prev)))
+// var df_implied_prev = _.pluck(df_implied, "response")
+// _.uniq(map(impliedLink,_.uniq(df_implied_prev)))
 
 // truthSpeaker2(0.1, 2, 2)
 //priorERP

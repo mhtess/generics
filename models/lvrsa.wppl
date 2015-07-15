@@ -1,5 +1,28 @@
+
+//////// writing prior
+// var writeReady = map(function(key){
+// 		var m = marginalize(resultsERP, key)
+// 		return [key, expectation(marginalize(m, 0)), expectation(marginalize(m, 1))]
+// 	},
+// 	_.keys(resultsERP.support()[0])
+// )
+// writeReady.unshift(["key","gamma","delta"])
+
+// asymutils.writeCSV(writeReady, "results/expVal_betas_prior2_incrMH10k.csv")
+////////
+
+console.log('prior made')
+
+//////// generics model
+
+var priorERP = {"accidental": getPriorERP("accidental"),
+				"color": getPriorERP("color")}
+
+console.log('prior really made')
+
 var thetaBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
-var bins = priorERP.support()
+var bins = priorERP["accidental"].support()
+
 // var thetaBins = priorERP.support()
 
 var thetaPrior = function() {
@@ -8,7 +31,9 @@ var thetaPrior = function() {
 }
 
 var numberUtterancePrior = function() {
-  var utterances = bins;          
+
+//  var utterances = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99];          
+  var utterances = bins
   var i = randomInteger(utterances.length)
   return utterances[i]
 }
@@ -37,35 +62,29 @@ var meaning = function(utt,state, theta) {
          true
 }
 
-var listener0 = cache(function(utterance, theta) {
+var listener0 = cache(function(utterance, domain, theta) {
   Enumerate(function(){
   	// console.log('enter listener0')
-    var state = sample(priorERP)
+    var state = sample(priorERP[domain])
     // console.log(state)
     // console.log(utterance)
     // console.log(theta)
     var m = meaning(utterance, state, theta)
     // console.log(m)
+    // console.log(state, utterance, m)
     factor(m?0:-Infinity)
     return state
   })
 })
 
-var speaker1 = cache(function(state, theta) {
+var speaker1 = cache(function(state, domain, theta) {
   Enumerate(function(){
   	// console.log('enter speaker 1')
+  	// console.log(state, theta, domain)
     var utterance = wordUtterancePrior()
-    var L0 = listener0(utterance, theta)
-    factor(L0.score([],state))
-    return utterance
-  })
-})
-
-var numberSpeaker1 = cache(function(state, theta) {
-  Enumerate(function(){
-  	// console.log('enter number speaker 1')
-    var utterance = numberUtterancePrior()
-    var L0 = listener0(utterance, theta)
+    var L0 = listener0(utterance, domain, theta)
+    // console.log(L0.support())
+    // console.log(map(function(x){return Math.exp(L0.score(x))},L0.support()))
     factor(L0.score([],state))
     return utterance
   })
@@ -73,53 +92,72 @@ var numberSpeaker1 = cache(function(state, theta) {
 
 
 
-var listener1 = function(utterance, s1optimality) {
+
+var listener1 = function(utterance, domain, s1optimality) {
   Enumerate(function(){
   	// console.log('enter listener 1')
-    var state = sample(priorERP)
+  	// console.log(domain)
+    var state = sample(priorERP[domain])
     // console.log(state)
     var theta = thetaPrior()
-    var S1 = speaker1(state, theta)
+    var S1 = speaker1(state, domain, theta)
     factor(s1optimality*S1.score([],utterance))
     return state
   })
 }
 
 
-var numberListener1 = function(numberWord, number_s1optimality) {
+var numberSpeaker1 = cache(function(state, domain, theta) {
+  Enumerate(function(){
+  	// console.log('enter number speaker 1')
+  	// console.log(state, theta, domain)
+
+    var utterance = numberUtterancePrior()
+    var L0 = listener0(utterance, domain, theta)
+    // console.log(map(function(x){return Math.exp(L0.score(x))},L0.support()))
+    factor(L0.score([],state))
+    return utterance
+  })
+})
+
+
+var numberListener1 = function(numberWord, domain, number_s1optimality) {
   Enumerate(function(){
 		// console.log('enter number listener 1')
-    var state = sample(priorERP)
+		//   	console.log(domain)
+
+    var state = sample(priorERP[domain])
     var theta = thetaPrior()
-    var S1 = numberSpeaker1(state, theta)
-    factor(number_s1optimality*S1.score([],numberWord))
+    // console.log(state, domain, theta)
+    var S1 = numberSpeaker1(state, domain, theta)
+   factor(number_s1optimality*S1.score([],numberWord))
     return state
   })
 }
 
-var truthSpeaker2 = function(prevalence, s1optimality, number_s1optimality){
+var truthSpeaker2 = function(prevalence, domain, s1optimality, number_s1optimality){
 	Enumerate(function(){
 		// console.log('enter truth speaker2')
-		var nL1 = numberListener1(prevalence,number_s1optimality)
+		var nL1 = numberListener1(prevalence,domain, number_s1optimality)
 		var state = sample(nL1)
 
 		var utterance = wordUtterancePrior()
-		var wL1 = listener1(utterance,s1optimality)
+		var wL1 = listener1(utterance,domain, s1optimality)
 
-		 factor(wL1.score([], state))
+		factor(wL1.score([], state))
 		return utterance
 	})
 }
 
 
-var numberSpeaker2 = function(generic, s1optimality, number_s1optimality){
+var numberSpeaker2 = function(generic, domain, s1optimality, number_s1optimality){
 	Enumerate(function(){
 		var numberWord = numberUtterancePrior()
-		var utteranceInterpretation = listener1(generic, s1optimality)
+		var utteranceInterpretation = listener1(generic, domain, s1optimality)
 		var state = sample(utteranceInterpretation)
 
 		// what would a listener think if I said this number word?
-		var nL1 = numberListener1(numberWord, number_s1optimality)
+		var nL1 = numberListener1(numberWord, domain, number_s1optimality)
 		factor(nL1.score([], state))
 		return numberWord
 	})

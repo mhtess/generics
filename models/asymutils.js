@@ -5,19 +5,17 @@ var babyparse = require('babyparse');
 var erpWriter = function(erp, filename) {
  var supp = erp.support([]);
  var csvFile = fs.openSync(filename, 'w');
+ fs.writeSync(csvFile,'Parameter,Item,Prevalence,Value,Probability\n')
  supp.forEach(function(s) {supportWriter(s, Math.exp(erp.score([], s)), csvFile);})
  fs.closeSync(csvFile);
 }
 
 var supportWriter = function(s, p, handle) {
- var l = s.length;
- for (var i = 0; i < l-1; i++) {
-   fs.writeSync(handle, s[i].join(',')+','+p+'\n');
- }
- var e = s[l-1];
- var k = e.length;
- for (i = 0; i < k; i++) {
-   fs.writeSync(handle, e[i].join(',')+','+p+'\n');
+ var sLst = _.pairs(s);
+ var l = sLst.length;
+
+ for (var i = 0; i < l; i++) {
+   fs.writeSync(handle, sLst[i].join(',')+','+p+'\n');
  }
 }
 
