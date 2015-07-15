@@ -1,72 +1,90 @@
-// webppl asymmetry.wppl --require-js ./asymutils.js   --require-wppl ./lvrsa.wppl --require-wppl prior.wppl 
+// webppl asymmetry.wppl --require-js ./asymutils.js --require-wppl ./lvrsa.wppl --require-wppl ./prior.wppl 
 
 
-//////// writing
-// var writeReady = map(function(key){
-// 		var m = marginalize(resultsERP, key)
-// 		return [key, expectation(marginalize(m, 0)), expectation(marginalize(m, 1))]
-// 	},
-// 	_.keys(resultsERP.support()[0])
-// )
-// writeReady.unshift(["key","gamma","delta"])
+var data = asymutils.readCSV("data/asymmetry-1-trials.csv").data
 
-// asymutils.writeCSV(writeReady, "results/expVal_betas_prior2_incrMH10k.csv")
-////////
+var df_asym = map(
+	function(lst){
+		return _.object(_.zip(data[0],lst))
+	},
+	data.slice(1))
 
-//////// generics model
-// var data = asymutils.readCSV("data/asymmetry-1-trials.csv").data
+var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
+var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
 
-// var df_asym = map(
-// 	function(lst){
-// 		return _.object(_.zip(data[0],lst))
-// 	},
-// 	data.slice(1))
+var df_accepted = subset(df_asym, "trial_type", "truth_conditions")
+var df_implied = subset(df_asym, "trial_type", "implied_prevalence")
 
+var prevalenceLevels = _.uniq(_.pluck(df_accepted, "stim_prevalence"))
 
-// var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
-// var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
+var agreeLink = {"Agree":"generic is true",
+					"Disagree": "mu"}
 
-// var df_accepted = subset(df_asym, "trial_type", "truth_conditions")
-// var df_implied = subset(df_asym, "trial_type", "implied_prevalence")
-
-// var prevalenceLevels = _.uniq(_.pluck(df_accepted, "stim_prevalence"))
-
-// var dataModel = function(){
-
-// 	foreach(tasks,
-// 		function(task){
+var impliedLink = function(number){
+	return avoidEnds(Math.round(number/10)/10)
+}
 
 
-// 			foreach(stimTypes, 
-// 				function(type){
+var dataModel = function(){
 
-// 					if (task=="truth_conditions") {
+	foreach(tasks,
+		function(task){
 
-// 						foreach(prevalenceLevels,
-// 							function(prevalence){
+			foreach(stimTypes, 
+				function(type){
 
-// 								var df_accepted_prev = _.pluck(subset(df_accepted, "stim_prevalence", prevalence), "response")
-// 								var predictiveERP = truthSpeaker2(prevalence, s1opt, number_s1opt)
+					if (task=="truth_conditions") {
 
-// 								var scr = reduce(function(response, memo) {
-// 												    return memo + predictiveERP.score([], response)
-// 													}, 0, df_accepted_prev)
-// 								factor(scr)
+						var df_accept_type = subset(df_accepted, "stim_type", type)
 
-// 								query.add(,)
+						foreach(prevalenceLevels,
+							function(prevalence){
+
+								var df_accepted_prev = _.pluck(subset(df_accept_type,"stim_prevalence", prevalence), "response")
+								var agreeERP = truthSpeaker2(prevalence, s1opt, number_s1opt)
+
+								// condition on both agree and disagree, or just agree?
+								// right now, it's both.
+
+								var scr = reduce(function(response, memo) {
+												    return memo + agreeERP.score([], agreeLink[response])
+													}, 0, df_accepted_prev)
+								factor(scr)
+
+								query.add([task,type,prevalence],Math.exp(agreeERP.score([], "generic is true")))
 
 
-// 							})
+							}
+						)
 
-// 					}
+					} else {
 
-// 				})
+						var df_implied_type = subset(df_implied, "stim_type", type)
+						var df_implied_prev = _.pluck(df_implied_type, "response")
+						var impliedERP = numberSpeaker2("generic is true", s1opt, number_s1opt)
 
-// 		})
-// }
+						var scr = reduce(function(response, memo) {
+										    return memo + impliedERP.score([], impliedLink(response))
+											}, 0, df_accepted_prev)
+						factor(scr)
 
-// stimTypes
+						query.add([task,type,"NA"], expectation(impliedERP))
 
-//truthSpeaker2(0.1, 2, 2)
+					}
+
+				})
+
+		})
+
+}
+
+// // stimTypes
+var df_implied_prev = _.pluck(df_implied, "response")
+_.uniq(map(impliedLink,_.uniq(df_implied_prev)))
+
+// truthSpeaker2(0.1, 2, 2)
 //priorERP
-expectation(numberSpeaker2("generic is true",2,1))
+//expectation(numberSpeaker2("generic is true",2,1))
+
+// var df_accepted_prev = _.pluck(subset(df_accepted, "stim_prevalence", 10), "response")
+// df_accepted_prev
