@@ -1,0 +1,123 @@
+var foreach = function(lst, fn) {
+    var foreach_ = function(i) {
+        if (i < lst.length) {
+            fn(lst[i]);
+            foreach_(i + 1);
+        }
+    };
+    foreach_(0);
+};
+
+var marginalize = function(myERP, index){
+  Enumerate(function(){
+    var x = sample(myERP)
+    return x[index]
+  })
+}
+
+var subset = function(df, field, value){
+	return filter(function(d){
+		return (d[field]==value)
+	},df)
+}
+
+var shape_alpha = function(gamma,delta){return gamma * delta}
+var shape_beta = function(gamma,delta){return (1-gamma) * delta}
+
+var Priordata = asymutils.readCSV("data/asymmetry-prior-2-trials.csv").data
+
+var df = map(
+	function(lst){
+		return _.object(_.zip(Priordata[0],lst))
+	},
+	Priordata.slice(1))
+
+
+var conditions = _.uniq(_.pluck(df,"stim_type"))
+
+var avoidEnds = function(response){
+	return response==0 ? 0.01 : response==1 ? 0.99 : response
+}
+
+var priorModel = function(c){
+
+	var conditionData = subset(df, "stim_type", c)
+
+	foreach(["response0","response1"],
+		function(r){
+
+			var gamma = uniform(0,1)
+			var delta = uniform(0,10)
+
+			var responseData = _.pluck(conditionData,r)
+			var scr = reduce(function(dataPoint, memo) {
+							    return memo + betaERP.score([
+									shape_alpha(gamma,delta),
+									shape_beta(gamma,delta)
+									], avoidEnds(dataPoint))
+								}, 0, responseData)
+
+			factor(scr)
+
+			query.add(r, [gamma, delta])
+		}
+	)
+	return query
+}
+
+
+// go from inferred beta parameters from prior elicitation, to a prevalence prior for lvrsa
+var getPriorERP = cache(function(condition){
+
+	// do BDA on prior elicitation
+	var heirarchicalERP = IncrementalMH(function(){return priorModel(condition)}, 1000)
+
+	Enumerate(function(){
+
+		var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+
+		// var kindDoesntHaveF_prevalence = 0.01
+		var kindDoesntHaveF_prevalence = 0
+
+		var discretizeBeta = function(gamma, delta){
+			var shape_alpha = gamma * delta
+			var shape_beta = (1-gamma) * delta
+			var betaPDF = function(x){
+			  return Math.pow(x,shape_alpha-1)*
+			      Math.pow((1-x),shape_beta-1)
+			}
+			return map(betaPDF, bins)
+		}
+
+		var s = sample(heirarchicalERP)
+
+		// var kindHasF = flip(
+		// 				beta(
+		// 					shape_alpha(s["response0"][0], s["response0"][1]),
+		// 					shape_beta(s["response0"][0], s["response0"][1])
+		// 					)
+		// 				)
+		// discretization occurs here
+		var kindHasF = flip(
+						bins[discrete(
+							discretizeBeta(
+								s["response0"][0], 
+								s["response0"][1]
+							)
+						)])
+
+		var prevalenceGivenK = kindHasF ? bins[discrete(
+							discretizeBeta(
+								s["response1"][0], 
+								s["response1"][1]
+							)
+						)] : kindDoesntHaveF_prevalence
+
+		return prevalenceGivenK
+	})
+
+})
+
+var priorERP = getPriorERP("accidental")
+
+console.log('prior made')
