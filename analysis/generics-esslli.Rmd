@@ -1,0 +1,371 @@
+---
+title: "generics-esslli"
+author: "mht"
+date: "July 14, 2015"
+output: html_document
+---
+
+Figures I'm using in my talk at ESSLLI. Probably also they will be used in my manuscript.
+
+
+# Prior 2: Prevalence priors for 16 properties
+
+
+```{r echo=F}
+upperFirst <- function(name){
+  return (paste(toupper(substr(name, 1, 1)), substr(name, 2, nchar(name)), sep=""))
+}
+
+removeS <- function(name.in){
+  exceptions = c("Turtles", "Bees", "Horses", "Giraffes","Whales","Beetles","Eagles","Snakes","Moles")
+  bluejays =  c("Blue jay","Blue Jay","Bluejay")
+  fleas = c("Flea", "Fly")
+  name<-removeSpace(name.in)
+  last<-substr(name,nchar(name),nchar(name))
+  last2<-substr(name,nchar(name)-1,nchar(name))
+  if (name%in%exceptions){
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else if (name%in%bluejays){
+    name.singular <- "Bluejay"
+  } else if (name%in%fleas){
+    name.singular <- "Flea"
+  } else if (name=="Wolves") {
+    name.singular <- "Wolf"
+  } else if (name=='Dolpin') {
+    name.singular <- "Dolphin"
+  } else if (name=='Giraffs') {
+    name.singular <- "Giraffe"
+  }  else if (last2=='es') {
+    name.singular <- substr(name,1,nchar(name)-2)
+  } else if (last=='s') {
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else {
+    name.singular <- name
+  }
+  
+return(name.singular)
+}
+
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+
+removeSpace <- function(name){
+  if (substrRight(name,1)==' ') {
+    name.edit <- substr(name,1, nchar(name)-1)
+  } else {
+    name.edit <- name
+  }
+  return(name.edit)
+}
+
+setwd(dir = '~/Documents/research/generics/analysis/')
+generics.of.interest <- data.frame(
+  animal=c("Robin","Leopard","Duck","Lion","Mosquito","Shark","Cardinal","Kangaroo","Peacock","Tiger","Tick","Swan"),
+  property=c("lay eggs", "have spots","have wings","have manes","carry malaria",
+              "attacks swimmers","are red","have pouches","have beautiful feathers","eat people","carry Lyme disease","are white"))
+
+d<-read.csv(file = '../experiments/turk/real-kinds-prior-2/real-kinds-2-trials.csv')
+d0<-read.csv(file='../experiments/turk/real-kinds-prior-2/real-kinds-2pilot5/real-kinds-2-trials.csv')
+
+d0$workerid = max(d$workerid) + d0$workerid+1
+d<-bind_rows(d,d0)
+
+d[d$property=='are juveline',]$property<-'are juvenile'
+
+d$animal.parsed<- factor(unlist(Map(removeS, upperFirst(as.character(d$animal)))))
+
+
+# retrieve novel animals (and count only one instance per subject)
+animals.produced<-filter(d,
+                         (!(animal.parsed %in% generics.of.interest$animal)&
+                            (property_index==0)|(property_index==8)))
+
+
+```
+
+### Prevalence distributions
+
+
+#### Estimates for each animal.
+
+Some of these animals have very few responses, owing to the fact that they were produced by just one or a few subjects. Ordering is alphabetical by animal name. Light blue bars indicate the category of interest for each property (for the generic).
+
+```{r exp2.estimatesByAnimal, fig.height=15, fig.width=36}
+
+d.tidy<- d %>%
+  group_by(property,animal.parsed) %>%
+  summarise(prev = mean(prevalence),
+            sterr=sem(prevalence)) %>%
+  filter(!(is.na(sterr)))
+
+generics.of.interest$combined <- paste(generics.of.interest$property, 
+                                       generics.of.interest$animal)
+d.tidy$combined <- paste(d.tidy$property, d.tidy$animal.parsed)
+
+d.tidy$interest<-d.tidy$combined %in% generics.of.interest$combined
+
+
+d.tidy.sub <- d.tidy %>% 
+  filter(animal.parsed %in% generics.of.interest$animal)
+
+```
+
+
+## Distribution by animal
+
+Here, I plot the distribution of prevalence after summarizing an average prevalence for each animal. Hence, a sample from this distribution is an animal category (with an associated prevalence of the property). Again note:: many of these categories have very few responses.
+
+Green line indicates prevalence for target category.
+```{r}
+ggplot(data=d.tidy, aes(x=prev))+
+  geom_vline(data=filter(d.tidy,interest), aes(xintercept=prev),
+             colour='#2ca25f',size=1.3)+
+ # geom_histogram(binwidth=5)+
+  geom_density()+
+  facet_wrap(~property, scales='free')+
+  xlim(0,100)
+```
+
+Binned distributions (for model)
+
+```{r}
+d.tidy<- d.tidy %>% mutate(roundval=round(prev/10)*10) 
+
+d.anim.bin<- d.tidy %>%
+  group_by(property, roundval) %>%
+  summarise(count = length(roundval)) %>%
+  ungroup() %>% group_by(property) %>%
+  mutate(prob = count/sum(count),
+         roundval = to.n(roundval))
+
+ggplot(d.anim.bin, aes(x=roundval, y=prob))+
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~property)+
+  xlab("prevalence")+
+  ylab("proportion of responses\n")+
+  #scale_fill_brewer(palette='Pastel1',type='qual')+
+ # scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1),limits=c(0,1))+
+  scale_x_discrete(breaks=c(0,20,40,60,80,100))+#,limits=c(-5,105))+
+ # theme_blackDisplay()+ 
+  guides(fill=guide_legend(title="property"))+
+#  theme(legend.key.size=unit(2, "lines"),
+#        legend.text.align=NULL)+
+  guides(fill=F)
+
+d.anim.bin %>% select(-prob) %>% spread(roundval, count)
+
+
+
+```
+
+
+
+## Distribution by response
+
+Here, I don't include the intermediate step of summarising by animal kind. Instead, I just plot the density directly from subjects' responses. Again, green line indicates prevalence for target categogry.
+
+```{r}
+
+d.interest<-d.tidy %>% filter(interest)
+
+selection <-c("are female", "have wings", "have manes", "carry malaria")
+
+ggplot(data = filter(d,property%in%selection), aes(x=prevalence,fill=property))+
+  #geom_histogram()+
+  geom_density(adjust=0.5, color='white')+
+  facet_wrap(~property,scales='free')+
+  xlim(0,100)+
+  scale_fill_brewer(type='qual',palette='Pastel1')+
+  theme_blackDisplay()+
+  xlab("\n prevalence")+
+  guides(fill=F)
+
+ggsave(file='~/Box Sync/talks/esslli-2015-generics/naturalkinds-4priors.pdf')
+
+,
+       width=14,height=10)
+ # geom_vline(data=d.interest, aes(xintercept=prev), colour='#2ca25f',size=1.3)
+```
+
+
+# Truth judgment: Experiment 1
+
+
+
+```{r tj1}
+
+setwd(dir = '~/Documents/research/generics/analysis/')
+tj<-read.csv(file = '../experiments/turk/real-kinds-truth-1/real-kinds-truth-1-trials.csv')
+c <- read.csv(file = '../experiments/turk/real-kinds-truth-1/real-kinds-truth-1-catch_trials.csv')
+
+### bootstrap CI
+bootstrap.ci <- function(x){
+  agr = aggregate(response ~ sentence, data=x, FUN=mean)
+  agr$CILow = aggregate(response ~ sentence, data=x, FUN=ci.low)$response
+  agr$CIHigh = aggregate(response ~ sentence, data=x, FUN=ci.high)$response
+  agr$YMin = agr$response - agr$CILow
+  agr$YMax = agr$response + agr$CIHigh
+  return(agr)
+}
+
+
+tj.bs<-bootstrap.ci(tj %>% mutate(response = as.numeric(response=='agree-key')))
+
+tj.bs$sentence <- gsub('&quotechar','', tj.bs$sentence)
+tj.bs$sentence <- gsub('lyme','Lyme', tj.bs$sentence)
+
+tj.bs$sentence<-with(tj.bs, reorder(sentence, response, function(x) x))
+
+
+ggplot(data=tj.bs, aes(x=sentence, y=response-0.5))+
+  geom_bar(stat='identity',position=position_dodge(), alpha=0.8,
+           fill='grey89')+
+  geom_errorbar(aes(ymin=YMin-0.5,ymax=YMax-0.5), width=0.5, size = 1.5,
+                color='white')+
+  theme_blackDisplay()+
+  #theme(axis.text.x = element_text(angle = 45, hjust = 1,
+   #                                vjust=1))+
+ # ylim(-.5,0.5)+
+  xlab("")+
+  ylab("\n proportion of subjects who agree")+
+  scale_y_continuous(breaks=c(-0.5,0,0.5),labels=c("0","0.5","1"))+
+  coord_flip()
+
+ggsave(file='~/Box Sync/talks/esslli-2015-generics/truhtjudge_n100.pdf',
+       width=24,height=20)
+
+tj.tidy <- tj %>%
+  group_by(sentence) %>%
+  summarise(prop = sum(as.numeric(response=='agree-key'))/length(response),
+            n = length(response)) %>%
+  mutate(sterr = sqrt(prop*(1-prop)/n),
+         endorse = prop-0.5)
+
+
+tj.tidy$sentence <- gsub('&quotechar','', tj.tidy$sentence)
+tj.tidy$sentence <- gsub('lyme','Lyme', tj.tidy$sentence)
+
+tj.tidy$sentence<-with(tj.tidy, reorder(sentence, prop, function(x) -x))
+
+
+ggplot(data=tj.tidy, aes(x=sentence, y=endorse))+
+  geom_bar(stat='identity',position=position_dodge(), alpha=0.8)+
+  geom_errorbar(aes(ymin=endorse-2*sterr,ymax=endorse+2*sterr), width=0.5)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  ylim(-.5,0.5)
+
+```
+
+Boring renaming of properties, and getting prior estimations for negations by subtracting positive form from 100
+
+Scatterplot of raw prevalence vs. proportion of "agree" responses
+
+```{r}
+
+d.tidy.sub[d.tidy.sub$property == 'attacks swimmers',]$property <- 'attack swimmers'
+d.tidy.sub$sentence <- with(d.tidy.sub, paste(paste(animal.parsed,'s',sep=''), paste(property,'.',sep='')))
+
+m.tidy<-left_join(tj.bs,d.tidy.sub, by="sentence")
+
+m.tidy[m.tidy$sentence=='Mosquitos dont carry malaria.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Mosquitos carry malaria.',]$prev
+
+m.tidy[m.tidy$sentence=='Sharks dont attack swimmers.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Sharks attack swimmers.',]$prev
+
+m.tidy[m.tidy$sentence=='Peacocks dont have beautiful feathers.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Peacocks have beautiful feathers.',]$prev
+
+m.tidy[m.tidy$sentence=='Ticks dont carry Lyme disease.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Ticks carry Lyme disease.',]$prev
+
+m.tidy[m.tidy$sentence=='Tigers dont eat people.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Tigers eat people.',]$prev
+
+m.tidy<-m.tidy %>%
+  filter(!is.na(prev))
+
+ggplot(m.tidy,aes(x=prev,y=response))+
+  geom_point()
+
+with(m.tidy, cor(prev,response))
+
+quantile(m.tidy$prev)
+
+with(filter(m.tidy,(prev > quantile(m.tidy$prev)["25%"] & 
+                      prev < quantile(m.tidy$prev)["75%"])), cor(prev,response))
+
+
+```
+
+
+
+## lvRSA model predictions
+
+Doing TFBT with speaker optimality (at the S1 level) as a free parameter
+
+```{r}
+model.posteriorpred <-read.csv('../cbg2010-replication/models/model_predictions/generics_truthJudge_3_postpred_n100_mh1000.csv',header=F,
+                               col.names=c("sentence","posteriorPred"))
+
+
+
+combined.model.data<- left_join(model.posteriorpred, m.tidy, by='sentence')
+
+with(combined.model.data, cor(posteriorPred, response))
+with(filter(combined.model.data,
+            (prev>25 & prev < 75)), cor(posteriorPred, response))
+
+with(filter(combined.model.data,
+            (prev > quantile(m.tidy$prev)["25%"] & 
+            prev < quantile(m.tidy$prev)["75%"])), cor(posteriorPred,response))
+
+
+
+
+  with(combined.model.data, cor(posteriorPred, response, method='spearman'))
+
+
+with(combined.model.data, cor(prev, response))
+with(combined.model.data, cor(prev, response, method='spearman'))
+
+
+combined.model.data$sentence<-with(combined.model.data, reorder(sentence, response, function(x) -x))
+
+
+
+qplot(data=combined.model.data,
+      x=posteriorPred,y=response,
+      color=sentence)+
+  geom_point(size=4)+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                position=position_dodge(), size =2)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=2,color='white')+
+  xlab("\n model posterior predictive")+
+  ylab("proportion of agree's \n")+
+  guides(color=F)+
+  coord_fixed()+
+  theme_blackDisplay()
+  
+ggsave(file='~/Box Sync/talks/esslli-2015-generics/scatter-lvrsa.pdf',
+       width=13,height=13)
+
+qplot(data=combined.model.data,
+      x=prev,y=response,
+      color=sentence)+
+  geom_point(size=4)+
+    geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                position=position_dodge(), size =2)+
+  geom_abline(intercept=0,slope=0.01,linetype=2, size =2,color='white')+
+  xlab("\n (raw) prevalence")+
+  ylab("proportion of agree's \n")+
+  guides(color=F)+
+  coord_fixed(ratio=100)+
+  theme_blackDisplay()
+
+ggsave(file='~/Box Sync/talks/esslli-2015-generics/scatter-prevalence.pdf',
+       width=13,height=13)
+
+```
+
