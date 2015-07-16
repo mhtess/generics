@@ -680,15 +680,15 @@ Materials (properties and novel animal kinds) match those used in Expt.~2a.
 
 \subsubsection{Data analysis}
 
-In order to recover the single distributions of prevalence representing prevalence both within- and across- categories (analogous to Figure \ref{fig:priors1a}), we built a simple Bayesian model of the task questions and their relation to the desired distribution. 
+In order to recover the single distributions representing prevalence both within- and across- categories (analogous to Figure \ref{fig:priors1a}), we built a simple Bayesian model of the task questions and their relation to the desired distribution. 
 
-Participants' responses to each question were assumed to be samples from Beta distributions with unknown parameters. 
-The responses to the questions are used to estimate the distributions of prevalence across- and within- categories, separately. 
+Participants' responses to each question (slider bar values) were assumed to be samples from Beta distributions with unknown parameters. 
+The responses to the questions ($d_{across}, d_{within}$) are used to estimate the distributions of prevalence across- and within- categories, separately. 
 \begin{align*}
 d_{across} \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\
 d_{within} \sim \text{Beta}(\gamma_{within}, \delta_{within}) 
 \end{align*}
-The parameters $\gamma$ and $\delta$ correspond to the mean and variance (formally, the concentration) of prevalence across- and within- categories, respectively. 
+The parameters $\gamma$ and $\delta$ correspond to the mean and variance (formally, the concentration), respectively, of prevalence for each of the across- and within- distributions. 
 We put identical, uninformative priors on these parameters:
 \begin{align*}
 \gamma & \sim \text{Uniform}(0,1) \\
@@ -703,6 +703,8 @@ p & \sim \begin{cases}
 				0 & \mbox{if } h=0. 
 				\end{cases} 
 \end{align*}
+
+Marginal posterior distributions for $p$ for estimated using the Metropolis-Hastings algorithm in the probabilistic programming language \emph{WebPPL} \cite{dippl}. Inference was completed by taking X samples with Y burn-in.
 
 \subsubsection{Results}
 
