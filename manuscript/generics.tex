@@ -148,7 +148,8 @@
 \definecolor{Red}{RGB}{255,0,0}
 \newcommand{\red}[1]{\textcolor{Red}{#1}}  
 
-\title{Words are vague: A prevalence-based account of generic language}
+%\title{Words are vague: A prevalence-based account of generic language}
+\title{Generic language is vague yet rationally understood}
 % \title{Generic statements are vague}
 % \author{{\large \bf Michael Henry Tessler, Noah D. Goodman } \\
 %	\{mhtessler, ngoodman\}@stanford.edu \\
@@ -212,7 +213,7 @@ Imagine talking with a 3-year-old about oxygen. Oxygen is difficult to explain b
 %If you were talking with an adult, you might use a more nuanced statement (e.g. by talking about the subcategory Mammals).
 %Words are vague because ideas are vague, Locke argues. In making this argument, he falls into the habit of communication that we all fall into: using generalizations about members of a category---in this case, \emph{[articulate] sounds}. 
 %
-This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category.  Generics seem to be one of the simplest linguistic constructs. They have no explicitly marked operator, and yet children as young as three can correctly identify and understand them \cite{Cimpian2008}. Generics are ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008}. They are thought to be essential to growth of conceptual knowledge \cite{Gelman2004}, and yet formal theories have little to say about what generics mean.
+This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category.  Generics are one of the simplest linguistic constructs. They have no explicitly marked operator, and yet children as young as three can correctly identify and understand them \cite{Cimpian2008}. Generics are ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008}. They are thought to be essential to growth of conceptual knowledge \cite{Gelman2004}, and yet formal theories have little to say about what generics mean.
 
 The semantics of generics is often contrasted with that of quantifier sentences, which are commonly understood in terms of the prevalence. For example, if ``\emph{Some} animals breathe oxygen.'', then it's quite reasonable to assume that there is at least one animal that does so. If ``\emph{Most} animals breathe oxygen.'', we might conclude that more than half of all animals do this. Similarly, if ``\emph{All} animals breathe oxygen.'' then there really can be no exceptions: 100\% of animals must breathe oxygen for the sentence to be valid. But what about ``Animals breathe oxygen.''? Is there some prevalence beyond which a generic sentence is true?
 
@@ -467,7 +468,7 @@ The model articulated in Section \ref{sec:model} is a model of a listener who up
 
 
 \begin{equation} 
-P_{S_{2}}(g \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_{1}}(x \mid g))
+P_{S_{2}}(g \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_{1}}(x \mid g)
 \label{eq:S2}
 \end{equation}
 
@@ -499,10 +500,16 @@ The largest deviations occur for the items with greatest variance (``neither tru
 
 \subsection{Discussion}
 
-In Experiment 1, we asked whether or not participants' judgments on a set of generic sentences with a range of truth values and covering a range of conceptual distinctions could be explained by a language understanding model with a truth-functional threshold sensitive to the prior distribution over prevalence. In Expt.~1a, we empirically measured the prior distribution of prevalence by asking participants about their beliefs of how prevalent certain properties in within a range of animal categories. Here, we observed qualitatively different distributions corresponding to properties that are common within-categories and common across-categories (e.g. ``are male''), common within-categories but rare across-categories (e.g. ``have manes''), rare within-categories and rare across-categories (e.g. ``carries malaria''). 
+In Expt.~1, we elicited a whether or not participants' judgments on a set of generic sentences with a range of truth values and covering a range of conceptual distinctions could be explained by a language understanding model with a truth-functional threshold sensitive to the prior distribution over prevalence. 
+In Expt.~1a, we empirically measured the prior distribution of prevalence by asking participants about their beliefs of how prevalent certain properties are within a range of animal categories. 
+Here, we observed qualitatively different distributions corresponding to properties that are common within-categories and common across-categories (e.g. ``are male''), common within-categories but rare across-categories (e.g. ``have manes''), rare within-categories and rare across-categories (e.g. ``carries malaria''). 
 
-These differences, coupled with an uncertain threshold for generic meaning, produce different acceptance probabilities for a range of generic sentences. For example, ``Mosquitos carry malaria'' is true, because the prevalence of malaria among mosquitos is higher than prevalence of malaria among most (possibly all) other animal species. ``Lions have manes'' is true for the same reasons. ``Lions are male'' is neither true nor false, because the prevalence of being male among lions is neither significantly more nor less than prevalence of being male among other animal species. The differences among these generic sentences can be explained by differences in the distribution of the prevalence of these categories, with a threshold on prevalence that is uncertain but resolved through communicative pressures.
-
+These differences, coupled with an uncertain threshold for generic meaning, produce different acceptance probabilities for a range of generic sentences. 
+For example, ``Mosquitos carry malaria'' is true, because the prevalence of malaria among mosquitos is higher than prevalence of malaria among most (possibly all) other animal species. 
+``Lions have manes'' is true for the same reason. 
+Participants judged ``Lions are male'' to be neither true nor false, because the prevalence of being male among lions is neither significantly more nor less than prevalence of being male among other animal species. 
+The differences among these generic sentences can be explained by differences in the distribution of the prevalence of these categories. 
+Our model of a pragmatic listener who has uncertainty about the true threshold on prevalence  resolves her uncertainty through a communicative inference about her world-knowledge and produces truth judgments highly similar to those of our participants.
 
 %The speaker selects the utterance according to a soft-max decision rule governed by parameter $\lambda$\footnote{It's conceivable that this $\lambda$ is different from the parameter that governs the selection of $S_{1}$'s utterances. For simplicity here we assume they are the same.}.
 
@@ -520,16 +527,32 @@ These differences, coupled with an uncertain threshold for generic meaning, prod
 %Continuing with this example, the speaker imagines the likely prevalence that the pragmatic listener $L_{1}$ will infer given either ```Birds lay eggs' is true''  or ```Birds lay eggs' is false''. Here, the prevalence prior plays a critical role in determining where the generic-threshold $\theta$ (and, consequently, the resulting inferred prevalence $x$) is likely to fall (Figure \ref{fig:schematic}). In setting the threshold, the pragmatic listener $L_{1}$ balances the truth of the utterance with the informativeness of the utterance. If ```Birds lay eggs' is true'', the pragmatic listener $L_{1}$ will likely set the threshold $\theta$ below 50\%, as this is necessary to make the utterance true (Figure \ref{fig:schematic}; red). At the same time, $L_{1}$ believes the message to be informative, so she will set $\theta$ probably above 10\%. Since the prevalence has to be above the threshold in order to make the utterance true, the most likely inferred prevalence $x$ will be about 50\% (i.e. after ruling out everything below 10\%, the most probably prevalence will be 50\%). On the other hand, if the speaker were to say ```Birds lay eggs' is false'', the prevalence would have to fall \emph{below} the threshold, which in this case would implicate the mass below 10\% and the pragmatic listener would infer something the speaker didn't intend. 
 
 
-\section{Experiment 2: Generics have strong implications}
+\section{Experiment 2: Generics carry strong implications}
 
-Generic statements can be endorsed for a puzzlingly wide range of prevalence levels, depending on the distribution of that property within- and across- categories. Generic statements are additionally puzzling because while they are acceptable for a range of prevalence levels, they are often interpreted as applying to most of the category.  \citeA{Cimpian2010} developed a paradigm aimed to examine this intuition empirically. For example, consider sentences about novel categories with the quantifier ``All'' (e.g. ``All lorches have purple feathers''). Presumably, this sentence is true only when 100\% of lorches have purple feathers. Similarly, upon hearing such an utterance, one is likely to infer that 100\% of lorches have purple feathers.  \citeA{Cimpian2010} tested this relationship between truth judgments and interpretations with the quantifier ``most''---the quantifier that comes closest to capturing generic meaning \cite{Carlson1977,Cimpian2010b}---and found the ``most'' has similar behavior. Participants judged ``most'' sentences true when between 50-100\% of the category had the property (on average: 75\%). Similarly, upon hearing an utterance with ``most'', participants on average inferred a prevalence of about 75\%. Rather intriguingly, they found this symmetry does not hold for generic statements. Generic statements are judged true for a wide range of prevalence levels, but upon hearing a generic utterance, participants were wont to infer that \emph{all} or \emph{almost all} of the category had the property. Thus, the implications of generic statements go far beyond the evidence needed to accept them as valid.
+Generic statements can be endorsed for a puzzlingly wide range of prevalence levels, depending on the distribution of that property within- and across- categories. 
+A second puzzle concerning generic statements is that while acceptable for a range of prevalences, upon hearing a generic, listener are wont to interpret the statement as applying to nearly all of the category. 
+Some of the earliest psychological work on generics brought this out, suggesting that generics ``once accepted psychologically, ... appear to be commonly taken in a rather strong sense, as if the qualifier \emph{always} had implicitly crept into their interpretation'' \cite{Abelson1966}. \red{[Note: this is the same quote that Cimpian2010 use... is this okay?}.
+\citeA{Gelman2002} found that adults interpret novel generic statements about familiar kinds (e.g. ``Bears like to eat ants.'') as implying that almost all bears like to eat ants.
+\citeA{Cimpian2010} found similar inferences with novel generics about novel kinds (e.g. ``Lorches have purple feathers.''). 
 
-These interpretations of generic statements are sensitive to people's beliefs about the properties in question. \citeA{Cimpian2010} observed that predicating with accidental properties (e.g. ``Lorches have muddy feathers.'') significantly reduced participants' judgments about the implied prevalence of these statements.
+These strong inferences are puzzling when examined next to the prevalence required for a generic to be true. As we saw in Expt.~1, generics can be true for a range of prevalence levels. 
+This behavior is anomalous when compared to quantified sentences (e.g. ``All lorches have purple feathers.''). This sentence is true only when 100\% of lorches have purple feathers. 
+Similarly, upon hearing such an utterance, one is likely to infer that 100\% of lorches have purple feathers.  
+\citeA{Cimpian2010} tested this relationship between truth judgments and interpretations with the quantifier ``most''---the quantifier that comes closest to capturing generic meaning \cite{Carlson1977,Cimpian2010b}---and found the ``most'' has similar behavior to ``all''. 
+Participants judged ``most'' sentences true when between 50-100\% of the category had the property (on average: 75\%). 
+Similarly, upon hearing an utterance with ``most'', participants on average inferred a prevalence of about 75\%. 
+This symmetry does not hold for generic statements. 
+Generic statements are judged true for a wide range of prevalence levels, but upon hearing a generic utterance, participants were wont to infer that \emph{all} or \emph{almost all} of the category have the property. 
+Thus, the implications of generic statements go far beyond the evidence needed to accept them as valid.
+
+Not all statements in bare plural form carry these implications. Indeed, interpretations of these sentences are sensitive to listener's beliefs about the properties in question. 
+\citeA{Cimpian2010} observed that predicating with accidental properties (e.g. ``Lorches have muddy feathers.'') significantly reduced participants' judgments about the implied prevalence of these statements.
 
 
 %That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. 10\% of lorches had purple feathers) to assert that the generic statement was true.
 
-Experiment 2 attempted to replicate these findings of \citeA{Cimpian2010}: that there is an asymmetry between truth conditions and implied prevalence of the generic and that this asymmetry is sensitive to the type of property predicated (Expt. 2a). Further, in Expt.~2b, we measure participants' beliefs about the distribution of these types of properties using a paradigm similar to Expt.~1a. We show how the prevalence-based model predicts this asymmetry between truth conditions and implications, and how this asymmetry can be pushed around by differences in the prevalence distributions between properties.
+Expt.~2 attempted to replicate findings of \citeA{Cimpian2010}: that there is an asymmetry between truth conditions and implied prevalence of the generic and that this asymmetry is sensitive to the type of property predicated (Expt. 2a). Further, in Expt.~2b, we measure participants' beliefs about the distribution of these types of properties using a paradigm generalized from Expt.~1a. 
+We show that the language understanding model predicts this asymmetry between truth conditions and implications, and that this asymmetry can be manipulated by differences in the prevalence distributions between properties.
 
 %Exp. 1a and 1b were conducted on separate sessions, one week apart. None of the participants completed both experiments.
 
@@ -538,24 +561,39 @@ Experiment 2 attempted to replicate these findings of \citeA{Cimpian2010}: that 
 
 \subsubsection{Participants}
 
-We recruited X participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 5 minutes and participants were compensated \$0.50.
+We recruited 100 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  
+Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
+All participants were native English speakers. 
+The experiment took about 5 minutes and participants were compensated \$0.50.
 
 \subsubsection{Procedure and materials}
 
-Participants were told they were the resident zoologist of a team of scientists that recently discovered an island with many new animals; their task was to provide their expert opinion on questions about these animals\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/cbg2010-replication/experiment/experiment-9.html}}. 
+In order to get participants thinking about novel they, they were told they were the resident zoologist of a team of scientists that recently discovered an island with many new animals; their task was to provide their expert opinion on questions about these animals\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/asymmetry/asymmetry-1.html}}. 
+Participants were randomly assigned to either the \emph{truth conditions} (n=47) or the \emph{implied prevalence} (n=53) task.
 
-Participants were randomly assigned to either the \emph{truth conditions} or the \emph{implied prevalence} task.
+Following \citeauthor{Cimpian2010}'s paradigm, in the \emph{truth conditions} task, participants were given an evidence statement consisting of the percentage of a novel animal category that had a property (e.g.~``30\% of lorches have purple feathers''). 
+Participants were asked if they agreed or disagreed with the associated generic statement (i.e.~``Lorches have purple feathers.'').
+%\footnote{In the original experiment, the \emph{type of biological property} was manipulated between subjects as well to test the hypothesis that generics of distinctive properties are more readily accepted than generics of otherwise nondistinctive properties.  We have already shown in Experiment 1 how this prevalence-based model can account for such flexibility in truth conditions so we focus our attention on the asymmetry finding here.} 
+Prevalence varied between 10, 30, 50, 70, and 90\%. Each participant saw 30 trials: 10 trials for each of 3 types of property (described below); each prevalence level appeared two times for each property type (5 prevalence levels x 3 property types x 2 repetitions). 
+The original authors found that proportion of ``agree'' responses increased monotonically as prevalence increased. 
 
-Following \citeauthor{Cimpian2010}'s paradigm, in the \emph{truth conditions} task, participants are given an evidence statement consisting of the percentage of a novel animal category that had a property (e.g.~``30\% of lorches have purple feathers''). Participants were asked to judge the associated generic statement (i.e.~``Lorches have purple feathers.'') as true or false. The kind of property was manipulated between-subjects: On each trial, prevalence and generic statements were either of biological properties (e.g. purple feathers) or accidental properties (e.g. muddy feathers)\footnote{In the original experiment, the \emph{type of biological property} was manipulated between subjects as well to test the hypothesis that generics of distinctive properties are more readily accepted than generics of otherwise nondistinctive properties.  We have already shown in Experiment 1 how this prevalence-based model can account for such flexibility in truth conditions so we focus our attention on the asymmetry finding here.} Prevalence varied between 10, 30, 50, 70, and 90\%. Each participant saw 20 trials: 10 trials for each kind of property type (and each prevalence level appeared two times for each property type). The original authors found that proportion of ``true'' responses increased monotonically as prevalence increased. 
-
-In the \emph{implied prevalence} task, participants were supplied with the generic and asked to judge prevalence: ``What percentage of lorches do you think have purple feathers?''. Participants saw 20 trials: 10 for each property type (biological vs. accidental).  \citeauthor{Cimpian2010} found that the generic was interpreted strongly---nearly all lorches have purple feathers---for biological properties. At the same time, generics of accidental properties (e.g. ``Lorches have muddy feathers.'') were not interpreted as applying to nearly all of the category.
+Participants in the \emph{implied prevalence} task were supplied with the generic and asked to judge prevalence: ``What percentage of lorches do you think have purple feathers?''. Participants saw 30 trials: 10 for each of 3 property types.
+The kind of property was manipulated within-subjects: On each trial, the statements were about a certain type of property. 
+Our primary manipulation was between biological properties (e.g. purple feathers) and accidental properties (e.g. muddy feathers)\footnote{Classic work in generalization \cite{Nisbett1983} additionally suggests that there may be differences in the distributions of different types of biological properties. 
+For this reason, we included two types of biological properties: color--part pairs (e.g. purple feathers) and gradable adjective--part pairs (e.g. long feathers). However, we found no meaningful differences between the two, and just describe the results of the color--part pairs for simplicity.}.
+Biological properties and accidental properties were expected to have different distributions and thus to have different implications.  
+\citeauthor{Cimpian2010} found that generic statements about biological properties are interpreted strongly---nearly all lorches have purple feathers.
+At the same time, statements about accidental properties (e.g. ``Lorches have muddy feathers.'') were not interpreted as applying to nearly all of the category.
 
 %Property type was manipulated by adding additional sentences to the prompt. CBG's original study used three property types: \emph{dangerous and distinct} (e.g.~``These feathers are as sharp as needles and can easily get lodged in you, causing massive bleeding. No other animals have these kinds of feathers.''), \emph{nondangerous and nondistinctive} (e.g.~``These feathers are wide and very smooth to the touch. Other animals have these kinds of feathers.''), and \emph{plain} (no additional statements). 
 
 %
 %They also found an interaction with type: \emph{dangerous and distinctive} property had higher proportions of ``true'' responses to the generic, particularly so at lower prevalence levels. 
  
-We used the same materials as \citeauthor{Cimpian2010}. The materials used were 30 novel animal categories (e.g. lorches, morseths, blins) each paired with a unique property. Biological properties were made by pairing a color with a body-part (e.g. purple feathers, orange tails). Accidental properties used the same set of body-parts but modified it with an adjective describing an accidental or disease state (e.g. broken legs, wet fur). Each participant saw a random subset of 10 unique animal-property pairs for each type of property (biological and accidental). 
+We used the same materials as \citeauthor{Cimpian2010}. The materials used were 30 novel animal categories (e.g. lorches, morseths, blins) each paired with a unique property. 
+Biological properties were made by pairing a color with a body-part (e.g. purple feathers, orange tails). 
+Accidental properties used the same set of body-parts but modified it with an adjective describing an accidental or disease state (e.g. broken legs, wet fur). 
+Each participant saw a random subset of 10 unique animal-property pairs for each type of property (biological and accidental). 
 Table \ref{tab:sampleTrial} shows an example trial for each of the property types and tasks.
 
 
@@ -615,11 +653,56 @@ The prevalence scores from each task were entered into a linear mixed model with
 
 \subsubsection{Participants}
 
-We recruited X participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about X minutes and participants were compensated \$X.
+We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 5-7 minutes and participants were compensated \$0.75.
 
 \subsubsection{Procedure and materials}
 
-The procedure was similar to that used in Experiment 1a. One change was that participants were told scientists recently discovered a remote island with a lot of animals we didn't know existed. They were told they might not recognize some animal-names listed but to do their best to estimate the prevalence. Participants were free to add animal names they were familiar with or ones that they made up. Materials (properties and novel animal kinds) matches those used in Expt.~2a.
+In Expt.~1a, participants filled out a table with rows corresponding to different animal kinds and columns corresponding to different properties. Pilot testing suggest this was a pragmatically strange setup for this paradigm, as participants do not know anything about the animals. 
+We thus generalized the procedure to simpler questions and used a Bayesian data analysis model to infer the underlying distribution. 
+We then used these distributions in our language model to make predictions about the implications of generic sentences.
+
+Participants were again told they were on a newly discovered island with lots of new animals on it. They were then given the following instructions
+
+\begin{quote}
+One day, you are roaming through the library when you encounter a data-collection robot. The robot doesn't know very much about the world and is asking you questions to learn more. Today, it wants to learn about properties of animals. It is randomly selecting an animal from its memory and a property from its memory, and asking you if the animal is likely to have the property.
+
+Of course, you're new to this island so you don't really know anything about these animals. The properties, however, will be familiar. Try to provide your best guess given your own experience.
+\end{quote}
+
+Participants were then run through a practice trial where they were familiarized with the questions that would be asked on them. 
+On each trial, the data-collection robot introduced a new animal (e.g. ``We recently discovered animals called glippets.''). 
+The robot then asked how likely it was that ``there was \emph{a} glippet with [[property]]''. 
+This question aimed to get at the prevalence of the property \emph{across} categories (e.g. it's very likely that there is a glippet that is female, less likely that there is a glippet that has wings, and even less likely that there is a glippet has purple wings). 
+The second question was about the prevalence \emph{within} categories. The robot asked, ``Suppose there is a glippet that has wings. What percentage of glippets do you think have wings?''
+
+Participants responded using slider bars that ranged from ``unlikely'' to ``likely'', and ``0\%'' to ``100\%'', respectively.
+Materials (properties and novel animal kinds) match those used in Expt.~2a.
+
+\subsubsection{Data analysis}
+
+In order to recover the single distributions of prevalence representing prevalence both within- and across- categories (analogous to Figure \ref{fig:priors1a}), we built a simple Bayesian model of the task questions and their relation to the desired distribution. 
+
+Participants' responses to each question were assumed to be samples from Beta distributions with unknown parameters. 
+The responses to the questions are used to estimate the distributions of prevalence across- and within- categories, separately. 
+\begin{align*}
+d_{across} \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\
+d_{within} \sim \text{Beta}(\gamma_{within}, \delta_{within}) 
+\end{align*}
+The parameters $\gamma$ and $\delta$ correspond to the mean and variance (formally, the concentration) of prevalence across- and within- categories, respectively. 
+We put identical, uninformative priors on these parameters:
+\begin{align*}
+\gamma & \sim \text{Uniform}(0,1) \\
+\delta & \sim \text{Uniform}(0,10)
+\end{align*}
+To construct prevalence distributions reflecting both the within- and across- category prevalence (as we have for Expt.~1b), we assume this resulting distribution is a mixture of categories that have the property and categories that don't have the property. Whether or not a category has a property is determined by flipping a coin, weighted by the prevalence across categories
+\begin{align*}
+\theta_{across} & \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\ 
+h & \sim \text{Bernoulli}(\theta_{across}) \\
+p & \sim \begin{cases} 
+		\text{Beta}(\gamma_{within}, \delta_{within}) &\mbox{if } h = 1 \\ 
+				0 & \mbox{if } h=0. 
+				\end{cases} 
+\end{align*}
 
 \subsubsection{Results}
 
