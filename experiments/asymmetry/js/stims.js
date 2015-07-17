@@ -419,6 +419,110 @@ var stimsForPrior2 =
                 ]
 
 
+var stimsForPrior3 = 
+                [
+                {
+                    part: "teeth", 
+                    accidental:"sore", 
+                    color:"pink", 
+                    vague:"long",
+                    dangerous:"razor sharp teeth that are so powerful a single bite can be lethal",
+                    vaguelong:"teeth that are long and narrow"
+                },
+                {
+                    part: "fur", 
+                    accidental:"wet", 
+                    color:"yellow", 
+                    vague:"curly",
+                    dangerous:"fur that sheds particles that get lodged in your lungs and make it impossible to breathe",
+                    vaguelong:"fur that is very curly and rough to the touch"
+                },
+                {
+                    part: "scales", 
+                    accidental:"infected", 
+                    color:"red", 
+                    vague:"soft",
+                    dangerous: "scales that secrete a strong venom that kills you on the spot",
+                    vaguelong: "scales that are soft, flexible, and very shiny."
+                },
+                {
+                    part: "tails", 
+                    accidental:"itchy", 
+                    color:"orange", 
+                    vague:"long",
+                    dangerous:"tails that are so long and muscular that they can suffocate you in a matter of minutes",
+                    vaguelong:"tails that are very long and usually get curled up in a ball"
+                },
+                {
+                    part: "stripes", 
+                    accidental:"faded", 
+                    color:"copper", 
+                    vague:"thin",
+                    dangerous:"stripes that deliver a powerful electric shock that's deadly to anyone within a few feet",
+                    vaguelong:"stripes that are very thin and closely spaced"
+                },
+                // {
+                //     part: "claws", 
+                //     accidental:"cracked", 
+                //     color:"blue", 
+                //     vague:"big",
+
+                // },
+                {
+                    part: "shells", 
+                    accidental:"rotting", 
+                    color:"green", 
+                    vague:"light",
+                    dangerous:"shells that are so heavy they would immediately crush your bones",
+                    vaguelong:"shells that have an octagonal shape and are very light"
+                },
+                {
+                    part: "spots", 
+                    accidental:"dirty", 
+                    color:"gold", 
+                    vague:"sensitive",
+                    dangerous:"spots that are home to a contagious fungus that is deadly to anyone who becomes infected with it",
+                    vaguelong:"spots that are very sensitive and cover most of their bodies"
+                },
+                {
+                    part: "feathers", 
+                    accidental:"muddy", 
+                    color:"purple", 
+                    vague:"smooth",
+                    dangerous:"feathers that are as sharp as needles and can easily get lodged in you, causing massive bleeding",
+                    vaguelong:"feathers that are wide and very smooth to the touch"
+                },
+                {
+                    part: "ears", 
+                    accidental:"swollen", 
+                    color:"orange", 
+                    vague:"small",
+                    dangerous:"ears that are home to dangerous parasites that can make you go deaf",
+                    vaguelong:"ears that are small and round"
+                },
+                {
+                    part: "legs", 
+                    accidental:"broken", 
+                    color:"silver", 
+                    vague:"long",
+                    dangerous:"legs that are so powerful a single blow could kill you",
+                    vaguelong:"legs that are very long and covered with bumpy skin",
+                }
+                // {
+                //     part: "skin", 
+                //     accidental:"swollen", 
+                //     color:"violet", 
+                //     vague:"rough"
+                // },
+                // {
+                //     part: "eyes", 
+                //     accidental:"dirty", 
+                //     color:"yellow", 
+                //     vague:"sensitive"
+                // }           
+                ]
+
+
 
 var realAnimals = [
                     "Tigers",
