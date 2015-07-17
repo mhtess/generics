@@ -391,7 +391,12 @@ function init() {
   exp.trials = [];
   exp.catch_trials = [];
   exp.nTrials = 12;
-  exp.propTypes = ["color", "accidental", "vaguelong", "dangerous"]
+  exp.propTypes = [
+                  "accidental",
+                  "dangerous",
+                  "vaguelong", 
+                  "color", 
+                  "part"]
 
 
 
