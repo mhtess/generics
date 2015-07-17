@@ -35,6 +35,7 @@ Plotted below are the trial-wise responses to the 2 questions (question 1 on x-a
 ```{r prior2}
 library(VGAM)
 d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-prior-2/asymmetry-prior-2-trials.csv')
+d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-prior-3/asymmetry-prior-3-trials.csv')
 
 ggplot(data=d,aes(x=response0,y=response1))+
   geom_point()+
@@ -201,5 +202,112 @@ ggplot(filter(d.all, prev!=0), aes(x=prev,fill=condition))+
   #geom_density()+
   facet_wrap(~condition, scales='free')
 ```
+
+
+# Item specific priors
+
+
+```{r item1}
+d.item <- d.tidy %>%
+  group_by(stim_type, stim_property, resp) %>%
+  summarise(mean_response = mean(val),
+            sterr = sem(val),
+            n = length(resp))
+
+d.item$stim_property<-factor(d.item$stim_property,
+       levels= levels(with((d.item %>% filter(resp=='response0')), reorder(stim_property, mean_response, function(x) -x))))
+
+ggplot(d.item, aes(x=stim_property, y = mean_response, group=stim_type, fill=stim_type))+
+  geom_bar(stat='identity', position=position_dodge())+
+  geom_errorbar(aes(ymin = mean_response-2*sterr, ymax = mean_response+2*sterr))+
+  facet_wrap(~resp) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,
+                                   vjust=1))
+```
+
+## Bayesian analysis
+
+```{r item.fbt}
+f<- read.csv('~/Documents/research/generics/analysis/FBT-priors/results/priors_betas_byItem_incrMH100000.csv')
+f<- read.csv('~/Documents/research/generics/analysis/FBT-priors/results/priors3_betas_byType_incrMH10000.csv')
+
+
+f.tidy<- f %>% gather(Parameter, Value, Gamma, Delta) %>%
+  mutate(param = paste(Item,Question,Parameter,sep='.'))
+samples  = 10000
+
+# f.params0<- data.frame(Parameter = rep(f.tidy$param, 1+samples*f.tidy$Probability),
+#                        Response = rep(f.tidy$Value, 1+samples*f.tidy$Probability))
+# f.params.tidy<- f.params0 %>%
+#   separate(Parameter, by='.', into=c("Item", "Question", "Parameter"))
+
+f.params <- data.frame(Item = rep(f.tidy$Item, 1+samples*f.tidy$Probability),
+                       Question = rep(f.tidy$Question, 1+samples*f.tidy$Probability),
+                      Parameter = rep(f.tidy$Parameter, 1+samples*f.tidy$Probability),
+                       Response = rep(f.tidy$Value, 1+samples*f.tidy$Probability)
+                       )
+
+
+ggplot(f.params %>% filter(Parameter=='Gamma'), aes(x=Response, fill=Item))+
+  geom_histogram(position=position_dodge())+
+  facet_grid(Question~.)
+
+```
+
+
+### Expected value of means
+```{r item.fbt.expectation}
+
+f.exp<-f.tidy %>%
+  group_by(Parameter, Item, Question) %>%
+  summarise(expectation = sum(Value*Probability))
+
+f.exp<- f.exp %>% filter(Parameter=='Gamma')
+f.exp$Item<-factor(f.exp$Item,
+       levels= levels(with((f.exp %>% filter(Question=='response1')), reorder(Item, expectation, function(x) -x))))
+
+ggplot(f.exp, aes(x=Item, y = expectation))+
+  geom_bar(stat='identity', position=position_dodge())+
+  #geom_errorbar(aes(ymin = mean_response-2*sterr, ymax = mean_response+2*sterr))+
+  facet_wrap(~Question) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,
+                                   vjust=1))
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

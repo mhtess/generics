@@ -22,6 +22,8 @@ n = 100
 Accept task n = 47
 Implied task n = 53
 
+[Experiment here.](http://stanford.edu/~mtessler/generics/experiments/asymmetry/asymmetry-1.html)
+
 ```{r helperFunctions}
 sem.2AFC <- function(p, n){return(sqrt((p*(1-p))/n))}
 avePrevScore <- function(responses,prevalences){
@@ -67,8 +69,31 @@ d.aveAccPrev <- d.accept %>%
   mutate(type = "accept")
 
 
-rs.accept<-glmer(response ~ stim_type*stim_prevalence + (1 +stim_prevalence | workerid), family='binomial', data=d.accept)
-summary(rs.accept)
+#rs.accept<-glmer(response ~ stim_type*stim_prevalence + (1 +stim_prevalence | workerid), family='binomial', data=d.accept)
+$summary(rs.accept)
+```
+
+## Item wise truth conditions
+
+```{r}
+# calculate average acceptable prevalence for each workerid and type
+d.itemAccPrev <- d.accept %>%
+  mutate(response = as.numeric(response=='Agree')) %>%
+  group_by(stim_type, stim_property) %>%
+  summarise(prev = avePrevScore(response,stim_prevalence),
+            n = length(response)) %>%
+  mutate(type = "accept")
+
+d.itemAccPrev$stim_property <- with(d.itemAccPrev, reorder(stim_property, prev, function(x) -x))
+ggplot(d.itemAccPrev, aes(x=stim_property, y = prev, group=stim_type, fill=stim_type))+
+  geom_bar(stat='identity', position=position_dodge())+
+  #geom_errorbar(aes(ymin = ave-2*sterr, ymax = ave+2*sterr))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,
+                                   vjust=1))
+
+range(d.itemAccPrev$prev)
+
+
 ```
 
 ```{r asym1.impliedprev}
@@ -105,18 +130,53 @@ summary(rs.asymmetry)
 ## Item effects
 
 ```{r}
-head(d.implied)
+#head(d.implied)
 
 d.impItems<-d.implied %>%
-  group_by(stim_property) %>%
+  filter(!(workerid %in%trouble.makers)) %>%
+  group_by(stim_type, stim_property) %>%
   summarise(ave = mean(to.n(response)),
-            type = stim_type[1])
+            sterr = sem(to.n(response)),
+           n = length(response))
 
-ggplot(d.impItems,aes(x=ave,fill=type))+
-  geom_histogram(position=position_dodge())
+d.impItems$stim_property<-with(d.impItems, reorder(stim_property, ave, function(x) -x))
+
+
+ggplot(d.impItems, aes(x=stim_property, y = ave, group=stim_type, fill=stim_type))+
+  geom_bar(stat='identity', position=position_dodge())+
+  geom_errorbar(aes(ymin = ave-2*sterr, ymax = ave+2*sterr))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,
+                                   vjust=1))
+
 
 ```
 
+## By subject
+```{r}
+mean(d.implied$rt)
+sd(d.implied$rt)
+
+
+ggplot(d.implied,aes(x=rt/1000))+
+  geom_histogram()+
+  xlim(0,10)
+
+  facet_wrap(~workerid)
+
+## some subjects just put 100 for all
+d.rt<-d.implied %>% group_by(workerid) %>%
+  summarise(meanrt = mean(rt/1000),
+            medrt = median(rt/1000),
+            sterr = sem(rt/1000))
+
+d.rt$workerid<- with(d.rt, reorder(workerid, medrt, function(x) -x))
+
+ggplot(d.rt, aes(x=workerid, y= medrt))+
+  geom_bar(stat='identity', position=position_dodge())+
+    geom_errorbar(aes(ymin = medrt-2*sterr, ymax = medrt+2*sterr))
+
+trouble.makers<-d.rt[d.rt$medrt<0,]$workerid
+```
 
 # Prior 1
 
@@ -364,10 +424,12 @@ ggplot(d.all, aes(x=prev,fill=condition))+
 
 ```{r tfbt}
 d<-read.csv("~/Documents/research/generics/models/generics-hashmh1000_prior-incrmh1000.csv")
+d<-read.csv("~/Documents/research/generics/models/results/generics-hashmh100_prior3-incrmh1000.csv")
+
 
 d.params <- d %>% filter(!(Parameter%in%c("truth_conditions", 
                                           "implied_prevalence")))
-samples = 1000
+samples = 100
 d.params <- data.frame(Parameter = rep(d.params$Parameter, 
                                        1+samples*d.params$Probability),
                        Response = rep(d.params$Value, 
@@ -378,10 +440,18 @@ ggplot(d.params, aes(x=Response))+
   xlim(0,1)
 
 
-d.pp <- d %>% filter(Parameter%in%c("truth_conditions", 
+d.pp <- d %>% 
+  filter(Parameter%in%c("truth_conditions", 
                                     "implied_prevalence")) %>%
   group_by(Parameter,Item, Prevalence) %>%
   summarise(expectation = sum(Value*Probability))
+
+# truth conditions plot
+ggplot(d.pp %>% filter(Parameter=='truth_conditions'),
+       aes(x=Prevalence, y = expectation, color=Item))+
+  geom_point(position=position_dodge())+
+  geom_line(position=position_dodge())
+
 
 d.aveprev <- 
   bind_rows(d.pp %>%  
