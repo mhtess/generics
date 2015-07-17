@@ -63,7 +63,7 @@ function make_slides(f) {
           '<br> How likely is it that there is a ' +stim.exemplar + ' that has <strong><em>' + stim.property + '</strong></em>?"'
 
       var prevalence_question = 'The robot says: "Suppose there is a ' + stim.exemplar +' that has ' + stim.property + '.' +
-          "<br>What percentage of "  + this.stim.category + " do you think have <strong><em>" + this.stim.property + "</strong></em>?\n";
+          "<br>What percentage of "  + this.stim.category + " do you think have <strong><em>" + this.stim.property + '</strong></em>?"\n';
 
       $(".question0").html(existential_question);
       $(".question1").html(prevalence_question);
