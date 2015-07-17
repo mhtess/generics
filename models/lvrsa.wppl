@@ -11,14 +11,16 @@
 // asymutils.writeCSV(writeReady, "results/expVal_betas_prior2_incrMH10k.csv")
 ////////
 
-console.log('prior made')
-
 //////// generics model
 
-var priorERP = {"accidental": getPriorERP("accidental"),
-				"color": getPriorERP("color")}
+var priorERP = {
+                "accidental": getPriorERP("accidental"),
+				        "color": getPriorERP("color"),
+                "vaguelong": getPriorERP("vaguelong"),
+                "dangerous": getPriorERP("dangerous")
+              }
 
-console.log('prior really made')
+console.log('prior inferred from prior elicitation data')
 
 var thetaBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
 var bins = priorERP["accidental"].support()

@@ -26,7 +26,7 @@ var subset = function(df, field, value){
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
-var Priordata = asymutils.readCSV("data/asymmetry-prior-2-trials.csv").data
+var Priordata = asymutils.readCSV("data/asymmetry-prior-3-trials.csv").data
 
 var df = map(
 	function(lst){
@@ -51,6 +51,7 @@ var priorModel = function(c){
 			var delta = uniform(0,10)
 
 			var responseData = _.pluck(conditionData,r)
+			// console.log(responseData)
 			var scr = reduce(function(dataPoint, memo) {
 							    return memo + betaERP.score([
 									shape_alpha(gamma,delta),
@@ -72,7 +73,7 @@ var priorModel = function(c){
 var getPriorERP = cache(function(condition){
 
 	// do BDA on prior elicitation
-	var heirarchicalERP = IncrementalMH(function(){return priorModel(condition)}, 100)
+	var heirarchicalERP = IncrementalMH(function(){return priorModel(condition)}, 1000)
 
 	Enumerate(function(){
 
@@ -119,3 +120,5 @@ var getPriorERP = cache(function(condition){
 	})
 
 })
+
+// getPriorERP("accidental")
