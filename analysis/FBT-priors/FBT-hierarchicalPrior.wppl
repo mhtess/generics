@@ -26,7 +26,7 @@ var subset = function(df, field, value){
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
-var data = priorutils.readCSV("../../data/asymmetry/asymmetry-prior-2-trials.csv").data
+var data = priorutils.readCSV("../../data/asymmetry/asymmetry-prior-3-trials.csv").data
 
 var df = map(
 	function(lst){
@@ -36,12 +36,14 @@ var df = map(
 
 
 var conditions = _.uniq(_.pluck(df,"stim_type"))
+var items = _.uniq(_.pluck(df,"stim_property"))
 var responseTypes = ["response0","response1"]
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
 }
 
+// by "condition" (part vs. color vs. vague vs. accidental)
 var dataAnalysisModel = function(){
 
 	foreach(conditions,
@@ -72,18 +74,59 @@ var dataAnalysisModel = function(){
 }
 
 
+// by "item" (e.g. "broken feathers", "legs")
 
-var resultsERP = IncrementalMH(dataAnalysisModel, 10000)
+// var itemAnalysisModel = function(){
 
-var writeReady = map(function(key){
-		var m = marginalize(resultsERP, key)
-		return [key, expectation(marginalize(m, 0)), expectation(marginalize(m, 1))]
-	},
-	_.keys(resultsERP.support()[0])
-)
-writeReady.unshift(["key","gamma","delta"])
+// 	foreach(items,
+// 		function(i){
 
-priorutils.writeCSV(writeReady, "results/expVal_betas_prior2_incrMH10k.csv")
+// 			var itemData = subset(df, "stim_property", i)
+
+// 			foreach(responseTypes,
+// 				function(r){
+
+// 					var gamma = uniform(0,1)
+// 					var delta = uniform(0,10)
+// 					var responseData = _.pluck(itemData,r)
+// 					var scr = reduce(function(dataPoint, memo) {
+// 									    return memo + betaERP.score([
+// 											shape_alpha(gamma,delta),
+// 											shape_beta(gamma,delta)
+// 											], avoidEnds(dataPoint))
+// 										}, 0, responseData)
+// 					factor(scr)
+
+// 					query.add([i, r], [gamma, delta])
+// 				}
+// 			)
+// 		}
+// 	)
+// 	return query
+// }
+
+
+var mhiter = 10000
+var resultsERP = IncrementalMH(dataAnalysisModel, mhiter)
+
+var outfile = "results/priors3_betas_byType_incrMH"+mhiter+".csv"
+
+priorutils.erpWriter(resultsERP,outfile)
+console.log('printed '+ outfile)
+
+// var resultsERP = HashMH(dataAnalysisModel, 100)
+// resultsERP
+
+
+// var writeReady = map(function(key){
+// 		var m = marginalize(resultsERP, key)
+// 		return [key, expectation(marginalize(m, 0)), expectation(marginalize(m, 1))]
+// 	},
+// 	_.keys(resultsERP.support()[0])
+// )
+// writeReady.unshift(["key","gamma","delta"])
+
+// priorutils.writeCSV(writeReady, "results/expVal_betas_prior2_incrMH10k.csv")
 
 // foreach(_.keys(resultsERP.support()[0]),
 // 	function(key){
