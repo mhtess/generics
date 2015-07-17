@@ -461,13 +461,14 @@ var stimsForPrior3 =
                     dangerous:"stripes that deliver a powerful electric shock that's deadly to anyone within a few feet",
                     vaguelong:"stripes that are very thin and closely spaced"
                 },
-                // {
-                //     part: "claws", 
-                //     accidental:"cracked", 
-                //     color:"blue", 
-                //     vague:"big",
-
-                // },
+                {
+                    part: "claws", 
+                    accidental:"cracked", 
+                    color:"blue", 
+                    vague:"big",
+                    dangerous:"claws that are so incredibly strong that once they grab hold of something, they cannot be unlatched",
+                    vaguelong:"claws that are big and delicate"
+                },
                 {
                     part: "shells", 
                     accidental:"rotting", 
@@ -507,13 +508,15 @@ var stimsForPrior3 =
                     vague:"long",
                     dangerous:"legs that are so powerful a single blow could kill you",
                     vaguelong:"legs that are very long and covered with bumpy skin",
+                },
+                {
+                    part: "skin", 
+                    accidental:"swollen", 
+                    color:"violet", 
+                    vague:"rough",
+                    dangerous:"skin that carries a poisonous dust that makes your veins seize up, causing blood clots",
+                    vaguelong:"skin that is rough and textured"
                 }
-                // {
-                //     part: "skin", 
-                //     accidental:"swollen", 
-                //     color:"violet", 
-                //     vague:"rough"
-                // },
                 // {
                 //     part: "eyes", 
                 //     accidental:"dirty", 

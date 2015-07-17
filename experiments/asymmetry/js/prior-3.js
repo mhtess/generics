@@ -391,7 +391,7 @@ function init() {
   exp.trials = [];
   exp.catch_trials = [];
   exp.nTrials = 12;
-  exp.propTypes = ["color", "vaguelong", "dangerous"]
+  exp.propTypes = ["color", "accidental", "vaguelong", "dangerous"]
 
 
 
@@ -423,7 +423,7 @@ var properties = _.shuffle(_.flatten(_.map(
     return _.map(substims,
       function(s){
 
-        var postfix = type=="color" ? " "+s.part : ""
+        var postfix = (type=="color" || type=='accidental') ? " "+s.part : ""
         return {property: s[type]+postfix,
                 type: type}
 
