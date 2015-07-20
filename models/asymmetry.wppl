@@ -28,7 +28,7 @@ var addGuessing = function(myERP, task, phi){
 		    (task=="truth_conditions") ? 
 		    		flip(0.5) ? "generic is true" 
 		    				  : "mu" : 
-			uniformDraw(bins)
+			uniformDraw(stateBins)
 	return x
 	})
 }
@@ -39,10 +39,57 @@ var sampleSubject = function(truthERP,trials){
 }
 
 
+
+
+var heirarchicalERP = {
+               "accidental-low": IncrementalMH(function(){return priorModel("accidental-low")}, 1000),
+               "accidental-high": IncrementalMH(function(){return priorModel("accidental-high")}, 1000),
+                // "accidental":getPriorERP("accidental"),
+                "color": IncrementalMH(function(){return priorModel("color")}, 1000),
+                  "vague": IncrementalMH(function(){return priorModel("vague")}, 1000),
+                  "part":IncrementalMH(function(){return priorModel("part")}, 1000)
+                // "vaguelong": getPriorERP("vaguelong"),
+                // "dangerous": getPriorERP("dangerous")
+              }
+console.log('prior inferred from prior elicitation data')
+
+var getPrior = function(s, condition){
+  var priorERP = Enumerate(function(){
+      var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+      // var kindDoesntHaveF_prevalence = 0.01
+      var kindDoesntHaveF_prevalence = 0
+      var discretizeBeta = function(gamma, delta){
+        var shape_alpha = gamma * delta
+        var shape_beta = (1-gamma) * delta
+        var betaPDF = function(x){
+          return Math.pow(x,shape_alpha-1)*
+              Math.pow((1-x),shape_beta-1)
+        }
+        return map(betaPDF, bins)
+      }
+      var kindHasF = flip(
+              bins[discrete(
+                discretizeBeta(
+                  s[condition+",response0,gamma"], 
+                  s[condition+',response0,delta']
+                )
+              )])
+      var prevalenceGivenK = kindHasF ? bins[discrete(
+                discretizeBeta(
+                  s[condition+",response1,gamma"], 
+                  s[condition+",response1,delta"]
+                )
+              )] : kindDoesntHaveF_prevalence
+
+      return prevalenceGivenK
+    })
+
+ return map(function(x){return Math.exp(priorERP.score([],x))}, [0, 0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99])
+}
+
 var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
 //var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
 var stimTypes = _.keys(heirarchicalERP)
-
 
 
 var dataModel = function(){
@@ -52,18 +99,19 @@ var dataModel = function(){
 	var phi = 0
 	// var phi = uniform(0.99,1.01)
 
-
 	foreach(tasks,
 		function(task){
 
 			foreach(stimTypes, 
 				function(type){
-					console.log(type)
+					// console.log(type)
+				    var s = sample(heirarchicalERP[type])
+				    var prior = getPrior(s, type)
 
 					if (task=="truth_conditions") {
 
-//						var truth1opt = uniform(0,20)
-						var truth1opt = uniform(0.99,1.01)
+						var truth1opt = uniform(0,10)
+//						var truth1opt = 1//uniform(0.99,1.01)
 						var df_accept_type = subset(df_accepted, "stim_type", type)
 
 						foreach(prevalenceLevels,
@@ -71,8 +119,7 @@ var dataModel = function(){
 
 								var df_accepted_prev = _.pluck(subset(df_accept_type,"stim_prevalence", prevalence), "response")
 								// console.log(prevalence, type, s1opt, number_s1opt)
-								// var agreeERP = truthSpeaker2(prevalence/100, truth1opt, 1, priorERP)
-								var agreeERP = genericsModel(task, type, prevalence/100, truth1opt, 1)
+								var agreeERP = truthSpeaker2(prevalence/100, prior, 1, 1)
 
 								var linkedERP = addGuessing(agreeERP, task, phi)
 
@@ -93,13 +140,12 @@ var dataModel = function(){
 						query.add(["truthOptimality","NA","NA"], truth1opt)
 
 					} else {
-//						var implied1opt = uniform(0,20)
-						var implied1opt = uniform(0.99,1.01)
+						var implied1opt = uniform(0,20)
+//						var implied1opt = 1//uniform(0.99,1.01)
 
 						var df_implied_type = subset(df_implied, "stim_type", type)
 						var df_implied_prev = _.pluck(df_implied_type, "response")
-						// var impliedERP = numberSpeaker2("generic is true", implied1opt, 1, priorERP)
-						var impliedERP = genericsModel(task, type, null, implied1opt, 1)
+						var impliedERP = numberSpeaker2("generic is true", prior, 1, 1)
 
 						var linkedERP = addGuessing(impliedERP, task, phi)
 
@@ -119,22 +165,29 @@ var dataModel = function(){
 		})
 
 	// query.add(["speakerOptimality","NA","NA"], s1opt)
-	query.add(["phi","NA","NA"], phi)
+	// query.add(["phi","NA","NA"], phi)
 
 	return query
+
 }
 
+var mhiter = 1000
+var resultsERP = HashMH(dataModel, mhiter)
+//resultsERP
+// dataModel()
+ // IncrementalMH(function(){return priorModel("accidental-low")}, 100)
 
-var mhiter = 10
-var resultsERP = HashMH(dataModel,mhiter)
+// var s = sample(heirarchicalERP["accidental-low"])
+// var prior = getPrior(s, "accidental-low")
 
 
-
-
+// // var agreeERP = truthSpeaker2(0.1, prior, 1, 1)
+// var impliedERP = numberSpeaker2("generic is true", prior, 1, 1)
+// impliedERP
 // var outfile = "results/generics-soWord-soNumber-phi-hashmh"+mhiter+"_prior2-incrmh1000.csv"
 //var outfile = "results/generics-truthOpt-impliedOpt-hashmh"+mhiter+"_prior2-incrmh1000.csv"
 // var outfile = "results/generics-fixedparams-nophi-hashmh"+mhiter+"_prior2-incrmh1000.csv"
-var outfile = "results/generics-priorUncertainty-fixedparams-nophi-hashmh"+mhiter+"_prior2-incrmh1000.csv"
+var outfile = "results/generics-priorUncertainty-truthOpt-impliedOpt-nophi-hashmh"+mhiter+"_prior2-incrmh1000.csv"
 
 console.log('inference complete')
 asymutils.erpWriter(resultsERP, outfile)
