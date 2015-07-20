@@ -37,10 +37,20 @@ avePrevScore <- function(responses,prevalences){
 ```
 
 ```{r asym1.entry}
-d<-read.csv('generics/experiments/turk/asymmetry-1/asymmetry-1-trials.csv')
+d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-1/asymmetry-1-trials.csv')
 
 d.accept<- d %>% filter(trial_type=='truth_conditions')
 d.implied<- d %>% filter(trial_type=='implied_prevalence')
+
+
+## some subjects just put 100 for all
+d.rt<-d.implied %>% group_by(workerid) %>%
+  summarise(meanrt = mean(rt/1000),
+            medrt = median(rt/1000),
+            sterr = sem(rt/1000))
+
+d.rt$workerid<- with(d.rt, reorder(workerid, medrt, function(x) -x))
+trouble.makers<-d.rt[d.rt$medrt<0,]$workerid
 ```
 
 ```{r asym1.truthconditions}
@@ -70,7 +80,7 @@ d.aveAccPrev <- d.accept %>%
 
 
 #rs.accept<-glmer(response ~ stim_type*stim_prevalence + (1 +stim_prevalence | workerid), family='binomial', data=d.accept)
-$summary(rs.accept)
+#summary(rs.accept)
 ```
 
 ## Item wise truth conditions
@@ -149,6 +159,51 @@ ggplot(d.impItems, aes(x=stim_property, y = ave, group=stim_type, fill=stim_type
                                    vjust=1))
 
 
+
+
+
+# testing median split on accidental
+
+d.impAcc<-d.impItems %>% filter(stim_type=='accidental')
+d.impAcc$medsplit <- 'low'
+d.impAcc[median(d.impAcc$ave)<d.impAcc$ave,]$medsplit<-'high'
+
+d.implied.accidental<-d.implied %>% filter(stim_type=='accidental')
+
+
+
+d.implied.accidental$medsplit<-'low'
+d.implied.accidental[d.implied.accidental$stim_property %in% d.impAcc[d.impAcc$medsplit=='high',]$stim_property,]$medsplit<-'high'
+
+
+rs1<-lmer(data=d.implied.accidental, response~medsplit + (1 | workerid))
+summary(rs1)
+
+d.impSplit1<- d.implied.accidental %>% filter(trial_type=='implied_prevalence') %>%
+  group_by(medsplit) %>%
+    summarise(ave = mean(to.n(response)),
+            sterr = sem(to.n(response)),
+           n = length(response))
+
+
+ggplot(d.impSplit1, aes(x=medsplit, y = ave))+
+  geom_bar(stat='identity', position=position_dodge())+
+  geom_errorbar(aes(ymin = ave-2*sterr, ymax = ave+2*sterr))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,
+                                   vjust=1))
+
+head(d)
+head(d.implied.accidental)
+
+d.accidental<-(d %>% filter(stim_type=='accidental'))
+
+d.accidental$medsplit<-'low'
+d.accidental[d.accidental$stim_property %in% d.impAcc[d.impAcc$medsplit=='high',]$stim_property,]$medsplit<-'high'
+d$stim_type<-as.character(d$stim_type)
+d[d$stim_type=='accidental',]$stim_type<-paste(d.accidental$stim_type,d.accidental$medsplit, sep='-')
+
+
+write.csv(d, file='~/Documents/research/generics/models/data/asymmetry-1-trials-medSplitAccidental.csv', row.names=F)
 ```
 
 ## By subject
@@ -163,20 +218,71 @@ ggplot(d.implied,aes(x=rt/1000))+
 
   facet_wrap(~workerid)
 
-## some subjects just put 100 for all
-d.rt<-d.implied %>% group_by(workerid) %>%
-  summarise(meanrt = mean(rt/1000),
-            medrt = median(rt/1000),
-            sterr = sem(rt/1000))
 
-d.rt$workerid<- with(d.rt, reorder(workerid, medrt, function(x) -x))
 
 ggplot(d.rt, aes(x=workerid, y= medrt))+
   geom_bar(stat='identity', position=position_dodge())+
     geom_errorbar(aes(ymin = medrt-2*sterr, ymax = medrt+2*sterr))
 
-trouble.makers<-d.rt[d.rt$medrt<0,]$workerid
 ```
+
+
+## From previous experiment
+
+n = 100, just accidental, TC / IP between-subjects
+
+```{r}
+
+d<-read.csv(file = '~/Documents/research//generics//cbg2010-replication/turk/exp14/cbg-exp14-trials.csv')
+
+d.impItems2<-d %>% filter(trial_type=='implied_prevalence') %>%
+  group_by(stim_property) %>%
+    summarise(ave = mean(to.n(response)),
+            sterr = sem(to.n(response)),
+           n = length(response))
+
+d.impItems2$stim_property<-with(d.impItems2, reorder(stim_property, ave, function(x) -x))
+
+
+
+ggplot(d.impItems2, aes(x=stim_property, y = ave))+
+  geom_bar(stat='identity', position=position_dodge())+
+  geom_errorbar(aes(ymin = ave-2*sterr, ymax = ave+2*sterr))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,
+                                   vjust=1))
+
+
+# testing median split
+d.impItems2$medsplit <- 'low'
+d.impItems2[median(d.impItems2$ave)<d.impItems2$ave,]$medsplit<-'high'
+
+
+d$medsplit<-'low'
+d[d$stim_property %in% d.impItems2[d.impItems2$medsplit=='high',]$stim_property,]$medsplit<-'high'
+
+
+rs2<- lmer(data=d,response ~ medsplit + (1 | workerid))
+summary(rs2)
+
+d.impSplit<-d %>% filter(trial_type=='implied_prevalence') %>%
+  group_by(medsplit) %>%
+    summarise(ave = mean(to.n(response)),
+            sterr = sem(to.n(response)),
+           n = length(response))
+
+
+ggplot(d.impSplit, aes(x=medsplit, y = ave))+
+  geom_bar(stat='identity', position=position_dodge())+
+  geom_errorbar(aes(ymin = ave-2*sterr, ymax = ave+2*sterr))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,
+                                   vjust=1))
+
+
+
+```
+
+There is a difference between implications of top median and bottom median.
+
 
 # Prior 1
 
@@ -422,14 +528,36 @@ ggplot(d.all, aes(x=prev,fill=condition))+
 
 # Full bayesian analysis of prior elicitation data and truth conditions / implied prevalence data
 
+
+
+### inferred prior from prior elicitation data
+
+```{r priors.fbt}
+g<-read.csv("~/Documents/research/generics/models/results/priorERP-incrmh1000_accidental_high.csv")
+
+
+```
+
+
 ```{r tfbt}
-d<-read.csv("~/Documents/research/generics/models/generics-hashmh1000_prior-incrmh1000.csv")
-d<-read.csv("~/Documents/research/generics/models/results/generics-hashmh100_prior3-incrmh1000.csv")
+d<-read.csv("~/Documents/research/generics/models/results/generics-hashmh1000_prior-incrmh1000.csv")
+d<-read.csv("~/Documents/research/generics/models/results/generics-soWord-soNumber-phi-hashmh1000_prior2-incrmh1000.csv")
+d<-read.csv("~/Documents/research/generics/models/results/generics-truthOpt-impliedOpt-phi-hashmh50000_prior2-incrmh1000.csv")
+d<-read.csv("~/Documents/research/generics/models/results/generics-truthOpt-impliedOpt-hashmh100_prior2-incrmh1000.csv")
+
+d<-read.csv("~/Documents/research/generics/models/results/generics-truthOpt-impliedOpt-hashmh1000_prior2-incrmh1000.csv")
 
 
 d.params <- d %>% filter(!(Parameter%in%c("truth_conditions", 
                                           "implied_prevalence")))
-samples = 100
+# 
+# d.params<-d.params %>% select(Parameter,Item, Prevalence) %>%
+#   rename(Value = Item,
+#          Probability = Prevalence) %>%
+#   mutate(Value = to.n(Value))
+# 
+
+samples = 1000
 d.params <- data.frame(Parameter = rep(d.params$Parameter, 
                                        1+samples*d.params$Probability),
                        Response = rep(d.params$Value, 
@@ -437,7 +565,15 @@ d.params <- data.frame(Parameter = rep(d.params$Parameter,
 
 ggplot(d.params, aes(x=Response))+
   geom_histogram()+
-  xlim(0,1)
+  facet_wrap(~Parameter)
+
+quantile((d.params %>% filter(Parameter=='truthOptimality'))$Response, 
+         probs = c(0.025,0.975))
+
+quantile((d.params %>% filter(Parameter=='impliedOptimality'))$Response, 
+         probs = c(0.025,0.975))
+
+
 
 
 d.pp <- d %>% 
