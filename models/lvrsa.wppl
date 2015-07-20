@@ -11,156 +11,207 @@
 // asymutils.writeCSV(writeReady, "results/expVal_betas_prior2_incrMH10k.csv")
 ////////
 
-//////// generics model
-
-var priorERP = {
-                "accidental": getPriorERP("accidental"),
-				        "color": getPriorERP("color"),
-                "vaguelong": getPriorERP("vaguelong"),
-                "dangerous": getPriorERP("dangerous")
+var heirarchicalERP = {
+               "accidental-low": IncrementalMH(function(){return priorModel("accidental-low")}, 100),
+               "accidental-high": IncrementalMH(function(){return priorModel("accidental-high")}, 100)
+                // "accidental":getPriorERP("accidental"),
+                // "color": IncrementalMH(function(){return priorModel("color")}, 1000),
+                //   "vague": IncrementalMH(function(){return priorModel("vague")}, 1000),
+                //   "part":IncrementalMH(function(){return priorModel("part")}, 1000)
+                // "vaguelong": getPriorERP("vaguelong"),
+                // "dangerous": getPriorERP("dangerous")
               }
-
 console.log('prior inferred from prior elicitation data')
 
-var thetaBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
-var bins = priorERP["accidental"].support()
+var getPriorERP = function(s){
+  return Enumerate(function(){
+      var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+      // var kindDoesntHaveF_prevalence = 0.01
+      var kindDoesntHaveF_prevalence = 0
+      var discretizeBeta = function(gamma, delta){
+        var shape_alpha = gamma * delta
+        var shape_beta = (1-gamma) * delta
+        var betaPDF = function(x){
+          return Math.pow(x,shape_alpha-1)*
+              Math.pow((1-x),shape_beta-1)
+        }
+        return map(betaPDF, bins)
+      }
+      var kindHasF = flip(
+              bins[discrete(
+                discretizeBeta(
+                  s[condition+",response0,gamma"], 
+                  s[condition+',response0,delta']
+                )
+              )])
+      var prevalenceGivenK = kindHasF ? bins[discrete(
+                discretizeBeta(
+                  s[condition+",response1,gamma"], 
+                  s[condition+",response1,gamma"]
+                )
+              )] : kindDoesntHaveF_prevalence
 
-// var thetaBins = priorERP.support()
-
-var thetaPrior = function() {
-  var threshold = uniformDraw(thetaBins)//something might go(?) wonky if "generic is false" can never be false
-  return threshold
+      return prevalenceGivenK
+    })
 }
 
-var numberUtterancePrior = function() {
+//////// generics model
 
-//  var utterances = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99];          
-  var utterances = bins
-  var i = randomInteger(utterances.length)
-  return utterances[i]
-}
-
-var wordUtterancePrior = function() {
-   // var utterances = ["generic is true",
-   //                  "generic is false"]
-   var utterances = ["generic is true",
-                   "mu"]  
-  var cost = 1      
-  var cst = [1,cost]       
-  return utterances[discrete(cst)]
-
-}
-
-var meaning = function(utt,state, theta) {
-  return _.isNumber(utt) ? state == utt :
-  		utt=="generic is true"? state>theta :
-         utt=="generic is false"? state<=theta :
-         utt=="some is true"? state>0 :
-         utt=="some is false"? state==0 :
-         utt=='mu'? true:
-         utt=='some'? state>0:
-         utt=='most'? state>= 0.5:
-         utt=='all'? state >= 0.99:
-         true
-}
-
-var listener0 = cache(function(utterance, domain, theta) {
-  Enumerate(function(){
-  	// console.log('enter listener0')
-    var state = sample(priorERP[domain])
-    // console.log(state)
-    // console.log(utterance)
-    // console.log(theta)
-    var m = meaning(utterance, state, theta)
-    // console.log(m)
-    // console.log(state, utterance, m)
-    factor(m?0:-Infinity)
-    return state
-  })
-})
-
-var speaker1 = cache(function(state, domain, theta) {
-  Enumerate(function(){
-  	// console.log('enter speaker 1')
-  	// console.log(state, theta, domain)
-    var utterance = wordUtterancePrior()
-    var L0 = listener0(utterance, domain, theta)
-    // console.log(L0.support())
-    // console.log(map(function(x){return Math.exp(L0.score(x))},L0.support()))
-    factor(L0.score([],state))
-    return utterance
-  })
-})
+var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]; 
 
 
 
 
-var listener1 = function(utterance, domain, s1optimality) {
-  Enumerate(function(){
-  	// console.log('enter listener 1')
-  	// console.log(domain)
-    var state = sample(priorERP[domain])
-    // console.log(state)
-    var theta = thetaPrior()
-    var S1 = speaker1(state, domain, theta)
-    factor(s1optimality*S1.score([],utterance))
-    return state
-  })
-}
+var genericsModel = function(query, domain, prevalence, s1optimality, number_s1optimality){
+
+  console.log(prevalence)
+  var s = sample(heirarchicalERP[domain])
+  var priorERP = getPriorERP(s)
+
+  var thetaBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+
+  // var thetaBins = priorERP.support()
+
+  var thetaPrior = function() {
+    var threshold = uniformDraw(thetaBins)//something might go(?) wonky if "generic is false" can never be false
+    return threshold
+  }
+
+  var numberUtterancePrior = function() {
+
+  //  var utterances = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99];          
+    var utterances = bins
+    var i = randomInteger(utterances.length)
+    return utterances[i]
+  }
+
+  var wordUtterancePrior = function() {
+     // var utterances = ["generic is true",
+     //                  "generic is false"]
+     var utterances = ["generic is true", "mu"]  
+    var cost = 1      
+    var cst = [1,cost]       
+    return utterances[discrete(cst)]
+
+  }
+
+  var meaning = function(utt,state, theta) {
+    return _.isNumber(utt) ? state == utt :
+    		utt=="generic is true"? state>theta :
+           utt=="generic is false"? state<=theta :
+           utt=="some is true"? state>0 :
+           utt=="some is false"? state==0 :
+           utt=='mu'? true:
+           utt=='some'? state>0:
+           utt=='most'? state>= 0.5:
+           utt=='all'? state >= 0.99:
+           true
+  }
+
+  var listener0 = function(utterance, theta) {
+    Enumerate(function(){
+    	console.log('enter listener0')
+      var state = sample(priorERP)
+      console.log("state " + state)
+      console.log("utt " + utterance)
+      console.log("theta " + theta)
+      var m = meaning(utterance, state, theta)
+      // console.log(m)
+      // console.log(m)
+      // console.log(state, utterance, m)
+      factor(m?0:-Infinity)
+      return state
+    })
+  }
+
+  var speaker1 = function(state, theta) {
+    Enumerate(function(){
+    	console.log('enter speaker 1')
+    	// console.log(state, theta, domain)
+      var utterance = wordUtterancePrior()
+      var L0 = listener0(utterance, theta)
+      // console.log(L0.support())
+      // console.log(map(function(x){return Math.exp(L0.score(x))},L0.support()))
+      factor(L0.score([],state))
+      return utterance
+    })
+  }
 
 
-var numberSpeaker1 = cache(function(state, domain, theta) {
-  Enumerate(function(){
-  	// console.log('enter number speaker 1')
-  	// console.log(state, theta, domain)
-
-    var utterance = numberUtterancePrior()
-    var L0 = listener0(utterance, domain, theta)
-    // console.log(map(function(x){return Math.exp(L0.score(x))},L0.support()))
-    factor(L0.score([],state))
-    return utterance
-  })
-})
-
-
-var numberListener1 = function(numberWord, domain, number_s1optimality) {
-  Enumerate(function(){
-		// console.log('enter number listener 1')
-		//   	console.log(domain)
-
-    var state = sample(priorERP[domain])
-    var theta = thetaPrior()
-    // console.log(state, domain, theta)
-    var S1 = numberSpeaker1(state, domain, theta)
-   factor(number_s1optimality*S1.score([],numberWord))
-    return state
-  })
-}
-
-var truthSpeaker2 = function(prevalence, domain, s1optimality, number_s1optimality){
-	Enumerate(function(){
-		// console.log('enter truth speaker2')
-		var nL1 = numberListener1(prevalence,domain, number_s1optimality)
-		var state = sample(nL1)
-
-		var utterance = wordUtterancePrior()
-		var wL1 = listener1(utterance,domain, s1optimality)
-
-		factor(wL1.score([], state))
-		return utterance
-	})
-}
+  var listener1 = function(utterance) {
+    Enumerate(function(){
+    	console.log('enter listener 1')
+    	// console.log(utterance)
+      var state = sample(priorERP)
+      // console.log(state)
+      var theta = thetaPrior()
+      var S1 = speaker1(state, theta)
+      factor(s1optimality*S1.score([],utterance))
+      return state
+    })
+  }
 
 
-var numberSpeaker2 = function(generic, domain, s1optimality, number_s1optimality){
-	Enumerate(function(){
-		var numberWord = numberUtterancePrior()
-		var utteranceInterpretation = listener1(generic, domain, s1optimality)
-		var state = sample(utteranceInterpretation)
+  var numberSpeaker1 = function(state, theta) {
+    Enumerate(function(){
+    	console.log('enter number speaker 1')
+    	// console.log(state, theta, domain)
 
-		// what would a listener think if I said this number word?
-		var nL1 = numberListener1(numberWord, domain, number_s1optimality)
-		factor(nL1.score([], state))
-		return numberWord
-	})
+      var utterance = numberUtterancePrior()
+      var L0 = listener0(utterance, theta)
+      // console.log(map(function(x){return Math.exp(L0.score(x))},L0.support()))
+      factor(L0.score([],state))
+      return utterance
+    })
+  }
+
+  var numberListener1 = function(numberWord) {
+    Enumerate(function(){
+  		console.log('enter number listener 1')
+  		//   	console.log(domain)
+
+      var state = sample(priorERP)
+      // var theta = thetaPrior()
+      // console.log(state, domain, theta)
+      var S1 = numberSpeaker1(state, 0)
+     factor(number_s1optimality*S1.score([],numberWord))
+      return state
+    })
+  }
+
+  var truthSpeaker2 = function(prevalence){
+  	Enumerate(function(){
+      console.log('prevalence is ' + prevalence)
+  		console.log('enter truth speaker2')
+      var nL1 = listener0(prevalence, 0)
+//  		var nL1 = numberListener1(prevalence, number_s1optimality)
+      console.log('exit number listener1')
+  		var state = sample(nL1)
+
+  		var utterance = wordUtterancePrior()
+  		var wL1 = listener1(utterance)
+
+  		factor(wL1.score([], state))
+  		return utterance
+  	})
+  }
+
+
+  var numberSpeaker2 = function(generic){
+  	Enumerate(function(){
+  		var numberWord = numberUtterancePrior()
+  		var utteranceInterpretation = listener1(generic)
+  		var state = sample(utteranceInterpretation)
+  		// what would a listener think if I said this number word?
+  		var nL1 = numberListener1(numberWord)
+  		factor(nL1.score([], state))
+  		return numberWord
+  	})
+  }
+
+
+  var results =  (query=='truth_conditions') ? truthSpeaker2(prevalence) : numberSpeaker2("generic is true")
+
+
+  return results
 }

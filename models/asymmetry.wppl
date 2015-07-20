@@ -1,17 +1,14 @@
-// webppl asymmetry.wppl --require-js ./asymutils.js --require-wppl ./lvrsa.wppl --require-wppl ./prior.wppl 
+// time webppl asymmetry.wppl --require-js ./asymutils.js --require-wppl ./lvrsa.wppl --require-wppl ./prior.wppl 
 
 
-var data = asymutils.readCSV("data/asymmetry-1-trials.csv").data
-
+//var data = asymutils.readCSV("data/asymmetry-1-trials.csv").data
+var data = asymutils.readCSV("data/asymmetry-1-trials-medSplitAccidental.csv").data
 var df_asym = map(
 	function(lst){
 		return _.object(_.zip(data[0],lst))
 	},
 	data.slice(1))
 
-var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
-//var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
-var stimTypes = _.keys(priorERP)
 
 var df_accepted = subset(df_asym, "trial_type", "truth_conditions")
 var df_implied = subset(df_asym, "trial_type", "implied_prevalence")
@@ -26,29 +23,47 @@ var alignImplied = function(number){
 }
 
 var addGuessing = function(myERP, task, phi){
+	Enumerate(function(){
 	var x = flip(1-phi) ? sample(myERP) : 
 		    (task=="truth_conditions") ? 
 		    		flip(0.5) ? "generic is true" 
 		    				  : "mu" : 
 			uniformDraw(bins)
 	return x
+	})
 }
+
+var sampleSubject = function(truthERP,trials){
+	var theta = Math.exp(truthERP.score([], "generic is true"))
+	var truthJudge = binomial(theta,trials)
+}
+
+
+var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
+//var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
+var stimTypes = _.keys(heirarchicalERP)
+
 
 
 var dataModel = function(){
 
-	var s1opt = uniform(0,5)
-	var number_s1opt = s1opt
-	// var phi = uniform(0,1)
+	// var number_s1opt = uniform(0,10)
+//	var phi = uniform(0,1)
+	var phi = 0
+	// var phi = uniform(0.99,1.01)
+
 
 	foreach(tasks,
 		function(task){
 
 			foreach(stimTypes, 
 				function(type){
+					console.log(type)
 
 					if (task=="truth_conditions") {
 
+//						var truth1opt = uniform(0,20)
+						var truth1opt = uniform(0.99,1.01)
 						var df_accept_type = subset(df_accepted, "stim_type", type)
 
 						foreach(prevalenceLevels,
@@ -56,36 +71,46 @@ var dataModel = function(){
 
 								var df_accepted_prev = _.pluck(subset(df_accept_type,"stim_prevalence", prevalence), "response")
 								// console.log(prevalence, type, s1opt, number_s1opt)
-								var agreeERP = truthSpeaker2(prevalence/100, type, s1opt, number_s1opt)
+								// var agreeERP = truthSpeaker2(prevalence/100, truth1opt, 1, priorERP)
+								var agreeERP = genericsModel(task, type, prevalence/100, truth1opt, 1)
+
+								var linkedERP = addGuessing(agreeERP, task, phi)
 
 								// condition on both agree and disagree, or just agree?
 								// right now, it's both.
 
 								var scr = reduce(function(response, memo) {
-												    return memo + agreeERP.score([], alignAgree[response])
+												    return memo + linkedERP.score([], alignAgree[response])
 													}, 0, df_accepted_prev)
 								factor(scr)
 								// console.log(scr)
 
-								query.add([task,type,prevalence],Math.exp(agreeERP.score([], "generic is true")))
-
+								query.add([task,type,prevalence],Math.exp(linkedERP.score([], "generic is true")))
 
 							}
 						)
+					
+						query.add(["truthOptimality","NA","NA"], truth1opt)
 
 					} else {
+//						var implied1opt = uniform(0,20)
+						var implied1opt = uniform(0.99,1.01)
 
 						var df_implied_type = subset(df_implied, "stim_type", type)
 						var df_implied_prev = _.pluck(df_implied_type, "response")
-						var impliedERP = numberSpeaker2("generic is true", type, s1opt, number_s1opt)
+						// var impliedERP = numberSpeaker2("generic is true", implied1opt, 1, priorERP)
+						var impliedERP = genericsModel(task, type, null, implied1opt, 1)
+
+						var linkedERP = addGuessing(impliedERP, task, phi)
 
 						var scr = reduce(function(response, memo) {
-										    return memo + impliedERP.score([], alignImplied(response))
+										    return memo + linkedERP.score([], alignImplied(response))
 											}, 0, df_implied_prev)
 						factor(scr)
 						// console.log(scr)
 
-						query.add([task,type,"NA"], expectation(impliedERP))
+						query.add([task,type,"NA"], expectation(linkedERP))
+						query.add(["impliedOptimality","NA","NA"], implied1opt)
 
 					}
 
@@ -93,15 +118,24 @@ var dataModel = function(){
 
 		})
 
-	query.add(["speakerOptimality","NA","NA"], s1opt)
+	// query.add(["speakerOptimality","NA","NA"], s1opt)
+	query.add(["phi","NA","NA"], phi)
+
 	return query
 }
 
 
-var mhiter = 1000
+var mhiter = 10
 var resultsERP = HashMH(dataModel,mhiter)
-//resultsERP
-var outfile = "results/generics-hashmh"+mhiter+"_prior3-incrmh1000.csv"
+
+
+
+
+// var outfile = "results/generics-soWord-soNumber-phi-hashmh"+mhiter+"_prior2-incrmh1000.csv"
+//var outfile = "results/generics-truthOpt-impliedOpt-hashmh"+mhiter+"_prior2-incrmh1000.csv"
+// var outfile = "results/generics-fixedparams-nophi-hashmh"+mhiter+"_prior2-incrmh1000.csv"
+var outfile = "results/generics-priorUncertainty-fixedparams-nophi-hashmh"+mhiter+"_prior2-incrmh1000.csv"
+
 console.log('inference complete')
 asymutils.erpWriter(resultsERP, outfile)
 console.log("ouput written to " +outfile)
