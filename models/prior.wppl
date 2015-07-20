@@ -23,26 +23,34 @@ var subset = function(df, field, value){
 	},df)
 }
 
+var bootstrap = function(lst){
+	return _.flatten(repeat(_.size(lst), function(x){return _.sample(lst,1)}))
+}
+
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
-var Priordata = asymutils.readCSV("data/asymmetry-prior-3-trials.csv").data
+var Priordata = asymutils.readCSV("data/asymmetry-prior-2splitAccidental-trials.csv").data
 
-var df = map(
+var df0 = map(
 	function(lst){
 		return _.object(_.zip(Priordata[0],lst))
 	},
 	Priordata.slice(1))
 
+var df = df0//bootstrap(df0)
 
-var conditions = _.uniq(_.pluck(df,"stim_type"))
+var conditions = _.uniq(_.pluck(df,"property_type"))
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
 }
+
+
+
 var priorModel = function(c){
 
-	var conditionData = subset(df, "stim_type", c)
+	var conditionData = subset(df, "property_type", c)
 
 	foreach(["response0","response1"],
 		function(r){
@@ -62,14 +70,16 @@ var priorModel = function(c){
 			factor(scr)
 			// console.log(scr)
 
-			query.add(r, [gamma, delta])
+//			query.add(r, [gamma, delta])
+			query.add([c,r,'gamma'], gamma)
+			query.add([c,r,'delta'], delta)
 		}
 	)
 	return query
 }
 
-
-// go from inferred beta parameters from prior elicitation, to a prevalence prior for lvrsa
+// // go from inferred beta parameters from prior elicitation, to a prevalence prior for lvrsa
+// fix me: return a distribution over prevalence priors
 var getPriorERP = cache(function(condition){
 
 	// do BDA on prior elicitation
@@ -101,24 +111,44 @@ var getPriorERP = cache(function(condition){
 		// 					)
 		// 				)
 		// discretization occurs here
-		var kindHasF = flip(
-						bins[discrete(
-							discretizeBeta(
-								s["response0"][0], 
-								s["response0"][1]
-							)
-						)])
+		var prevalencePrior = 
+		Enumerate(function(){
+			var kindHasF = flip(
+							bins[discrete(
+								discretizeBeta(
+									s[condition+",response0,gamma"], 
+									s[condition+',response0,delta']
+								)
+							)])
 
-		var prevalenceGivenK = kindHasF ? bins[discrete(
-							discretizeBeta(
-								s["response1"][0], 
-								s["response1"][1]
-							)
-						)] : kindDoesntHaveF_prevalence
+			var prevalenceGivenK = kindHasF ? bins[discrete(
+								discretizeBeta(
+									s[condition+",response1,gamma"], 
+									s[condition+",response1,gamma"]
+								)
+							)] : kindDoesntHaveF_prevalence
 
-		return prevalenceGivenK
+				return prevalenceGivenK
+			})
+
+
+		return map(function(s){return Math.exp(prevalencePrior.score([],s))} , prevalencePrior.support())
+
+
 	})
-
 })
 
-// getPriorERP("accidental")
+
+// map(function(key){
+
+//   var heirarchicalERP = IncrementalMH(function(){return priorModel(key)}, 1000)
+//   var outfile = "results/priorERP-incrmh1000_"+key+".csv"
+//   asymutils.erpWriter(heirarchicalERP, outfile)
+//   console.log("prior written to " +outfile)
+// },
+// ["accidental_low","accidental_high","color","vague","part"])
+
+
+//IncrementalMH(function(){return priorModel("vague")}, 1000)
+
+getPriorERP("vague")
