@@ -52,28 +52,28 @@ function make_slides(f) {
       $(".evidence").html(this.evidence_prompt);
       $(".query").html(query_prompt);
 
-      this.n_sliders = 1;
-      this.init_sliders(this.n_sliders);
+      this.init_sliders();
       // exp.sliderPost = [];
-      exp.sliderPost = utils.fillArray(-1,this.n_sliders);//[];
+      exp.sliderPost = -1;
       $(".slider_number").html("---")
 
     },
 
-    init_sliders : function(n_sliders) {
-      for (var i=0; i<n_sliders; i++) {
-        utils.make_slider("#single_slider" + i, this.make_slider_callback(i));
-      }
+    init_sliders : function() {
+        utils.make_slider("#single_slider", this.make_slider_callback());
+      // utils.make_slider("#single_slider", function(event, ui) {
+      //   exp.sliderPost = ui.value;
+      // });
     },
-    make_slider_callback : function(i) {
+    make_slider_callback : function() {
       return function(event, ui) {
-        exp.sliderPost[i] = ui.value;
-        (i==0) ? $(".slider_number").html(Math.round(exp.sliderPost[i]*100)+"%") : null
+        exp.sliderPost = ui.value;
+        $(".slider_number").html(Math.round(exp.sliderPost*100)+"%")
       };
     },
 
     button : function() {
-      if (exp.sliderPost.indexOf(-1)>-1) {
+      if (exp.sliderPost>-1) {
         $(".err").show();
       } else {
         this.rt = Date.now() - this.startTime;
@@ -81,12 +81,11 @@ function make_slides(f) {
         _stream.apply(this);
       }
     },
-
-        log_responses : function() {
+   log_responses : function() {
       exp.data_trials.push({
         "trial_type" : "implied_prevalence",
         "trial_num": this.trialNum,
-        "response" : exp.sliderPost[0],
+        "response" : exp.sliderPost,
         "rt":this.rt,
         "stim_type": this.stim.type,
         "stim_determiner": this.determiner,
@@ -335,7 +334,7 @@ function init() {
   //blocks of the experiment:
   console.log(exp.condition)
  // exp.structure=["i0", "two_afc","single_trial","two_afc","single_trial", "one_slider", "multi_slider", 'subj_info', 'thanks'];
-   exp.structure=["i0", "instructions", exp.condition,'subj_info', 'thanks'];
+   exp.structure=["implied_prevalence","i0", "instructions", exp.condition,'subj_info', 'thanks'];
    //exp.structure=['subj_info', 'thanks'];
  
   exp.data_trials = [];
