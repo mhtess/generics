@@ -73,7 +73,7 @@ function make_slides(f) {
     },
 
     button : function() {
-      if (exp.sliderPost>-1) {
+      if (exp.sliderPost<0) {
         $(".err").show();
       } else {
         this.rt = Date.now() - this.startTime;
