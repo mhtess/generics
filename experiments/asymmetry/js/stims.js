@@ -451,7 +451,7 @@ var stimsForPrior3 =
                 // },
                 {
                     part: "claws", 
-                    // accidental:"cracked",
+                    accidental:"cracked",
                     disease:"worn-out",
                     color:"blue", 
                     vague:"big",
