@@ -252,32 +252,11 @@ var allstims =
         irrelevant:"These teeth are long and narrow."}]
       ]
 
-var accidental = [
-    "broken legs",
-    "broken tails",
-    "cracked claws",
-    "cracked shells",
-    "fungus-covered claws",
-    "fungus-covered scales",
-    "infected ears",
-    "infected scales",
-    "itchy skin",
-    "itchy tails",
-    "muddy feathers",
-    "muddy fur",
-    "rotting shells",
-    "rotting teeth",
-    "sore legs",
-    "sore teeth",
-    "swollen ears",
-    "swollen skin",
-    "wet feathers",
-    "wet fur"
-]
 
 
 var creatureNames = 
-    [{list:0,category: "morseths", exemplar:"morseth"},
+    [
+    {list:0,category: "morseths", exemplar:"morseth"},
     {list:1, category: "ollers", exemplar:"oller"},
     {list:2, category: "kweps", exemplar:"kwep"},
     {list:0,category: "blins", exemplar:"blin"},
@@ -301,17 +280,18 @@ var creatureNames =
     {list:0,category: "lorches", exemplar:"lorch"},
     {list:1, category: "plovs", exemplar:"plov"},
     {list:2, category: "grinks", exemplar:"grink"},
-    // {list:0,category: "glippets", exemplar:"glippet"},
-    // {list:1, category: "sapers", exemplar:"saper"},
-    // {list:2, category: "stups", exemplar:"stup"},
-    // {list:0,category: "krivels", exemplar:"krivel"},
+    {list:0,category: "glippets", exemplar:"glippet"},
+    {list:1, category: "sapers", exemplar:"saper"},
+    {list:2, category: "stups", exemplar:"stup"},
+    {list:0,category: "krivels", exemplar:"krivel"},
     {list:1, category: "zoovs", exemplar:"zoov"},
-    {list:2, category: "thups", exemplar:"thup"}
+    {list:2, category: "thups", exemplar:"thup"},
+    {list:3, category: "crullets", exemplar:"crullet"},
+    {list:3, category: "feps", exemplar:"fep"}
     ]
 
     // ,
-    // {list:3, category: "crullets", exemplar:"crullet"},
-    // {list:3, category: "feps", exemplar:"fep"}]
+
 
 var cbgstims = [
                 {type:"accidental", property: "broken legs"},
@@ -419,11 +399,17 @@ var stimsForPrior2 =
                 ]
 
 
+
+
+
+
+
 var stimsForPrior3 = 
                 [
                 {
                     part: "teeth", 
-                    accidental:"sore", 
+                    accidental:"sore",
+                    disease:"rotten",
                     color:"pink", 
                     vague:"long",
                     dangerous:"razor sharp teeth that are so powerful a single bite can be lethal",
@@ -432,6 +418,7 @@ var stimsForPrior3 =
                 {
                     part: "fur", 
                     accidental:"wet", 
+                    disease:"fungus-covered",
                     color:"yellow", 
                     vague:"curly",
                     dangerous:"fur that sheds particles that get lodged in your lungs and make it impossible to breathe",
@@ -447,7 +434,8 @@ var stimsForPrior3 =
                 },
                 {
                     part: "tails", 
-                    accidental:"itchy", 
+                    accidental:"itchy",
+                    disease:"torn",
                     color:"orange", 
                     vague:"long",
                     dangerous:"tails that are so long and muscular that they can suffocate you in a matter of minutes",
@@ -463,7 +451,8 @@ var stimsForPrior3 =
                 },
                 {
                     part: "claws", 
-                    accidental:"cracked", 
+                    accidental:"cracked",
+                    disease:"worn-out",
                     color:"blue", 
                     vague:"big",
                     dangerous:"claws that are so incredibly strong that once they grab hold of something, they cannot be unlatched",
@@ -471,7 +460,8 @@ var stimsForPrior3 =
                 },
                 {
                     part: "shells", 
-                    accidental:"rotting", 
+                    accidental:"rotting",
+                    disease:"cracked",
                     color:"green", 
                     vague:"light",
                     dangerous:"shells that are so heavy they would immediately crush your bones",
@@ -480,6 +470,7 @@ var stimsForPrior3 =
                 {
                     part: "spots", 
                     accidental:"dirty", 
+                    disease: "bleeding",
                     color:"gold", 
                     vague:"sensitive",
                     dangerous:"spots that are home to a contagious fungus that is deadly to anyone who becomes infected with it",
@@ -488,6 +479,7 @@ var stimsForPrior3 =
                 {
                     part: "feathers", 
                     accidental:"muddy", 
+                    disease:"torn",
                     color:"purple", 
                     vague:"smooth",
                     dangerous:"feathers that are as sharp as needles and can easily get lodged in you, causing massive bleeding",
@@ -495,15 +487,17 @@ var stimsForPrior3 =
                 },
                 {
                     part: "ears", 
-                    accidental:"swollen", 
-                    color:"orange", 
+                    accidental:"swollen",
+                    disease:"infected",
+                    color:"orange",
                     vague:"small",
                     dangerous:"ears that are home to dangerous parasites that can make you go deaf",
                     vaguelong:"ears that are small and round"
                 },
                 {
                     part: "legs", 
-                    accidental:"broken", 
+                    accidental:"sore", 
+                    disease:"broken",
                     color:"silver", 
                     vague:"long",
                     dangerous:"legs that are so powerful a single blow could kill you",
@@ -511,18 +505,20 @@ var stimsForPrior3 =
                 },
                 {
                     part: "skin", 
-                    accidental:"swollen", 
+                    accidental:"burned", 
+                    disease:"bloody",
                     color:"violet", 
                     vague:"rough",
                     dangerous:"skin that carries a poisonous dust that makes your veins seize up, causing blood clots",
                     vaguelong:"skin that is rough and textured"
-                }
-                // {
-                //     part: "eyes", 
-                //     accidental:"dirty", 
-                //     color:"yellow", 
-                //     vague:"sensitive"
-                // }           
+                },
+                {
+                    part: "eyes", 
+                    accidental:"itchy",
+                    disease:"melted",
+                    color:"yellow", 
+                    vague:"sensitive"
+                }           
                 ]
 
 
@@ -540,5 +536,27 @@ var realAnimals = [
                     "Sharks"
                     ]
 
+var accidental = [
+    "broken legs",
+    "broken tails",
+    "cracked claws",
+    "cracked shells",
+    "fungus-covered claws",
+    "fungus-covered scales",
+    "infected ears",
+    "infected scales",
+    "itchy skin",
+    "itchy tails",
+    "muddy feathers",
+    "muddy fur",
+    "rotting shells",
+    "rotting teeth",
+    "sore legs",
+    "sore teeth",
+    "swollen ears",
+    "swollen skin",
+    "wet feathers",
+    "wet fur"
+]
 
 
