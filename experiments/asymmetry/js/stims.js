@@ -424,14 +424,14 @@ var stimsForPrior3 =
                     dangerous:"fur that sheds particles that get lodged in your lungs and make it impossible to breathe",
                     vaguelong:"fur that is very curly and rough to the touch"
                 },
-                {
-                    part: "scales", 
-                    accidental:"infected", 
-                    color:"red", 
-                    vague:"soft",
-                    dangerous: "scales that secrete a strong venom that kills you on the spot",
-                    vaguelong: "scales that are soft, flexible, and very shiny."
-                },
+                // {
+                //     part: "scales", 
+                //     accidental:"infected", 
+                //     color:"red", 
+                //     vague:"soft",
+                //     dangerous: "scales that secrete a strong venom that kills you on the spot",
+                //     vaguelong: "scales that are soft, flexible, and very shiny."
+                // },
                 {
                     part: "tails", 
                     accidental:"itchy",
@@ -441,41 +441,41 @@ var stimsForPrior3 =
                     dangerous:"tails that are so long and muscular that they can suffocate you in a matter of minutes",
                     vaguelong:"tails that are very long and usually get curled up in a ball"
                 },
-                {
-                    part: "stripes", 
-                    accidental:"faded", 
-                    color:"copper", 
-                    vague:"thin",
-                    dangerous:"stripes that deliver a powerful electric shock that's deadly to anyone within a few feet",
-                    vaguelong:"stripes that are very thin and closely spaced"
-                },
+                // {
+                //     part: "stripes", 
+                //     accidental:"faded", 
+                //     color:"copper", 
+                //     vague:"thin",
+                //     dangerous:"stripes that deliver a powerful electric shock that's deadly to anyone within a few feet",
+                //     vaguelong:"stripes that are very thin and closely spaced"
+                // },
                 {
                     part: "claws", 
-                    accidental:"cracked",
+                    // accidental:"cracked",
                     disease:"worn-out",
                     color:"blue", 
                     vague:"big",
                     dangerous:"claws that are so incredibly strong that once they grab hold of something, they cannot be unlatched",
                     vaguelong:"claws that are big and delicate"
                 },
-                {
-                    part: "shells", 
-                    accidental:"rotting",
-                    disease:"cracked",
-                    color:"green", 
-                    vague:"light",
-                    dangerous:"shells that are so heavy they would immediately crush your bones",
-                    vaguelong:"shells that have an octagonal shape and are very light"
-                },
-                {
-                    part: "spots", 
-                    accidental:"dirty", 
-                    disease: "bleeding",
-                    color:"gold", 
-                    vague:"sensitive",
-                    dangerous:"spots that are home to a contagious fungus that is deadly to anyone who becomes infected with it",
-                    vaguelong:"spots that are very sensitive and cover most of their bodies"
-                },
+                // {
+                //     part: "shells", 
+                //     // accidental:"rotting",
+                //     disease:"cracked",
+                //     color:"green", 
+                //     vague:"light",
+                //     dangerous:"shells that are so heavy they would immediately crush your bones",
+                //     vaguelong:"shells that have an octagonal shape and are very light"
+                // },
+                // {
+                //     part: "spots", 
+                //     // accidental:"dirty", 
+                //     disease: "bleeding",
+                //     color:"gold", 
+                //     vague:"sensitive",
+                //     dangerous:"spots that are home to a contagious fungus that is deadly to anyone who becomes infected with it",
+                //     vaguelong:"spots that are very sensitive and cover most of their bodies"
+                // },
                 {
                     part: "feathers", 
                     accidental:"muddy", 
@@ -505,20 +505,20 @@ var stimsForPrior3 =
                 },
                 {
                     part: "skin", 
-                    accidental:"burned", 
-                    disease:"bloody",
+                    accidental:"dusty", 
+                    disease:"burned",
                     color:"violet", 
                     vague:"rough",
                     dangerous:"skin that carries a poisonous dust that makes your veins seize up, causing blood clots",
                     vaguelong:"skin that is rough and textured"
-                },
-                {
-                    part: "eyes", 
-                    accidental:"itchy",
-                    disease:"melted",
-                    color:"yellow", 
-                    vague:"sensitive"
-                }           
+                }
+                //, {
+                //     part: "eyes", 
+                //     accidental:"itchy",
+                //     disease:"melted",
+                //     color:"yellow", 
+                //     vague:"sensitive"
+                // }           
                 ]
 
 

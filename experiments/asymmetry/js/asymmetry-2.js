@@ -259,62 +259,98 @@ function init() {
   //                   contexts[1]:_.shuffle(["5","15","25","35","45","55","65","75","85","95"]),
   //                   contexts[2]:_.shuffle(["5","15","25","35","45","55","65","75","85","95"])};
 
+// var i,j,chunk = exp.nTrials/exp.propTypes.length;
+// var stimArray=[]
+// var shufStims = _.shuffle(stimsForPrior2)
+
+// for (i=0,j=shufStims.length; i<j; i+=chunk) {
+//     stimArray.push(shufStims.slice(i,i+chunk));
+// }
+
+exp.numTrials = 30;
+var stimCategories = ["part","accidental","disease","color","vague"]
+
+var stimArray = _.shuffle(_.flatten(_.map(stimCategories, 
+  function(type){
+    return _.map(_.shuffle(stimsForPrior3).slice(0,exp.numTrials/5),
+      function(stim){
+        var prefix = type=="part" ? "" : stim[type]+" "
+        return {property: prefix+stim.part,
+                type: type}
+    })
+  })))
+
+// var stim1 = _.flatten(_.map(stimsForPrior3, 
+//   function(lst){
+//     return _.map(["part","accidental","color","vague"],
+//       function(x){
+//         var prefix = x=="part" ? "" : lst[x]+" "
+//         return {property: prefix+lst.part,
+//                 type: x}
+//     })
+//   }))
+
+
+
+
+// var properties = _.shuffle(_.flatten(_.map(
+//   _.zip(exp.propTypes,stimArray),
+//   function(typeAndStims){
+//     var substims = typeAndStims[1]
+//     var type = typeAndStims[0]
+//     return _.map(substims,
+//       function(s){
+//         return {property: prefix+s.part,
+//                 type: type}
+//       }
+//       )
+//   }
+//   )
+// ))
+
+var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.numTrials),
+  function(x){return {category: x.category, exemplar: x.exemplar}}
+  )
+
+exp.stims =_.map(_.zip(creatures, stimArray),
+  function(cp){
+    return _.extend(cp[1], cp[0])
+  })
+
+exp.stimscopy = exp.stims.slice(0);
+
+
+
+
 
   // pair random creature name with property
-  var zipstims = _.shuffle(_.map(
-    _.zip(
-      cbgstims, 
-      _.shuffle(creatureNames),
-      _.flatten(
-        _.map(prev_levels,
-            function(y){return _.shuffle(y)}
-            )
-        )
-      ),
-    function(x){return _.extend(x[0],x[1],{"prev":x[2]})}))
+  // var zipstims = _.shuffle(_.map(
+  //   _.zip(
+  //     cbgstims, 
+  //     _.shuffle(creatureNames),
+  //     _.flatten(
+  //       _.map(prev_levels,
+  //           function(y){return _.shuffle(y)}
+  //           )
+  //       )
+  //     ),
+  //   function(x){return _.extend(x[0],x[1],{"prev":x[2]})}))
 
 
   exp.trials = [];
   exp.catch_trials = [];
-  exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
-//  exp.condition = "truth_conditions";
+//  exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
+ exp.condition = "implied_prevalence";
 //  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
 //  exp.determiner = _.shuffle(["generic","some","most"]);
   exp.determiner = ["generic","generic","generic"];
   exp.instructions = "elaborate_instructions";
 
-  exp.numTrials = zipstims.length;
+  // exp.numTrials = zipstims.length;
 
-//  exp.prevalence_levels = [_.shuffle(prev_levels),_.shuffle(prev_levels),_.shuffle(prev_levels)];
- // debugger;
-
-  // var stims_with_context = []
-  // for (i = 0; i < allstims.length; i++){
-  //   var context_assign = _.shuffle(contexts);
-  //   allstims[i][0].context = context_assign[0]
-  //   allstims[i][1].context = context_assign[1]
-  //   allstims[i][2].context = context_assign[2]
-  //   allstims[i][0].prevalence = prev_levels[0][i]
-  //   allstims[i][1].prevalence = prev_levels[1][i]
-  //   allstims[i][2].prevalence = prev_levels[2][i]
-  // }
-  // var stims_with_context = allstims
-
-
-
-  // var stims_with_context =
-  //   allstims.map(function (x) {
-  //     var context_assign = _.shuffle(contexts);
-  //     x[0].context = context_assign[0];
-  //    // x[0].prevalence = exp.prev_levels[0]
-  //     x[1].context = context_assign[1];
-  //     x[2].context = context_assign[2];
-  //     return x;
-  //     });
-
-  exp.stims = zipstims
-  console.log(zipstims)
+  // exp.stims = zipstims
+  // console.log(zipstims)
 
   // _.map(_.zip(exp.stims, 
   //             _.shuffle(accidental), 
@@ -334,7 +370,7 @@ function init() {
   //blocks of the experiment:
   console.log(exp.condition)
  // exp.structure=["i0", "two_afc","single_trial","two_afc","single_trial", "one_slider", "multi_slider", 'subj_info', 'thanks'];
-   exp.structure=["implied_prevalence","i0", "instructions", exp.condition,'subj_info', 'thanks'];
+   exp.structure=["i0", "instructions", exp.condition,'subj_info', 'thanks'];
    //exp.structure=['subj_info', 'thanks'];
  
   exp.data_trials = [];
