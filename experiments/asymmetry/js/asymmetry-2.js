@@ -119,7 +119,7 @@ function make_slides(f) {
       // BAD
       //this.stimtype = exp.stimtype[this.stim.list]; // exp.stimtype already randomized, grab which stimtype corresponds to list #_this.stim
       // BETTER
-      this.prevalence = this.stim.prev
+      this.prevalence = this.stim.prevalence
     //  this.prevalence = exp.prev_levels[]
 
       //this.stimtype = exp.stimtype[0]; // exp.stimtype between-subjects var
@@ -249,9 +249,11 @@ function init() {
 
 //  var prev_levels = ["5","15","25","35","45","55","65","75","85","95"];
   var prev_levels = [
-                    ["10","30","50","70","90","10","30","50","70","90"],
-                    ["10","30","50","70","90","10","30","50","70","90"],
-                    ["10","30","50","70","90","10","30","50","70","90"]
+                    ["10","30","50","70","90"],
+                    ["10","30","50","70","90"],
+                    ["10","30","50","70","90"],
+                    ["10","30","50","70","90"],
+                    ["10","30","50","70","90"]
                     ];
 
 //  var contexts = ["bare","danger-distinct","nondistinctive"];
@@ -267,16 +269,20 @@ function init() {
 //     stimArray.push(shufStims.slice(i,i+chunk));
 // }
 
-exp.numTrials = 30;
+exp.numTrials = 25;
 var stimCategories = ["part","accidental","disease","color","vague"]
 
 var stimArray = _.shuffle(_.flatten(_.map(stimCategories, 
   function(type){
-    return _.map(_.shuffle(stimsForPrior3).slice(0,exp.numTrials/5),
-      function(stim){
+    return _.map(
+      _.zip(_.shuffle(stimsForPrior3).slice(0,exp.numTrials/5),["10","30","50","70","90"]),
+      function(stimWithPrev){
+        var stim = stimWithPrev[0]
+        var prev = stimWithPrev[1]
         var prefix = type=="part" ? "" : stim[type]+" "
         return {property: prefix+stim.part,
-                type: type}
+                type: type,
+                prevalence: prev}
     })
   })))
 
@@ -340,7 +346,7 @@ exp.stimscopy = exp.stims.slice(0);
   exp.trials = [];
   exp.catch_trials = [];
 //  exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
- exp.condition = "implied_prevalence";
+ exp.condition = "truth_conditions";
 //  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
 //  exp.determiner = _.shuffle(["generic","some","most"]);
