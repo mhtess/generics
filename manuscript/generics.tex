@@ -329,11 +329,11 @@ We compare our model's predictions to experiments examining the acceptability of
 \section{A lifted-threshold model of generic meaning}
 \label{sec:model}
 
-The meanings of words are often embedded in a conversation context.
-We view language understanding as a special case of social cognition---wherein a listener thinks about a speaker, and language comprehension as deriving from an intuitive theory of language production.  
-Recent work in probabilistic pragmatics formalizes how listeners arrive at interpretations of different types of utterances, including quantifier sentences \cite{Goodman2013}, nonliteral utterances \cite{Kao2014}, and vague sentences \cite{Lassiter2015}.
-In particular, we draw on work from the Rational Speech-Act (RSA) theory of language understanding. 
-In this framework, a listener infers the meaning of an utterance by considering the thought-processes of a speaker whose goal is to be informative. 
+The meanings of words are often embedded in a conversational context.
+Language understanding is a special case of social cognition---interlocutors think about one another when producing and interpreting utterances.  
+Recent work in probabilistic pragmatics formalizes how listeners arrive at rich interpretations of utterances by considering the thought-processes of a speaker whose goal is to be informative.
+The Rational Speech-Act (RSA) theory of language understanding \cite{Frank2012, Goodman2013} has provided formal, computational accounts of understanding utterances with quantifiers \cite{Goodman2013}, gradable adjectives \cite{Lassiter2015}, and nonliteral usages \cite{Kao2014}.
+
 %Variants of this theory have provided formal explanations for a number of linguistic phenomena including scalar implicature, hyperbole, and argument evaluation \cite{Kao2014, Tessler2014, Lassiter2014}. 
 
 %CBG showed how contexts affects the endorsement for generic statements. An additional concern of their experiments surrounded the relation between two dependent measures for understanding generics. One dependent measure was the ``truth conditions'', or \emph{sentence verification} measure that we've been considering up to this point. The other was an ``implied prevalence'', or \emph{sentence interpretation} dependent measure. The latter was collected by giving participants the generic statement (plus, any additional contextual information), and asking the participant ``What percentage of lorches have purple feathers?''
@@ -344,41 +344,57 @@ In this framework, a listener infers the meaning of an utterance by considering 
 
 %The Bayesian data analysis above provides compelling evidence that context influences the truth-conditions of a generic statement. The poor qualitative fit as well as the high inferred value of the guessing parameter $\phi$ suggest, however, that our language model is incomplete. Rather than propose that the meaning of a generic is simply a one-to-one mapping between context and threshold, 
 
+Recently, the Rational Speech-Act theory has been extended to account for gradable adjectives like \emph{tall}, which lack single, context-invariant meanings. 
+This is done by positing the semantics of the word (``tall'') is a distribution over criteria (``anything could count as tall given the right context''). 
+This uncertainty is resolved through a listener consulting her beliefs about the domain in question (``what are possible heights of X?'') as well as taking into account the communicative force of a speech act (``why did the speaker bother to say ``John is tall''?'').
+The vagueness and context-sensitivity of gradable adjectives are accounted for by a formal model of these principles.
 
-We propose that generics are vague in the way that gradable adjectives, like \emph{tall}, are vague. 
+We propose that generics are vague in the same way that gradable adjectives, like \emph{tall}, are vague. 
 %% 
 %\red{MOVE THIS EARLIER}
 %For example, the conditions under which ``John is tall'' and ``The Empire State Building is tall'' are quite different. 
 %\red{++++}
 %
-\citeA{Lassiter2015}  propose the meaning of a property like \emph{is tall} is a standard truth-functional, threshold meaning such that an object in question \emph{is tall} if it has a height greater than some threshold $\theta_{tall}$. 
+%\citeA{Lassiter2015}  propose the meaning of a property like \emph{is tall} is a standard truth-functional, threshold meaning such that an object in question \emph{is tall} if it has a height greater than some threshold $\theta_{tall}$. 
 %
 %The vagueness and context-sensitivity of these adjectives are accounted for by treating $\theta_{tall}$ as an unknown property of the language, and modeling the pragmatic listener as inferring this threshold. In this example, different thresholds are derived through the interaction of the prior distribution over heights (people vs. buildings) with the communicative pressures to be truthful and informative. 
  %
-In a similar way, we propose the literal semantics of a generic sentence like ``Birds lay eggs'' is in fact a threshold on prevalence $x$:
-\begin{flalign}
-\denote{\text{Birds lay eggs}} = \{x^{\text{lays eggs}}_{bird} : x^{\text{lays eggs}}_{bird} = p(\text{lays eggs} | \text{bird}) > \theta_{generic}\} \label{eq:birds}
-\end{flalign}
-but listeners have uncertainty about the threshold $\theta_{generic}$ \emph{a priori} and actively must reason about it in context. 
-The relevant prior distribution is the distribution of the prevalence of the property across categories---$P(x^{\text{lays eggs}})$. 
-Just as the prior distributions of heights for people and buildings differ, the prior distributions of prevalence for different types of properties can vary.
+We propose the literal semantics of a generic sentence ``K has F'' (e.g. ``Lions have manes.'') is a standard truth-functional, threshold meaning such that a category in question K has property F if the prevalence $x$ of F within K is greater than some threshold $\theta_{generic}$.
 
-The RSA model for generic interpretation, with the prevalence threshold as a variable ``lifted'' to pragmatic reasoning is specified by:
+\begin{flalign}
+\denote{\text{K has F}} = \{x^{\text{F}}_{K} : x^{\text{F}}_{K} = p(\text{F} | \text{K}) > \theta_{generic}\} \label{eq:birds}
+\end{flalign}
+
+The threshold $\theta_{generic}$, however, is left underspecified in the semantics.
+Listeners have uncertainty about the threshold $\theta_{generic}$ \emph{a priori} and actively must reason about it in context to derive a realistic but informative meaning. 
+%The relevant prior distribution is the distribution of the prevalence of F within- and across- categories---$P(x^{\text{F}})$. 
+%Just as the prior distributions of heights for people and buildings differ, the prior distributions of prevalence for different types of properties can vary.
+
+The RSA model for generic interpretation, with an uncertain prevalence threshold is specified by:
 \begin{flalign}
 & P_{L_{1}}(x , \theta \mid g) \propto P_{S_{1}}(g \mid x, \theta) P(x) \label{eq:L1}
 \end{flalign}
-Eq.~\ref{eq:L1} is a model of a listener ($L_{1}$) who has been told a generic statement $g$. She has uncertainty about the prevalence of the property $x$ as well as the meaning of the generic $\theta$, and is trying to figure out what these are. She accomplishes this by assuming that this generic was produced by a speaker $S_{1}$, whose goal was to communicate the prevalence of the property $x$. The speaker model is specified by:
+Eq.~\ref{eq:L1} is a model of a listener ($L_{1}$) who has been told a generic statement $g$ (e.g. ``Lions have manes.''). She has uncertainty about the prevalence of the property $x$ (``how many lions have manes?'') as well as the meaning of the generic $\theta$ (``what does this sentence even mean?''), and is trying to figure out what these are. 
+She accomplishes this by consulting her prior beliefs $P(x)$ and assuming that utterance was produced by a speaker $S_{1}$, whose goal was to be informative about the prevalence of the property $x$. 
+The speaker model is specified by:
 \begin{flalign}
 & P_{S_{1}}(g \mid x, \theta) \propto \exp(\lambda \ln {P_{L_{0}}(x \mid g, \theta)}) \label{eq:S1}
 \end{flalign}
-This is a model of a speaker who knows some prevalence $x$ to be the case (e.g. knows that 50\% of birds lay eggs). The listener ($L_{1}$) believes that the speaker ($S_{1}$) has a particular threshold $\theta$ in mind: Hence, the listener has uncertainty about what the words mean, but assumes that the speaker --- who produced those words --- know what they mean. The listener's intuitive theory of speaker also assumes the speaker chooses his words to be informative to a hypothetical literal listener, specified by:
+The speaker knows the prevalence $x$ (e.g. knows that 50\% of lions have manes). 
+The listener ($L_{1}$) believes the speaker ($S_{1}$) to have a particular threshold $\theta$ in mind. 
+The listener's intuitive theory of the speaker attempts to resolve the threshold $\theta$ and the prevalence $x$ by assuming the speaker was trying to be informative to a hypothetical literal listener, specified by:
 
 \begin{flalign}
 & P_{L_{0}}(x \mid g, \theta) \propto {\delta_{\denote{g(\theta)}(x)} P(x)} \label{eq:L0}
 \end{flalign}
-Here $\denote{g(\theta)}: X \rightarrow \text{Boolean}$ is a truth-function specifying the literal meaning of the generic. The literal content in Eq.~\ref{eq:L0} is given by $\denote{g(\theta)}= \{x | x > \theta \}$ as in Eq.~\ref{eq:birds}, where $x$ is a prevalence. $g$ is a function of $\theta$ because the meaning of a generic may vary across contexts.
 
-The degree to which the speaker's utterance is optimal for a given intended-prevalence is governed by a soft-max decision rule with rationality parameter  $\lambda$ \cite{Luce1959}. From this, the pragmatic listener (Eq. ~\ref{eq:L1}) jointly infers both the prevalence $x$ and the threshold $\theta$. We call this type of model a ``lifted threshold'' model because $\theta$, traditionally thought to be part of the semantic content of the utterance (and thus perfectly transparent to all in the conversation), has been underspecified in the semantics but is locally fixed through pragmatic reasoning.
+The degree to which the speaker's utterances are optimal for a given intended-prevalence is governed by a soft-max decision rule with rationality parameter  $\lambda$ \cite{Luce1959}. 
+The literal listener ($L_0$) has access to the threshold $\theta$ and thus knows exactly what the speaker meant to communicate. 
+This idealized listener simply uses Bayes' Rule where the likelihood function $\denote{g(\theta)}: X \rightarrow \text{Boolean}$ is a truth-function specifying the literal meaning of the generic. 
+The literal content in Eq.~\ref{eq:L0} is given by $\denote{g(\theta)}= \{x | x > \theta \}$ as in Eq.~\ref{eq:birds}.
+
+
+We call this type of model a ``lifted threshold'' model because $\theta$, traditionally thought to be part of the semantic content of the utterance (and thus perfectly transparent to all in the conversation), has been underspecified in the semantics but is locally fixed through pragmatic reasoning.
  
  How does a listener decide upon a threshold? As first demonstrated by \citeA{Lassiter2013}, the inference about the threshold is a balance between truthfulness and informativity. Consider again the example of ``John is tall''. To make ``tall'' maximally truthful, the listener would set $\theta$ to be very low; no matter what John's height actually is, the utterance will be true since the threshold for tallness is low. Hence, truthfulness would be maximized. 
  Truthfulness is not the only constraint in conversation however; there is also the pressure to be informative. A maximally informative ``tall'' would correspond to a threshold that carries with it the maximum surprisal or information gain. 
