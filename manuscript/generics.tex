@@ -570,7 +570,8 @@ However, large deviations from a purely within-category prevalence account remai
 
 \subsection{Lifted-threshold model predictions}
 
-The model specified in Section \ref{sec:model} reasons about the likely prevalence that a generic implies, given some distribution over the prevalence of the property. In this way, the model takes into account the prevalence of the property within- and across-categories.
+The model specified in Section \ref{sec:model} reasons about the likely prevalence that a generic implies given a distribution over the prevalence of the property. 
+In this way, the model takes into account the prevalence of the property both within- and across-categories.
 We explore the predictions of this model, using the empirical priors elicited in Expt.~1a. 
 We compare these predictions to the truth judgment data observed in Expt.~1b.
 
@@ -593,7 +594,7 @@ The 95\% Credible Interval is [3.79,4.70].
 
 \subsubsection{Posterior predictive}
 
-Finally, we evaluate the model by examining the posterior predictive distribution of responses. The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the lifted-threshold model and the observed data. This is akin to fitting the parameters and is an important step in model validation: It shows what data is actually predicted by the model. 
+We evaluate the model by examining the posterior predictive distribution of responses. The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the lifted-threshold model and the observed data. This is akin to fitting the parameters and is an important step in model validation: It shows what data is actually predicted by the model. 
 Figure \ref{fig:modeldataScatter} shows the expected values of the model predictions compared against the observed data. 
 The model predicts graded endorsements for the generic statements used in Expt.~1b. 
 
@@ -615,7 +616,7 @@ The largest deviations occur for the items with greatest variance (``neither tru
 In Expt.~1, we asked whether or not participants' truth judgments on a set of generic sentences covering a range of conceptual distinctions could be explained by a language understanding model with a truth-functional threshold sensitive to the prior distribution over prevalence. 
 In Expt.~1a, we empirically measured the prior distribution of prevalence by asking participants about their beliefs of how prevalent certain properties are across many animal categories. 
 Here, we observed qualitatively different distributions corresponding to properties that are common within-categories and common across-categories (e.g. ``are male''), common within-categories but rare across-categories (e.g. ``have manes''), rare within-categories and rare across-categories (e.g. ``carries malaria''). Interestingly, these same distinctions are made between generics of these properties \cite{Prasada2013}. 
-Our empirical and modeling results suggests these distinctions are a result of different belief distributions about the prevalence of the properties.
+Our empirical and modeling results suggest these distinctions are a result of different belief distributions about the prevalence of the properties.
 
 How does the model arrive at different truth judgments for generics of different properites?
 Here, the prevalence prior plays a critical role in determining where the generic-threshold $\theta$ (and, consequently, the resulting inferred prevalence $x$) is likely to fall (see Figure \ref{fig:priors1a} for examples of the relevant priors). 
@@ -623,14 +624,14 @@ In setting the threshold, the pragmatic listener $L_{1}$ balances the truth of t
 If the pragmatic listener hears ``Lions haves manes.'', she will likely set the threshold $\theta$ below 50\%, as this is necessary to make the utterance true (Figure \ref{fig:priors1a} bottom left). 
 At the same time, the listener believes the message to be informative, so she will probably set $\theta$ above 10\%. 
 Since the posterior inferred prevalence has to be greater than the threshold in order to make the utterance true, the most likely inferred prevalence $x$ will be about 50\% (i.e. after ruling out everything below 10\%, the most probably prevalence will be 50\%). 
-Since this matches the actual prevalence of having manes among lions, the speaker concludes this is a reasonable thing to say.
+Since this matches the speaker's believed prevalence of having manes among lions, the speaker concludes the generic is a helpful thing to say.
+%These differences, coupled with a vague meaning for the generic, produce different acceptance probabilities for a range of generic sentences. 
+%For example, ``Mosquitos carry malaria'' is true, because the prevalence of malaria among mosquitos is higher than prevalence of malaria among most (possibly all) other animal species. 
+%``Lions have manes'' is true for the same reason. 
+At the same time, participants judged ``Lions are male'' to be neither true nor false; the model exhibits the same behavior because the prevalence of being male among lions is neither significantly more nor less than prevalence of being male among other animal species. 
 
-These differences, coupled with a vague meaning for the generic, produce different acceptance probabilities for a range of generic sentences. 
-For example, ``Mosquitos carry malaria'' is true, because the prevalence of malaria among mosquitos is higher than prevalence of malaria among most (possibly all) other animal species. 
-``Lions have manes'' is true for the same reason. 
-Participants judged ``Lions are male'' to be neither true nor false, because the prevalence of being male among lions is neither significantly more nor less than prevalence of being male among other animal species. 
-The differences among these generic sentences can be explained by differences in the distribution of the prevalence of these categories. 
-Our model of a pragmatic listener who has uncertainty about the true threshold on prevalence resolves her uncertainty through a communicative inference using her world-knowledge and produces truth judgments highly similar to those of our participants.
+The conceptual distinctions among generics \cite{Prasada2013} explored in this experiment can be explained by differences in the distribution of the prevalence of these properties. 
+Our model of a speaker considering a listener who has uncertainty about the true threshold on prevalence produces truth judgments highly similar to those of our participants.
 
 %The speaker selects the utterance according to a soft-max decision rule governed by parameter $\lambda$\footnote{It's conceivable that this $\lambda$ is different from the parameter that governs the selection of $S_{1}$'s utterances. For simplicity here we assume they are the same.}.
 
