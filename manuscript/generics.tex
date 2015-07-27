@@ -395,32 +395,32 @@ The literal content in Eq.~\ref{eq:L0} is given by $\denote{g(\theta)}= \{x | x 
 
 
 We call this type of model a ``lifted threshold'' model because $\theta$, traditionally thought to be part of the semantic content of the utterance (and thus perfectly transparent to all in the conversation), has been underspecified in the semantics but is locally fixed through pragmatic reasoning.
- 
  How does a listener decide upon a threshold? As first demonstrated by \citeA{Lassiter2013}, the inference about the threshold is a balance between truthfulness and informativity. Consider again the example of ``John is tall''. To make ``tall'' maximally truthful, the listener would set $\theta$ to be very low; no matter what John's height actually is, the utterance will be true since the threshold for tallness is low. Hence, truthfulness would be maximized. 
  Truthfulness is not the only constraint in conversation however; there is also the pressure to be informative. A maximally informative ``tall'' would correspond to a threshold that carries with it the maximum surprisal or information gain. 
  This would be a threshold that very few individuals could cross; this would correspond to something like ``the tallest''. 
  The lifted-variable pragmatics model seeks a balance between these two pressures. 
  The result is a threshold that signifies that ``John is tall'' means he is ``significantly taller than average''.
  
- This inference, as well as the inference about what the world is like (``what is the height of John?''; ``how many birds lay eggs?''), depends critically on the prior distribution on world states. 
- For tallness, world states correspond to heights of people (thus, the prior distribution is realistically [an approximation of] the actual distribution of heights for people). 
- For a semantics of generics that corresponds to the prevalence of the property, as we're proposing here, world states are possible prevalence levels. 
- The prior distribution over these prevalence levels is going to vary by the property in question, and inferences derived from these prior distributions on prevalence will be similarly sensitive. 
- 
+% This inference, as well as the inference about what the world is like (``what is the height of John?''; ``how many birds lay eggs?''), depends critically on the prior distribution on world states. 
+% For tallness, world states correspond to heights of people (thus, the prior distribution is realistically [an approximation of] the actual distribution of heights for people). 
+% For a semantics of generics that corresponds to the prevalence of the property, as we're proposing here, world states are possible prevalence levels. 
+% The prior distribution over these prevalence levels is going to vary by the property in question, and inferences derived from these prior distributions on prevalence will be similarly sensitive. 
+% 
 The model articulated so far is a model of generic interpretation: Upon hearing a generic, what prevalence is the listener likely to infer? 
-To explain the different conditions under which the generic is true, we introduce a model of a speaker who is deciding whether or not to produce the generic. 
+To explain the different conditions under which a generic utterance can be true, we extend the lifted-threshold model of \citeA{Lassiter2013} to include a model of a speaker who is deciding whether or not to produce the utterance. 
 
 \begin{equation} 
 P_{S_{2}}(g \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_{1}}(x \mid g)
 \label{eq:S2}
 \end{equation}
 
-This speaker in \eqref{eq:S2}, like $L_{1}$, doesn't actually have access to the threshold $\theta$, but knows that $L_{1}$ is thinking about it, and marginalizes over possible inferred values. 
-The $S_{2}$ speaker has in mind a prevalence $x$ (or, equivalently here, a category--property pair corresponding to that prevalence; e.g. ``birds'' and those that ``lay eggs''). 
-The speaker imagines the likely prevalence that the pragmatic listener $L_{1}$ will infer given the alternative utterances\footnote{In this implementation of the model, we stipulate the alternative to saying the generic as saying nothing (i.e. a null utterance). The qualitative results hold both when (1) the alternative is saying ````Lions have manes'' is false'' as well as (2) the alternative is saying the negation of the generic i.e. ``Lions do not have manes''. (1) is modeled as the logical negation of the generic, while (2) is modeled as a separate threshold. This distinction is analogous to the distinction found in gradable adjectives between saying ``John is not tall'' and ``John is short'' as possible alternatives to ``John is tall''.}. 
-He then decides whether or not it would be good to say the generic in order to convey the prevalence to the listener.
+The speaker in \eqref{eq:S2} doesn't actually have access to the threshold $\theta$, but knows that $L_{1}$ is thinking about it, and marginalizes over possible inferred values. 
+The $S_{2}$ speaker knows the prevalence $x$ (or, equivalently here, a category--property pair corresponding to that prevalence; e.g. ``lions'' and those that ``have manes''), and imagines the likely prevalence that the pragmatic listener $L_{1}$ will infer given the alternative utterances\footnote{How exactly to specify the space of alternative utterances in RSA models is an open question. In this implementation of the model, we stipulate the alternative to saying the generic as saying nothing at all (i.e. a null utterance). Thus, the listener considers ``why did the speaker say the generic, when he could have said nothing?''. This captures the communicative force of a speech-act. The qualitative results hold both when the alternative is stipulated to be (1) the negation:  ````Lions have manes'' is false'' as well as (2) the generic of the negation i.e. ``Lions do not have manes''. (1) is modeled as the logical negation of the generic, while (2) is modeled as a separate threshold. These alternatives are  analogous to alternatives to ``John is tall'' of ``John is not tall'' and ``John is short''.}. 
+He then decides whether or not it would be wise to say the generic in order to convey the prevalence to the listener.
  
-In the experiments that follow, we elicit this prior distribution on prevalence and find that it---coupled with the vagueness and pragmatics specified---predicts human acceptability judgments.
+In the experiments that follow, we explore the predictions of the $S_2$ model by comparing them to participant acceptability judgments of natural cases of generic utterances. 
+We also verify the predictions of the $L_1$ model by comparing them to participants' interpretations of novel generic sentences.
+These predictions are borne out by first eliciting the prior distribution on prevalence.
  
 %However, it interacts with the prior distribution $P(x)$ over prevalence levels---the prior distribution across kinds of a particular property's prevalence.
 
@@ -458,14 +458,12 @@ In the experiments that follow, we elicit this prior distribution on prevalence 
 
 \section{Experiment 1: Truth value judgments}
 
-The lifted-threshold RSA model specified in Eq.~\ref{S2} predicts different probabilities of producing the generic when the prevalence prior differs. 
-In Experiment 1a, we measure the distribution of prevalence of certain target properties by asking participants about the percentage of a kind with the property. 
-So as to not bias the measurement in favor of a small number of stipulated animal categories, we ask participants to generate their own animal categories. 
-In Expt. 1b, we measure the acceptability of a number of generic statements about the properties measured in Expt. 1a, predicting to cover a range of ratings. 
-We show how the prevalence within a property alone is insufficient to explain the truth judgments of these generics. 
-We then show how a model of a pragmatic speaker who considers the distribution of prevalence across categories can explain this wide range of truth judgments.
+The lifted-threshold RSA model specified in Eq.~\ref{S2} predicts probabilities of producing a generic given a prior distribution on the prevalence of the property. 
+In Expt.~1a, we measure the distribution on prevalence of certain target properties by asking participants about the percentage of a kind with the property \footnote{So as to not bias the measurement in favor of a small number of stipulated animal categories, we ask participants to generate their own animal categories.}. 
+In Expt.~1b, we measure the acceptability of a number of generic statements about the properties measured in Expt. 1a. 
+We show how the prevalence within a property alone is insufficient to explain the diversity of truth judgments of these generics, but how a model of a pragmatic speaker who considers the distribution on prevalence can explain this wide range of truth judgments.
 
-\subsection{Experiment 1a: \emph{Empirical prior}}
+\subsection{Experiment 1a: \emph{Eliciting the prior}}
 
 The goal of this experiment was to measure participants' beliefs about the distributions of the prevalence of various properties within and across categories.
 
@@ -475,21 +473,27 @@ We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Tu
 
 \subsubsection{Procedure and materials}
 
-Participants were told 
-\begin{quote}
-In this study, we are interested in how prevalent certain properties are within different kinds of animals. We will give you examples of the kinds of animals we have in mind and ask you to list a few of your own.
-
-Then, you will estimate the \emph{percentage of the individual members} of the animal species that have certain properties.
-
-On each trial, you will rate 8 properties. The properties will be revealed to you one at a time. Essentially, you will be filling out a big table. You are allowed to go back and revise your answers, if you think there is a more realistic estimate you could give. You will do this 2 times (2 big tables). 
-
-\end{quote}
-
-On each trial of the experiment, the participant filled out a table where each row was an animal category and each column was a property\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/experiments/real-kinds/prior-2.html}}. Columns were revealed one at a time. First, participants saw a partially completed column of animal kinds. These names were randomly sampled from a larger set of categories of interest (see Appendix \ref{sec:appendix} for full list of animals and properties used). They were asked to add 5 of their own animal names to the list. Upon completion, the next column appeared with a property (e.g. ``lays eggs'') as the column header. Participants were asked: ``For each kind of animal, what percentage of the species do you think [property]?'' This procedure was repeated for 8 properties in total. The animal kind column was unable to be modified once completed. The prevalence columns, however, could be modified at a later stage (i.e. the participant could go back and change her estimates after seeing more properties). Participants completed this procedure on each of 2 trials.
+On each trial of the experiment, the participant filled out a table where each row was an animal category and each column was a property\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/experiments/real-kinds/prior-2.html}}. 
+Participants were asked to respond with the percentage of the species that had the property.
+The list of animal categories was only partially pre-specified with animal categories that would be used in the generic truth judgment task.
+%These names were randomly sampled from a larger set of categories of interest (see Appendix \ref{sec:appendix} for full list of animals and properties used). 
+Participants were asked to add five of their own animal names to the list. 
+Upon completion, the next column appeared with a property (e.g. ``has manes'') as the column header and text-boxes where the participants could put their estimated prevalence. 
+%Participants were asked: ``For each kind of animal, what percentage of the species do you think [property]?'' 
+This procedure was repeated for 8 properties in total. 
+The animal kind column was unable to be modified once completed. 
+The prevalence columns, however, could be modified at a later stage (i.e. the participant could go back and change her estimates after seeing more properties). 
+Participants completed this procedure on each of 2 trials.
 
 We used a set of properties associated with generics of theoretical interest (16 properties in total), motivated in part by conceptual distinctions pointed out by \citeA{Prasada2013}. 
-The conceptual categories used to generate the generics were: majority characteristic (e.g. ``Leopards have spots''), minority characteristic (e.g. ``Lions have manes''), striking (e.g. ``Sharks attack swimmers.''), and majority false generalizations (e.g. ``Ducks are female.'') \cite{Prasada2013}. 
-The pre-specified animal names were those names associated with these generics.  For a full list of the generic sentences used in this experiment, see Appendix \ref{sec:appendix}.
+The conceptual categories used to generate the generics were: majority characteristic (e.g. ``Leopards have spots''), minority characteristic (e.g. ``Lions have manes''), striking (e.g. ``Sharks attack swimmers.''), and majority false generalizations (e.g. ``Ducks are female.'') \cite{Prasada2013}. In addition, we included false sentences (e..g ``Lions lay eggs''), to cover the full range of possible truth values .
+%The pre-specified animal names were those names associated with these generics.  
+For a full list of the generic sentences used in this experiment, see Appendix \ref{sec:appendix}.
+Complete instructions given to participants can be seen in Appendix \ref{sec:prior1instruct}.
+
+
+
+
 
 \subsubsection{Results}
 
@@ -504,10 +508,14 @@ From the 300 free responses for the animal production part of the task, 105 dist
   \label{fig:priors1a}
 \end{figure}
 
-We aggregated responses for each property by rounding responses to the nearest 10 and constructing a histogram. There are fewer responses for some animal categories relative to others, owing to idiosyncratic differences in the availability during the production part of the experiment (e.g. ``Dog'' is produced 10 times more than ``Bee'') as well as the fact that our 12 target categories were presented to every participant (whereas the freely-produced categories were not). As a result, these distributions may be biased to over represent certain animal categories. However, the distributions produced by analyzing the data on a by-response or by-category were qualitatively similar. In addition, model predictions between the the model using the by-response prior distribution and the by-category distribution had a correlation of \red{r = X.XX}, suggesting that the variability that is leads to different rates of generic acceptability were captured by the shared variance of these distributions. 
+We aggregated responses for each property by rounding responses to the nearest 10 and constructing a histogram. 
+There are fewer responses for some animal categories relative to others, owing to idiosyncratic differences in the availability during the production part of the experiment (e.g. ``Dog'' is produced 10 times more than ``Bee'') as well as the fact that our 12 target categories were presented to every participant (whereas the freely-produced categories were not). 
+As a result, these distributions may be biased to over-represent certain animal categories. 
+However, the distributions produced by analyzing the data on a by-response or by-category were qualitatively similar. 
+In addition, model predictions between the the model using the by-response prior distribution and the by-category distribution had a correlation of \red{r = X.XX}, suggesting that the variability that is leads to different rates of generic acceptability were captured by the shared variance of these distributions. 
 
 
-\subsection{Experiment 1b: \emph{Truth judgments}}
+\subsection{Experiment 1b: \emph{Truth judgments of natural cases}}
 
 The goal of this experiment was to measure participants' beliefs about the acceptability of a number of different generic sentences. 
 
@@ -524,16 +532,14 @@ We hypothesized that these ``neither true nor false'' ratings would be translate
 
 Participants were asked to report whether they agreed or disagreed with generic sentences presented in bare plural form (e.g. ``Birds lay eggs.''). 
 Items were presented sequentially, and subjects reported whether or not they agreed with the sentence by pressing either ``P'' or ``Q'' (randomized between-subjects). 
-
 Generic sentences were selected to correspond with the prevalence distributions elicited in Experiment 1a. 
 Approximately 10 true, 10 false, and 10 uncertain truth-value generics were selected (see Appendix \ref{sec:appendix} for full list of items).
-
 As a manipulation check, participants were asked at the end of the trials which button corresponded to ``Agree''.
 
 \subsubsection{Results}
 
-4 participants were excluded for failing to successfully report which button corresponded with ``Agree''. 
-5 additional participants were excluded for listing a language other than English as their native language, resulting in 91 participants.
+Four participants were excluded for failing to successfully report which button corresponded with ``Agree''. 
+Five additional participants were excluded for listing a language other than English as their native language, resulting in 91 participants.
 
 
 \begin{figure}
@@ -544,7 +550,9 @@ As a manipulation check, participants were asked at the end of the trials which 
 \end{figure}
 
 
-The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false (Figure \red{fig:tj1b}). We entered participants' agreement judgments into a mixed-effect logistic regression with random by-participant effects of intercept. This \emph{a priori} distinction was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$) and false generics were significantly less likely to be agreed with than the indeterminate generics ($\beta = -2.07; SE = 0.15; z = -14.1$). Rather interesting, indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$).
+The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false (Figure \ref{fig:tj1b}). We entered participants' agreement judgments into a mixed-effect logistic regression with random by-participant effects of intercept. 
+This \emph{a priori} distinction was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$).
+Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
 
 Truth judgments for these generic sentences were correlated with the prevalence of the property for the target category elicited in Expt.~1a ($r = 0.73$, Figure \ref{fig:scatterprev}). This is, of course, expected given that high-prevalence true generics (e.g. ``Leopards have spots.'') and low-prevalence false generics (e.g. ``Leopards have wings.'') were used. 
 However, large deviations from a purely within-category prevalence account remain: Generics with intermediate prevalences (Prevalence quartiles 2 and 3: $ 22\% < prevalence < 62\%$), exhibited no correlation with truth judgments ($r_{Q2,3} = -0.08$).
@@ -1131,6 +1139,21 @@ Novel                         & 21. Mosquitos attack swimmers.       &          
 
 \end{tabular}
 \end{table}
+
+
+\section{Instructions used in Experiment 1a: prior elicitation for familiar categories}
+\label{sec:prior1instruct}
+
+Participants were told 
+\begin{quote}
+In this study, we are interested in how prevalent certain properties are within different kinds of animals. We will give you examples of the kinds of animals we have in mind and ask you to list a few of your own.
+
+Then, you will estimate the \emph{percentage of the individual members} of the animal species that have certain properties.
+
+On each trial, you will rate 8 properties. The properties will be revealed to you one at a time. Essentially, you will be filling out a big table. You are allowed to go back and revise your answers, if you think there is a more realistic estimate you could give. You will do this 2 times (2 big tables). 
+
+\end{quote}
+
 
 \section{Instructions used in Experiment 2a: prior elicitation for novel categories}
 \label{sec:prior2instruct}
