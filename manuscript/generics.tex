@@ -656,29 +656,29 @@ However, this puzzle is resolved when a speaker understands the generic to be va
 A second puzzle surrounds how a listener is to interpret a generic utterances.
 Some of the earliest psychological work on generics brought this out, suggesting that generics ``once accepted psychologically, ... appear to be commonly taken in a rather strong sense, as if the qualifier \emph{always} had implicitly crept into their interpretation'' \cite{Abelson1966}. \red{[Note: this is the same quote that Cimpian2010 use... is this okay?}.
 %
-\citeA{Gelman2002} found that adults interpret novel generic statements about familiar kinds (e.g. ``Bears like to eat ants.'') as implying that almost all bears like to eat ants.
-\citeA{Cimpian2010} found similar inferences with novel generics about novel kinds (e.g. ``Lorches have purple feathers.''). 
+\citeA{Gelman2002} found that adults interpret novel generic statements about familiar kinds (e.g. ``Bears like to eat ants.'') as implying that almost all of the category has the property (e.g. almost all bears like to eat ants).
+\citeA{Cimpian2010} found similar inferences with generics about unfamiliar kinds (e.g. ``Lorches have purple feathers.''). 
 
 These strong inferences are puzzling when examined next to the prevalence required for a generic to be true. 
 As we saw in Expt.~1, generics can be true for a range of prevalence levels. 
 This phenomenon clearly distinguishes generic statements from quantified statements.
 ``All lorches have purple feathers.'' is true only when 100\% of lorches have purple feathers. 
 Similarly, upon hearing such an utterance, one is likely to infer that 100\% of lorches have purple feathers.  
-This symmetric relationship was found to hold with the quantifier ``most'', but generic utterances don't behave in this way \citeA{Cimpian2010}.
+This symmetric relationship was found to hold with the quantifier ``most'', but generic utterances don't behave in this way \cite{Cimpian2010}.
 %Participants judged ``most'' sentences true when between 50-100\% of the category had the property (on average: 75\%). 
 %Similarly, upon hearing an utterance with ``most'', participants on average inferred a prevalence of about 75\%. 
 Generic statements are judged true for a wide range of prevalence levels, but upon hearing a generic utterance, participants were wont to infer that \emph{all} or \emph{almost all} of the category have the property. 
 Thus, the implications of generic statements go far beyond the evidence needed to accept them as valid.
 
-Not all statements in bare plural form carry these implications. 
+Not all statements in bare plural form carry these implications, however. 
 Indeed, interpretations of these sentences are sensitive to listener's beliefs about the properties in question. 
 \citeA{Cimpian2010} observed that predicating with accidental properties (e.g. ``Lorches have muddy feathers.'') significantly reduced participants' judgments about the implied prevalence of these statements.
 
 %That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. 10\% of lorches had purple feathers) to assert that the generic statement was true.
 
-Expt.~2 attempted to replicate and explain the findings of \citeA{Cimpian2010}: that there is an asymmetry between truth conditions and implied prevalence of the generic and that this asymmetry is sensitive to the type of property predicated. 
+Expt.~2 attempted to replicate, extend and explain the findings of \citeA{Cimpian2010}: that there is an asymmetry between truth conditions and implied prevalence of the generic and that this asymmetry is sensitive to the type of property predicated. 
 In Expt.~2a, we measure participants' beliefs about the distribution of these types of properties using a paradigm generalized from Expt.~1a. 
-In Expt.~2b, we replicate and extend \citeauthor{Cimpian2010}'s findings to different classes of properties for which the prevalence priors should differ. 
+In Expt.~2b, we replicate and extend \citeauthor{Cimpian2010}'s findings to different classes of properties for which the prevalence priors differed. 
 We show that the language understanding model predicts this asymmetry between truth conditions and implications, and that this asymmetry can be manipulated by differences in the prevalence distributions between properties.
 
 %Exp. 1a and 1b were conducted on separate sessions, one week apart. None of the participants completed both experiments.
@@ -692,22 +692,27 @@ We used materials from \citeA{Cimpian2010} which consisted of novel animal categ
 
 \subsubsection{Participants}
 
-We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 5-7 minutes and participants were compensated \$0.75.
+We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 5-7 minutes and participants were compensated \$0.75.
 
 \subsubsection{Procedure and materials}
 
 In Expt.~1a, participants filled out a table with rows corresponding to different animal kinds and columns corresponding to different properties. 
-Pilot testing suggest this was a pragmatically awkward setup for this paradigm, as participants are just asked out of the blue to report a prevalence of a property for an animal they've never heard of. 
+Pilot testing suggested this was a pragmatically strange setup for this paradigm: answering ``What percentage of lorches have purple feathers?'', when participants knew nothing about lorches was difficult.
 We thus generalized the procedure to ask simpler questions and used a Bayesian statistical model to infer the underlying distribution. 
 We then used these distributions in our language model to make predictions about the implications of generic sentences.
 
-
-Participants were asked about the prevalence across categories by asking them the likelihood of there existing a K that has F, where K was a novel animal categories and F was a property (e.g. how likely is it that there is a fep that is female). 
+Participants were asked about the prevalence across categories by asking them the likelihood of there existing a K that has F, where K was a novel animal categories and F was a property (e.g. ``how likely is it that there is a lorch that is female?''). 
 Prevalence within categories was measured by asking participants about the percentage of Ks that have Fs, given that at least one does.
 Complete instructions shown to participants are in Appendix \ref{sec:prior2instruct}. 
 
 Participants responded using slider bars that ranged from ``unlikely'' to ``likely'', and ``0\%'' to ``100\%'', respectively.
-Materials (properties and novel animal kinds) are in Appendix \ref{sec:materials2}.
+
+Materials---novel animal names and familiar properties---were taken largely from \citeA{Cimpian2010}. 
+We expanded the stimulus set to include four different types of properties: biological parts (e.g. ``feathers''), colored parts (e.g. ``purple feathers''), vague parts (e.g. ``smooth feathers''), and accidental parts (e.g. ``broken feathers''). 
+Pilot testing revealed a lot of variability in the estimated prevalences of accidental properties relative to the other types of properties. 
+To test the quantitative predictive power of the generic interpretation model, we used twice as many exemplars of the accidental class of properties, with the aim to make a ``common accidental'' and a ``rare accidental'' class of properties. 
+We used 8 exemplars of each of the three non-accidental properties (``parts'', ``colored parts'', ``vague parts'') and 16 exemplars of accidental properties.
+Materials are in Appendix \ref{sec:materials2}.
 
 \subsubsection{Data analysis}
 
@@ -725,38 +730,36 @@ We put identical, uninformative priors on these parameters:
 \gamma & \sim \text{Uniform}(0,1) \\
 \delta & \sim \text{Uniform}(0,10)
 \end{align*}
-To construct prevalence distributions reflecting both the within- and across- category prevalence (as we have for Expt.~1a), we assume that resulting distribution is a mixture of categories that have the property and categories that don't have the property\footnote{This is similar in spirit to Hurdle Models of count data used in clinical trials where the observed proportion of zeros is greater than one would expect from classical models of count data like the Poisson model.}. Whether or not a category has a property is determined by flipping a coin, weighted by the prevalence across categories
+To construct single prevalence distributions reflecting both the within- and across- category prevalence (as we have for Expt.~1a), we assume that the distribution is a mixture of categories that have the property and categories that don't have the property\footnote{This is similar in spirit to Hurdle Models of count data used in clinical trials where the observed proportion of zeros is greater than one would expect from classical models of count data like the Poisson model.}. Whether or not a category has a property is determined by flipping a coin, weighted by the prevalence across categories
 \begin{align*}
 \theta_{across} & \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\ 
 h & \sim \text{Bernoulli}(\theta_{across}) \\
-p & \sim \begin{cases} 
+x & \sim \begin{cases} 
 		\text{Beta}(\gamma_{within}, \delta_{within}) &\mbox{if } h = 1 \\ 
 				0 & \mbox{if } h=0. 
 				\end{cases} 
 \end{align*}
 
-Marginal posterior distributions for $p$ for estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking X samples using the Metropolis-Hastings algorithm.
+Marginal posterior distributions for $x$ for estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking 50,000 samples using the Metropolis-Hastings algorithm.
 
 \subsubsection{Results}
 
-Our focus for this experiment is to see if the distributions on prevalence differ between the different types of properties, and further to see if these differences predict the different interpretations of generics. 
+Our focus for this experiment is to see if the distributions on prevalence differ between the different types of properties.
+We analyzed the data first by item in order to split the accidental properties into two categories: common accidental properties (e.g. wet fur) and rare accidental properties (e.g. broken legs). We then ran the model again analyzing the data by type of property.
 
-We analyzed the data first by item and discovered that accidental properties displayed wide variability in the estimated prevalence within-categories. Hence, we split the accidental properties into two types of properties: accidental-rare (e.g. broken legs) and accidental-common (e.g. wet fur).
+Figure \ref{fig:prior2} Left shows the posterior predictive distributions for prevalence $x$ for 5 different types of properties.Figure \ref{fig:prior2} Right shows the region of interest of these distributions by removing the all the mass at 0. These distributions form the prevalence priors used in the language understanding model. 
+With the exception of the body part category, properties are mostly likely to be absent from the category (Figure \ref{fig:prior2} left; modes of distributions are at 0).
+If the property is present in the category, the most likely prevalence for biological properties (``part'', ``color part'', and ``vague part'') is 100\% (Figure \ref{fig:prior2} right; modes of blue, green, and red distributions are at 1).
+This is not the case with the prevalence priors for accidental properties, for which lower values are more likely (Figure \ref{fig:prior2} right; modes of orange and purples distributions are at some low prevalence).
 
-We look at the posterior predictive distributions for prevalence $p$ for 5 different types of properties. 
 
-\subsubsection{Model predictions}
-\label{sec:modelAsymmetry}
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{prior2_prevalenceprior-50k.pdf}
+    \caption{Prevalence priors inferred from the prior elicitation experiment  (Expt.~1a). Right plot shows all non-zero probability mass. This corresponds to the expected within-category prevalence. Different types of properties have different likely prevalence values.}
+  \label{fig:prior2}
+\end{figure}
 
-To see if these different inferred prevalence distributions predict different interpretations of generic sentences we generated predictions from our model using 
-
-%\begin{figure}
-%\centering
-%    \includegraphics[width=\columnwidth]{exp1truthconds_empiricalPriors}
-%    \caption{``Forward'' predictions of lifted-threshold RSA for truth conditions using the empirical priors from Expt. 2.}
-%  \label{fig:exp1preds}
-%\end{figure}
-%
 %
 %In Section \ref{sec:model1}, we posited a family of priors for our model (the $\beta$ family of distributions). We saw that our model could accommodate both the flexibility in truth conditions as well as the asymmetry between truth conditions and implications. This combined data-analysis --- cognitive model made the \emph{backward prediction} that the priors would have to vary between property-types. In Exp.~2 we found that to be case \footnote{Qualitative differences between the \emph{observed} and \emph{backward-predicted} priors are likely a results of the family of priors posited a priori. The $\beta$ family can only accommodate U- and N- shaped distributions.}. There is still a question of whether or not the priors elicited in Exp.~2 would actually still predict the flexible truth conditions and the asymmetry.  
 %
@@ -864,16 +867,22 @@ Accidental &             &                                                      
 \subsubsection{Results}
 
 
+
+Results are shown in Figure~\ref{fig:exp2a} (Left). We entered participants' truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and type as well as their interaction.  
+
+The original authors found that proportion of ``agree'' responses increased monotonically as prevalence increased. 
+
+
 \begin{figure}
 \centering
-    \includegraphics[width=0.8\columnwidth]{exp3_asymmetry}
-    \caption{Replication of \protect\citeA{Cimpian2010}. Generic statements are accepted for a range of prevalences, resulting in an intermediate ``average prevalence'' (light bars). There is a small effect of participants' rejecting generics about accidental properties, resulting in a higher average prevalence for acceptance (difference between light bars). Upon hearing a generic statement about biological properties, participants' infer that a high proportion of the category has the property (dark bar, biological). Generics about accidental properties do not result in high implied prevalence.  Error bars denote bootstrapped 95\% confidence intervals.}
+    \includegraphics[width=\columnwidth]{asym-data-model-4opts-75k.pdf}
+    \caption{Replication and extension of \protect\citeA{Cimpian2010} (Left) and model predictions (Right). 
+    Generic statements are accepted for a range of prevalences, resulting in an intermediate average prevalence (light bars) for ``truth conditions''. 
+    Upon hearing a generic statement about biological properties, participants' infer that a high proportion of the category has the property (dark bars: red, blue and green). 
+    Generics about accidental properties do not result in such a high implied prevalence (dark bars: purple and orange).  Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
   \label{fig:exp2a}
 \end{figure}
 
-Results are shown in Figure~\ref{fig:exp2a}. We entered participants' truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and type as well as their interaction\footnote{This was the maximal mixed-effect structure supported by the data.}.  
-
-The original authors found that proportion of ``agree'' responses increased monotonically as prevalence increased. 
 
 %
 %Our results replicated the finding of CBG that the generic statements were endorsed more with dangerous and distinctive properties than with plain properties (Figure \ref{fig:exp1}, left; $\beta=1.99; SE = .36; z = 5.52; p < .001$). 
@@ -1172,6 +1181,61 @@ On each trial, the data-collection robot introduced a new animal (e.g. ``We rece
 The robot then asked how likely it was that ``there was \emph{a} glippet with [[property]]''. 
 This question aimed to get at the prevalence of the property \emph{across} categories (e.g. it's very likely that there is a glippet that is female, less likely that there is a glippet that has wings, and even less likely that there is a glippet has purple wings). 
 The second question was about the prevalence \emph{within} categories. The robot asked, ``Suppose there is a glippet that has wings. What percentage of glippets do you think have wings?''
+
+\section{Stimuli used in Experiment 2}
+\label{sec:materials2}
+
+Many of these materials were originally used in \citeA{Cimpian2010}.
+
+\begin{table}[h]
+\begin{tabular}{| l || l | l | l |}
+\hline
+Property type               & Item                    & Across-category prevalence estimate  & Within-category prevalence estimate \\
+\hline \hline
+Body part       			& 1. Teeth    &   &                     \\
+                                          & 2. Fur                       &                &                     \\
+                                          & 3. Tails                     &                &                     \\
+                                          & 4. Claws                       &                &                     \\
+                                          & 5. Feathers                       &                &                     \\
+                                          & 6. Ears                       &                &                     \\
+                                          & 7. Legs                       &                &                     \\
+                                          & 8. Skin                       &                &                     \\
+Colored part      	 & 9. Pink teeth       &                &                     \\
+                                          & 10. Yellow fur                       &                &                     \\
+                                          & 11. Orange tails                         &                &                     \\
+                                          & 12. Blue claws                       &                &                     \\
+                                          & 13. Purple feathers                      &                &                     \\
+                                          & 14. Orange ears                    &                &                     \\
+                                          & 15. Silver legs                       &                &                     \\
+                                          & 16. Violet skin                      &                &                     \\       
+Vague part      	 & 17. Long teeth       &                &                     \\
+                                          & 18. Curly fur                       &                &                     \\
+                                          & 19. Long tails                         &                &                     \\
+                                          & 20. Big claws                       &                &                     \\
+                                          & 21. Smooth feathers                      &                &                     \\
+                                          & 22. Small ears                    &                &                     \\
+                                          & 23. Long legs                       &                &                     \\
+                                          & 24. Rough skin                      &                &                     \\ 
+Common accidental part    & 25. Wet fur       &                &                     \\
+                                          & 26. Dusty skin                       &                &                     \\
+                                          & 27. Worn-out claws                         &                &                     \\
+                                          & 28. Fungus-covered fur                      &                &                     \\
+                                          & 29. Muddy feathers                      &                &                     \\
+                                          & 30. Rotten teeth                   &                &                     \\
+                                          & 31. Torn feathers                       &                &                     \\
+                                          & 32. Itchy tails                      &                &                     \\  
+Rare accidental part    & 33. Sore legs       &                &                     \\
+                                          & 34. Torn tails                       &                &                     \\
+                                          & 35. Cracked claws                         &                &                     \\
+                                          & 36. Sore teeth                       &                &                     \\
+                                          & 37. Swollen ears                      &                &                     \\
+                                          & 38. Infected ears                    &                &                     \\
+                                          & 39. Burned skin                       &                &                     \\
+                                          & 40. Broken legs                     &                &                     \\                                                                                          
+                                           \hline
+
+\end{tabular}
+\end{table}
 
 
 
