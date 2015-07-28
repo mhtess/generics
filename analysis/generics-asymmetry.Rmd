@@ -677,7 +677,7 @@ d.rt$workerid<- with(d.rt, reorder(workerid, medrt, function(x) -x))
 trouble.makers<-d.rt[d.rt$medrt<0,]$workerid
 ```
 
-```{r asym1.truthconditions}
+```{r asym2.truthconditions}
 # calculate proportion of "accepts" for each type and prevalence
 accept.summary <- d.accept %>%
   mutate(response = as.numeric(response=='Agree')) %>%
@@ -701,7 +701,7 @@ ggplot(accept.summary,aes(x=factor(stim_prevalence), y= prop,
 
 ## Asymmetry (money plot 2)
 
-```{r}
+```{r asym2.moneyplot}
 d.aveImpPrev <- d.implied %>%
   mutate(response = to.n(response))%>%
   group_by(workerid, type) %>%
@@ -759,6 +759,13 @@ d.asymSummary<-bind_rows(d.impSummary, d.accSummary)
 d.asymSummary$type<-with(d.asymSummary %>% filter(src=='implied'), 
                              reorder(type, aveprev, function(x) x))
 
+d.asymSummary<-d.asymSummary %>%
+  rename(task = src,
+         avePrev = aveprev) %>%
+  mutate(src = 'data',
+         credLow = avePrev - 2*sterr,
+         credHigh = avePrev + 2*sterr) %>%
+  select(-sterr)
 
 ggplot(d.asymSummary,
        aes(x=type, y = aveprev, fill = src))+
@@ -952,10 +959,27 @@ ggplot(d.tidy, aes(x=val,fill=stim_type))+
 head(d.tidy)
 d.item<-d.tidy %>% 
   group_by(stim_type, stim_property, resp) %>%
-  summarise(mean_response = mean(val))
+  summarise(mean_response = mean(val),
+            sterr = sem(val)) %>%
+  mutate(ciLow = mean_response - 2*sterr,
+         ciHigh = mean_response + 2*sterr)
+
+
+View(d.item[order(d.item$mean_response, decreasing=T),] %>% filter(resp=='response0'))
 
 d.acc<-d.item %>% filter((stim_type=='accidental' | stim_type=='disease')
                         & resp=='response1')
+
+
+
+d.acc$stim_property<-with(d.acc, 
+                 reorder(stim_property, mean_response, function(x) -x))
+
+
+ggplot(d.acc, aes(x=stim_property, y = mean_response))+
+  geom_bar(stat='identity')+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,
+                                   vjust=1)) 
 
 
 acc.low<-d.acc[order(d.acc$mean_response),]$stim_property[1:8]
@@ -999,14 +1023,13 @@ summary(rs.implications)
 
 ### FBT Priors
 
-```{r}
+```{r priors2.FBT}
 d<-read.csv("~/Documents/research/generics/analysis/FBT-priors/results/priors4_betas_byItem_incrMH10000.csv")
-
+d<-read.csv("~/Documents/research/generics/analysis/FBT-priors/results/priors4_betas_byType_incrMH50000.csv")
 d.tidy <- d %>% 
   gather(Parameter, Value, Gamma, Delta)
 
-samples = 10000
-
+samples = 50000
 
 d.params<-data.frame(Item = rep(d.tidy$Item, 
                                1+samples*d.tidy$Probability),
@@ -1017,7 +1040,127 @@ d.params<-data.frame(Item = rep(d.tidy$Item,
                 Response = rep(d.tidy$Value, 
                                1+samples*d.tidy$Probability))
 
+fmt <- function(){
+    f <- function(x) as.character(round(x,2))
+    f
+}
+d.params$Item<- factor(d.params$Item, levels=c("accidental_low",
+                                               "accidental_high",
+                                               "color",
+                                               "vague",
+                                               "part"),
+                       labels=c("rare_accidental",
+                                "common_accidental",
+                                "color_parts",
+                                "vague_parts",
+                                "body_parts"))
 
+
+
+
+d.delta <- d.params %>% filter(Parameter=='Delta')
+d.gamma <- d.params %>% filter(Parameter=='Gamma')
+d.gamma$Question<-factor(d.gammma$Question, 
+                          levels=c("response0", "response1"),
+       labels=c("gamma[between]","gamma[within]"))
+
+
+ggplot(d.gamma %>% filter(Question=='gamma[between]'), 
+       aes(x=Response))+
+  geom_histogram(binwidth=0.01,
+                 aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]))+
+  #geom_density(adjust=2.5)+
+  facet_grid(Question~Item, labeller = label_parsed)+
+  #facet_wrap(~Item)+
+  scale_x_continuous(limits=c(0,1),labels = fmt())+
+    theme(strip.text.y = element_text(angle = 0))+
+  xlab("Value")+
+  ylab("Probability")
+
+ggsave(file='~/Documents/research/generics/manuscript/figures/cogsci/prior2_gamma-between-posterior-50k.pdf', width=12, height = 3)
+
+
+d.delta$Question<-factor(d.delta$Question, 
+                          levels=c("response0", "response1"),
+       labels=c("delta[between]","delta[within]"))
+
+
+ggplot(d.delta, 
+       aes(x=Response))+
+  geom_histogram(
+                 aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]))+
+  #geom_density(adjust=2.5)+
+  facet_grid(Question~Item, labeller = label_parsed)+
+  #facet_wrap(~Item)+
+  scale_x_continuous(limits=c(0,5),labels = fmt())+
+    theme(strip.text.y = element_text(angle = 0))+
+  xlab("Value")+
+  ylab("Probability")
+
+ggsave(file='~/Documents/research/generics/manuscript/figures/cogsci/prior2_delta-posterior-50k.pdf', width=12, height = 3)
+
+```
+
+Posterior predictive (prevalence prior distribution)
+```{r prior2.fbt.prevalenceprior}
+d.samples<-data.frame()
+for (i in 1:1000){
+
+  d.samp<-d.params %>%
+    group_by(Item,Question, Parameter) %>%
+    sample_n(1) %>%
+    ungroup() %>%
+    spread(Parameter, Response) %>%
+    mutate(alph = shape1(Gamma,Delta),
+           bet = shape2(Gamma, Delta))%>%
+    group_by(Item, Question) %>%
+    mutate(prev = rbeta(1,alph,bet),
+           hasF = rbinom(1,1,prev)) %>%
+    select(-Gamma, -Delta, -alph, -bet) %>%
+    group_by(Item) %>%
+    summarise(prevalence = if(hasF[Question=='response0']==0) {0} 
+              else {prev[Question=='response1']})
+  
+  d.samples<-bind_rows(d.samples, d.samp)
+}
+
+ggplot(d.samples, aes(x=prevalence))+
+  geom_histogram()+
+  facet_wrap(~Item)
+
+d.samples$Item<-factor(d.samples$Item,
+                       levels=c("body_parts",
+                                "vague_parts",
+                                "color_parts",
+                                "common_accidental",
+                                "rare_accidental"))
+
+a<-ggplot(d.samples, 
+          aes(x=prevalence, color=Item))+
+  geom_density(size=1.1)+
+  scale_color_brewer(palette='Set1')+
+  xlab("Prevalence")+
+  ylab("Posterior density")+
+  theme(legend.position=c(0.7,0.65))
+
+b<-ggplot(d.samples %>% filter(!(prevalence==0)), 
+          aes(x=prevalence, color=Item))+
+  geom_density(size=1.3, linetype =1 )+
+  scale_color_brewer(palette='Set1')+
+  scale_x_continuous(limits=c(0,1),breaks=c(0.25,0.5,0.75,1))+
+  xlab("Prevalence")+
+  ylab("Posterior density")+
+  guides(color=F)
+
+c<-arrangeGrob(a,b,nrow=1)
+
+ggsave(c,file='~/Documents/research/generics/manuscript/figures/cogsci/prior2_prevalenceprior-50k.pdf',width=12, height= 4)
+```
+
+
+By item analysis
+
+```{r prior2.fbt.byItem}
 d.par<- d.params %>%
   group_by(Item, Question, Parameter) %>%
   summarise(Value = mean(Response),
@@ -1072,12 +1215,12 @@ d.prior$type<-as.character(d.prior$stim_type)
 d.prior[(d.prior$stim_property %in% acc.hi),]$type <- "accidental_high"
 d.prior[(d.prior$stim_property %in% acc.low),]$type <- "accidental_low"
 
-write.csv(d,file='~/Documents/research/generics/models/data/asymmetry-prior-4splitAccidental-trials.csv', row.names=F)
+write.csv(d.prior,file='~/Documents/research/generics/models/data/asymmetry-prior-4splitAccidental-trials.csv', row.names=F)
 
 d.prior[(d.prior$stim_property %in% acc.fbt.hi),]$type <- "accidental_high"
 d.prior[(d.prior$stim_property %in% acc.fbt.low),]$type <- "accidental_low"
 
-write.csv(d,file='~/Documents/research/generics/models/data/asymmetry-prior-4splitAccidentalFBT-trials.csv', row.names=F)
+write.csv(d.prior,file='~/Documents/research/generics/models/data/asymmetry-prior-4splitAccidentalFBT-trials.csv', row.names=F)
 
 
 d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-2/asymmetry-2-trials.csv')
@@ -1116,8 +1259,8 @@ FBT on prior elicitation and asymmetry data. Posterior over parameters and poste
 
 ```{r tfbt.2}
 d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-hashmh1000_asym2-prior4-incrmh10k.csv")
-d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-impliedOpt-hashmh1000_asym2-prior4-incrmh10k.csv")
-
+d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-4opts-phi-hashmh75000_asym2-prior4-incrmh10k.csv")
+d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-3opts-phi-hashmh10000_asym2-prior4-incrmh10k.csv")
 
 d.params <- d %>% filter(!(Parameter%in%c("truth_conditions", 
                                           "implied_prevalence")))
@@ -1128,7 +1271,7 @@ d.params <- d %>% filter(!(Parameter%in%c("truth_conditions",
 #   mutate(Value = to.n(Value))
 # 
 
-samples = 1000
+samples = 75000
 d.params <- data.frame(Parameter = rep(d.params$Parameter, 
                                        1+samples*d.params$Probability),
                        Response = rep(d.params$Value, 
@@ -1136,12 +1279,22 @@ d.params <- data.frame(Parameter = rep(d.params$Parameter,
 
 ggplot(d.params, aes(x=Response))+
   geom_histogram()+
-  facet_wrap(~Parameter)
+  facet_wrap(~Parameter,scales='free')
 
-quantile((d.params %>% filter(Parameter=='truthOptimality'))$Response, 
+
+quantile((d.params %>% filter(Parameter=='truthOptimality1'))$Response, 
          probs = c(0.025,0.975))
 
-quantile((d.params %>% filter(Parameter=='impliedOptimality'))$Response, 
+quantile((d.params %>% filter(Parameter=='impliedOptimality1'))$Response, 
+         probs = c(0.025,0.975))
+
+quantile((d.params %>% filter(Parameter=='truthOptimality2'))$Response, 
+         probs = c(0.025,0.975))
+
+quantile((d.params %>% filter(Parameter=='impliedOptimality2'))$Response, 
+         probs = c(0.025,0.975))
+
+quantile((d.params %>% filter(Parameter=='phi'))$Response, 
          probs = c(0.025,0.975))
 
 
@@ -1184,23 +1337,111 @@ d.aveprev <-
             mutate(norm_exp = expectation/sum(expectation)) %>%
             summarise(Parameter = "truth_conditions",
                       expectation = sum(Prevalence*norm_exp)/100)) %>%
-  rename(type = Parameter,
-         stim_type = Item,
+  rename(
+         type = Item,
          avePrev = expectation) %>%
-  mutate(type = factor(type, labels = c("implied", "accept")),
+  mutate(task = factor(Parameter, labels = c("implied", "accept")),
          src = "model",
-         avePrev=avePrev*100)
+         avePrev=avePrev*100,
+         credLow = credLow*100,
+         credHigh = credHigh*100) %>%
+  select(-Parameter)
 
-d.modeldata<-bind_rows(d.aveprev, asymmetry.summary%>%mutate(src='data'))
 
-ggplot(d.modeldata, aes(x=stim_type, y=avePrev, fill = type))+
+
+d.modeldata<-bind_rows(d.aveprev, d.asymSummary)
+
+ggplot(d.modeldata, aes(x=type, y=avePrev, fill = task))+
   geom_bar(position=position_dodge(), stat='identity')+
+  geom_errorbar(position=position_dodge(),
+                aes(ymin=credLow, ymax = credHigh))+
   facet_wrap(~src)
 
 ggplot(d.modeldata %>% filter(type=='implied' & src=='model'),
        aes(x=stim_type, y=avePrev, fill = stim_type))+
   geom_bar(position=position_dodge(), stat='identity')+
   geom_errorbar(position=position_dodge(),
-                aes(ymin=100*credLow, ymax = 100*credHigh))
+                aes(ymin=credLow, ymax = credHigh))
+
+```
+
+
+
+ Simulate subjects for truth conditions task
+ 
+```{r asym2.fbt.tc.bootstrap}
+
+
+d.tc <- d.tasks %>% filter(Parameter =='truth_conditions')
+d.bootstrap <- data.frame()
+
+for (i in 1:100){
+  d.simulsamp <- data.frame()
+  for (j in 1:40){
+    d.subj<- d.tc %>% 
+      group_by(Item, Prevalence) %>%
+      sample_n(1) %>%
+      mutate(Outcome = rbinom(1,1,Response)) %>%
+      group_by(Item) %>%
+      summarise(avePrev = avePrevScore(Outcome, Prevalence))
+    d.simulsamp <- bind_rows(d.simulsamp, d.subj)
+  }
+  d.groupmean<-d.simulsamp %>% group_by(Item) %>%
+    summarise(group_mean = mean(avePrev))
+  
+  d.bootstrap<- bind_rows(d.bootstrap, d.groupmean)
+  print(i)
+}
+
+
+d.simulsubj.stats <- d.bootstrap %>%
+  group_by(Item) %>%
+  summarise(expectation = mean(group_mean),
+            credLow = quantile(group_mean, probs=0.025),
+            credHigh = quantile(group_mean, probs=0.975)) %>%
+  rename(avePrev = expectation) %>%
+  mutate(task = 'accept',
+         src = 'model',
+         type = Item) %>%
+  select(-Item)
+
+d.aveprev<-bind_rows(d.aveprev %>% filter(task=='implied'),
+          d.simulsubj.stats)
+
+
+d.modeldata<-bind_rows(d.aveprev, d.asymSummary)
+
+d.modeldata$type<- with(d.modeldata%>% filter(task=='implied' & src=='data'),
+                        reorder(type, avePrev, function(x) -x))
+
+
+d.modeldata$type<-factor(d.modeldata$type, 
+                         labels = c("body parts", "vague parts",
+                                    "color parts", "common accidental",
+                                    "rare accidental"))
+
+d.modeldata$src<-factor(d.modeldata$src,labels =c("Data", "Model"))
+
+d.modeldata$task<-factor(d.modeldata$task, labels=c("Truth conditions",
+                                                    "Implied prevalence"))
+
+ggplot(d.modeldata, aes(x=type, y=avePrev, fill = type, alpha=task))+
+  geom_bar(position=position_dodge(0.9),width=0.9,
+           color='black',stat='identity')+
+  geom_errorbar(position=position_dodge(0.9),
+                aes(ymin=credLow, ymax = credHigh),
+                width=0.7)+
+  scale_alpha_manual(values=c(0.6,1))+
+  scale_fill_brewer(palette='Set1')+
+  facet_wrap(~src)+
+  ylab("Average prevalence")+
+  xlab("")+
+  guides(fill=F, alpha=guide_legend("Task"))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1,
+                                   vjust=1))+
+  theme(legend.position='bottom',
+        legend.direction='horizontal')
+
+ggsave(file='~/Documents/research/generics/manuscript/figures/cogsci/asym-data-model-4opts-75k.pdf', width=11, height = 6)
 
 ```
