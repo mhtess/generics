@@ -118,7 +118,7 @@
 \usepackage{wrapfig}
 \usepackage{lipsum}
 
-\graphicspath{{figures/cogsci/}}
+\graphicspath{{figures/}}
 
 \def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
   \hbox{}\nobreak\hfil(#1)%
@@ -707,7 +707,8 @@ Complete instructions shown to participants are in Appendix \ref{sec:prior2instr
 
 Participants responded using slider bars that ranged from ``unlikely'' to ``likely'', and ``0\%'' to ``100\%'', respectively.
 
-Materials---novel animal names and familiar properties---were taken largely from \citeA{Cimpian2010}. 
+Materials---novel animal names and familiar properties---built upon those from \citeA{Cimpian2010}. 
+Classic work in generalization suggested to us that there may be differences in the distributions of different types of biological properties \cite{Nisbett1983}. 
 We expanded the stimulus set to include four different types of properties: biological parts (e.g. ``feathers''), colored parts (e.g. ``purple feathers''), vague parts (e.g. ``smooth feathers''), and accidental parts (e.g. ``broken feathers''). 
 Pilot testing revealed a lot of variability in the estimated prevalences of accidental properties relative to the other types of properties. 
 To test the quantitative predictive power of the generic interpretation model, we used twice as many exemplars of the accidental class of properties, with the aim to make a ``common accidental'' and a ``rare accidental'' class of properties. 
@@ -794,33 +795,40 @@ This is not the case with the prevalence priors for accidental properties, for w
 
 
 \subsection{Experiment 2b: mistmaches between \emph{truth conditions} and \emph{implications}}
-In this experiments, we aimed to replicate the findings of \citeauthor{Cimpian2010} that generic statements of biological properties have strong implications while generic statements of accidental properties have weak implications. 
-We also aimed to extend these findings to the other properties types observed in Expt.~2a to have different distributions over prevalence (e.g. accidental-common, accidental-rare).
+
+\citeauthor{Cimpian2010} observed that generic statements of novel kinds with biological properties (e.g. ``Glippets have yellow fur'') show an asymmetry between the conditions by which the generic is true (``\emph{truth conditions}'') and the prevalence implied by the generic (``\emph{implied prevalence}''). 
+Generic sentences were endorsed for a wide-range of prevalence levels (e.g. when ``30\% of glippets have yellow fur.''), resulting in intermediate average truth conditions. 
+Upon hearing a generic, listeners inferred that the property was widespread (e.g. almost all glippets have yellow fur).
+This mismatch between \emph{truth conditions} and \emph{implied prevalence} was significantly reduced for generics of properties plausibly construed as accidental (e.g. ``Glippets have wet fur.'').
+
+In this experiment,  we replicate these findings and extend them to reveal even more variability in the mismatch between \emph{truth conditions} and \emph{implied prevalence} using the types of properties from Expt.~2a.
+We also show how the prevalence-based model predicts the variability in the mismatch with strong quantitative accuracy.
 
 
 \subsubsection{Participants}
 
-We recruited 100 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  
+We recruited 80 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  
 Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
 All participants were native English speakers. 
-The experiment took about 5 minutes and participants were compensated \$0.50.
+The experiment took about 5 minutes and participants were compensated \$0.60.
 
 \subsubsection{Procedure and materials}
 
-In order to get participants motivated to consider about novel animals, they were told they were the resident zoologist of a team of scientists that recently discovered an island with many new animals; their task was to provide their expert opinion on questions about these animals\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/asymmetry/asymmetry-1.html}}. 
-Participants were randomly assigned to either the \emph{truth conditions} (n=47) or the \emph{implied prevalence} (n=53) task.
+In order to get participants motivated to reason about novel animals, they were told they were the resident zoologist of a team of scientists that recently discovered an island with many new animals; their task was to provide their expert opinion on questions about these animals\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/asymmetry/asymmetry-2.html}}. 
+We recruited 40 participants for the \emph{truth conditions} task and 40 participants for the \emph{implied prevalence task}. 
 
-Following \citeauthor{Cimpian2010}'s paradigm, in the \emph{truth conditions} task, participants were given an evidence statement consisting of the percentage of a novel animal category that had a property (e.g.~``30\% of lorches have purple feathers''). 
-Participants were asked if they agreed or disagreed with the associated generic statement (i.e.~``Lorches have purple feathers.'').
+Following \citeauthor{Cimpian2010}'s paradigm, in the \emph{truth conditions} task, participants were given an evidence statement consisting of the percentage of a novel animal category that had a property (e.g.~``30\% of glippets have yellow fur''). 
+Participants were asked if they agreed or disagreed with the associated generic statement (i.e.~``Glippets have yellow fur.'').
 %\footnote{In the original experiment, the \emph{type of biological property} was manipulated between subjects as well to test the hypothesis that generics of distinctive properties are more readily accepted than generics of otherwise nondistinctive properties.  We have already shown in Experiment 1 how this prevalence-based model can account for such flexibility in truth conditions so we focus our attention on the asymmetry finding here.} 
 Prevalence varied between 10, 30, 50, 70, and 90\%.
-Each participant saw 30 trials: 10 trials for each of 3 types of property (described below); each prevalence level appeared two times for each property type (5 prevalence levels x 3 property types x 2 repetitions). 
+The experiment consisted of 25 trials: 5 trials for each of 5 types of properties measured in Expt.~2a (part, color part, vague part, common accidental, rare accidental). 
+Each prevalence level appeared once for each property type (5 prevalence levels x 5 property types). 
 
-Participants in the \emph{implied prevalence} task were supplied with the generic and asked to judge prevalence: ``What percentage of lorches do you think have purple feathers?''. Participants saw 30 trials: 10 for each of 3 property types.
-The kind of property was manipulated within-subjects: On each trial, the statements were about a certain type of property. 
-The original study by \citeauthor{Cimpian2010} found a difference between biological properties (e.g. purple feathers) and accidental properties (e.g. muddy feathers). 
-Classic work in generalization additionally suggests that there may be differences in the distributions of different types of biological properties \cite{Nisbett1983} . 
-For this reason, we included three types of biological properties: parts (e.g. feathers), color--part pairs (e.g. purple feathers) and gradable adjective--part pairs (e.g. smooth feathers). 
+Participants in the \emph{implied prevalence} task were supplied with the generic (e.g. ``Glippets have yellow fur.'') and asked to judge prevalence: ``What percentage of glippets do you think have yellow fur?''. Participants saw 25 trials: 5 for each of 5 property types.
+The original study by \citeauthor{Cimpian2010} found a difference in the implied prevalence between ``color parts'' (e.g. yellow fur) and accidental properties (e.g. wet fur).
+The prevalence priors inferred from Expt.~2a suggest that generic interpretation should be even more variable than simply strong vs. weak.
+For this reason, we included three types of biological properties: parts (e.g. fur), color--part pairs (e.g. yellow fur) and gradable adjective--part pairs (e.g. curly fur). 
+We also coded the accidental properties from Expt.~2a as either ``common'' or ``rare'' using a by-item median split.
 
 
 
@@ -829,7 +837,8 @@ For this reason, we included three types of biological properties: parts (e.g. f
 %
 %They also found an interaction with type: \emph{dangerous and distinctive} property had higher proportions of ``true'' responses to the generic, particularly so at lower prevalence levels. 
  
-Most of the materials we used were from \citeauthor{Cimpian2010}. The materials used were 30 novel animal categories (e.g. lorches, morseths, blins) each paired with a unique property. 
+Most of the materials we used were from \citeauthor{Cimpian2010}. 
+The materials used were 30 novel animal categories (e.g. lorches, morseths, blins) each paired with a unique property. 
 Biological properties were made by pairing a color with a body-part (e.g. purple feathers, orange tails). 
 Accidental properties used the same set of body-parts but modified it with an adjective describing an accidental or disease state (e.g. broken legs, wet fur). 
 Each participant saw a random subset of 10 unique animal-property pairs for each type of property (biological and accidental). 
@@ -868,19 +877,22 @@ Accidental &             &                                                      
 
 
 
-Results are shown in Figure~\ref{fig:exp2a} (Left). We entered participants' truth judgments into a mixed effects logistic regression with random by-item and by-participant effects of intercept and fixed effects of prevalence and type as well as their interaction.  
-
-The original authors found that proportion of ``agree'' responses increased monotonically as prevalence increased. 
-
+Results are shown in Figure~\ref{fig:exp2b} (Left). 
+We replicated \citeA{Cimpian2010}'s finding that the proportion of ``agree'' responses increases monotonically as prevalence increased ($\beta=0.05; SE = .003; z = 15.5$). 
+There were no differences in the tendency to agree with the generic based on property type: 
+A linear model that takes into account property type did not significantly increase the fit to the data as revealed by an Analysis of Deviance Chi-square test $\chi^2_{4}=7.53; p > 0.1$.
+Figure \ref{fig:exp2b} (Left; light bars) shows the average truth conditions by condition following the data analysis strategy of \citeauthor{Cimpian2010}\footnote{ 
+Using the truth conditions data, we computed, for each subject, an \emph{average prevalence level} that led to ``Agree'' responses. 
+For example, if a participant agreed with the generic whenever the prevalence was 70\% or 90\% and disagreed at the other prevalence levels, that participant received an \emph{average prevalence score} of 80\%; if a participant disagreed to everything, their \emph{average prevalence score} was 100\%, since they presumably would only agree if the prevalence was 100\%.}.
 
 \begin{figure}
 \centering
-    \includegraphics[width=\columnwidth]{asym-data-model-4opts-75k.pdf}
+    \includegraphics[width=\columnwidth]{asym-data-model-2opts-phi-100k.pdf}
     \caption{Replication and extension of \protect\citeA{Cimpian2010} (Left) and model predictions (Right). 
     Generic statements are accepted for a range of prevalences, resulting in an intermediate average prevalence (light bars) for ``truth conditions''. 
     Upon hearing a generic statement about biological properties, participants' infer that a high proportion of the category has the property (dark bars: red, blue and green). 
     Generics about accidental properties do not result in such a high implied prevalence (dark bars: purple and orange).  Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
-  \label{fig:exp2a}
+  \label{fig:exp2b}
 \end{figure}
 
 
@@ -889,15 +901,14 @@ The original authors found that proportion of ``agree'' responses increased mono
 %%
 %There was also an interaction between prevalence level and type such that the generic was endorsed more with \emph{dangerous and distinctive} properties than with plain properties at lower prevalence levels ($\beta=.03; SE = .01; z=2.35; p = 0.019$). There was a trending effect for the \emph{nondangerous and nondistinct} properties to be endorsed \emph{less} than the plain properties ($\beta=-.57; SE = .30; z=-1.91; p = .056$).
 
+Implied prevalence of the generic was affected by the type of property in question (Figure \ref{fig:exp2b} Left; dark bars). 
+Importantly, there was greater implied prevalence of common accidental properties than rare accidental properties ($\beta=0.059; SE = 0.03; t(51.2) = -2.09; p < 0.05$ \footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-item effects of intercept and by-participant effects of intercept and slope}).
 
-\citeauthor{Cimpian2010} found that generic statements about biological properties are interpreted strongly---nearly all lorches have purple feathers.
-At the same time, statements about accidental properties (e.g. ``Lorches have muddy feathers.'') were not interpreted as applying to nearly all of the category.
 
-We entered participants' implied prevalence responses into a mixed effects linear regression with random by-item and by-participant effects of intercept and fixed effects of type of property.
+%The prevalence scores from each task were entered into a linear mixed model with a by-participant random effect of intercept; the fixed effects were property-type, task, and their interaction. Our results replicated the asymmetry finding that the generic statement was interpreted as having a higher prevalence than its truth conditions entail (i.e. main effect of task; $\beta=28.8; SE = 4.3; t=6.6; p < 0.001$; see Fig.~\ref{fig:exp2a}, right).
 
-To compare the truth conditions data with the implied prevalence data, we followed the data analysis strategy of \citeauthor{Cimpian2010}. Using the truth conditions data, we computed, for each subject, an \emph{average prevalence level} that led to ``True'' responses. For example, if a participant said ``True'' whenever the prevalence was 70\% or 90\% and ``False'' to everything else, that participant received an \emph{average prevalence score} of 80\%; if a participant said ``False'' to everything, their \emph{average prevalence score} was 100\%, since they presumably were interpreting the generic statement as a universal (i.e. an ``all'' statement). This score was compared against the implied prevalence data.
+\subsubsection{Lifted-threshold model predictions}
 
-The prevalence scores from each task were entered into a linear mixed model with a by-participant random effect of intercept; the fixed effects were property-type, task, and their interaction. Our results replicated the asymmetry finding that the generic statement was interpreted as having a higher prevalence than its truth conditions entail (i.e. main effect of task; $\beta=28.8; SE = 4.3; t=6.6; p < 0.001$; see Fig.~\ref{fig:exp2a}, right). \red{In the original study, this asymmetry was not observed for sentences using the quantifier ``most''; however, we did not replicate this effect here. [Maybe I'll add the ``most'' condition...]}
 
 
 \subsubsection{Discussion}
@@ -920,7 +931,7 @@ This simple semantics is consistent with the profound phenomenon from cognitive 
 
 On the psychological side, we have explained two outstanding puzzles in language understanding. 
 The first is that generic utterances can be true for a wide range of prevalence levels: from tigers with stripes all the way down to mosquitos with West Nile Virus. 
-How can the prevalence of the property alone explain what a makes some generics good things to say and others not as good? 
+How can the prevalence of the property alone explain what makes some generics good things to say and others not as good? 
 The insight is that with an uncertain semantics, the likely meaning of the generic (technically: the likely threshold for acceptance) is inferred using listeners' \emph{a priori} beliefs and the communicative force of a speech act. 
 This leads to different thresholds for different types of properties. 
 
