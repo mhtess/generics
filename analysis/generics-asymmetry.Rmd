@@ -1077,7 +1077,7 @@ ggplot(d.gamma %>% filter(Question=='gamma[between]'),
   xlab("Value")+
   ylab("Probability")
 
-ggsave(file='~/Documents/research/generics/manuscript/figures/cogsci/prior2_gamma-between-posterior-50k.pdf', width=12, height = 3)
+ggsave(file='~/Documents/research/generics/manuscript/figures/prior2_gamma-between-posterior-50k.pdf', width=12, height = 3)
 
 
 d.delta$Question<-factor(d.delta$Question, 
@@ -1097,7 +1097,7 @@ ggplot(d.delta,
   xlab("Value")+
   ylab("Probability")
 
-ggsave(file='~/Documents/research/generics/manuscript/figures/cogsci/prior2_delta-posterior-50k.pdf', width=12, height = 3)
+ggsave(file='~/Documents/research/generics/manuscript/figures/prior2_delta-posterior-50k.pdf', width=12, height = 3)
 
 ```
 
@@ -1154,7 +1154,7 @@ b<-ggplot(d.samples %>% filter(!(prevalence==0)),
 
 c<-arrangeGrob(a,b,nrow=1)
 
-ggsave(c,file='~/Documents/research/generics/manuscript/figures/cogsci/prior2_prevalenceprior-50k.pdf',width=12, height= 4)
+ggsave(c,file='~/Documents/research/generics/manuscript/figures/prior2_prevalenceprior-50k.pdf',width=12, height= 4)
 ```
 
 
@@ -1259,8 +1259,21 @@ FBT on prior elicitation and asymmetry data. Posterior over parameters and poste
 
 ```{r tfbt.2}
 d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-hashmh1000_asym2-prior4-incrmh10k.csv")
-d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-4opts-phi-hashmh75000_asym2-prior4-incrmh10k.csv")
+
 d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-3opts-phi-hashmh10000_asym2-prior4-incrmh10k.csv")
+
+
+d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-2opts-phi-hashmh10000_asym2-prior4-incrmh10k.csv")
+
+d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-3opts-phi-hashmh10000_asym2-prior4-incrmh10k.csv")
+
+d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-4opts-phi-hashmh75000_asym2-prior4-incrmh10k.csv")
+
+
+samples = 40000
+paramsetups = "4opts-phi"
+
+d<-read.csv(paste("~/Documents/research/generics/models/results/generics-priorUncertainty-",paramsetups,"-hashmh",samples,"_asym2-prior4-incrmh10k.csv",sep=''))
 
 d.params <- d %>% filter(!(Parameter%in%c("truth_conditions", 
                                           "implied_prevalence")))
@@ -1271,7 +1284,6 @@ d.params <- d %>% filter(!(Parameter%in%c("truth_conditions",
 #   mutate(Value = to.n(Value))
 # 
 
-samples = 75000
 d.params <- data.frame(Parameter = rep(d.params$Parameter, 
                                        1+samples*d.params$Probability),
                        Response = rep(d.params$Value, 
@@ -1280,6 +1292,8 @@ d.params <- data.frame(Parameter = rep(d.params$Parameter,
 ggplot(d.params, aes(x=Response))+
   geom_histogram()+
   facet_wrap(~Parameter,scales='free')
+
+ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-params-',paramsetups,'-',samples/1000,'k.pdf',sep=''))
 
 
 quantile((d.params %>% filter(Parameter=='truthOptimality1'))$Response, 
@@ -1320,12 +1334,12 @@ d.pp <- d.tasks %>%
             credLow = quantile(Response, probs=0.025),
             credHigh = quantile(Response, probs=0.975))
 
-# truth conditions plot
-ggplot(d.pp %>% filter(Parameter=='truth_conditions'),
-       aes(x=Prevalence, y = expectation, color=Item))+
-  geom_point(position=position_dodge())+
-  geom_line(position=position_dodge())
-
+# # truth conditions plot
+# ggplot(d.pp %>% filter(Parameter=='truth_conditions'),
+#        aes(x=Prevalence, y = expectation, color=Item))+
+#   geom_point(position=position_dodge())+
+#   geom_line(position=position_dodge())
+# 
 
 d.aveprev <- 
   bind_rows(d.pp %>%  
@@ -1349,19 +1363,19 @@ d.aveprev <-
 
 
 
-d.modeldata<-bind_rows(d.aveprev, d.asymSummary)
-
-ggplot(d.modeldata, aes(x=type, y=avePrev, fill = task))+
-  geom_bar(position=position_dodge(), stat='identity')+
-  geom_errorbar(position=position_dodge(),
-                aes(ymin=credLow, ymax = credHigh))+
-  facet_wrap(~src)
-
-ggplot(d.modeldata %>% filter(type=='implied' & src=='model'),
-       aes(x=stim_type, y=avePrev, fill = stim_type))+
-  geom_bar(position=position_dodge(), stat='identity')+
-  geom_errorbar(position=position_dodge(),
-                aes(ymin=credLow, ymax = credHigh))
+# d.modeldata<-bind_rows(d.aveprev, d.asymSummary)
+# 
+# ggplot(d.modeldata, aes(x=type, y=avePrev, fill = task))+
+#   geom_bar(position=position_dodge(), stat='identity')+
+#   geom_errorbar(position=position_dodge(),
+#                 aes(ymin=credLow, ymax = credHigh))+
+#   facet_wrap(~src)
+# 
+# ggplot(d.modeldata %>% filter(type=='implied' & src=='model'),
+#        aes(x=stim_type, y=avePrev, fill = stim_type))+
+#   geom_bar(position=position_dodge(), stat='identity')+
+#   geom_errorbar(position=position_dodge(),
+#                 aes(ymin=credLow, ymax = credHigh))
 
 ```
 
@@ -1375,7 +1389,7 @@ ggplot(d.modeldata %>% filter(type=='implied' & src=='model'),
 d.tc <- d.tasks %>% filter(Parameter =='truth_conditions')
 d.bootstrap <- data.frame()
 
-for (i in 1:100){
+for (i in 1:10){
   d.simulsamp <- data.frame()
   for (j in 1:40){
     d.subj<- d.tc %>% 
@@ -1442,6 +1456,6 @@ ggplot(d.modeldata, aes(x=type, y=avePrev, fill = type, alpha=task))+
   theme(legend.position='bottom',
         legend.direction='horizontal')
 
-ggsave(file='~/Documents/research/generics/manuscript/figures/cogsci/asym-data-model-4opts-75k.pdf', width=11, height = 6)
+ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-data-model-',paramsetups,'-',samples/1000,'k.pdf',sep=''), width=11, height = 6)
 
 ```
