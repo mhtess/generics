@@ -186,13 +186,15 @@
 
 
 \begin{abstract}
-Generic utterances (e.g. ``Dogs bark'') express ideas about categories in the world and are ubiquitous in natural language. 
-Despite their prevalence, the meanings of generic statements are puzzling to formal approaches. 
-It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). If this were true, however, there should be some percentage of the category that must display the property (e.g. some threshold on the number of dogs that bark) for the utterance to be true.
+Generic utterances (e.g. ``Dogs bark'') express ideas about categories in the world and are ubiquitous in everyday conversation. 
+Despite their prevalence, the meanings of generic statements are puzzling to formal theories. 
+It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). 
+If this is correct, however, there should be some criterion on the percentage of the category that must display the property (e.g. some threshold on the number of dogs that bark) for the utterance to be true.
 This is notoriously difficult for generics, which can be true based on very little evidence but which can also imply near-universality of the property. 
-Here, we formalize a semantics and pragmatics for generic language understanding: The threshold for acceptance is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
-We explain how a simple, vague semantics can account for two central phenomena surrounding generic language: the conditions by which a generic is true and the variable implications of generic language. 
-We do this using a novel behavioral and data-analytic technique for measuring beliefs about the prevalence of properties. 
+Here, we formalize a vague semantics and a conversational pragmatics for generic language understanding: The threshold for acceptance is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
+We explain how this simple semantics can account for two central phenomena surrounding generic language: The flexible conditions by which a generic is true and the variable implications of generic language. 
+Inferences from the model are driven largely by the listeners' \emph{a priori} beliefs about the property, which we measure using a novel behavioral and data-analytic technique.
+%We predict human acceptability judgments and interpretations of generics of both familiar and novel categories with strong quantitative accuracy using a novel behavioral and data-analytic technique for measuring beliefs about the prevalence of properties coupled with our model of generic language. 
 This work suggests that the semantics of generic statements can treated as scalar and that listeners' expectations in the form of prior beliefs heavily govern generic interpretation. 
 
 %To illustrate the model, we measure participants' expectations about the prevalence of certain properties in addition to the acceptability of a number of generic utterances. 
@@ -239,14 +241,16 @@ generics; pragmatics; vagueness; bayesian model
 %\end{aquote}
 
 
-Imagine talking with a 3-year-old about oxygen. Oxygen is difficult to explain because it is so rarely observable and the function of oxygen is abstract. You might offer, ``Animals breathe oxygen to live.''. Few would argue with the truth of this sentence, yet its meaning is difficult to specify. 
+Imagine talking with a 3-year-old about oxygen. Oxygen is difficult to explain because it is so rarely observable and the function of oxygen is abstract. 
+You might offer, ``Animals breathe oxygen to live.''. 
+Few would argue with the truth of this sentence, yet its meaning is difficult to specify. 
 
 %Is it synonymous with ``All animals breathe Oxygen to live''? %It's false that \emph{all} animals breathe oxygen (e.g. fish), yet intuitively the sentence seems to convey something stronger than the weak \emph{some} animals breathe oxygen. 
 %If you were talking with an adult, you might use a more nuanced statement (e.g. by talking about the subcategory Mammals).
 %Words are vague because ideas are vague, Locke argues. In making this argument, he falls into the habit of communication that we all fall into: using generalizations about members of a category---in this case, \emph{[articulate] sounds}. 
 %
 This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category.  Generics are one of the simplest linguistic constructs. 
-They have no explicitly marked operator and children as young as three can correctly identify and understand them \cite{Cimpian2008}. 
+They have no explicitly marked operator and yet children as young as two or three can correctly understand that they refer to unobservable categories \cite{Cimpian2008}. 
 Generics are ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008} and are thought to be essential to growth of conceptual knowledge \cite{Gelman2004}. 
 At the same time, generics are the primary vehicle by which stereotypes are conveyed \cite{GelmanEtAl2004, Cimpian2010motivation, Leslie2015}.
 Despite their centrality to cognitive development and everyday conversation, generic utterances have elusive meanings. % stable meanings for generic sentences are hard to come by.
@@ -260,7 +264,7 @@ Is there some prevalence beyond which the generic is true?
 
 Prevalence based accounts are difficult to defend. 
 At first glance, generics seem like universally-quantified statements (i.e. ``All animals breathe oxygen''), but generics are resilient to counter-examples\footnote{``Animals breathe oxygen'' is true even though there are three species of creatures called \emph{lorica} that live 2.2 miles underwater on the ocean floor in an oxygen-free environment \cite{Danovaro2010}}. 
-Interpreting the generic as meaning ``most'' captures many cases, but cannot explain why ``Robins lay eggs'' and ``Mosquitos carry West Nile Virus'' both seem true, despite the fact that only adult female Robins lay eggs and that less than 1\% of mosquitos actually carry West Nile Virus. 
+Interpreting the generic as meaning ``most'' captures many cases, but cannot explain why ``Robins lay eggs'' and ``Mosquitos carry West Nile Virus'' both seem true, despite the fact that only adult female robins lay eggs and that less than 1\% of mosquitos actually carry West Nile Virus. 
 The only quantifier that could satisfy all of these conditions is the weak ``some''.  
 Yet, the semantics for ``some'' cannot be the semantics of generics:  Upon hearing a generic, listeners are wont to interpret the sentence as applying to \emph{all or nearly all} of a category \cite{Gelman2002, Cimpian2010}. 
 ``Some animals breathe oxygen'' does not carry the same generalizability.
@@ -295,7 +299,13 @@ with communicative pressures to be truthful and informative.
 
 In a similar way, we posit a simple, scalar semantics for generics in which they express that the probability of the property given the category-----i.e. the property's \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). We treat this threshold as unknown property of the language and thus, as a variable that must be reasoned about in context. We extend the \emph{Rational Speech-Acts} (RSA) framework \cite{Frank2012,Goodman2013} to consider a listener tasked with the joint problem of figuring out what the speaker intended to communicate as well as what the generic actually means \emph{in a context}. 
 
-With uncertainty in the language, the listener figures out what the words mean by drawing upon her prior beliefs---in this case about the prevalence of the property---in addition to harnessing standard inferences from conversational pragmatics \cite{Clark1996, Grice1975, Levinson2000}. From this, this model predicts the degree to which a given generic utterance will be acceptable, and predicts how this might vary for different types of properties. At the same time, the model predicts that a generic utterance will have variable interpretations contingent on the prior distribution on prevalence. 
+It might seem paradoxical that language which gets so much usage should be vague. 
+Language evolutionary pressures suggest that such underspecification is useful, given that there is some context through which the uncertainty can be resolved \cite{Piantadosi2012}.
+In this work, context reflects a listener's beliefs about the property in question. We show how this, coupled with 
+%With uncertainty in the language, the listener figures out what the words mean by drawing upon her prior beliefs---in this case about the prevalence of the property---in addition to harnessing 
+standard inferences from conversational pragmatics \cite{Clark1996, Grice1975, Levinson2000}, allows the listener to figure out the meaning of the otherwise vague words.
+This model predicts the degree to which a given generic utterance will be acceptable, and predicts how this might vary for different types of properties. 
+The vagueness simultaneously gives rise to variable interpretations contingent on the listener's beliefs about the distribution of the property. 
 We show how these predictions are borne out in a series of experiments.
 %
 \subsection{The phenomena}
@@ -474,7 +484,7 @@ These predictions are borne out by first eliciting the prior distribution on pre
 
 \section{Experiment 1: Truth value judgments}
 
-The lifted-threshold RSA model specified in Eq.~\ref{S2} predicts probabilities of producing a generic given a prior distribution on the prevalence of the property. 
+The lifted-threshold RSA model specified in Eq.~\ref{eq:S2} predicts probabilities of producing a generic given a prior distribution on the prevalence of the property. 
 In Expt.~1a, we measure the distribution on prevalence of certain target properties by asking participants about the percentage of a kind with the property \footnote{So as to not bias the measurement in favor of a small number of stipulated animal categories, we ask participants to generate their own animal categories.}. 
 In Expt.~1b, we measure the acceptability of a number of generic statements about the properties measured in Expt. 1a. 
 We show how the prevalence within a property alone is insufficient to explain the diversity of truth judgments of these generics, but how a model of a pragmatic speaker who considers the distribution on prevalence can explain this wide range of truth judgments.
@@ -894,12 +904,13 @@ Accidental &             &                                                      
 
 
 Results are shown in Figure~\ref{fig:exp2b} (Left). 
-We replicated \citeA{Cimpian2010}'s finding that the proportion of ``agree'' responses increases monotonically as prevalence increased ($\beta=0.05; SE = .003; z = 15.5$). 
+We replicated \citeA{Cimpian2010}'s finding that the proportion of ``agree'' responses increases monotonically as prevalence increases ($\beta=0.05; SE = .003; z = 15.5$). 
 There were no differences in the tendency to agree with the generic based on property type: 
 A linear model that takes into account property type did not significantly increase the fit to the data as revealed by an Analysis of Deviance Chi-square test $\chi^2_{4}=7.53; p > 0.1$.
 Figure \ref{fig:exp2b} (Left; light bars) shows the average truth conditions by condition following the data analysis strategy of \citeauthor{Cimpian2010}\footnote{ 
 Using the truth conditions data, we computed, for each subject, an \emph{average prevalence level} that led to ``Agree'' responses. 
 For example, if a participant agreed with the generic whenever the prevalence was 70\% or 90\% and disagreed at the other prevalence levels, that participant received an \emph{average prevalence score} of 80\%; if a participant disagreed to everything, their \emph{average prevalence score} was 100\%, since they presumably would only agree if the prevalence was 100\%.}.
+Generics are accepted for a wide range of prevalence levels, and their acceptability increases as a function of prevalence, resulting in an intermediate (but above 50\%) average acceptability condition.
 
 \begin{figure}
 \centering
@@ -918,7 +929,10 @@ For example, if a participant agreed with the generic whenever the prevalence wa
 %There was also an interaction between prevalence level and type such that the generic was endorsed more with \emph{dangerous and distinctive} properties than with plain properties at lower prevalence levels ($\beta=.03; SE = .01; z=2.35; p = 0.019$). There was a trending effect for the \emph{nondangerous and nondistinct} properties to be endorsed \emph{less} than the plain properties ($\beta=-.57; SE = .30; z=-1.91; p = .056$).
 
 Implied prevalence of the generic was affected by the type of property in question (Figure \ref{fig:exp2b} Left; dark bars). 
-Importantly, there was greater implied prevalence of common accidental properties than rare accidental properties ($\beta=0.059; SE = 0.03; t(51.2) = -2.09; p < 0.05$ \footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-item effects of intercept and by-participant effects of intercept and slope}).
+Of theoretical interest is whether or not the median split we performed on the accidental properties based on the results of the prior elicitation experiment resulted in different implications for the associated generic.
+We observe  greater implied prevalence of common accidental properties than rare accidental properties ($\beta=0.061; SE = 0.025; t(39) = 2.47; p = 0.018$ \footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}).
+Implications of generics of body parts was significantly greater than those of the biological properties used by \citeA{Cimpian2010} (here, ``color parts'') ($\beta=0.118; SE = 0.024; t(39) = 4.74; p < 0.001$).
+There was also a trending effect for the implications of vague body parts (e.g. curly fur) to be greater than those of color parts (e.g. yellow fur) ($\beta=0.032; SE = 0.016, t(54.8) = 1.95; p = 0.056$).
 
 
 %The prevalence scores from each task were entered into a linear mixed model with a by-participant random effect of intercept; the fixed effects were property-type, task, and their interaction. Our results replicated the asymmetry finding that the generic statement was interpreted as having a higher prevalence than its truth conditions entail (i.e. main effect of task; $\beta=28.8; SE = 4.3; t=6.6; p < 0.001$; see Fig.~\ref{fig:exp2a}, right).
