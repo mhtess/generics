@@ -695,7 +695,22 @@ ggplot(accept.summary,aes(x=factor(stim_prevalence), y= prop,
                 width=0.1, size=1.5,
                 position=position_dodge(0.3))
 
+rs.accept<-glmer(response ~ type*stim_prevalence + (1 | workerid), 
+                 family='binomial', data=d.accept)
 
+rs0<-glm(response ~ stim_prevalence, 
+                 family='binomial', data=d.accept)
+
+rs1<-glm(response ~  type + stim_prevalence, 
+                 family='binomial', data=d.accept)
+rs2<-glm(response ~ type*stim_prevalence, 
+                 family='binomial', data=d.accept)
+
+
+summary(rs0)
+
+a0<-anova(rs0, rs1, test='Chisq')
+a0
 
 ```
 
@@ -777,12 +792,13 @@ ggplot(d.asymSummary,
 
 
 rs.asymmetry<-lmer(data=d.asymmetry, 
-                   prev~ type*src + (1 | workerid))
+                   prev~-1+ type*src + (1 | workerid))
 
 summary(rs.asymmetry)
 
 
-rs1<-lmer(data=d.implied, response~type + (1 | workerid))
+rs1<-lmer(data=d.implied, response~ type + (1 + type | workerid) + 
+                                                  (1 | stim_property))
 summary(rs1)
 
 ```
@@ -1258,22 +1274,23 @@ FBT on prior elicitation and asymmetry data. Posterior over parameters and poste
 
 
 ```{r tfbt.2}
-d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-hashmh1000_asym2-prior4-incrmh10k.csv")
+# d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-hashmh1000_asym2-prior4-incrmh10k.csv")
+# 
+# d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-3opts-phi-hashmh10000_asym2-prior4-incrmh10k.csv")
+# 
+# 
+# d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-2opts-phi-hashmh10000_asym2-prior4-incrmh10k.csv")
+# 
+# d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-3opts-phi-hashmh10000_asym2-prior4-incrmh10k.csv")
+# 
+# d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-4opts-phi-hashmh75000_asym2-prior4-incrmh10k.csv")
+# 
 
-d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-3opts-phi-hashmh10000_asym2-prior4-incrmh10k.csv")
+samples = 100000
+paramsetups = "2opts-phi"
 
-
-d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-2opts-phi-hashmh10000_asym2-prior4-incrmh10k.csv")
-
-d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-3opts-phi-hashmh10000_asym2-prior4-incrmh10k.csv")
-
-d<-read.csv("~/Documents/research/generics/models/results/generics-priorUncertainty-4opts-phi-hashmh75000_asym2-prior4-incrmh10k.csv")
-
-
-samples = 40000
-paramsetups = "4opts-phi"
-
-d<-read.csv(paste("~/Documents/research/generics/models/results/generics-priorUncertainty-",paramsetups,"-hashmh",samples,"_asym2-prior4-incrmh10k.csv",sep=''))
+d<-read.csv(paste("~/Documents/research/generics/models/results/generics-priorUncertainty-",paramsetups,"-hashmh",
+                  sprintf("%1.f",samples),"_asym2-prior4-incrmh10k.csv",sep=''))
 
 d.params <- d %>% filter(!(Parameter%in%c("truth_conditions", 
                                           "implied_prevalence")))
@@ -1289,9 +1306,32 @@ d.params <- data.frame(Parameter = rep(d.params$Parameter,
                        Response = rep(d.params$Value, 
                                       1+samples*d.params$Probability))
 
-ggplot(d.params, aes(x=Response))+
-  geom_histogram()+
-  facet_wrap(~Parameter,scales='free')
+ggplot(d.params %>%filter(Parameter=='phi'), aes(x=Response))+
+  geom_histogram(aes(y=..count../sum(..count..)), binwidth=0.01)+
+  xlim(0,1)+
+  xlab(expression(phi))+
+  ylab("Posterior probability")
+
+ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-phi-',paramsetups,'-',samples/1000,'k.pdf',sep=''))
+
+d.opt <- d.params %>% filter((Parameter=='truthOptimality1') | 
+                               (Parameter=='impliedOptimality1'))
+
+d.opt$Parameter<- factor(d.opt$Parameter, 
+                         levels=c("truthOptimality1",
+                                  "impliedOptimality1"),
+                         labels=c("lambda[truth_conditions]",
+                                  "lambda[implied_prevalence]"))
+
+ggplot(d.opt, aes(x=Response))+
+  geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]))+
+  facet_grid(.~Parameter,scales='free', labeller = label_parsed)+
+  xlim(0,20)+
+  ylab("Posterior probability")+
+  xlab("Value")
+
+ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-lambdas-',paramsetups,'-',samples/1000,'k.pdf',sep=''))
+
 
 ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-params-',paramsetups,'-',samples/1000,'k.pdf',sep=''))
 
@@ -1389,7 +1429,7 @@ d.aveprev <-
 d.tc <- d.tasks %>% filter(Parameter =='truth_conditions')
 d.bootstrap <- data.frame()
 
-for (i in 1:10){
+for (i in 1:100){
   d.simulsamp <- data.frame()
   for (j in 1:40){
     d.subj<- d.tc %>% 
@@ -1457,5 +1497,7 @@ ggplot(d.modeldata, aes(x=type, y=avePrev, fill = type, alpha=task))+
         legend.direction='horizontal')
 
 ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-data-model-',paramsetups,'-',samples/1000,'k.pdf',sep=''), width=11, height = 6)
+
+(with(d.modeldata %>% select(type, task, src, avePrev) %>% spread(src, avePrev),cor(Data, Model)))^2
 
 ```
