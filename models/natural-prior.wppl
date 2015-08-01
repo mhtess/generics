@@ -32,13 +32,13 @@ var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
 var Priordata = truthutils.readCSV("data/real-kinds-prior-2-trials.csv").data
 
-var df = map(
+var df_prior = map(
 	function(lst){
 		return _.object(_.zip(Priordata[0],lst))
 	},
 	Priordata.slice(1))
 
-var properties = _.uniq(_.pluck(df,"property"))
+var properties = _.uniq(_.pluck(df_prior,"property"))
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
@@ -52,12 +52,13 @@ var alignPrevalence = function(number){
 	return avoidEnds(Math.round(number/5)/20)
 }
 
-//var discretizedPriorModel = function(g0, d0, g1, d1){
-var discretizedPriorModel = function(hasF, g1, d1){
+var discretizedPriorModel = function(g0, d0, g1, d1){
+//var discretizedPriorModel = function(hasF, g1, d1){
 	// var hasF = makeBetaBernoulli([shape_alpha(g0,d0), shape_beta(g0,d0)])()
 	// var prevalence = hasF ? beta()
 //	var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
-	var bins = [0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
+	var bins = [0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,
+					 0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
 
 	var kindDoesntHaveF_prevalence = 0.01
 	// var kindDoesntHaveF_prevalence = 0
@@ -72,8 +73,8 @@ var discretizedPriorModel = function(hasF, g1, d1){
 	// discretization occurs here
 	var prevalencePrior = 
 		Enumerate(function(){
-//			var kindHasF = flip(bins[discrete(discretizeBeta(g0,d0))])
-			var kindHasF = flip(hasF)
+			var kindHasF = flip(bins[discrete(discretizeBeta(g0,d0))])
+//			var kindHasF = flip(hasF)
 
 			var prevalenceGivenK = kindHasF ? bins[discrete(discretizeBeta(g1,d1))] : 
 											kindDoesntHaveF_prevalence
@@ -98,60 +99,101 @@ var discretizedPriorModel = function(hasF, g1, d1){
 // }
 
 
-var dataAnalysisModel = function(){
+var priorModel = function(p){
 
-	foreach(properties,
-		function(p){
+	var propertyData = _.pluck(subset(df_prior, "property", p),"prevalence")
 
-			var propertyData = _.pluck(subset(df, "property", p),"prevalence")
+	var gamma_across = uniform(0,1)
+	var delta_across = uniform(0,50)
+//			var prob_hasF = uniform(0,1)
 
-//			var gamma_across = uniform(0,1)
-//			var delta_across = uniform(0,10)
-			var prob_hasF = uniform(0,1)
+	// var prob_hasF = beta(shape_alpha(gamma_across, delta_across),
+	// 					  shape_beta(gamma_across, delta_across))
 
-			// var prob_hasF = beta(shape_alpha(gamma_across, delta_across),
-			// 					  shape_beta(gamma_across, delta_across))
-
-			var gamma_within = uniform(0,1)
-			var delta_within = uniform(0,100)
-
-
-			// var scoreFunction = function(d){
-			// 	return (prob_hasF*(x==0)) + (1-prob_hasF)*(Math.exp(betaERP.score([shape_alpha(gamma_within, delta_within),
-			// 									                           shape_beta(gamma_within, delta_within)],
-			// 									  d)))
-			// }
+	var gamma_within = uniform(0,1)
+	var delta_within = uniform(0,50)
 
 
 
-			var priorERP = discretizedPriorModel(prob_hasF, gamma_within, delta_within)
 
-			// console.log(propertyData)
-			// console.log(propertyData[0])
-			// console.log(scoreFunction(propertyData[0]/100, prob_hasF, gamma_within, delta_within))
+//			var priorERP = discretizedPriorModel(prob_hasF, gamma_within, delta_within)
+	var priorERP = discretizedPriorModel(gamma_across, delta_across, gamma_within, delta_within)
 
-			// var scr = reduce(function(dataPoint, memo) {
-			// 					// console.log(dataPoint)
-			// 				    return memo + scoreFunction(avoidUpperBound(dataPoint/100), prob_hasF, gamma_within, delta_within)
-			// 					}, 0, propertyData)
-			var scr = reduce(function(dataPoint, memo) {
-							    return memo + priorERP.score([], alignPrevalence(dataPoint))
-								}, 0, propertyData)
+	// console.log(propertyData)
+	// console.log(propertyData[0])
+	// console.log(scoreFunction(propertyData[0]/100, prob_hasF, gamma_within, delta_within))
 
-			factor(scr)
-			// console.log(scr)
+	// var scr = reduce(function(dataPoint, memo) {
+	// 					// console.log(dataPoint)
+	// 				    return memo + scoreFunction(avoidUpperBound(dataPoint/100), prob_hasF, gamma_within, delta_within)
+	// 					}, 0, propertyData)
+	var scr = reduce(function(dataPoint, memo) {
+					    return memo + priorERP.score([], alignPrevalence(dataPoint))
+						}, 0, propertyData)
 
-			// query.add([c, r], [gamma, delta])
-			// query.add([p,'gamma_across'], gamma_across)
-			// query.add([p,'delta_across'], delta_across)
-			query.add([p,'hasF'], prob_hasF)
-			query.add([p,'gamma_within'], gamma_within)
-			query.add([p,'delta_within'], delta_within)
+	factor(scr)
+	// console.log(scr)
 
-		}
-	)
-	return query
+	return priorERP
+
 }
+
+
+
+// var dataAnalysisModel = function(){
+
+// 	foreach(properties,
+// 		function(p){
+
+// 			var propertyData = _.pluck(subset(df, "property", p),"prevalence")
+
+// 			var gamma_across = uniform(0,1)
+// 			var delta_across = uniform(0,50)
+// //			var prob_hasF = uniform(0,1)
+
+// 			// var prob_hasF = beta(shape_alpha(gamma_across, delta_across),
+// 			// 					  shape_beta(gamma_across, delta_across))
+
+// 			var gamma_within = uniform(0,1)
+// 			var delta_within = uniform(0,50)
+
+
+// 			// var scoreFunction = function(d){
+// 			// 	return (prob_hasF*(x==0)) + (1-prob_hasF)*(Math.exp(betaERP.score([shape_alpha(gamma_within, delta_within),
+// 			// 									                           shape_beta(gamma_within, delta_within)],
+// 			// 									  d)))
+// 			// }
+
+
+
+// //			var priorERP = discretizedPriorModel(prob_hasF, gamma_within, delta_within)
+// 			var priorERP = discretizedPriorModel(gamma_across, delta_across, gamma_within, delta_within)
+
+// 			// console.log(propertyData)
+// 			// console.log(propertyData[0])
+// 			// console.log(scoreFunction(propertyData[0]/100, prob_hasF, gamma_within, delta_within))
+
+// 			// var scr = reduce(function(dataPoint, memo) {
+// 			// 					// console.log(dataPoint)
+// 			// 				    return memo + scoreFunction(avoidUpperBound(dataPoint/100), prob_hasF, gamma_within, delta_within)
+// 			// 					}, 0, propertyData)
+// 			var scr = reduce(function(dataPoint, memo) {
+// 							    return memo + priorERP.score([], alignPrevalence(dataPoint))
+// 								}, 0, propertyData)
+
+// 			factor(scr)
+// 			// console.log(scr)
+
+// 			query.add([p,'gamma_across'], gamma_across)
+// 			query.add([p,'delta_across'], delta_across)
+// //			query.add([p,'hasF'], prob_hasF)
+// 			query.add([p,'gamma_within'], gamma_within)
+// 			query.add([p,'delta_within'], delta_within)
+
+// 		}
+// 	)
+// 	return query
+// }
 
 // dataAnalysisModel()
 
@@ -160,9 +202,14 @@ var dataAnalysisModel = function(){
 // var resultsERP = IncrementalMH(dataAnalysisModel, mhiter, {"verbose":true})
 
 
-// var outfile = "results/naturalkinds-priors-flatAcross_incrMH"+mhiter+".csv"
+// var outfile = "results/naturalkinds-priors-heirarchicalAcross_incrMH"+mhiter+".csv"
 // truthutils.naturalpriorERPWriter(resultsERP, outfile)
 // console.log('printed file...' +outfile)
+
+
+
+
+
 
 // var prob_hasF = 0.3
 // var gamma = 0.5
@@ -181,13 +228,13 @@ var dataAnalysisModel = function(){
 
 
 
-properties
+// properties
 // scoreFunction(0.1)
-// var p = "are male"
+// var p = "have manes"
 // var propertyData = _.pluck(subset(df, "property", p),"prevalence")
 // //var m = discretizedPriorModel(0.9,0.5,50)
 // var priorERP = discretizedPriorModel(0.2,0.3,5)
-
+// propertyData
 // //m
 
 // var scr = reduce(function(dataPoint, memo) {

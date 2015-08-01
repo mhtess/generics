@@ -3,7 +3,17 @@
 // mht's helper functions
 
 
+var prevalenceERPobject = _.object(map(function(sentence){
+			var pieces = parseGeneric(sentence)
+			var p = pieces[0] // e.g. are white
+			var k = pieces[1] // e.g. Sharks
+			return [sentence, HashMH(function(){return prevalenceModel(k,p)}, 10, {"verbose":false})]
+	},
+_.uniq(_.pluck(df_truth, "sentence"))))
 
+var priorERPobject = _.object(map(function(property){
+	return [property, HashMH(function(){return priorModel(property)}, 10, {"verbose":false})]
+}, properties))
 
 
 var softmaxSpeaker2 = function(myERP, softmax){
@@ -29,7 +39,8 @@ var modelAnalysis = function(){
 			var pieces = parseGeneric(sentence)
 			var p = pieces[0] // e.g. are white
 			var k = pieces[1] // e.g. Sharks
-			var prevalenceERP = IncrementalMH(function(){return prevalenceModel(k,p}, 1000, {"verbose":false})
+
+			var prevalencePriorERP = HashMH()
 
 			var predictionERP = cognitiveModel(sentence,speakerOptimality, cost)
 
@@ -52,9 +63,13 @@ var modelAnalysis = function(){
 	return query
 }
 
-var s = parseGeneric(df_truth[0]["sentence"])
 
-console.log(s)
+priorERPobject
+
+
+// var s = parseGeneric(df_truth[0]["sentence"])
+
+// console.log(s)
 
 // //var tfbt = Enumerate(dataAnalysis)
 // var mhiter = 10000
