@@ -24,6 +24,11 @@ var softmaxSpeaker2 = function(myERP, softmax){
 	})
 }
 
+var responseDictionary = {
+	"agree-key":"generic is true",
+	"disagree-key":"mu"
+}
+
 
 var modelAnalysis = function(){
 
@@ -40,17 +45,21 @@ var modelAnalysis = function(){
 			var p = pieces[0] // e.g. are white
 			var k = pieces[1] // e.g. Sharks
 
-			var prevalencePriorERP = HashMH()
+			var priorERP = sample(priorERPobject[p])
+//			var prior = 
+			console.log(priorERP.support())
+			var prevalence = sample(prevalenceERPobject[sentence])
 
-			var predictionERP = cognitiveModel(sentence,speakerOptimality, cost)
+
+			var predictionERP = truthSpeaker2(prevalence, prior, speakerOptimality, 1)
 
 			// var linkedERP = softmaxSpeaker2(predictionERP, softmax)
 
 
 			var scr = reduce(function(d, memo) {
-						    return memo + predictionERP.score([], d)
-								}, 0, truthJudgments[sentence])
-
+						    return memo + predictionERP.score([], responseDictionary[d])
+								}, 0, responseData)
+			console.log(scr)
 			factor(scr)
 
 			query.add(sentence, Math.exp(predictionERP.score([], "generic is true")))
@@ -64,16 +73,21 @@ var modelAnalysis = function(){
 }
 
 
-priorERPobject
+// priorERPobject
 
 
+// var sentence = _.uniq(_.pluck(df_truth, "sentence"))[0]
+// var responseData = _.pluck(subset(df_truth, "sentence", sentence), "response")
+// responseData
 // var s = parseGeneric(df_truth[0]["sentence"])
 
 // console.log(s)
 
 // //var tfbt = Enumerate(dataAnalysis)
-// var mhiter = 10000
-// var tfbt = HashMH(dataAnalysis,mhiter)
+var mhiter = 10
+var tfbt = HashMH(modelAnalysis,mhiter)
+tfbt
+
 // var outfile = 'results/'+ 'generics_truthJudge_rationality-n100_hashmh'+mhiter+'a.csv'
 
 // truthutils.erpWriter(tfbt, outfile)
