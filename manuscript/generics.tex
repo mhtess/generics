@@ -189,8 +189,8 @@
 Generic utterances (e.g. ``Dogs bark'') express ideas about categories in the world and are ubiquitous in everyday conversation. 
 Despite their prevalence, the meanings of generic statements are puzzling to formal theories. 
 It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). 
-If this is correct, however, there should be some criterion on the percentage of the category that must display the property (e.g. some threshold on the number of dogs that bark) for the utterance to be true.
-This is notoriously difficult for generics, which can be true based on very little evidence but which can also imply near-universality of the property. 
+If this is correct, however, there should be some threshol on the percentage of the category that must display the property (e.g. some criterion number of dogs that bark) for the utterance to be true.
+This threshold is notoriously difficult to define for generics, which can be true based on very little evidence but which can also imply near-universality of the property. 
 Here, we formalize a vague semantics and a conversational pragmatics for generic language understanding: The threshold for acceptance is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
 We explain how this simple semantics can account for two central phenomena surrounding generic language: The flexible conditions by which a generic is true and the variable implications of generic language. 
 Inferences from the model are driven largely by the listeners' \emph{a priori} beliefs about the property, which we measure using a novel behavioral and data-analytic technique.
@@ -241,6 +241,13 @@ generics; pragmatics; vagueness; bayesian model
 %\end{aquote}
 
 
+%Imagine talking with a 3-year-old about engines. Engines are difficult to explain because they are so often observed when they are unobserved as when they are hidden beneath a car's shell. You might say, ``Engines turn gas into energy, and that makes cars go''. Few would argue with the truth of this sentence, yet its meaning is difficult to specify. 
+%
+% is so rarely observable and the function of oxygen is abstract. 
+%You might offer, ``Animals breathe oxygen to live.''. 
+%Few would argue with the truth of this sentence, yet its meaning is difficult to specify. 
+
+
 Imagine talking with a 3-year-old about oxygen. Oxygen is difficult to explain because it is so rarely observable and the function of oxygen is abstract. 
 You might offer, ``Animals breathe oxygen to live.''. 
 Few would argue with the truth of this sentence, yet its meaning is difficult to specify. 
@@ -250,8 +257,8 @@ Few would argue with the truth of this sentence, yet its meaning is difficult to
 %Words are vague because ideas are vague, Locke argues. In making this argument, he falls into the habit of communication that we all fall into: using generalizations about members of a category---in this case, \emph{[articulate] sounds}. 
 %
 This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category.  Generics are one of the simplest linguistic constructs. 
-They have no explicitly marked operator and yet children as young as two or three can correctly understand that they refer to unobservable categories \cite{Cimpian2008}. 
-Generics are ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008} and are thought to be essential to growth of conceptual knowledge \cite{Gelman2004}. 
+They have no explicitly marked operator and yet children as young as two or three can correctly understand that they refer to categories and not just examples in a scene \cite{Cimpian2008}. 
+Generics are ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008} and are thought to be essential to the growth of conceptual knowledge \cite{Gelman2004}. 
 At the same time, generics are the primary vehicle by which stereotypes are conveyed \cite{GelmanEtAl2004, Cimpian2010motivation, Leslie2015}.
 Despite their centrality to cognitive development and everyday conversation, generic utterances have elusive meanings. % stable meanings for generic sentences are hard to come by.
 
@@ -290,23 +297,28 @@ We propose these phenomena can be explained as the effects of pragmatic inferenc
  %We propose that the meaning of a generic is underspecified in the language and these phenomena can be explained as the effects of pragmatic inference over this underspecified meaning. %
  %
 In particular, we posit that generics are a vague description of prevalence in much the same way that gradable adjectives like \emph{tall} are vague descriptions of height. 
-To understand the vagueness of ``tall'', consider the conditions under which a person would qualify as ``tall'' versus the conditions for a building to qualify as ``tall''.
-This vagueness and context-sensitivity can be accounted for by treating the condition for tallness (i.e. the threshold beyond which something counts as tall) as an unknown property of the language, and modeling the listener as inferring this threshold in context \cite{Lassiter2015}. 
-The fact that the distribution of heights for people is different from the distribution of heights for buildings produces context-sensitive meanings when coupled 
-with communicative pressures to be truthful and informative.
+To understand the vagueness of ``tall'', consider the conditions by which a person is ``tall'' versus the conditions for a building to qualify as ``tall''.
+This context-sensitivity of meaning can be accounted for by treating the condition for tallness (i.e. the threshold beyond which something counts as tall) as an unknown property of the language, and modeling the listener as inferring this threshold in context \cite{Lassiter2015}. 
+The fact that the distributions of heights for buildings and people are different, and that listeners expect speakers to be truthful and informative \cite{Clark1996, Grice1975, Levinson2000}, produces intuitive meanings for vague adjectives.
  
 %In a similar way, we posit a simple, scalar semantics for generics in which they express that the probability of the property given the kind-----i.e. the property's \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). Following \citeA{GoodmanLassiter}, we treat this threshold as unknown property of the language and thus, as a variable that must be reasoned about in context. In this way, generics are vague in the way gradable adjectives like ``tall'' are vague: There is inherent uncertainty in the words' context-independent meaning. In this extension of the \emph{Rational Speech-Act} (RSA) framework \cite{Frank2012,Goodman2013}, the listener is tasked with the joint problem of figuring out what the speaker intended to communicate as well as what the generic means \emph{in this context}. 
 
-In a similar way, we posit a simple, scalar semantics for generics in which they express that the probability of the property given the category-----i.e. the property's \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). We treat this threshold as unknown property of the language and thus, as a variable that must be reasoned about in context. We extend the \emph{Rational Speech-Acts} (RSA) framework \cite{Frank2012,Goodman2013} to consider a listener tasked with the joint problem of figuring out what the speaker intended to communicate as well as what the generic actually means \emph{in a context}. 
+In a similar way, we posit a simple, scalar semantics for generics in which they express that the probability of the property given the category-----i.e. the property's \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). We treat this threshold as unknown property of the language and thus, as a variable that must be reasoned about in context. 
 
 It might seem paradoxical that language which gets so much usage should be vague. 
-Language evolutionary pressures suggest that such underspecification is useful, given that there is some context through which the uncertainty can be resolved \cite{Piantadosi2012}.
-In this work, context reflects a listener's beliefs about the property in question. We show how this, coupled with 
+Shouldn't speakers express their ideas as clearly as possible?
+Language evolutionary pressures suggest that such underspecification is in fact useful, given that there is some context through which the uncertainty can be resolved \cite{Piantadosi2012}.
+In this work, context takes the shape of a listener's beliefs about the property in question. This, coupled with 
 %With uncertainty in the language, the listener figures out what the words mean by drawing upon her prior beliefs---in this case about the prevalence of the property---in addition to harnessing 
-standard inferences from conversational pragmatics \cite{Clark1996, Grice1975, Levinson2000}, allows the listener to figure out the meaning of the otherwise vague words.
-This model predicts the degree to which a given generic utterance will be acceptable, and predicts how this might vary for different types of properties. 
-The vagueness simultaneously gives rise to variable interpretations contingent on the listener's beliefs about the distribution of the property. 
-We show how these predictions are borne out in a series of experiments.
+standard inferences from conversational pragmatics, allows the listener to figure out the meaning of the otherwise vague words.
+We extend the \emph{Rational Speech-Acts} (RSA) framework \cite{Frank2012,Goodman2013} to consider how a speaker determines what generics are acceptable to produce and how a listener might interpret generics differently depending on her belief's about the property in question. 
+This formalism gives a new, computational perspective on how ideas are conveyed and how beliefs play a central role in understanding language.
+
+% tasked with the joint problem of figuring out what the speaker intended to communicate as well as what the generic actually means \emph{in a context}. 
+
+%This model predicts the degree to which a given generic utterance will be acceptable, and predicts how this might vary for different types of properties. 
+%The vagueness simultaneously gives rise to variable interpretations contingent on the listener's beliefs about the distribution of the property. 
+%We show how these predictions are borne out in a series of experiments.
 %
 \subsection{The phenomena}
 
