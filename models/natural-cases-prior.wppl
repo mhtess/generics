@@ -145,43 +145,63 @@ var expectationDiscretizeBeta = function(gamma, delta){
 
 
 
-var dataAnalysisModel = function(){
+var prevalenceModel = function(k, p){
 
-	foreach(uniquePropertyPairs,
-		function(sentence){
+	// var pieces = sentence.split(' ')
+	// var k = pieces[0]
+	// var p = pieces.slice(1).join(' ')
+	var propertyData = _.pluck(subset(subset(df, "property", p),"animal", k),"prevalence")
+	// console.log(propertyData)
+	var gamma = uniform(0,1)
+	var delta = uniform(0,20)
 
-			var pieces = sentence.split(' ')
-			var k = pieces[0]
-			var p = pieces.slice(1).join(' ')
-			var propertyData = _.pluck(subset(subset(df, "property", p),"animal", k),"prevalence")
+	var scr = reduce(function(dataPoint, memo) {
+					    return memo + betaERP.score([shape_alpha(gamma, delta),
+					    							 shape_beta(gamma,delta)], avoidEnds(dataPoint/100))
+						}, 0, propertyData)
 
-			var gamma = uniform(0,1)
-			var delta = uniform(0,20)
+	factor(scr)
 
-			var scr = reduce(function(dataPoint, memo) {
-							    return memo + betaERP.score([shape_alpha(gamma, delta),
-							    							 shape_beta(gamma,delta)], avoidEnds(dataPoint/100))
-								}, 0, propertyData)
+	// query.add([sentence,'gamma'], gamma)
+	// query.add([sentence,'delta'], delta)
+	// return query
 
-			factor(scr)
-
-
-
-	// var kindDoesntHaveF_prevalence = 0
-
-			// console.log(scr)
-
-			query.add([sentence,'gamma'], gamma)
-			query.add([sentence,'delta'], delta)
-
-		}
-	)
-	return query
+	var discretized_prevalence = avoidEnds(Math.round(gamma*10)/10)
+	return discretized_prevalence
 }
 
-var mhiter = 10000
-var resultsERP = IncrementalMH(dataAnalysisModel, mhiter, {"verbose":true})
 
-var outfile = "results/naturalkinds-prevalence_incrMH"+mhiter+".csv"
-truthutils.naturalpriorERPWriter(resultsERP, outfile)
-console.log('printed file...' +outfile)
+// var prevalenceModel = function(){
+
+// 	foreach(uniquePropertyPairs,
+// 		function(sentence){
+
+// 			var pieces = sentence.split(' ')
+// 			var k = pieces[0]
+// 			var p = pieces.slice(1).join(' ')
+// 			var propertyData = _.pluck(subset(subset(df, "property", p),"animal", k),"prevalence")
+
+// 			var gamma = uniform(0,1)
+// 			var delta = uniform(0,20)
+
+// 			var scr = reduce(function(dataPoint, memo) {
+// 							    return memo + betaERP.score([shape_alpha(gamma, delta),
+// 							    							 shape_beta(gamma,delta)], avoidEnds(dataPoint/100))
+// 								}, 0, propertyData)
+
+// 			factor(scr)
+
+// 			query.add([sentence,'gamma'], gamma)
+// 			query.add([sentence,'delta'], delta)
+
+// 		}
+// 	)
+// 	return query
+// }
+
+// var mhiter = 10000
+// var resultsERP = IncrementalMH(dataAnalysisModel, mhiter, {"verbose":true})
+
+// var outfile = "results/naturalkinds-prevalence_incrMH"+mhiter+".csv"
+// truthutils.naturalpriorERPWriter(resultsERP, outfile)
+// console.log('printed file...' +outfile)

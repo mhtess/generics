@@ -1,0 +1,66 @@
+// time webppl truthjudgments.wppl --require-js ./truthutils
+// time webppl truthjudgments.wppl --require-js ./truthutils.js --require-wppl ./lvrsa.wppl --require-wppl ./natural-cases-prior.wppl  --require-wppl ./natural-prior.wppl 
+// mht's helper functions
+
+
+
+
+
+var softmaxSpeaker2 = function(myERP, softmax){
+	Enumerate(function(){
+		var p = truthutils.softmax(Math.exp(myERP.score([], "generic is true")), softmax)
+		var response = flip(p) ? "generic is true" : "mu"
+		return response
+	})
+}
+
+
+var modelAnalysis = function(){
+
+	var speakerOptimality = uniform(0,10)
+	// var cost = uniform(0,5)
+	var cost = 1
+	// var softmax = uniform(0,5)
+
+	foreach(_.uniq(_.pluck(df_truth, "sentence")),
+		function(sentence){
+
+			var responseData = _.pluck(subset(df_truth, "sentence", sentence), "response")
+			var pieces = parseGeneric(sentence)
+			var p = pieces[0] // e.g. are white
+			var k = pieces[1] // e.g. Sharks
+			var prevalenceERP = IncrementalMH(function(){return prevalenceModel(k,p}, 1000, {"verbose":false})
+
+			var predictionERP = cognitiveModel(sentence,speakerOptimality, cost)
+
+			// var linkedERP = softmaxSpeaker2(predictionERP, softmax)
+
+
+			var scr = reduce(function(d, memo) {
+						    return memo + predictionERP.score([], d)
+								}, 0, truthJudgments[sentence])
+
+			factor(scr)
+
+			query.add(sentence, Math.exp(predictionERP.score([], "generic is true")))
+		}
+		)
+
+	query.add("speakerOptimality", speakerOptimality)
+	// query.add("cost", cost)
+	// query.add("softmax", softmax)
+	return query
+}
+
+var s = parseGeneric(df_truth[0]["sentence"])
+
+console.log(s)
+
+// //var tfbt = Enumerate(dataAnalysis)
+// var mhiter = 10000
+// var tfbt = HashMH(dataAnalysis,mhiter)
+// var outfile = 'results/'+ 'generics_truthJudge_rationality-n100_hashmh'+mhiter+'a.csv'
+
+// truthutils.erpWriter(tfbt, outfile)
+
+// console.log('wrote to... ' + outfile )
