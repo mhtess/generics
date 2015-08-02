@@ -1,4 +1,4 @@
-// time webppl natural-cases-prior.wppl --require-js ./truthutils.js 
+// time webppl FBT-natural-cases.wppl --require-js ./truthutils.js 
 
 var foreach = function(lst, fn) {
     var foreach_ = function(i) {
@@ -116,6 +116,8 @@ var model = function(){
 
 	foreach(properties,
 		function(p){
+			console.log(p)
+			// infer prevalence prior from prior elicitation data
 			var propertyData = _.pluck(subset(df_prior, "Property", p),"prevalence")
 
 			var gamma_across = uniform(0,1)
@@ -127,7 +129,7 @@ var model = function(){
 													delta_across, 
 													gamma_within, 
 													delta_within)
-			var prior = getProbsFromERP(priorERP)
+			var priorProbs = getProbsFromERP(priorERP)
 
 			var scr1 = reduce(function(dataPoint, memo) {
 							    return memo + priorERP.score([], alignPrevalence(dataPoint))
@@ -135,14 +137,16 @@ var model = function(){
 
 			factor(scr1)
 
-
-			foreach(_.zip(prior, bins),
+			// write out inferred prevalence prior
+			foreach(_.zip(priorProbs, bins),
 				function(x){query.add(['prevalencePrior',property,x[1]], x[0])})
 
-			var categories = _.pluck(subset(df_truth, "Property", p), "Category")
+			var categories = _.pluck(subset(df_truth, "positiveProperty", p), "Category")
 
 			foreach(categories,
 				function(k){
+					console.log(k)
+					// infer prevalence from prior elicitation data
 					var categoryData = _.pluck(subset(propertyData,"Category", k), "prevalence")
 					var gamma = uniform(0,1)
 					var delta = uniform(0,20)
@@ -153,50 +157,57 @@ var model = function(){
 
 					factor(scr2)
 
-					// try this with sampling from the beta
+					// NOTE: Try this with sampling from the beta!
 					var discretized_prevalence = avoidEnds(Math.round(gamma*20)/20)
 
-					var tjData = _.pluck(subset(subset(df_truth, "Property", p),"Category", k), "response")
+					var tjData = subset(subset(df_truth, "positiveProperty", p),"Category", k)
 
-					var predictionERP = truthSpeaker2(discretized_prevalence, 
-														prior, 
-														speakerOptimality, 
-														1)
-					var scr3 = reduce(function(d, memo) {
-								    return memo + predictionERP.score([], responseDictionary[d])
-										}, 0, tjData)
+					// check if generic came in both "has " and "doesn't have" forms
+					var forms = _.uniq(_.pluck(tjData,"negation"))
 
-					factor(scr3)
+					foreach(forms,
+						function(negation){
+							console.log(negation)
+							var responseData = _.pluck(subset(tjData, "negation", negation), "response")
 
-					query.add(["generic",property,category], Math.exp(predictionERP.score([], "generic is true")))
-					query.add(["prevalence",property,category], discretized_prevalence)
+							var prevalence = negation ? 1 - prevalence : prevalence
+							var prior = negation ? priorProbs.reverse() : priorProbs
+
+							var genericERP = truthSpeaker2(prevalence, 
+																prior, 
+																speakerOptimality, 
+																1)
+							var scr3 = reduce(function(d, memo) {
+										    return memo + genericERP.score([], responseDictionary[d])
+												}, 0, responseData)
+
+							factor(scr3)
+
+							query.add(["generic",property,category, negation], 
+											Math.exp(genericERP.score([], "generic is true")))
+							query.add(["prevalence",property,category, negation], discretized_prevalence)
+
+						}
+						)
 				}
 				)
-})}
-
-
-	// var pieces = sentence.split(' ')
-	// var k = pieces[0]
-	// var p = pieces.slice(1).join(' ')
-	var propertyData = _.pluck(subset(subset(df, "property", p),"animal", k),"prevalence")
-	// console.log(propertyData)
-	// console.log(propertyData)
-	var gamma = uniform(0,1)
-	var delta = uniform(0,20)
-
-	var scr = reduce(function(dataPoint, memo) {
-					    return memo + betaERP.score([shape_alpha(gamma, delta),
-					    							 shape_beta(gamma,delta)], avoidEnds(dataPoint/100))
-						}, 0, propertyData)
-
-	factor(scr)
-
-	// query.add([sentence,'gamma'], gamma)
-	// query.add([sentence,'delta'], delta)
-	// return query
-
-	var discretized_prevalence = avoidEnds(Math.round(gamma*20)/20)
-	return discretized_prevalence
+}
+)
+query.add(["speakerOptimality","na","na","na"], speakerOptimality)
 }
 
-df_truth
+// var p  = properties[0]
+// var k = "Sharks"
+// var propertyData = subset(df_prior, "Property", p)
+// var categories = _.pluck(subset(df_truth, "positiveProperty", p), "Category")
+// var tjData = subset(subset(df_truth, "positiveProperty", p),"Category", k)
+
+
+var mhiter = 10
+var tfbt = IncrementalMH(model,mhiter, {"verbose":true})
+var outfile = 'results/'+ 'generics-tj-fullBayesian-so-incrmh'+mhiter+'.csv'
+truthutils.erpWriter(tfbt, outfile)
+console.log('wrote to... ' + outfile )
+
+
+
