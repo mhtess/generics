@@ -35,7 +35,12 @@ Plotted below are the trial-wise responses to the 2 questions (question 1 on x-a
 ```{r prior2}
 library(VGAM)
 d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-prior-2/asymmetry-prior-2-trials.csv')
-d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-prior-3/asymmetry-prior-3-trials.csv')
+#d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-prior-3/asymmetry-prior-3-trials.csv')
+#d<-(d %>% filter(workerid>29))
+
+
+
+
 
 ggplot(data=d,aes(x=response0,y=response1))+
   geom_point()+
@@ -215,7 +220,7 @@ d.item <- d.tidy %>%
             n = length(resp))
 
 d.item$stim_property<-factor(d.item$stim_property,
-       levels= levels(with((d.item %>% filter(resp=='response0')), reorder(stim_property, mean_response, function(x) -x))))
+       levels= levels(with((d.item %>% filter(resp=='response1')), reorder(stim_property, mean_response, function(x) -x))))
 
 ggplot(d.item, aes(x=stim_property, y = mean_response, group=stim_type, fill=stim_type))+
   geom_bar(stat='identity', position=position_dodge())+
@@ -225,11 +230,31 @@ ggplot(d.item, aes(x=stim_property, y = mean_response, group=stim_type, fill=sti
                                    vjust=1))
 ```
 
+Split accidental into accidental-low and accidental-high
+
+```{r}
+
+d.acc<-d.item %>% filter(stim_type=='accidental' & resp=='response1')
+
+
+acc.low<-d.acc[order(d.acc$mean_response),]$stim_property[1:6]
+acc.hi<-d.acc[order(d.acc$mean_response),]$stim_property[7:12]
+
+d$type<-as.character(d$stim_type)
+
+d[(d$stim_property %in% acc.hi),]$type <- "accidental_high"
+d[(d$stim_property %in% acc.low),]$type <- "accidental_low"
+
+write.csv(d,file='~/Documents/research/generics/models/data/asymmetry-prior-2splitAccidental-trials.csv', row.names=F)
+
+
+```
+
 ## Bayesian analysis
 
 ```{r item.fbt}
-f<- read.csv('~/Documents/research/generics/analysis/FBT-priors/results/priors_betas_byItem_incrMH100000.csv')
-f<- read.csv('~/Documents/research/generics/analysis/FBT-priors/results/priors3_betas_byType_incrMH10000.csv')
+f<- read.csv('~/Documents/research/generics/analysis/FBT-priors/results/priors_betas_byItem_incrMH10000.csv')
+#f<- read.csv('~/Documents/research/generics/analysis/FBT-priors/results/priors3_betas_byType_incrMH10000.csv')
 
 
 f.tidy<- f %>% gather(Parameter, Value, Gamma, Delta) %>%
@@ -258,17 +283,29 @@ ggplot(f.params %>% filter(Parameter=='Gamma'), aes(x=Response, fill=Item))+
 ### Expected value of means
 ```{r item.fbt.expectation}
 
-f.exp<-f.tidy %>%
+f.exp<-f.params %>%
   group_by(Parameter, Item, Question) %>%
-  summarise(expectation = sum(Value*Probability))
+  summarise(expectation = mean(Response),
+            credHigh = quantile(Response, probs = 0.975),
+            credLow = quantile(Response, probs = 0.025))
 
 f.exp<- f.exp %>% filter(Parameter=='Gamma')
-f.exp$Item<-factor(f.exp$Item,
-       levels= levels(with((f.exp %>% filter(Question=='response1')), reorder(Item, expectation, function(x) -x))))
+f.exp<-left_join(f.exp, d %>% select(stim_property, stim_type) %>%
+  rename(Item = stim_property,
+         Type = stim_type))
 
-ggplot(f.exp, aes(x=Item, y = expectation))+
+
+f.exp$Item<-factor(f.exp$Item,
+       levels= levels(with((f.exp %>% filter(Question=='response1')), 
+                           reorder(Item, expectation, function(x) -x))))
+
+
+
+ggplot(f.exp %>% filter(Question=='response1'), 
+       aes(x=Item, y = expectation, fill=Type))+
   geom_bar(stat='identity', position=position_dodge())+
-  #geom_errorbar(aes(ymin = mean_response-2*sterr, ymax = mean_response+2*sterr))+
+  geom_errorbar(aes(ymin = credLow, 
+                    ymax = credHigh))+
   facet_wrap(~Question) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1,
                                    vjust=1))

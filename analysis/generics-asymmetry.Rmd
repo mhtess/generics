@@ -653,10 +653,10 @@ Properties are either:
 n = 40 ($0.60)
 
 ```{r asym2.entry}
-d.implied<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-2/asymmetry-2-trials.csv')
-table(d$stim_property)
+#d.implied<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-2/asymmetry-2-trials.csv')
+#table(d$stim_property)
 
-d.accept<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-2/truth-conditions-2-trials.csv')
+#d.accept<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-2/truth-conditions-2-trials.csv')
 
 d<-read.csv('~/Documents/research/generics/models/data/asymmetry-2-trials-medSplitAccidental.csv')
 
@@ -795,10 +795,15 @@ rs.asymmetry<-lmer(data=d.asymmetry,
                    prev~-1+ type*src + (1 | workerid))
 
 summary(rs.asymmetry)
+contrasts(d.tidy$context)<-cbind(dd = c(-2,1,1), ni = c(0, 1, -1))
 
 
-rs1<-lmer(data=d.implied, response~ type + (1 + type | workerid) + 
-                                                  (1 | stim_property))
+contrasts(d.implied$type)<- cbind(acc_high = c(1, 0, 0,0,0), 
+                                  acc_lo = c(0, 1, 0,0,0), 
+                                  vague = c(0, 0, 0,0,1), 
+                                  part = c(0, 0, 0,1,0) )
+
+rs1<-lmer(data=d.implied, response~ type + (1 + type | workerid))
 summary(rs1)
 
 ```

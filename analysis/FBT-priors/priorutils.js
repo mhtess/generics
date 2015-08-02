@@ -10,6 +10,8 @@ var erpWriter = function(erp, filename) {
  fs.closeSync(csvFile);
 }
 
+
+
 var supportWriter = function(s, p, handle) {
  var sLst = _.pairs(s);
  var l = sLst.length;

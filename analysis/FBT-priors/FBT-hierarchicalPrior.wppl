@@ -26,7 +26,8 @@ var subset = function(df, field, value){
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
-var data = priorutils.readCSV("../../data/asymmetry/asymmetry-prior-3-trials.csv").data
+var data = priorutils.readCSV("../../models/data/asymmetry-prior-4splitAccidental-trials.csv").data
+//var Priordata = asymutils.readCSV("data/asymmetry-prior-4splitAccidental-trials.csv").data
 
 var df = map(
 	function(lst){
@@ -35,7 +36,7 @@ var df = map(
 	data.slice(1))
 
 
-var conditions = _.uniq(_.pluck(df,"stim_type"))
+var conditions = _.uniq(_.pluck(df,"type"))
 var items = _.uniq(_.pluck(df,"stim_property"))
 var responseTypes = ["response0","response1"]
 
@@ -49,7 +50,7 @@ var dataAnalysisModel = function(){
 	foreach(conditions,
 		function(c){
 
-			var conditionData = subset(df, "stim_type", c)
+			var conditionData = subset(df, "type", c)
 
 			foreach(responseTypes,
 				function(r){
@@ -65,7 +66,10 @@ var dataAnalysisModel = function(){
 										}, 0, responseData)
 					factor(scr)
 
-					query.add([c, r], [gamma, delta])
+					// query.add([c, r], [gamma, delta])
+					query.add([c,r,'gamma'], gamma)
+					query.add([c,r,'delta'], delta)
+
 				}
 			)
 		}
@@ -106,10 +110,19 @@ var dataAnalysisModel = function(){
 // }
 
 
-var mhiter = 10000
-var resultsERP = IncrementalMH(dataAnalysisModel, mhiter)
 
-var outfile = "results/priors3_betas_byType_incrMH"+mhiter+".csv"
+
+
+
+
+var mhiter = 100
+// var resultsERP = IncrementalMH(dataAnalysisModel, mhiter)
+var resultsERP = HashMH(dataAnalysisModel, mhiter, {"burnin":75,
+													"verbose":true})
+
+//var outfile = "results/priors4_betas_byType_incrMH"+mhiter+".csv"
+//var outfile = "results/priors4_betas_byType_incrMH"+mhiter+".csv"
+var outfile = "results/priors4_betas_byType_hashMH"+mhiter+".csv"
 
 priorutils.erpWriter(resultsERP,outfile)
 console.log('printed '+ outfile)

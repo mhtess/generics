@@ -68,6 +68,36 @@
 // 	"ducks are female":-0.58,
 // 	"lions have wings":-2.5 // made up
 // }
+
+var foreach = function(lst, fn) {
+    var foreach_ = function(i) {
+        if (i < lst.length) {
+            fn(lst[i]);
+            foreach_(i + 1);
+        }
+    };
+    foreach_(0);
+};
+
+var marginalize = function(myERP, index){
+  Enumerate(function(){
+    var x = sample(myERP)
+    return x[index]
+  })
+}
+
+var subset = function(df, field, value){
+	return filter(function(d){
+		return (d[field]==value)
+	},df)
+}
+
+var bootstrap = function(lst){
+	return _.flatten(repeat(_.size(lst), function(x){return _.sample(lst,1)}))
+}
+
+
+
 var writeERP = function(myERP){
   return map(function(val){
   	return [val, Math.exp(myERP.score([],val))]
@@ -373,14 +403,13 @@ var dataAnalysis = function(){
 		//var phiTC = sample(uniformERP, [0,1])
 		//var phiIP = sample(uniformERP, [0,1])
 
-		var speakerOptimality = sample(uniformERP,[0,10])
+		var speakerOptimality = uniform(0.99,1.01)
 //		var speakerOptimality = 0.1+(randomInteger(20)/4)
 //		var cost = (randomInteger(3)+1)/2
 		var cost = 1
 		//var speakerOptimalityIP = sample(uniformERP,[0,10])
 
-		var posteriorPredictive = 
-			map(
+		foreach(_.keys(truthJudgments),
 				function(sentence){
 					var predictionERP = cognitiveModel(sentence,speakerOptimality, cost)
 
@@ -391,20 +420,21 @@ var dataAnalysis = function(){
 					//return modelScore(predictionERP, truthJudgments[sentence])
 					factor(modelScore(predictionERP, truthJudgments[sentence]))
 
-					return [sentence, Math.exp(predictionERP.score([], "generic is true"))]
-				},
-				_.shuffle(_.keys(truthJudgments)) // factor in random order
+					query.add(sentence, Math.exp(predictionERP.score([], "generic is true")))
+				}
 			)
 
 	//	return _.object(posteriorPredictive)
 //		return [speakerOptimality, cost]
 	//	return speakerOptimality
 //		return _.object(posteriorPredictive)
-		return speakerOptimality
+
+		return query
 }
 
 //var tfbt = Enumerate(dataAnalysis)
-var tfbt = MH(dataAnalysis,1000)
+var mhiter=100
+var tfbt = HashMH(dataAnalysis,mhiter)
 // //tfbt
 
 //tfbt
@@ -412,9 +442,8 @@ var tfbt = MH(dataAnalysis,1000)
 
 //dataAnalysis()
 //var output = utils.expectation(tfbt, _.keys(truthJudgments))
-var output = writeERP(tfbt)
+utils.erpWriter(tfbt, 'generics_truthJudge_3_rationality1_n100_hashmh'+mhiter+'.csv')
 //output
-utils.writeCSV(output, 'generics_truthJudge_3_rationality_n100_mh1000.csv')
 
 // dataAnalysis()
 

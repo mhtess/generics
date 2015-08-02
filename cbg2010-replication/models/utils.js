@@ -14,6 +14,23 @@ function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+var erpWriter = function(erp, filename) {
+ var supp = erp.support([]);
+ var csvFile = fs.openSync(filename, 'w');
+ fs.writeSync(csvFile,'Item,Value,Probability\n')
+ supp.forEach(function(s) {supportWriter(s, Math.exp(erp.score([], s)), csvFile);})
+ fs.closeSync(csvFile);
+}
+
+var supportWriter = function(s, p, handle) {
+ var sLst = _.pairs(s);
+ var l = sLst.length;
+
+ for (var i = 0; i < l; i++) {
+   fs.writeSync(handle, sLst[i].join(',')+','+p+'\n');
+ }
+}
+
 var writeERP = function(myERP){
   return _.map(myERP.support([]),
           function(value){
@@ -268,5 +285,6 @@ module.exports = {
   readTruthJudgements:readTruthJudgements,
   isNumber: isNumber,
   fillArray: fillArray,
+  erpWriter:erpWriter,
   expectation: expectation
 };

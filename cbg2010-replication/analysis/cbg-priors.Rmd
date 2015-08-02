@@ -327,6 +327,8 @@ table(d$context,d$part)
 ## yes: the experiment allowed you to advance if you had clicked the last slider, but not any of the other ones
 d[is.na(d)]<-0
 
+d<-d %>% filter(context=='bare')
+
 d.tidy<-d %>% 
   select(workerid,rt,context,item,starts_with("bin"),-binOrder) %>%
   gather(bin,value,-workerid,-rt,-context, -item) %>%
@@ -341,6 +343,13 @@ d.tidy$context<-factor(d.tidy$context,
                         labels=c("dangerous & distinctive", 
                                  "nondistinctive & irrelevant",
                                  "plain"))
+
+ggplot(d.tidy, aes(x=bin,y=value))+
+  geom_bar(stat='identity')+
+  facet_wrap(~workerid)+
+  xlab('prevalence')
+
+
 d.stats <- d.tidy %>% 
   group_by(context,bin) %>%
   summarise(mn = mean(value,na.rm=T),
