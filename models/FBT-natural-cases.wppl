@@ -1,0 +1,202 @@
+// time webppl natural-cases-prior.wppl --require-js ./truthutils.js 
+
+var foreach = function(lst, fn) {
+    var foreach_ = function(i) {
+        if (i < lst.length) {
+            fn(lst[i]);
+            foreach_(i + 1);
+        }
+    };
+    foreach_(0);
+};
+
+var subset = function(df, field, value){
+	return filter(function(d){
+		return (d[field]==value)
+	},df)
+}
+
+
+var shape_alpha = function(gamma,delta){return gamma * delta}
+var shape_beta = function(gamma,delta){return (1-gamma) * delta}
+
+var Priordata = truthutils.readCSV("data/real-kinds-prior-2-trials-formatted.csv").data
+var Truthdata = truthutils.readCSV("data/real-kinds-truth-1-trials-formatted.csv").data
+
+var df_truth = map(
+	function(lst){
+		return _.object(_.zip(Truthdata[0],lst))
+	},
+	Truthdata.slice(1))
+
+var df_prior = map(
+	function(lst){
+		return _.object(_.zip(Priordata[0],lst))
+	},
+	Priordata.slice(1))
+
+// var genericSentences = map(parseGeneric,_.uniq(_.pluck(df_truth, "sentence")))
+
+// var uniquePropertyPairs = _.uniq(map(function(sentence){
+// 	var property = sentence[0]
+// 	var kind = sentence[1]
+// 	var negation = property.split(' ')[0].slice(0,5)=='don&q'
+// 	return [kind, negation ? property.split(' ').slice(1).join(' ') : property].join(' ')
+// }, genericSentences))
+
+
+
+
+
+
+var properties = _.uniq(_.pluck(df_prior,"Property"))
+
+var avoidEnds = function(response){
+	return response==0 ? 0.01 : response==1 ? 0.99 : response
+}
+
+var avoidUpperBound = function(response){
+	return response==1 ? 0.99 : response
+}
+
+var alignPrevalence = function(number){
+	return avoidEnds(Math.round(number/5)/20)
+}
+
+var getProbsFromERP = function(myERP, orderedSupport){
+	return map(function(s){
+		Math.exp(myERP.score([], s))
+	}, orderedSupport)
+}
+
+
+
+// var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+var bins = [0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,
+				 0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
+
+var discretizedPriorModel = function(g0, d0, g1, d1){
+//var discretizedPriorModel = function(hasF, g1, d1){
+	// var hasF = makeBetaBernoulli([shape_alpha(g0,d0), shape_beta(g0,d0)])()
+	// var prevalence = hasF ? beta()
+//	var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+	var bins = [0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,
+					 0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
+
+	var kindDoesntHaveF_prevalence = 0.01
+	// var kindDoesntHaveF_prevalence = 0
+	var discretizeBeta = function(gamma, delta){
+		var shape_alpha =  gamma * delta
+		var shape_beta = (1-gamma) * delta
+		var betaPDF = function(x){
+		  return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
+		}
+		return map(betaPDF, bins)
+	}
+	// discretization occurs here
+	var prevalencePrior = 
+		Enumerate(function(){
+			var kindHasF = flip(bins[discrete(discretizeBeta(g0,d0))])
+//			var kindHasF = flip(hasF)
+
+			var prevalenceGivenK = kindHasF ? bins[discrete(discretizeBeta(g1,d1))] : 
+											kindDoesntHaveF_prevalence
+
+			return prevalenceGivenK
+		})
+
+	return prevalencePrior
+}
+
+
+
+var model = function(){
+
+	var speakerOptimality = uniform(0,10)
+
+	foreach(properties,
+		function(p){
+			var propertyData = _.pluck(subset(df_prior, "Property", p),"prevalence")
+
+			var gamma_across = uniform(0,1)
+			var delta_across = uniform(0,50)
+			var gamma_within = uniform(0,1)
+			var delta_within = uniform(0,50)
+
+			var priorERP = discretizedPriorModel(gamma_across, 
+													delta_across, 
+													gamma_within, 
+													delta_within)
+			var prior = getProbsFromERP(priorERP)
+
+			var scr1 = reduce(function(dataPoint, memo) {
+							    return memo + priorERP.score([], alignPrevalence(dataPoint))
+								}, 0, propertyData)
+
+			factor(scr1)
+
+
+			foreach(_.zip(prior, bins),
+				function(x){query.add(['prevalencePrior',property,x[1]], x[0])})
+
+			var categories = _.pluck(subset(df_truth, "Property", p), "Category")
+
+			foreach(categories,
+				function(k){
+					var categoryData = _.pluck(subset(propertyData,"Category", k), "prevalence")
+					var gamma = uniform(0,1)
+					var delta = uniform(0,20)
+					var scr2 = reduce(function(dataPoint, memo) {
+									    return memo + betaERP.score([shape_alpha(gamma, delta),
+									    							 shape_beta(gamma,delta)], avoidEnds(dataPoint/100))
+										}, 0, categoryData)
+
+					factor(scr2)
+
+					// try this with sampling from the beta
+					var discretized_prevalence = avoidEnds(Math.round(gamma*20)/20)
+
+					var tjData = _.pluck(subset(subset(df_truth, "Property", p),"Category", k), "response")
+
+					var predictionERP = truthSpeaker2(discretized_prevalence, 
+														prior, 
+														speakerOptimality, 
+														1)
+					var scr3 = reduce(function(d, memo) {
+								    return memo + predictionERP.score([], responseDictionary[d])
+										}, 0, tjData)
+
+					factor(scr3)
+
+					query.add(["generic",property,category], Math.exp(predictionERP.score([], "generic is true")))
+					query.add(["prevalence",property,category], discretized_prevalence)
+				}
+				)
+})}
+
+
+	// var pieces = sentence.split(' ')
+	// var k = pieces[0]
+	// var p = pieces.slice(1).join(' ')
+	var propertyData = _.pluck(subset(subset(df, "property", p),"animal", k),"prevalence")
+	// console.log(propertyData)
+	// console.log(propertyData)
+	var gamma = uniform(0,1)
+	var delta = uniform(0,20)
+
+	var scr = reduce(function(dataPoint, memo) {
+					    return memo + betaERP.score([shape_alpha(gamma, delta),
+					    							 shape_beta(gamma,delta)], avoidEnds(dataPoint/100))
+						}, 0, propertyData)
+
+	factor(scr)
+
+	// query.add([sentence,'gamma'], gamma)
+	// query.add([sentence,'delta'], delta)
+	// return query
+
+	var discretized_prevalence = avoidEnds(Math.round(gamma*20)/20)
+	return discretized_prevalence
+}
+
+df_truth
