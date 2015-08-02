@@ -1,18 +1,52 @@
 // time webppl truthjudgments.wppl --require-js ./truthutils
 // time webppl truthjudgments.wppl --require-js ./truthutils.js --require-wppl ./lvrsa.wppl --require-wppl ./natural-cases-prior.wppl  --require-wppl ./natural-prior.wppl 
 // mht's helper functions
+// time webppl truthjudgments.wppl --require-js ./truthutils.js --require-wppl ./lvrsa.wppl --require-wppl ./natural-cases-prior.wppl  --require-wppl ./natural-prior.wppl 
 
+var isNegation = function(property){
+	return (property.split(' ')[0].slice(0,5)=='don&q')
+}
+
+// console.log(filter(function(sentence){
+// 		var pieces = parseGeneric(sentence)
+// 		var p = pieces[0] // e.g. are white
+// 		var k = pieces[1] // e.g. Sharks
+// 		console.log(p)
+// 		var neg = isNegation(p)
+// 		return neg},
+// 		_.uniq(_.pluck(df_truth, "sentence"))
+// 	))
+
+var positiveSentences = _.object(map(
+	function(sentence){
+		var pieces = parseGeneric(sentence)
+		var p = pieces[0] // e.g. are white
+		var k = pieces[1]
+		var property = isNegation(p) ? p.split(' ').slice(1).join(' ') : p
+
+		return [sentence, [k, property].join(' ')]
+	},
+	_.uniq(_.pluck(df_truth, "sentence"))))
+
+var uniquePositiveSentences = _.uniq(_.values(positiveSentences))
+
+// console.log(positiveSentences.length)
+// console.log(uniquePositiveSentences.length)
+
+var prioriters = 1000
 
 var prevalenceERPobject = _.object(map(function(sentence){
-			var pieces = parseGeneric(sentence)
-			var p = pieces[0] // e.g. are white
-			var k = pieces[1] // e.g. Sharks
-			return [sentence, HashMH(function(){return prevalenceModel(k,p)}, 10, {"verbose":false})]
-	},
-_.uniq(_.pluck(df_truth, "sentence"))))
+			var pieces = sentence.split(' ');
+			var k = pieces[0] // e.g. Sharks
+			var p = pieces.slice(1).join(' ') // e.g. are white
+
+			console.log('inferring prevalence of ' + sentence)
+			return [sentence, HashMH(function(){return prevalenceModel(k,p)}, prioriters, {"verbose":false})]
+},uniquePositiveSentences))
 
 var priorERPobject = _.object(map(function(property){
-	return [property, HashMH(function(){return priorModel(property)}, 10, {"verbose":false})]
+	console.log('inferring prevalence prior of ' + property)
+	return [property, HashMH(function(){return priorModel(property)}, prioriters, {"verbose":false})]
 }, properties))
 
 
@@ -29,6 +63,14 @@ var responseDictionary = {
 	"disagree-key":"mu"
 }
 
+var getProbsFromERP = function(myERP, orderedSupport){
+	return map(function(s){
+		Math.exp(myERP.score([], s))
+	}, orderedSupport)
+}
+
+
+
 
 var modelAnalysis = function(){
 
@@ -39,18 +81,28 @@ var modelAnalysis = function(){
 
 	foreach(_.uniq(_.pluck(df_truth, "sentence")),
 		function(sentence){
-
+			// console.log(sentence)
 			var responseData = _.pluck(subset(df_truth, "sentence", sentence), "response")
 			var pieces = parseGeneric(sentence)
-			var p = pieces[0] // e.g. are white
+			var property = pieces[0] // e.g. are white
+			// console.	log(property)
 			var k = pieces[1] // e.g. Sharks
+			// is the property a negation of another property?
+
+			var p = isNegation(property) ? property.split(' ').slice(1).join(' ')  : property
+
+			// console.log(p)
+			// console.log(k)
 
 			var priorERP = sample(priorERPobject[p])
-//			var prior = 
-			console.log(priorERP.support())
-			var prevalence = sample(prevalenceERPobject[sentence])
+			// if negation, reverse the probabilities of the prevalence
+			var prior = isNegation(property) ? getProbsFromERP(priorERP, bins).reverse() : getProbsFromERP(priorERP, bins)
 
-
+			// console.log('sampled prior '  + prior)
+			var positivePropertyPrevalence = sample(prevalenceERPobject[positiveSentences[sentence]])
+			var prevalence = isNegation(property) ? avoidEnds(Math.round((1 - positivePropertyPrevalence)*20)/20) : 
+													positivePropertyPrevalence
+			// console.log('sampled prevalence ' + prevalence )
 			var predictionERP = truthSpeaker2(prevalence, prior, speakerOptimality, 1)
 
 			// var linkedERP = softmaxSpeaker2(predictionERP, softmax)
@@ -59,10 +111,13 @@ var modelAnalysis = function(){
 			var scr = reduce(function(d, memo) {
 						    return memo + predictionERP.score([], responseDictionary[d])
 								}, 0, responseData)
-			console.log(scr)
+			// console.log(scr)
 			factor(scr)
 
 			query.add(sentence, Math.exp(predictionERP.score([], "generic is true")))
+			query.add('prevalence_'+sentence, prevalence)
+			foreach(_.zip(prior, bins),
+				function(x){query.add('prevalencePrior_'+property+"_" + x[1], x[0])})
 		}
 		)
 
@@ -84,12 +139,13 @@ var modelAnalysis = function(){
 // console.log(s)
 
 // //var tfbt = Enumerate(dataAnalysis)
-var mhiter = 10
-var tfbt = HashMH(modelAnalysis,mhiter)
-tfbt
+var mhiter = 10000
+var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true})
+var outfile = 'results/'+ 'generics-tj-fullBayesian-wPrev-so-priorhash'+prioriters+'_incrmh'+mhiter+'.csv'
+truthutils.erpWriter(tfbt, outfile)
+console.log('wrote to... ' + outfile )
 
-// var outfile = 'results/'+ 'generics_truthJudge_rationality-n100_hashmh'+mhiter+'a.csv'
 
-// truthutils.erpWriter(tfbt, outfile)
 
-// console.log('wrote to... ' + outfile )
+
+

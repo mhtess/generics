@@ -30,7 +30,7 @@ var bootstrap = function(lst){
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
-var Priordata = asymutils.readCSV("data/asymmetry-prior-2splitAccidental-trials.csv").data
+var Priordata = asymutils.readCSV("data/asymmetry-prior-4splitAccidental-trials.csv").data
 
 var df0 = map(
 	function(lst){
@@ -40,17 +40,16 @@ var df0 = map(
 
 var df = df0//bootstrap(df0)
 
-var conditions = _.uniq(_.pluck(df,"property_type"))
+var conditions = _.uniq(_.pluck(df,"type"))
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
 }
 
 
-
 var priorModel = function(c){
 
-	var conditionData = subset(df, "property_type", c)
+	var conditionData = subset(df, "type", c)
 
 	foreach(["response0","response1"],
 		function(r){
@@ -78,65 +77,62 @@ var priorModel = function(c){
 	return query
 }
 
+// Priordata
+
+// df
+
 // // go from inferred beta parameters from prior elicitation, to a prevalence prior for lvrsa
-// fix me: return a distribution over prevalence priors
-var getPriorERP = cache(function(condition){
+// var getPriorERP = cache(function(condition){
 
-	// do BDA on prior elicitation
-	var heirarchicalERP = IncrementalMH(function(){return priorModel(condition)}, 1000)
+// 	// do BDA on prior elicitation
+// 	var heirarchicalERP = IncrementalMH(function(){return priorModel(condition)}, 1000)
 
-	Enumerate(function(){
+// 	Enumerate(function(){
 
-		var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+// 		var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
 
-		// var kindDoesntHaveF_prevalence = 0.01
-		var kindDoesntHaveF_prevalence = 0
+// 		// var kindDoesntHaveF_prevalence = 0.01
+// 		var kindDoesntHaveF_prevalence = 0
 
-		var discretizeBeta = function(gamma, delta){
-			var shape_alpha = gamma * delta
-			var shape_beta = (1-gamma) * delta
-			var betaPDF = function(x){
-			  return Math.pow(x,shape_alpha-1)*
-			      Math.pow((1-x),shape_beta-1)
-			}
-			return map(betaPDF, bins)
-		}
+// 		var discretizeBeta = function(gamma, delta){
+// 			var shape_alpha = gamma * delta
+// 			var shape_beta = (1-gamma) * delta
+// 			var betaPDF = function(x){
+// 			  return Math.pow(x,shape_alpha-1)*
+// 			      Math.pow((1-x),shape_beta-1)
+// 			}
+// 			return map(betaPDF, bins)
+// 		}
 
-		var s = sample(heirarchicalERP)
+// 		var s = sample(heirarchicalERP)
 
-		// var kindHasF = flip(
-		// 				beta(
-		// 					shape_alpha(s["response0"][0], s["response0"][1]),
-		// 					shape_beta(s["response0"][0], s["response0"][1])
-		// 					)
-		// 				)
-		// discretization occurs here
-		var prevalencePrior = 
-		Enumerate(function(){
-			var kindHasF = flip(
-							bins[discrete(
-								discretizeBeta(
-									s[condition+",response0,gamma"], 
-									s[condition+',response0,delta']
-								)
-							)])
+// 		// discretization occurs here
+// 		var prevalencePrior = 
+// 		Enumerate(function(){
+// 			var kindHasF = flip(
+// 							bins[discrete(
+// 								discretizeBeta(
+// 									s[condition+",response0,gamma"], 
+// 									s[condition+',response0,delta']
+// 								)
+// 							)])
 
-			var prevalenceGivenK = kindHasF ? bins[discrete(
-								discretizeBeta(
-									s[condition+",response1,gamma"], 
-									s[condition+",response1,gamma"]
-								)
-							)] : kindDoesntHaveF_prevalence
+// 			var prevalenceGivenK = kindHasF ? bins[discrete(
+// 								discretizeBeta(
+// 									s[condition+",response1,gamma"], 
+// 									s[condition+",response1,gamma"]
+// 								)
+// 							)] : kindDoesntHaveF_prevalence
 
-				return prevalenceGivenK
-			})
+// 				return prevalenceGivenK
+// 			})
 
 
-		return map(function(s){return Math.exp(prevalencePrior.score([],s))} , prevalencePrior.support())
+// 		return map(function(s){return Math.exp(prevalencePrior.score([],s))} , prevalencePrior.support())
 
 
-	})
-})
+// 	})
+// })
 
 
 // map(function(key){
@@ -151,4 +147,4 @@ var getPriorERP = cache(function(condition){
 
 //IncrementalMH(function(){return priorModel("vague")}, 1000)
 
-getPriorERP("vague")
+// getPriorERP("vague")

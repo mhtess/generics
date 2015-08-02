@@ -9,14 +9,14 @@ var df_asym = map(
 	},
 	data.slice(1))
 
-var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
-//var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
-var stimTypes = _.keys(priorERP)
+// var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
+// //var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
+// var stimTypes = _.keys(priorERP)
 
-var df_accepted = subset(df_asym, "trial_type", "truth_conditions")
-var df_implied = subset(df_asym, "trial_type", "implied_prevalence")
+// var df_accepted = subset(df_asym, "trial_type", "truth_conditions")
+// var df_implied = subset(df_asym, "trial_type", "implied_prevalence")
 
-var prevalenceLevels = _.uniq(_.pluck(df_accepted, "stim_prevalence"))
+// var prevalenceLevels = _.uniq(_.pluck(df_accepted, "stim_prevalence"))
 
 var alignAgree = {"Agree":"generic is true",
 				  "Disagree": "mu"}
@@ -85,4 +85,27 @@ var bootstrapSampleMean = function(property_type){
 }
 
 
-bootstrapSampleMean("color")
+// bootstrapSampleMean("color")
+
+
+var impliedERP = numberSpeaker2("generic is true", "color", 1, 1)
+var ahimpliedERP = numberSpeaker2("generic is true", "accidental_high", 1, 1)
+var alimpliedERP = numberSpeaker2("generic is true", "accidental_low", 1, 1)
+var vimpliedERP = numberSpeaker2("generic is true", "vague", 1, 1)
+var pimpliedERP = numberSpeaker2("generic is true", "part", 1, 1)
+
+console.log("part truth ... " + simulateSampleMean("part"))
+console.log("part implications ... " + expectation(pimpliedERP))
+
+console.log("color truth ... " + simulateSampleMean("color"))
+console.log("color implications ... " + expectation(impliedERP))
+
+console.log("vague truth ... " + simulateSampleMean("vague"))
+console.log("vague implications ... " + expectation(vimpliedERP))
+
+console.log("accidental high truth ... " + simulateSampleMean("accidental_high"))
+console.log("accidental high implications ... " + expectation(ahimpliedERP))
+
+console.log("accidental  low truth ... " + simulateSampleMean("accidental_low"))
+console.log("accidental low implications ... " + expectation(alimpliedERP))
+

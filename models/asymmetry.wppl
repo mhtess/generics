@@ -2,7 +2,10 @@
 
 
 //var data = asymutils.readCSV("data/asymmetry-1-trials.csv").data
-var data = asymutils.readCSV("data/asymmetry-1-trials-medSplitAccidental.csv").data
+//var data = asymutils.readCSV("data/asymmetry-1-trials-medSplitAccidental.csv").data
+//var data = asymutils.readCSV("data/asymmetry-2-trials.csv").data
+var data = asymutils.readCSV("data/asymmetry-2-trials-medSplitAccidental.csv").data
+
 var df_asym = map(
 	function(lst){
 		return _.object(_.zip(data[0],lst))
@@ -15,41 +18,42 @@ var df_implied = subset(df_asym, "trial_type", "implied_prevalence")
 
 var prevalenceLevels = _.uniq(_.pluck(df_accepted, "stim_prevalence"))
 
-var alignAgree = {"Agree":"generic is true",
-				  "Disagree": "mu"}
+// var alignAgree = {"Agree":"generic is true",
+// 				  "Disagree": "mu"}
+var alignAgree = {"1":"generic is true",
+				  "0": "mu"}
 
 var alignImplied = function(number){
-	return avoidEnds(Math.round(number/10)/10)
+	return avoidEnds(Math.round(number*10)/10)
 }
 
-var addGuessing = function(myERP, task, phi){
+var softmaxAndGuessingLink = function(myERP, task, phi, power){
 	Enumerate(function(){
-	var x = flip(1-phi) ? sample(myERP) : 
-		    (task=="truth_conditions") ? 
-		    		flip(0.5) ? "generic is true" 
-		    				  : "mu" : 
-			uniformDraw(stateBins)
-	return x
+		var states = myERP.support();
+		var probs = map(function(x){return Math.exp(myERP.score([], x))}, states);
+		var softmax_probs = map(function(x){return Math.pow(x, power)}, probs);
+
+		var x = flip(1-phi) ? 
+					states[discrete(softmax_probs)] :
+					(task=="truth_conditions") ?
+						["generic is true","mu"][discrete([0.5,0.5])] :
+						uniformDraw(stateBins)
+
+		return x
 	})
 }
 
-var sampleSubject = function(truthERP,trials){
-	var theta = Math.exp(truthERP.score([], "generic is true"))
-	var truthJudge = binomial(theta,trials)
-}
 
 
-
-
+var prioriter = 20000
+console.log('inferring prior')
 var heirarchicalERP = {
-               "accidental-low": IncrementalMH(function(){return priorModel("accidental-low")}, 1000),
-               "accidental-high": IncrementalMH(function(){return priorModel("accidental-high")}, 1000),
+               "accidental_low": IncrementalMH(function(){return priorModel("accidental_low")}, prioriter),
+               "accidental_high": IncrementalMH(function(){return priorModel("accidental_high")}, prioriter),
                 // "accidental":getPriorERP("accidental"),
-                "color": IncrementalMH(function(){return priorModel("color")}, 1000),
-                  "vague": IncrementalMH(function(){return priorModel("vague")}, 1000),
-                  "part":IncrementalMH(function(){return priorModel("part")}, 1000)
-                // "vaguelong": getPriorERP("vaguelong"),
-                // "dangerous": getPriorERP("dangerous")
+                "color": IncrementalMH(function(){return priorModel("color")}, prioriter),
+                "vague": IncrementalMH(function(){return priorModel("vague")}, prioriter),
+                "part":IncrementalMH(function(){return priorModel("part")}, prioriter)
               }
 console.log('prior inferred from prior elicitation data')
 
@@ -110,53 +114,73 @@ var dataModel = function(){
 
 					if (task=="truth_conditions") {
 
-						var truth1opt = uniform(0,10)
-//						var truth1opt = 1//uniform(0.99,1.01)
-						var df_accept_type = subset(df_accepted, "stim_type", type)
+						var truth1opt = uniform(0,20)
+						var truth2opt = 1//uniform(0,20)
+//						var df_accept_type = subset(df_accepted, "stim_type", type)
+						var df_accept_type = subset(df_accepted, "type", type)
 
 						foreach(prevalenceLevels,
 							function(prevalence){
 
 								var df_accepted_prev = _.pluck(subset(df_accept_type,"stim_prevalence", prevalence), "response")
 								// console.log(prevalence, type, s1opt, number_s1opt)
-								var agreeERP = truthSpeaker2(prevalence/100, prior, 1, 1)
+								var agreeERP = truthSpeaker2(prevalence/100, prior, truth1opt, 1)
 
-								var linkedERP = addGuessing(agreeERP, task, phi)
+								// var linkedERP = softmaxAndGuessingLink(agreeERP, task, phi, truth2opt)
 
 								// condition on both agree and disagree, or just agree?
 								// right now, it's both.
-
 								var scr = reduce(function(response, memo) {
-												    return memo + linkedERP.score([], alignAgree[response])
+												    return memo + agreeERP.score([], alignAgree[response])
 													}, 0, df_accepted_prev)
+
+								// var scr = reduce(function(response, memo) {
+								// 				    return memo + linkedERP.score([], alignAgree[response])
+								// 					}, 0, df_accepted_prev)
 								factor(scr)
 								// console.log(scr)
 
-								query.add([task,type,prevalence],Math.exp(linkedERP.score([], "generic is true")))
-
+								// query.add([task,type,prevalence],Math.exp(linkedERP.score([], "generic is true")))
+								query.add([task,type,prevalence],Math.exp(agreeERP.score([], "generic is true")))
 							}
 						)
 					
-						query.add(["truthOptimality","NA","NA"], truth1opt)
+						query.add(["truthOptimality1","NA","NA"], truth1opt)
+						query.add(["truthOptimality2","NA","NA"], truth2opt)
 
 					} else {
 						var implied1opt = uniform(0,20)
-//						var implied1opt = 1//uniform(0.99,1.01)
+						var implied2opt = 1//uniform(0,20)
 
-						var df_implied_type = subset(df_implied, "stim_type", type)
+//						var df_implied_type = subset(df_implied, "stim_type", type)
+						var df_implied_type = subset(df_implied, "type", type)
+
 						var df_implied_prev = _.pluck(df_implied_type, "response")
-						var impliedERP = numberSpeaker2("generic is true", prior, 1, 1)
 
-						var linkedERP = addGuessing(impliedERP, task, phi)
+//						console.log(df_implied_prev)
+
+						// console.log(map(alignImplied,df_implied_prev))
+						var impliedERP = numberSpeaker2("generic is true", prior, implied1opt, 1)
+//						var impliedERP = listener1("generic is true", prior, implied1opt, 1)
+
+						// var linkedERP = softmaxAndGuessingLink(impliedERP, task, phi, implied2opt)
 
 						var scr = reduce(function(response, memo) {
-										    return memo + linkedERP.score([], alignImplied(response))
+										    return memo + impliedERP.score([], alignImplied(response))
 											}, 0, df_implied_prev)
-						factor(scr)
-						// console.log(scr)
 
-						query.add([task,type,"NA"], expectation(linkedERP))
-						query.add(["impliedOptimality","NA","NA"], implied1opt)
+						// var scr = reduce(function(response, memo) {
+						// 				    return memo + linkedERP.score([], alignImplied(response))
+						// 					}, 0, df_implied_prev)
+
+						factor(scr)
+						// console.log(task +' ' + type +  scr)
+
+
+						// query.add([task,type,"NA"], expectation(linkedERP))
+						query.add([task,type,"NA"], expectation(impliedERP))
+						query.add(["impliedOptimality1","NA","NA"], implied1opt)
+						query.add(["impliedOptimality2","NA","NA"], implied2opt)
 
 					}
 
@@ -165,14 +189,33 @@ var dataModel = function(){
 		})
 
 	// query.add(["speakerOptimality","NA","NA"], s1opt)
-	// query.add(["phi","NA","NA"], phi)
+	query.add(["phi","NA","NA"], phi)
 
 	return query
 
 }
 
-var mhiter = 1000
-var resultsERP = HashMH(dataModel, mhiter)
+
+// var prior = IncrementalMH(function(){return priorModel("accidental_low")}, 100)
+// var p = sample(prior)
+// var r = numberSpeaker2("generic is true",getPrior(p,"accidental_low"), 1, 1)
+// console.log(_.object(map(function(s){return [s,Math.exp(r.score([], s))]}, r.support())))
+// var r1 = listener1("generic is true",getPrior(p,"accidental_low"), 1, 1)
+// console.log(_.object(map(function(s){return [s,Math.exp(r1.score([], s))]}, r1.support())))
+// var r2 =  softmaxAndGuessingLink(r1, "implied_prevalence", 0, 0.7)
+// console.log(_.object(map(function(s){return [s,Math.exp(r2.score([], s))]}, r2.support())))
+
+
+// var r1 = numberSpeaker2("generic is true",getPrior(p,"accidental_low"), 6, 1)
+// console.log(map(function(s){return Math.exp(r1.score([], s))}, r1.support()))
+
+//softmaxAndGuessingLink(r, "implied_prevalence", 0, 2)
+
+
+//softmaxAndGuessingLink
+
+var mhiter = 100000
+var resultsERP = HashMH(dataModel, mhiter, {"verbose":true})
 //resultsERP
 // dataModel()
  // IncrementalMH(function(){return priorModel("accidental-low")}, 100)
@@ -184,10 +227,13 @@ var resultsERP = HashMH(dataModel, mhiter)
 // // var agreeERP = truthSpeaker2(0.1, prior, 1, 1)
 // var impliedERP = numberSpeaker2("generic is true", prior, 1, 1)
 // impliedERP
-// var outfile = "results/generics-soWord-soNumber-phi-hashmh"+mhiter+"_prior2-incrmh1000.csv"
+// var outfile = "results/generics-soWord-soNumber-phi-hashmh"+	mhiter+"_prior2-incrmh1000.csv"
 //var outfile = "results/generics-truthOpt-impliedOpt-hashmh"+mhiter+"_prior2-incrmh1000.csv"
 // var outfile = "results/generics-fixedparams-nophi-hashmh"+mhiter+"_prior2-incrmh1000.csv"
-var outfile = "results/generics-priorUncertainty-truthOpt-impliedOpt-nophi-hashmh"+mhiter+"_prior2-incrmh1000.csv"
+//var outfile = "results/generics-priorUncertainty-phi-hashmh"+mhiter+"_asym2-prior4-incrmh10k.csv"
+
+var outfile = "results/generics-priorUncertainty-2opts-hashmh"+mhiter+"_asym2-prior4-incrmh"+prioriter/1000+"k.csv"
+//var outfile = "results/generics-priorUncertainty-hashmh"+mhiter+"_asym2-prior4-incrmh10k.csv"
 
 console.log('inference complete')
 asymutils.erpWriter(resultsERP, outfile)
