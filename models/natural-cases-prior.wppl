@@ -1,24 +1,5 @@
 // time webppl natural-cases-prior.wppl --require-js ./truthutils.js 
 
-
-var parseGeneric = function(sentence){
-	var attacksFunc = function(prop){
-		var x = prop == 'attack swimmers.' ? 'attacks swimmers.' : 
-				(prop == 'don&quotechart attack swimmers.') ? 'don&quotechart attacks swimmers.' : 
-				(prop == 'carry lyme disease.') ? 'carry Lyme disease.' : prop
-		return x
-	}
-
-	var pieces = sentence.split(' ');
-	var kind = pieces[0];
-	pieces.shift();
-	var property = attacksFunc(pieces.join(' '))
-	return [property.substring(0, property.length-1), kind]
-}
-
-
-
-
 var foreach = function(lst, fn) {
     var foreach_ = function(i) {
         if (i < lst.length) {
@@ -29,28 +10,18 @@ var foreach = function(lst, fn) {
     foreach_(0);
 };
 
-var marginalize = function(myERP, index){
-  Enumerate(function(){
-    var x = sample(myERP)
-    return x[index]
-  })
-}
-
 var subset = function(df, field, value){
 	return filter(function(d){
 		return (d[field]==value)
 	},df)
 }
 
-var bootstrap = function(lst){
-	return _.flatten(repeat(_.size(lst), function(x){return _.sample(lst,1)}))
-}
 
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
-var Priordata = truthutils.readCSV("data/real-kinds-prior-2-trials.csv").data
-var Truthdata = truthutils.readCSV("data/real-kinds-truth-1-trials.csv").data
+var Priordata = truthutils.readCSV("data/real-kinds-prior-2-trials-formatted.csv").data
+var Truthdata = truthutils.readCSV("data/real-kinds-truth-1-trials-formatted.csv").data
 
 var df_truth = map(
 	function(lst){
@@ -58,25 +29,13 @@ var df_truth = map(
 	},
 	Truthdata.slice(1))
 
-var genericSentences = map(parseGeneric,_.uniq(_.pluck(df_truth, "sentence")))
-
-var uniquePropertyPairs = _.uniq(map(function(sentence){
-	var property = sentence[0]
-	var kind = sentence[1]
-	var negation = property.split(' ')[0].slice(0,5)=='don&q'
-	return [kind, negation ? property.split(' ').slice(1).join(' ') : property].join(' ')
-}, genericSentences))
-
-
-
-
-var df = map(
+var df_prior = map(
 	function(lst){
 		return _.object(_.zip(Priordata[0],lst))
 	},
 	Priordata.slice(1))
 
-var properties = _.uniq(_.pluck(df,"property"))
+var properties = _.uniq(_.pluck(df_prior,"Property"))
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
@@ -87,69 +46,29 @@ var avoidUpperBound = function(response){
 }
 
 var alignPrevalence = function(number){
-	return avoidEnds(Math.round(number/5)/20)
+	return avoidEnds(Math.round(number/10)/10)
+//	return avoidEnds(Math.round(number/5)/20)
 }
 
-// var discretizedPriorModel = function(g, d){
-// //var discretizedPriorModel = function(hasF, g1, d1){
-// 	// var hasF = makeBetaBernoulli([shape_alpha(g0,d0), shape_beta(g0,d0)])()
-// 	// var prevalence = hasF ? beta()
-// //	var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
-// 	var bins = [0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,
-// 					 0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
 
-// 	// var kindDoesntHaveF_prevalence = 0
-// 	var discretizeBeta = function(gamma, delta){
-// 		var shape_alpha =  gamma * delta
-// 		var shape_beta = (1-gamma) * delta
-// 		var betaPDF = function(x){
-// 		  return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
-// 		}
-// 		return map(betaPDF, bins)
-// 	}
-// 	// discretization occurs here
-// 	var prevalencePrior = 
-// 		Enumerate(function(){
-// 			var kindHasF = flip(bins[discrete(discretizeBeta(g0,d0))])
-// //			var kindHasF = flip(hasF)
+// var bins = [0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,
+// 				 0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
+var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
 
-// 			var prevalenceGivenK = kindHasF ? bins[discrete(discretizeBeta(g1,d1))] : 
-// 											kindDoesntHaveF_prevalence
-
-// 			return prevalenceGivenK
-// 		})
-
-// 	return prevalencePrior
-// }
-
-
-
-// var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
-var bins = [0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,
-				 0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
-
-// var expectationDiscretizeBeta = function(gamma, delta){
-// 	var shape_alpha =  gamma * delta
-// 	var shape_beta = (1-gamma) * delta
-// 	var betaPDF = function(x){
-// 	  return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
-// 	}
-
-// 	var probs = map(betaPDF, bins)
-// 	var normed_probs = map(function(x){return x/sum(probs)}, probs)
-// 	return sum(map(function(x) {return x[0]*x[1]}, _.zip(normed_probs, bins)))
-// }
-
+var discretizeBeta = function(gamma, delta){
+	var shape_alpha =  gamma * delta
+	var shape_beta = (1-gamma) * delta
+	var betaPDF = function(x){
+	  return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
+	}
+	return map(betaPDF, bins)
+}
 
 
 var prevalenceModel = function(k, p){
 
-	// var pieces = sentence.split(' ')
-	// var k = pieces[0]
-	// var p = pieces.slice(1).join(' ')
-	var propertyData = _.pluck(subset(subset(df, "property", p),"animal", k),"prevalence")
-	// console.log(propertyData)
-	// console.log(propertyData)
+	var propertyData = _.pluck(subset(subset(df_prior, "Property", p),"Category", k),"prevalence")
+
 	var gamma = uniform(0,1)
 	var delta = uniform(0,20)
 
@@ -159,47 +78,13 @@ var prevalenceModel = function(k, p){
 						}, 0, propertyData)
 
 	factor(scr)
-
-	// query.add([sentence,'gamma'], gamma)
-	// query.add([sentence,'delta'], delta)
-	// return query
+	// console.log(scr)
 
 	var discretized_prevalence = avoidEnds(Math.round(gamma*20)/20)
+	// var discretized_prevalence = bins[discrete(discretizeBeta(gamma, delta))]
 	return discretized_prevalence
 }
 
 
-// var prevalenceModel = function(){
 
-// 	foreach(uniquePropertyPairs,
-// 		function(sentence){
-
-// 			var pieces = sentence.split(' ')
-// 			var k = pieces[0]
-// 			var p = pieces.slice(1).join(' ')
-// 			var propertyData = _.pluck(subset(subset(df, "property", p),"animal", k),"prevalence")
-
-// 			var gamma = uniform(0,1)
-// 			var delta = uniform(0,20)
-
-// 			var scr = reduce(function(dataPoint, memo) {
-// 							    return memo + betaERP.score([shape_alpha(gamma, delta),
-// 							    							 shape_beta(gamma,delta)], avoidEnds(dataPoint/100))
-// 								}, 0, propertyData)
-
-// 			factor(scr)
-
-// 			query.add([sentence,'gamma'], gamma)
-// 			query.add([sentence,'delta'], delta)
-
-// 		}
-// 	)
-// 	return query
-// }
-
-// var mhiter = 10000
-// var resultsERP = IncrementalMH(dataAnalysisModel, mhiter, {"verbose":true})
-
-// var outfile = "results/naturalkinds-prevalence_incrMH"+mhiter+".csv"
-// truthutils.naturalpriorERPWriter(resultsERP, outfile)
-// console.log('printed file...' +outfile)
+// MH(function(){return prevalenceModel("Sharks", "attack swimmers")},10)
