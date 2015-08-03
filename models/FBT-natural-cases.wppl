@@ -189,15 +189,16 @@ var model = function(){
 							// console.log(negation)
 							var responseData = _.pluck(subset(tjData, "negation", negation), "response")
 
-							var prevalence = negation ? avoidEnds(Math.round((1 - discretized_prevalence)*20)/20) : 
+							var prevalence = (negation==1) ? avoidEnds(Math.round((1 - discretized_prevalence)*20)/20) : 
 														discretized_prevalence
-							var prior = negation ? priorProbs.reverse() : priorProbs
+							var prior = (negation==1) ? priorProbs.reverse() : priorProbs
 							// console.log(prior)
 							// console.log(prevalence)
 							var genericERP = truthSpeaker2(prevalence, 
 																prior, 
 																speakerOptimality, 
 																1)
+
 							var scr3 = reduce(function(d, memo) {
 										    return memo + genericERP.score([], responseDictionary[d])
 												}, 0, responseData)
