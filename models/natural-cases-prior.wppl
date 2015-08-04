@@ -70,58 +70,83 @@ var getProbsFromERP = function(myERP, orderedSupport){
 	}, orderedSupport)
 }
 
+// var coarsenERP = function(myERP, n){
+// 	var supp = myERP.support()
+// 	var max = _.max(supp)
+// 	var min = _.min(supp)
+// 	var binwidth = (max - min) / n
+// 	var coarsenSupport = _.range(min, max, binwidth)
+
+// 	_.groupby(supp, function(s){})
+// 	foreach(supp,
+// 		function(x){
+// 			var i = truthutils.closest(x, coarsenSupport)
+			
+// 		})
+// 	var bins = 
+
+// }
+
+// var prevalenceModel = function(){
+// 	foreach(properties, function(p){
+// 		var propertyData = subset(df_prior, "Property", p)
+// 		var categories = _.uniq(_.pluck(subset(df_truth, "Property", p), "Category"))
 
 
-var prevalenceModel = function(){
-	foreach(properties, function(p){
-		var propertyData = subset(df_prior, "Property", p)
-		var categories = _.uniq(_.pluck(propertyData, "Category"))
+// 		foreach(categories, function(k){
+// 			var categoryData = _.pluck(subset(propertyData, "Category", k), "prevalence")
+// 			var gamma = uniform(0,1)
+// 			var delta = uniform(0,20)
+
+// 			console.log(gamma, delta)
+
+// 			var scr = reduce(function(dataPoint, memo) {
+// 						console.log(avoidEnds(dataPoint/100))
+// 							    return memo + betaERP.score([shape_alpha(gamma, delta),
+// 							    							 shape_beta(gamma,delta)], 
+// 							    							 avoidEnds(dataPoint/100))
+// 								}, 0, categoryData)
+
+// 			factor(scr)
+// 			// console.log(scr)
+
+// 			var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
+// 			query.add(["prevalence",p, k, "gamma"], gamma)
+// 			query.add(["prevalence",p, k, "delta"], delta)
+// 			query.add(["prevalence",p, k, "beta"], postpred)
+
+// 			// var discretized_prevalence = discretizeBeta(gamma, delta)
+// 			// foreach(_.zip(discretized_prevalence, bins),
+// 			// 	function(x){query.add(['prevalencePrior',p,k,x[1]], x[0])}
+// 			// )
+// 		})
+// 	})
+// 	return query
+// }
+
+// var mhiter = 50000
+
+// var resultsERP = IncrementalMH(prevalenceModel, mhiter, {"verbose":"true"})
+
+// var outfile = 'results/generics-tj-prevalenceGammaUNIF20-incr'+mhiter+'a.csv'
+// truthutils.erpWriter(resultsERP, outfile)
+// console.log('wrote to... ' + outfile)
 
 
-		foreach(categories, function(k){
-			var categoryData = _.pluck(subset(subset(df_truth, "Property", p), "Category", k), "prevalence")
-			var gamma = uniform(0,1)
-			var delta = uniform(0,20)
-
-			var scr = reduce(function(dataPoint, memo) {
-							    return memo + betaERP.score([shape_alpha(gamma, delta),
-							    							 shape_beta(gamma,delta)], 
-							    							 avoidEnds(dataPoint/100))
-								}, 0, categoryData)
-
-			factor(scr)
-			// console.log(scr)
 
 
-			query.add(["prevalence",p, k, "gamma"], gamma)
-			query.add(["prevalence",p, k, "delta"], delta)
-
-			// var discretized_prevalence = discretizeBeta(gamma, delta)
-			// foreach(_.zip(discretized_prevalence, bins),
-			// 	function(x){query.add(['prevalencePrior',p,k,x[1]], x[0])}
-			//)
-		})
-	})
-	return query
-}
-
-var mhiter = 1000
-
-var resultsERP = IncrementalMH(prevalenceModel, mhiter, {"verbose":"true"})
-
-var outfile = 'results/generics-tj-prevalence-incr'+mhiter+'.csv'
-truthutils.erpWriter(resultsERP, outfile)
-console.log('wrote to... ' + outfile)
 
 
 // var prevalenceModel = function(k, p){
 
-// 	var propertyData = subset(subset(df_prior, "Property", p),"Category", k),"prevalence")
+// 	var propertyData = _.pluck(subset(subset(df_prior, "Property", p),"Category", k),"prevalence")
 
+// 	// console.log(propertyData)
 // 	var gamma = uniform(0,1)
 // 	var delta = uniform(0,20)
 
 // 	var scr = reduce(function(dataPoint, memo) {
+// 						// console.log(avoidEnds(dataPoint/100))
 // 					    return memo + betaERP.score([shape_alpha(gamma, delta),
 // 					    							 shape_beta(gamma,delta)], avoidEnds(dataPoint/100))
 // 						}, 0, propertyData)
@@ -130,9 +155,14 @@ console.log('wrote to... ' + outfile)
 // 	// console.log(scr)
 
 // 	// var discretized_prevalence = avoidEnds(Math.round(gamma*10)/10)
-// 	var discretized_prevalence = bins[discrete(discretizeBeta(gamma, delta))]
-// 	return discretized_prevalence
+// //	var discretized_prevalence = bins[discrete(discretizeBeta(gamma, delta))]
+// //	return discretized_prevalence
+// 	return gamma
 // }
+
+// var results = HashMH(function(){return prevalenceModel("Robins", "are female")},1000)
+
+// expectation(results)
 
 
 

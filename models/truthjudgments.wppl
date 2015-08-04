@@ -33,15 +33,24 @@ var isNegation = function(property){
 // console.log(positiveSentences.length)
 // console.log(uniquePositiveSentences.length)
 
-var prioriters = 5000
+var prioriters = 50
 
-var prevalenceERPobject = _.object(map(function(property){
-			var cats = _.uniq(_.pluck(subset(df_truth, "Property", property),"Category"))
-			return [property, _.object(map(function(k){
-				console.log('inferring prevalence of ' + property + ' ' + k)
-				return [k, HashMH(function(){return prevalenceModel(k,property)}, prioriters, {"verbose":false})]
-			},cats))]
-},properties))
+// var prevalenceERPobject = _.object(map(function(property){
+// 			var cats = _.uniq(_.pluck(subset(df_truth, "Property", property),"Category"))
+// 			return [property, _.object(map(function(k){
+// 				console.log('inferring prevalence of ' + property + ' ' + k)
+// 				return [k, HashMH(function(){return prevalenceModel(k,property)}, prioriters, {"verbose":false})]
+// 			},cats))]
+// },properties))
+
+var prevalenceData = truthutils.readCSV("data/inferredPrevalence_gammas.csv").data
+
+var df_prevalence = map(
+	function(lst){
+		return _.object(_.zip(prevalenceData[0],lst))
+	},
+	prevalenceData.slice(1))
+
 
 // console.log(_.keys(prevalenceERPobject))
 
@@ -72,10 +81,10 @@ var modelAnalysis = function(){
 	// var cost = uniform(0,5)
 	var cost = 1
 	// var softmax = uniform(0,5)
-
+	// console.log(properties)
 	foreach(properties,
 		function(property){
-			// console.log(property)
+			console.log(property)
 			var propertyData = subset(df_truth, "positiveProperty", property)
 			var categories = _.uniq(_.pluck(propertyData, "Category"))
 
@@ -84,25 +93,33 @@ var modelAnalysis = function(){
 
 			foreach(categories,
 				function(k){
-					// console.log(k)
+					console.log(k)
 					var categoryData = subset(propertyData, "Category", k)
 					var negations = _.uniq(_.pluck(categoryData, "negation"))
 
-					var positivePropertyPrevalence = sample(prevalenceERPobject[property][k])
-
+					var prevalenceInformation = subset(subset(df_prevalence, "Category", k), "Property", property)
+					var prevBins = _.pluck(prevalenceInformation, "b")
+					var probs = _.pluck(prevalenceInformation, "h0")
+					// console.log(probs)
+					// console.log(prevBins)
+					var positivePropertyPrevalence = prevBins[discrete(probs)-1]// sample(prevalenceERPobject[property][k])
+					// console.log(positivePropertyPrevalence)
 					foreach(negations, 
 						function(n){
 						 var responseData = _.pluck(subset(categoryData, "negation", n), "response")
-						 var prior = n ? priorProbs.reverse() : priorProbs
+						 var prior = (n==1) ? priorProbs.reverse() : priorProbs
 						 // console.log(bins.length)
-						 var prevalence = n ? avoidEnds(Math.round((1 - positivePropertyPrevalence)/10)/10) : 
+						 var prevalence = (n==1) ? avoidEnds(Math.round((1 - positivePropertyPrevalence)/10)/10) : 
 													positivePropertyPrevalence
-						// console.log(prevalence)
+						console.log(prevalence)
+						console.log(prior)
+						console.log(speakerOptimality)
 			     		 var predictionERP = truthSpeaker2(prevalence, prior, speakerOptimality, 1)
+			     		 console.log('after prediction')
 							var scr = reduce(function(d, memo) {
 										    return memo + predictionERP.score([], responseDictionary[d])
 												}, 0, responseData)
-							// console.log(scr)
+							console.log(scr)
 							factor(scr)
 
 						query.add(["generic",property, k, n], 
@@ -122,7 +139,7 @@ var modelAnalysis = function(){
 	// query.add("softmax", softmax)
 	return query
 }
-
+// modelAnalysis()
 
 // priorERPobject
 
@@ -133,17 +150,30 @@ var modelAnalysis = function(){
 // var s = parseGeneric(df_truth[0]["sentence"])
 
 // console.log(s)
+// var tERP =	truthSpeaker2(0.99,[ 0.6072024814295272,
+//   0.0009705628671470384,
+//   0.010577582316734814,
+//   0.02106705403747204,
+//   0.030843261647242798,
+//   0.039620123418043815,
+//   0.04710578498300383,
+//   0.052918769877482535,
+//   0.05647055761543959,
+//   0.05667012195202359,
+//   0.050760347220097035,
+//   0.025793352635785614 ], 5.374629208818078, 1)
+
+// var tjData = subset(subset(df_truth, "positiveProperty", "have spots"),"Category", "Leopards")
+// map(function(d){return tERP.score([], responseDictionary[d])}, _.pluck(subset(tjData, "negation", 0), "response"))
+
 
 // //var tfbt = Enumerate(dataAnalysis)
-var mhiter = 50000
-var tfbt = HashMH(modelAnalysis,mhiter, {"verbose":true})
-
+var mhiter = 10
+var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true})
+// properties
 // tfbt
-var outfile = 'results/'+ 'generics-tj-fullBayesian-meanPrev-so-priorhash'+prioriters+'_hashmh'+mhiter+'.csv'
+// var outfile = 'results/'+ 'generics-tj-fullBayesian-samplePrev-so-priorhash'+prioriters+'_hashmh'+mhiter+'.csv'
+
+var outfile = 'results/'+ 'generics-tj-test'+prioriters+'_mh'+mhiter+'.csv'
 truthutils.erpWriter(tfbt, outfile)
 console.log('wrote to... ' + outfile )
-
-
-
-
-
