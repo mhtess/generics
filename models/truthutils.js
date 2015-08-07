@@ -13,11 +13,20 @@ function writeCSV(jsonCSV, filename){
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
+function closest(arr, closestTo){
+
+    var closest = Math.max.apply(null, arr); //Get the highest number in arr in case it match nothing.
+    for(var i = 0; i < arr.length; i++){ //Loop the array
+        if(arr[i] >= closestTo && arr[i] < closest) closest = arr[i]; //Check if it's higher than your number, but lower than your closest value
+    }
+    return closest; // return the value
+};
 
 var erpWriter = function(erp, filename) {
  var supp = erp.support([]);
  var csvFile = fs.openSync(filename, 'w');
- fs.writeSync(csvFile,'Item,Value,Probability\n')
+// fs.writeSync(csvFile,'Item,Value,Probability\n')
+ fs.writeSync(csvFile,'Parameter,Property, Category, Negation,Value,Probability\n')
  supp.forEach(function(s) {supportWriter(s, Math.exp(erp.score([], s)), csvFile);})
  fs.closeSync(csvFile);
 }
@@ -311,5 +320,6 @@ module.exports = {
   expectation: expectation,
   softmax:softmax,
   naturalpriorERPWriter:naturalpriorERPWriter,
-  naturalcasepriorERPWriter: naturalcasepriorERPWriter
+  naturalcasepriorERPWriter: naturalcasepriorERPWriter,
+  closest:closest
 };

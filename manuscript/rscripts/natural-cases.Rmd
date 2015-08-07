@@ -73,7 +73,7 @@ d<-bind_rows(d,d0)
 d[d$property=='are juveline',]$property<-'are juvenile'
 
 
-
+# 
 
 d$animal.parsed<- factor(unlist(Map(removeS, upperFirst(as.character(d$animal)))))
 
@@ -110,8 +110,15 @@ tj<- tj %>%
 d.out <- d.out %>%
   rename(Property = property,
          Category = animal)
-write.csv(d.out,file='~/Documents/research/generics/models/data/real-kinds-prior-2-trials-formatted.csv')
-write.csv(tj,file='~/Documents/research/generics/models/data/real-kinds-truth-1-trials-formatted.csv')
+
+
+tj$negation <- 0
+tj[grepl("dont", tj$Property),]$negation <-1
+
+tj$positiveProperty <- gsub("^.*?dont ","",tj$Property)
+
+#write.csv(d.out,file='~/Documents/research/generics/models/data/real-kinds-prior-2-trials-formatted.csv', row.names=F)
+#write.csv(tj,file='~/Documents/research/generics/models/data/real-kinds-truth-1-trials-formatted.csv',row.names=F)
 
 
 ```
@@ -270,11 +277,11 @@ Here, I don't include the intermediate step of summarising by animal kind. Inste
 
 d.interest<-d.tidy %>% filter(interest)
 
-selection <-c("are female", "have wings", "have manes", "carry malaria")
-
-ggplot(data = filter(d,property%in%selection), aes(x=prevalence))+
-  #geom_histogram()+
-  geom_density(adjust=0.5, fill='grey')+
+#selection <-c("are female", "have wings", "have manes", "carry malaria")
+ggplot(data = filter(d, prevalence > 0), aes(x=prevalence))+
+#ggplot(data = filter(d,property%in%selection), aes(x=prevalence))+
+  geom_histogram()+
+  #geom_density(adjust=0.5, fill='grey')+
   facet_wrap(~property,scales='free')+
   xlim(0,100)
 
@@ -705,25 +712,299 @@ However, large deviations from a purely within-category prevalence account remai
 
 ## lvRSA model predictions
 
+
+Inference over prevalence of category-property pairs
+###
+```{r infer.prevalence}
+m.path<-"~/Documents/research/generics/models/results/"
+
+samples = 50000
+m<-read.csv(paste(m.path,
+                  'generics-tj-prevalenceGammaUNIF20-incr', 
+                  samples, 'a.csv', sep=''))
+str(m)
+
+
+m <- data.frame(Parameter =  rep(m$Parameter, 
+                                   1+samples*m$Probability),
+                Property =  rep(m$Property, 
+                                   1+samples*m$Probability),
+                Category =  rep(m$Category, 
+                                   1+samples*m$Probability),
+                Negation =  rep(m$Negation, 
+                                   1+samples*m$Probability),
+                Value = rep(m$Value, 
+                                   1+samples*m$Probability))
+
+
+m1 <- m %>% filter(Negation=='gamma')
+m1 <- m %>% filter(Negation=='delta')
+m1 <- m %>% filter(Negation=='beta')
+
+
+
+m.prev<- m1 %>%
+  unite(Pairing, Property, Category) 
+
+ggplot(m.prev, aes(x=Value))+
+  #geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
+  geom_histogram(aes(y=..count../sum(..count..)))+
+  facet_wrap(~Pairing, scales='free')+
+  xlim(0,1)+
+  xlab("Prevalence")+
+  ylab("Posterior probability")
+
+
+
+### discretize and write to file: inferred prevalence
+h = data.frame()
+bins = c(0, 0.01,0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ,0.99, 1)
+for (i in levels(factor(m.prev$Pairing))){
+  h<-bind_rows(h,
+  data.frame(Pairing = i,
+               b = bins[1:12],
+            h0 = hist(filter(m.prev, Pairing == i)$Value, breaks = bins, 
+                      plot=F)$density))
+  print(i)
+}
+h<-h %>% separate(Pairing, into = c("Property", "Category"), sep = "_")  
+write.csv(h, file = '~/Documents/research/generics/models/data/inferredPrevalence_betas.csv', row.names = F)
+
+
+
+
+ggsave(file='~/Documents/research/generics/models/results/plots/prevalence-deltass-naturalKinds.pdf',
+       width=17,height=13)
+
+
+# m.prevPrior <- m %>%
+#   filter(Parameter== 'prevalencePrior') %>%
+#   unite(Pairing, Property, Category) %>%
+#   group_by(Pairing, Negation) %>%
+#   summarise(expectation = mean(Value),
+#             credLo = quantile(Value, probs=0.025),
+#             credHi = quantile(Value, probs=0.975)) %>%
+#   mutate(Bin = to.n(Negation))
+# 
+# 
+# 
+# ggplot(m.prevPrior, aes(x=Bin,y = expectation, fill=Pairing))+
+#   geom_bar(stat='identity', position = position_dodge())+
+#   geom_errorbar(aes(ymin=credLo, ymax=credHi), position=position_dodge())+
+#   facet_wrap(~Pairing)+
+#   guides(fill=F)
+```
+
+
+
+```{r infer.prevalencePriors}
+m.path<-"~/Documents/research/generics/models/results/"
+
+samples = 50000
+m<-read.csv(paste(m.path,
+                  #'generics-tj-prevalencePrior-incr', 
+                  #'generics-tj-prevalencePrior_hasFUNIF-has0-incr', 
+                  'generics-tj-prevalencePrior_hasFUNIF-has0-postpred-incr', 
+                  samples, 'a.csv', sep=''))
+
+m <- data.frame(Parameter =  rep(m$Parameter, 
+                                   1+samples*m$Probability),
+                Property =  rep(m$Property, 
+                                   1+samples*m$Probability),
+                Category =  rep(m$Category, 
+                                   1+samples*m$Probability),
+                Negation =  rep(m$Negation, 
+                                   1+samples*m$Probability),
+                Value = rep(m$Value, 
+                                   1+samples*m$Probability))
+str(m)
+
+  
+m.hasF <- m %>% filter(Negation=='prob_hasF')
+ggplot(m.hasF, aes(x=Value))+
+  geom_histogram()+
+  facet_wrap(~Property)
+
+ggsave(file='~/Documents/research/generics/models/results/plots/prevalencePriors-hasF-naturalKinds.pdf',
+       width=17,height=13)
+
+
+m.gamma <- m %>% filter(Negation=='gamma_within')
+ggplot(m.gamma, aes(x=Value))+
+  geom_histogram(binwidth=0.01)+
+  facet_wrap(~Property)
+
+ggsave(file='~/Documents/research/generics/models/results/plots/prevalencePriors-gammas-naturalKinds.pdf',
+       width=17,height=13)
+
+
+m.delta <- m %>% filter(Negation=='delta_within')
+ggplot(m.delta, aes(x=Value))+
+  geom_histogram()+
+  facet_wrap(~Property)
+
+ggsave(file='~/Documents/research/generics/models/results/plots/prevalencePriors-deltas-naturalKinds.pdf',
+       width=17,height=13)
+
+
+
+
+m.beta <- m %>% filter(Negation=='beta')
+ggplot(m.beta, aes(x=Value))+
+  geom_histogram(binwidth=0.02)+
+  facet_wrap(~Property)
+
+ggsave(file='~/Documents/research/generics/models/results/plots/prevalencePriors-postpredBetas-naturalKinds.pdf',
+       width=17,height=13)
+
+
+
+
+m.prevPrior <- m %>%
+  filter(Negation== 'posteriorPredictive') %>%
+  group_by(Property, Category) %>%
+  summarise(expectation = mean(Value),
+            credLo = quantile(Value, probs=0.025),
+            credHi = quantile(Value, probs=0.975)) %>%
+  mutate(Bin = to.n(Category))
+
+
+ggplot(m.prevPrior %>% filter(Bin > 0), aes(x=Bin,y = expectation, fill=Property))+
+  geom_bar(stat='identity', position = position_dodge())+
+  geom_errorbar(aes(ymin=credLo, ymax=credHi), position=position_dodge())+
+  facet_wrap(~Property)+
+  guides(fill=F)
+
+
+
+
+```
+
+reconstruct priors
+```{r reconstruct.frominferred}
+d.samples<-data.frame()
+
+shape1 = function(gamma,delta){return (gamma * delta)}
+shape2= function(gamma,delta){return ((1-gamma) * delta)}
+
+
+m.sansHyper <- m %>% filter((Negation =='prob_hasF') | (Negation=='beta'))
+
+# for model with "flat" hasProperty levels
+for (i in 1:1000){
+
+#   d.samp<-m %>%
+#     group_by(Property, Negation) %>%
+#     sample_n(1) %>%
+#     ungroup() %>%
+#     spread(Negation, Value) %>%
+#     mutate(alph = shape1(gamma_within,delta_within),
+#            bet = shape2(gamma_within, delta_within))%>%
+#     group_by(Property) %>%
+#     mutate(doesHaveF = rbinom(1,1,prob_hasF)) %>%
+#    select(-gamma_within, -delta_within) %>%
+#     group_by(Property) %>%
+#     mutate(prevalence = if(doesHaveF==0) {0} 
+#               else {rbeta(1, alph, bet)})
+  d.samp<-m.sansHyper %>%
+    group_by(Property, Negation) %>%
+    sample_n(1) %>%
+    ungroup() %>%
+    spread(Negation, Value) %>%
+#     mutate(alph = shape1(gamma_within,delta_within),
+#            bet = shape2(gamma_within, delta_within))%>%
+    group_by(Property) %>%
+    mutate(doesHaveF = rbinom(1,1,prob_hasF)) %>%
+  # select(-gamma_within, -delta_within) %>%
+  #  group_by(Property) %>%
+    mutate(prevalence = if(doesHaveF==0) {0} 
+              else {beta})
+  
+  d.samples<-bind_rows(d.samples, d.samp)
+  if ((i %% 100)==0) { print(i) }
+}
+
+# ggplot(d.samples %>% filter(prevalence!=0), 
+ggplot(d.samples, 
+          aes(x=prevalence, color=Property))+
+  geom_histogram()+
+  #scale_color_brewer(palette='Set1')+
+  xlab("Prevalence")+
+  ylab("Posterior density")+
+  theme(legend.position=c(0.7,0.65))+
+  guides(color=F)+ 
+  facet_wrap(~Property)
+
+### discretize and write to file: inferred prevalence priors
+prevprior = data.frame()
+bins = c(0, 0.01,0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ,0.99, 1)
+for (i in levels(d.samples$Property)){
+  prevprior<-bind_rows(prevprior,
+  data.frame(Property = i,
+               b = bins[1:12],
+            h0 = hist(filter(d.samples, Property == i)$prevalence, 
+                      breaks = bins, 
+                      plot=F)$density))
+  print(i)
+}
+
+ggplot(prevprior %>% filter(b > 0), aes(x= b, y = h0, fill = Property)) +
+  geom_bar(stat='identity', position=position_dodge())+
+  facet_wrap(~Property, scales='free')+
+  guides(fill=F)
+
+write.csv(h, file = '~/Documents/research/generics/models/data/inferredPrevalence_betas.csv', row.names = F)
+
+
+```
+
+
 #### posterior over parameters
 
-```{r}
+```{r fullBayesian.postparams}
 m.path<-"~/Documents/research/generics/models/results/"
 #m<-read.csv(paste(m.path, 'generics_truthJudge_rationality-n100_hashmh10000a.csv', sep=''))
 
-prioriter=10000
-samples=10000
+samples=100000
+prioriter<-50
+#prefix<-paste('fullBayesian-wPrev-so-priorhash',prioriter,'_hashmh',samples,sep='')
+prefix<-paste('fullBayesian-samplePrevfromBeta-so-incrmh',samples,sep='')
+prefix<-paste('fullBayesian-so-priorhash',prioriter,'_hashmh',samples,sep='')
+prefix<-paste('fullBayesian-samplePrev-so-priorhash',prioriter,'_hashmh',samples,sep='')
+prefix<-paste('test_incrmh',samples,sep='')
+prefix<-paste('test_incrmh100000',sep='')
 
-prefix<-paste('fullBayesian-wPrev-so-priorhash',prioriter,'_hashmh',samples,sep='')
+
+prefix<- paste('fullBayesian-prevGamma-so-incrmh',samples, sep='')
+
 m<-read.csv(paste(m.path, 'generics-tj-',prefix, '.csv', sep=''))
 
-m.prev <- m %>% 
-  filter(substring(Item,1,11) == 'prevalence_')
+m <- data.frame(Parameter =  rep(m$Parameter, 
+                                   1+samples*m$Probability),
+                Property =  rep(m$Property, 
+                                   1+samples*m$Probability),
+                Category =  rep(m$Category, 
+                                   1+samples*m$Probability),
+                Negation =  rep(m$Negation, 
+                                   1+samples*m$Probability),
+                Value = rep(m$Value, 
+                                   1+samples*m$Probability))
 
-m.prev <- data.frame(Item =  rep(m.prev$Item, 
-                                   1+prioriter*m.prev$Probability),
-                         Value = rep(m.prev$Value, 
-                                     1+prioriter*m.prev$Probability))
+# m.prev <- m %>% 
+#   filter(substring(Item,1,11) == 'prevalence_')
+m.prev <- m %>% 
+  filter(Parameter == 'prevalence') %>%
+  mutate(Negation = gsub(1," dont ", Negation),
+         Negation = gsub(0," ", Negation)) %>%
+  unite(Property1, Category, Negation, Property,sep='') %>%
+  rename(Item = Property1)
+
+
+
+# m.prev <- data.frame(Item =  rep(m.prev$Item, 
+#                                    1+prioriter*m.prev$Probability),
+#                          Value = rep(m.prev$Value, 
+#                                      1+prioriter*m.prev$Probability))
 
 ggplot(m.prev, aes(x=Value))+
   geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
@@ -734,30 +1015,37 @@ ggplot(m.prev, aes(x=Value))+
   
 
 
+# m.prevPrior <- m %>%
+#   filter(substring(Item,1,11) == 'prevalenceP') %>%
+#   separate(Item, into=c("a", "Item","Bin"), sep = "_") %>%
+#   select(-a)
+
 m.prevPrior <- m %>%
-  filter(substring(Item,1,11) == 'prevalenceP') %>%
-  separate(Item, into=c("a", "Item","Bin"), sep = "_") %>%
-  select(-a)
-
-m.prevPrior <- data.frame(Item =  rep(m.prevPrior$Item, 
-                                   1+prioriter*m.prevPrior$Probability),
-                          Bin =  rep(m.prevPrior$Bin, 
-                                   1+prioriter*m.prevPrior$Probability),
-                         Value = rep(m.prevPrior$Value, 
-                                     1+prioriter*m.prevPrior$Probability))
-
-m.prevPriorStats <- m.prevPrior %>%
-  group_by(Item, Bin) %>%
+  filter(Parameter== 'prevalencePrior') %>%
+  group_by(Property, Category) %>%
   summarise(expectation = mean(Value),
             credLo = quantile(Value, probs=0.025),
             credHi = quantile(Value, probs=0.975)) %>%
-  mutate(Bin = to.n(Bin))
+  mutate(Bin = to.n(Category))
+# m.prevPrior <- data.frame(Item =  rep(m.prevPrior$Item, 
+#                                    1+prioriter*m.prevPrior$Probability),
+#                           Bin =  rep(m.prevPrior$Bin, 
+#                                    1+prioriter*m.prevPrior$Probability),
+#                          Value = rep(m.prevPrior$Value, 
+#                                      1+prioriter*m.prevPrior$Probability))
+
+# m.prevPriorStats <- m.prevPrior %>%
+#   group_by(Item, Bin) %>%
+#   summarise(expectation = mean(Value),
+#             credLo = quantile(Value, probs=0.025),
+#             credHi = quantile(Value, probs=0.975)) %>%
+#   mutate(Bin = to.n(Bin))
 
 
-ggplot(m.prevPriorStats, aes(x=Bin,y = expectation, fill=Item))+
+ggplot(m.prevPrior, aes(x=Bin,y = expectation, fill=Property))+
   geom_bar(stat='identity', position = position_dodge())+
   geom_errorbar(aes(ymin=credLo, ymax=credHi), position=position_dodge())+
-  facet_wrap(~Item)+
+  facet_wrap(~Property)+
   guides(fill=F)
 
 
@@ -765,13 +1053,14 @@ ggplot(m.prevPriorStats, aes(x=Bin,y = expectation, fill=Item))+
 #m<- bind_rows(m,m0)
 #m$Probability <- m$Probability/2
 
-m.params<- m %>% filter(Item %in% c("speakerOptimality", "cost", "softmax"))
-m.params <- data.frame(Item =  rep(m.params$Item, 
-                                   1+samples*m.params$Probability),
-                         Value = rep(m.params$Value, 
-                                     1+samples*m.params$Probability))
+m.params<- m %>% filter(Parameter 
+                        %in% c("speakerOptimality", "cost", "softmax"))
+# m.params <- data.frame(Item =  rep(m.params$Item, 
+#                                    1+samples*m.params$Probability),
+#                          Value = rep(m.params$Value, 
+#                                      1+samples*m.params$Probability))
 ggplot(m.params, aes(x=Value))+
-  geom_histogram(binwidth=0.05,aes(y=..count../sum(..count..)))+
+  geom_histogram(aes(y=..count../sum(..count..)))+
   #facet_wrap(~Item, scales='free')+
   xlim(0,10)+
   xlab("Speaker Optimality")+
@@ -784,22 +1073,32 @@ quantile(m.params$Value, probs = c(0.025,0.975))
 ```
 
 #### posterior predictive
-```{r}
+```{r fullBayesian.pp}
+  
+m.pp<- m %>% filter(!((Parameter %in% 
+                         c("speakerOptimality", "cost", "softmax", 'gamma',
+                           'delta')) |
+                        (substring(Parameter,1,10) == 'prevalence'))) %>%
+    mutate(Negation = gsub(1," dont ", Negation),
+         Negation = gsub(0," ", Negation)) %>%
+    unite(sentence, Category, Negation, Property,sep='')
 
-m.pp<- m %>% filter(!((Item %in% c("speakerOptimality", "cost", "softmax")) |
-                        (substring(Item,1,10) == 'prevalence')))
-m.pp <- data.frame(Item =  rep(m.pp$Item, 
-                                   1+samples*m.pp$Probability),
-                         Value = rep(m.pp$Value, 
-                                     1+samples*m.pp$Probability))
+# 
+# m.pp <- data.frame(Item =  rep(m.pp$Item, 
+#                                    1+samples*m.pp$Probability),
+#                          Value = rep(m.pp$Value, 
+#                                      1+samples*m.pp$Probability))
 m.pp.exp<- m.pp %>%
-  rename(sentence = Item) %>%
+  #rename(sentence = Item) %>%
   group_by(sentence) %>%
   summarise(expectation = mean(Value),
             credHi = quantile(Value, probs = 0.975),
             credLo = quantile(Value, probs = 0.025)) %>%
-  mutate(sentence = gsub('&quotechar','', sentence),
-         sentence = gsub('lyme','Lyme', sentence))
+  mutate(sentence = paste(sentence, '.', sep=''))
+
+# %>%
+#   mutate(sentence = gsub('&quotechar','', sentence),
+#          sentence = gsub('lyme','Lyme', sentence))
 
 
 combined.model.data<- left_join(m.pp.exp, m.tidy, by='sentence')
@@ -840,6 +1139,8 @@ qplot(data=combined.model.data,
   xlab("\n model posterior predictive")+
   ylab("proportion of agree's \n")+
   guides(color=F)+
+  xlim(-0.05,1.05)+
+  ylim(-0.05,1.05)+
   coord_fixed()
 #+
 #  theme_blackDisplay()
