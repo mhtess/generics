@@ -1,4 +1,4 @@
-// time webppl natural-cases-prior.wppl --require-js ./truthutils.js 
+// time webppl natural-prevalence.wppl --require-js ./truthutils.js 
 
 var foreach = function(lst, fn) {
     var foreach_ = function(i) {
@@ -22,7 +22,6 @@ var dataFrame = function(rawCSV){
         return _.object(_.zip(rawCSV[0],row))
     }, rawCSV.slice(1))
 }
-
 
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
@@ -48,7 +47,6 @@ var alignPrevalence = function(number){
 //	return avoidEnds(Math.round(number/5)/20)
 }
 
-
 // var bins = [0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,
 // 				 0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
 var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
@@ -68,41 +66,27 @@ var getProbsFromERP = function(myERP, orderedSupport){
 	}, orderedSupport)
 }
 
-var prevalenceModel = function(){
-	foreach(properties, function(p){
-		var propertyData = subset(df_prior, "Property", p)
-		var categories = _.uniq(_.pluck(subset(df_truth, "Property", p), "Category"))
+var prevalenceModel = function(p, k){
+
+	var propertyData = subset(df_prior, "Property", p)
+	var categoryData = _.pluck(
+						subset(propertyData, "Category", k), 
+						"prevalence")
+
+	var gamma = uniform(0,1)
+	var delta = uniform(0,20)
 
 
-		foreach(categories, function(k){
-			var categoryData = _.pluck(subset(propertyData, "Category", k), "prevalence")
-			var gamma = uniform(0,1)
-			var delta = uniform(0,20)
+	var scr = reduce(function(dataPoint, memo) {
+					    return memo + betaERP.score([shape_alpha(gamma, delta),
+					    							 shape_beta(gamma,delta)], 
+					    							 avoidEnds(dataPoint/100))
+						}, 0, categoryData)
 
-			console.log(gamma, delta)
+	factor(scr)
+	// console.log(scr)
 
-			var scr = reduce(function(dataPoint, memo) {
-						console.log(avoidEnds(dataPoint/100))
-							    return memo + betaERP.score([shape_alpha(gamma, delta),
-							    							 shape_beta(gamma,delta)], 
-							    							 avoidEnds(dataPoint/100))
-								}, 0, categoryData)
+	var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
 
-			factor(scr)
-			// console.log(scr)
-
-			var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
-			query.add(["prevalence",p, k, "gamma"], gamma)
-			query.add(["prevalence",p, k, "delta"], delta)
-			query.add(["prevalence",p, k, "beta"], postpred)
-
-			// var discretized_prevalence = discretizeBeta(gamma, delta)
-			// foreach(_.zip(discretized_prevalence, bins),
-			// 	function(x){query.add(['prevalencePrior',p,k,x[1]], x[0])}
-			// )
-		})
-	})
-	return query
+	return avoidEnds(Math.round(postpred*10)/10)
 }
-
-var mhiter = 50000

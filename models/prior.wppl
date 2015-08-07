@@ -94,15 +94,15 @@ var priorModel = function(c){
 // 		// var kindDoesntHaveF_prevalence = 0.01
 // 		var kindDoesntHaveF_prevalence = 0
 
-// 		var discretizeBeta = function(gamma, delta){
-// 			var shape_alpha = gamma * delta
-// 			var shape_beta = (1-gamma) * delta
-// 			var betaPDF = function(x){
-// 			  return Math.pow(x,shape_alpha-1)*
-// 			      Math.pow((1-x),shape_beta-1)
-// 			}
-// 			return map(betaPDF, bins)
-// 		}
+		var discretizeBeta = function(gamma, delta){
+			var shape_alpha = gamma * delta
+			var shape_beta = (1-gamma) * delta
+			var betaPDF = function(x){
+			  return Math.pow(x,shape_alpha-1)*
+			      Math.pow((1-x),shape_beta-1)
+			}
+			return map(betaPDF, bins)
+		}
 
 // 		var s = sample(heirarchicalERP)
 

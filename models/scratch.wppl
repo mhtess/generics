@@ -1,1 +1,25 @@
-!(5==5)
+//'0'===1 ? "okay" : "no"
+// webppl scratch.wppl --require-js ./truthutils.js 
+
+var subset = function(df, field, value){
+	return filter(function(d){
+		return (d[field]==value)
+	},df)
+}
+
+var prevalenceData = truthutils.readCSV("data/inferredPrevalence_gammas.csv").data
+
+var df_prevalence = map(
+	function(lst){
+		return _.object(_.zip(prevalenceData[0],lst))
+	},
+	prevalenceData.slice(1))
+
+df_prevalence
+
+var bins = _.pluck(subset(subset(df_prevalence, "Category", "Sharks"),"Property", "attack swimmers"),"b")
+var probs = _.pluck(subset(subset(df_prevalence, "Category", "Sharks"),"Property", "attack swimmers"),"h0")
+bins[discrete(probs)-1]
+//probs.len
+
+// prevalenceData

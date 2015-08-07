@@ -36,7 +36,6 @@ var df_prior = map(
 	Priordata.slice(1))
 
 // var genericSentences = map(parseGeneric,_.uniq(_.pluck(df_truth, "sentence")))
-
 // var uniquePropertyPairs = _.uniq(map(function(sentence){
 // 	var property = sentence[0]
 // 	var kind = sentence[1]

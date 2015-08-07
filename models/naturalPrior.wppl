@@ -1,0 +1,66 @@
+// time webppl natural-prior.wppl --require-js ./truthutils.js --require-wppl ./natural-prevalence.wppl 
+
+
+// var discretizedPriorModel = function(g0, d0, g1, d1){
+var discretizedPriorModel = function(hasF, g1, d1){
+
+	var getProbsFromERP = function(myERP, orderedSupport){
+		return map(function(s){
+			Math.exp(myERP.score([], s))
+		}, orderedSupport)
+	}
+
+	// var hasF = makeBetaBernoulli([shape_alpha(g0,d0), shape_beta(g0,d0)])()
+	var kindDoesntHaveF_prevalence = 0
+	// discretization occurs here
+	var prevalencePrior = 
+		Enumerate(function(){
+			// var kindHasF = flip(bins[discrete(discretizeBeta(g0,d0))])
+			var kindHasF = flip(hasF)
+
+			var prevalenceGivenK = kindHasF ? 
+										bins[discrete(discretizeBeta(g1,d1))] : 
+										kindDoesntHaveF_prevalence
+
+			return prevalenceGivenK
+		})
+	return getProbsFromERP(prevalencePrior, 
+							[0, 0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99])
+}
+
+var priorModel = function(p){
+
+	var propertyData = _.pluck(subset(df_prior, "Property", p),"prevalence")
+
+	// var gamma_across = uniform(0,1)
+	// var delta_across = uniform(0,20)
+	var prob_hasF = beta(1,1)
+	// var prob_hasF = beta(shape_alpha(gamma_across, delta_across),
+	// 					  shape_beta(gamma_across, delta_across))
+
+	var scr1 = reduce(function(d, memo) {
+					    return memo + bernoulliERP.score([prob_hasF], d!=0)
+						}, 0, propertyData)
+	// console.log(scr1)
+	factor(scr1)
+
+	var gamma = uniform(0,1)
+	var delta = uniform(0,20)
+	
+
+	var scr2 = reduce(function(d, memo) {
+						// console.log(d)
+						var x = d==0? 0 : betaERP.score([shape_alpha(gamma, delta), 
+					    								shape_beta(gamma, delta)], 
+					    								alignPrevalence(d))
+					    return memo + x
+						}, 0, propertyData)
+	factor(scr2)
+	// console.log(scr)
+	return discretizedPriorModel(prob_hasF, gamma, delta)
+}
+
+
+// MH(function(){return priorModel("attack swimmers")}, 10)
+
+
