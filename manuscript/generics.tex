@@ -167,7 +167,7 @@
 
 
 %\title{Words are vague: A prevalence-based account of generic language}
-\title{Generic language is vague yet rationally understood}
+\title{Generic language is vague yet rationally / pragmatically understood}
 % \title{Generic statements are vague}
 % \author{{\large \bf Michael Henry Tessler, Noah D. Goodman } \\
 %	\{mhtessler, ngoodman\}@stanford.edu \\
@@ -189,11 +189,11 @@
 Generic utterances (e.g. ``Dogs bark'') express ideas about categories in the world and are ubiquitous in everyday conversation. 
 Despite their prevalence, the meanings of generic statements are puzzling to formal theories. 
 It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). 
-If this is correct, however, there should be some threshol on the percentage of the category that must display the property (e.g. some criterion number of dogs that bark) for the utterance to be true.
-This threshold is notoriously difficult to define for generics, which can be true based on very little evidence but which can also imply near-universality of the property. 
-Here, we formalize a vague semantics and a conversational pragmatics for generic language understanding: The threshold for acceptance is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
+If this is correct, however, there should be some threshold on the percentage of the category that must display the property (e.g. some criterion number of dogs that bark) for the utterance to be true.
+This threshold is notoriously difficult to define for generics, which are flexible enough to be true based on very little evidence while also implying near-universality of the property. 
+Here, we formalize a semantics and pragmatics for generic language understanding, based on the idea that generics are vague: The threshold for acceptance is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
 We explain how this simple semantics can account for two central phenomena surrounding generic language: The flexible conditions by which a generic is true and the variable implications of generic language. 
-Inferences from the model are driven largely by the listeners' \emph{a priori} beliefs about the property, which we measure using a novel behavioral and data-analytic technique.
+Inferences from the model are driven largely by the listeners' \emph{a priori} beliefs about the property, which we measure empirically.
 %We predict human acceptability judgments and interpretations of generics of both familiar and novel categories with strong quantitative accuracy using a novel behavioral and data-analytic technique for measuring beliefs about the prevalence of properties coupled with our model of generic language. 
 This work suggests that the semantics of generic statements can treated as scalar and that listeners' expectations in the form of prior beliefs heavily govern generic interpretation. 
 
@@ -233,7 +233,7 @@ This work suggests that the semantics of generic statements can treated as scala
 
 
 \textbf{Keywords:} 
-generics; pragmatics; vagueness; bayesian model
+generics; probabilisitic pragmatics
 \end{abstract}
 
 %\begin{aquote}{John Locke, \emph{An Essay Concerning Human Understanding (1690)}}
@@ -256,21 +256,23 @@ Few would argue with the truth of this sentence, yet its meaning is difficult to
 %If you were talking with an adult, you might use a more nuanced statement (e.g. by talking about the subcategory Mammals).
 %Words are vague because ideas are vague, Locke argues. In making this argument, he falls into the habit of communication that we all fall into: using generalizations about members of a category---in this case, \emph{[articulate] sounds}. 
 %
-This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category.  Generics are one of the simplest linguistic constructs. 
-They have no explicitly marked operator and yet children as young as two or three can correctly understand that they refer to categories and not just examples in a scene \cite{Cimpian2008}. 
+This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category (e.g. \emph{animals}).  
+Generics are one of the simplest linguistic constructs. 
+They have no explicitly marked operator and yet children as young as two or three can correctly understand that they refer to categories and not just a plurality in a scene \cite{Cimpian2008}. 
 Generics are ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008} and are thought to be essential to the growth of conceptual knowledge \cite{Gelman2004}. 
 At the same time, generics are the primary vehicle by which stereotypes are conveyed \cite{GelmanEtAl2004, Cimpian2010motivation, Leslie2015}.
 Despite their centrality to cognitive development and everyday conversation, generic utterances have elusive meanings. % stable meanings for generic sentences are hard to come by.
 
-The semantics of generics is often contrasted with that of quantifier sentences, which are commonly understood in terms of the prevalence of a property. 
+The semantics of generics is often contrasted with that of quantifier sentences, which are commonly understood in terms of the prevalence of a property and are straightforward to evaluate for truth. 
 For example, for ``\emph{Some} animals breathe oxygen.'' to be true, then there must be at least one animal that does so. 
-``\emph{Most} animals breathe oxygen.'' is only true if more than half do. 
-Similarly, if ``\emph{All} animals breathe oxygen.'' then there really can be no exceptions: 100\% of animals must breathe oxygen for the sentence to be valid. 
+``\emph{Most} animals breathe oxygen.'' is true because more than half do. 
+``\emph{All} animals breathe oxygen.'' is actually not true because there are three species of creatures called \emph{lorica} that live 2.2 miles underwater on the ocean floor in an oxygen-free environment \cite{Danovaro2010}; ``all'' means 100\%. 
+%then there really can be no exceptions: 100\% of animals must breathe oxygen for the sentence to be valid. 
 But what about ``Animals breathe oxygen.''? 
-Is there some prevalence beyond which the generic is true?
+Is there some prevalence beyond which the generic becomes true?
 
 Prevalence based accounts are difficult to defend. 
-At first glance, generics seem like universally-quantified statements (i.e. ``All animals breathe oxygen''), but generics are resilient to counter-examples\footnote{``Animals breathe oxygen'' is true even though there are three species of creatures called \emph{lorica} that live 2.2 miles underwater on the ocean floor in an oxygen-free environment \cite{Danovaro2010}}. 
+At first glance, generics seem like universally-quantified statements (i.e. ``All animals breathe oxygen''), but generics are resilient to counter-examples like \emph{lorica}. 
 Interpreting the generic as meaning ``most'' captures many cases, but cannot explain why ``Robins lay eggs'' and ``Mosquitos carry West Nile Virus'' both seem true, despite the fact that only adult female robins lay eggs and that less than 1\% of mosquitos actually carry West Nile Virus. 
 The only quantifier that could satisfy all of these conditions is the weak ``some''.  
 Yet, the semantics for ``some'' cannot be the semantics of generics:  Upon hearing a generic, listeners are wont to interpret the sentence as applying to \emph{all or nearly all} of a category \cite{Gelman2002, Cimpian2010}. 
@@ -305,12 +307,12 @@ The fact that the distributions of heights for buildings and people are differen
 
 In a similar way, we posit a simple, scalar semantics for generics in which they express that the probability of the property given the category-----i.e. the property's \emph{prevalence}-----is above a threshold (cf. \citeA{Cohen1999}). We treat this threshold as unknown property of the language and thus, as a variable that must be reasoned about in context. 
 
-It might seem paradoxical that language which gets so much usage should be vague. 
-Shouldn't speakers express their ideas as clearly as possible?
-Language evolutionary pressures suggest that such underspecification is in fact useful, given that there is some context through which the uncertainty can be resolved \cite{Piantadosi2012}.
-In this work, context takes the shape of a listener's beliefs about the property in question. This, coupled with 
+It might seem paradoxical that vague language should get so much usage. 
+Shouldn't speakers want to express their ideas as clearly as possible?
+Language evolutionary pressures suggest that, to the contrary, such underspecification is in fact useful, given that there is some context through which the uncertainty can be resolved \cite{Piantadosi2012}.
+In this work, context takes the shape of a listener and speaker's shared beliefs (i.e. common ground) about the property in question. This, coupled with 
 %With uncertainty in the language, the listener figures out what the words mean by drawing upon her prior beliefs---in this case about the prevalence of the property---in addition to harnessing 
-standard inferences from conversational pragmatics, allows the listener to figure out the meaning of the otherwise vague words.
+standard inferences from conversational pragmatics, allows the listener to figure out the meaning of the otherwise vague utterance.
 We extend the \emph{Rational Speech-Acts} (RSA) framework \cite{Frank2012,Goodman2013} to consider how a speaker determines what generics are acceptable to produce and how a listener might interpret generics differently depending on her belief's about the property in question. 
 This formalism gives a new, computational perspective on how ideas are conveyed and how beliefs play a central role in understanding language.
 
@@ -323,9 +325,9 @@ This formalism gives a new, computational perspective on how ideas are conveyed 
 \subsection{The phenomena}
 
 One important test for a theory of generic meaning is that it captures the intuition shared by language users about the truth of certain generic sentences. To test the predictions of this model, we must first measure participants' prior expectations about the prevalence of the properties in question. Critically, however, we must measure not only prior expectations about the prevalence of the property for the category \emph{alone} but the distribution of expectations across categories (i.e. not only the probability of laying eggs for a robin, but also the probability of laying eggs for a cow and other animal species).  
-We show how prevalence within the category alone is insufficient to explain generic acceptability, but a model that considers the distribution over prevalence is sufficient to explain the variability in truth judgments.
+We show how prevalence within the category alone is insufficient to explain generic acceptability, but a model that reasons pragmatically about the distribution over prevalence is sufficient to explain the variability in truth judgments.
 
-Generic statements not only vary in acceptability, but also in how they are interpreted. \citeA{Gelman2002} found that listeners are wont to interpret novel facts about animals in the form of generics (e.g. ``Bears like to eat ants.'') as applying to nearly all of the category. Interpretations of bare plurals of novel animals with accidental properties (e.g. ``Morseths have wet fur.'') were found to be much weaker \cite{Cimpian2010}. These differences in interpretation are thought to be a result of different beliefs about the properties in question. This intuition is readily formalized in our language understanding model. Beliefs about properties are measured in independent experiments to serve as a foundation for the model's predictions. 
+Generic statements are not only puzzling because of their variable truth conditions, but also because of how they are interpreted. \citeA{Gelman2002} found that listeners  interpret novel facts about animals in the form of generics (e.g. ``Bears like to eat ants.'') as applying to nearly all of the category. Interpretations of bare plurals of novel animals with accidental properties (e.g. ``Morseths have wet fur.'') were found to be much weaker \cite{Cimpian2010}. These differences in interpretation are thought to be a result of different beliefs about the properties in question. This intuition is readily formalized in our language understanding model. Beliefs about properties are measured in independent experiments to serve as a foundation for the model's predictions. 
 We compare our model's predictions to experiments examining the acceptability of naturalistic generics and interpretations of generics about novel categories.
 
 %\citeA{Cimpian2010} employed a paradigm to assess the relationship between the \emph{truth judgments} and \emph{interpretations} of novel generic statements. In these studies, the \emph{interpretations} of generic statements were measured by asking participants to report the prevalence of the property within the category upon hearing the associated generic, e.g. ``Lorches have purple feathers. What \% of lorches do you think have purple feathers?'' In this task, subjects reported that almost all of the category had the property (i.e. almost all lorches have purple feathers.). In the \emph{truth judgments} task, participants were given prevalence information (e.g. ``30\% of lorches have purple feathers.'') and asked if the associated generic statement (i.e. ``Lorches have purple feathers'') was true or false. The results suggest an apparent ``paradox'' in the form of an asymmetry between the truth judgments of generics and the interpretations of generics:  Generics are accepted at prevalence levels as low as 10\%, but are interpreted as applying to nearly 100\% of the category\footnote{This asymmetry was absent for the sentences that used the quantifier ``most'', arguably the quantifier with the most similar meaning to generics \red{[cite]}}.  In a follow-up experiment, the authors showed how the interpretations of generics can be greatly weakened if the property in question is not a biological property (e.g. ``purple feathers'') but instead an accidental property (e.g. ``muddy feathers''). We replicate these findings and show how the apparent ``paradox'' can be explained by the interaction of an uncertain semantics with a prior distribution over the prevalence of biological properties. We further show how the interpretations of generics can be substantially weakened when the listener considers the distribution of prevalence for accidental properties.
@@ -384,7 +386,7 @@ The Rational Speech-Act (RSA) theory of language understanding \cite{Frank2012, 
 
 Recently, the Rational Speech-Act theory has been extended to account for gradable adjectives like \emph{tall}, which lack single, context-invariant meanings. 
 This is done by positing the semantics of the word (``tall'') is a distribution over criteria (``anything could count as tall given the right context''). 
-This uncertainty is resolved through a listener consulting her beliefs about the domain in question (``what are possible heights of X?'') as well as taking into account the communicative force of a speech act (``why did the speaker bother to say ``John is tall''?'').
+This uncertainty is resolved through a listener consulting her beliefs about the domain in question (``what are probable heights of a person?'') as well as taking into account the communicative force of a speech act (``why did the speaker bother to say ``John is tall'' when he could have not said anything?'').
 The vagueness and context-sensitivity of gradable adjectives are accounted for by a formal model of these principles.
 
 We propose that generics are vague in the same way that gradable adjectives, like \emph{tall}, are vague. 
@@ -428,14 +430,15 @@ The listener's intuitive theory of the speaker attempts to resolve the threshold
 
 The degree to which the speaker's utterances are optimal for a given intended-prevalence is governed by a soft-max decision rule with rationality parameter  $\lambda$ \cite{Luce1959}. 
 The literal listener ($L_0$) has access to the threshold $\theta$ and thus knows exactly what the speaker meant to communicate. 
-This idealized listener simply uses Bayes' Rule where the likelihood function $\denote{g(\theta)}: X \rightarrow \text{Boolean}$ is a truth-function specifying the literal meaning of the generic. 
+This idealized listener simply uses Bayes' Rule where the likelihood function $\denote{g(\theta)}: X \rightarrow \text{Boolean}$ is a truth-function specifying the literal meaning of the generic given a threshold $\theta$. 
 The literal content in Eq.~\ref{eq:L0} is given by $\denote{g(\theta)}= \{x | x > \theta \}$ as in Eq.~\ref{eq:birds}.
 
 
 We call this type of model a ``lifted threshold'' model because $\theta$, traditionally thought to be part of the semantic content of the utterance (and thus perfectly transparent to all in the conversation), has been underspecified in the semantics but is locally fixed through pragmatic reasoning.
- How does a listener decide upon a threshold? As first demonstrated by \citeA{Lassiter2013}, the inference about the threshold is a balance between truthfulness and informativity. Consider again the example of ``John is tall''. To make ``tall'' maximally truthful, the listener would set $\theta$ to be very low; no matter what John's height actually is, the utterance will be true since the threshold for tallness is low. Hence, truthfulness would be maximized. 
- Truthfulness is not the only constraint in conversation however; there is also the pressure to be informative. A maximally informative ``tall'' would correspond to a threshold that carries with it the maximum surprisal or information gain. 
- This would be a threshold that very few individuals could cross; this would correspond to something like ``the tallest''. 
+ How does a listener decide upon a threshold? \citeA{Lassiter2013} demonstrated the inference about the threshold is a balance between truthfulness and informativity. Consider again the example of ``John is tall''. To make ``tall'' maximally truthful, the listener would set $\theta$ to be very low (e.g. 2 feet tall); no matter what John's height actually is, the utterance will be true since the threshold for tallness is so low. Here, truthfulness would be maximized. 
+ Truthfulness is not the only constraint in conversation however; there is also the pressure to be informative. 
+ A maximally informative ``tall'' would correspond to a threshold that carries with it the maximum surprisal or information gain on the part of the listener. 
+ This would be a threshold that very few individuals could cross (e.g. 7 feet tall); this would correspond to something like ``the tallest''. 
  The lifted-variable pragmatics model seeks a balance between these two pressures. 
  The result is a threshold that signifies that ``John is tall'' means he is ``significantly taller than average''.
  
@@ -568,6 +571,9 @@ x & \sim \begin{cases}
 
 where, $h$ is a variable indicating whether or not the property is present within a particular species. 
 
+
+We also inferred the likely prevalence of each animal category and property pair of interest, to be used in the generic truth judgment task (Expt.~1b). The results of this can be seen in Table \ref{tab:expt1}.
+
 %\begin{align*}
 %d_{across} \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\
 %d_{within} \sim \text{Beta}(\gamma_{within}, \delta_{within}) 
@@ -597,7 +603,7 @@ From the 300 free responses for the animal production part of the task, 105 dist
 
 \begin{figure}
 \centering
-    \includegraphics[width=0.8\columnwidth]{priors-exp1a-4types}
+    \includegraphics[width=0.8\columnwidth]{prevalence_priors_inferred-gammas.pdf}
     \caption{Four example elicited prevalence priors inferred using a Bayesian statistical model. 
     Density plots reveal qualitatively different distributions for different properties. 
     Each sample from these distributions can be thought of to correspond to a particular animal category, representing the prevalence of the property within that animal category.}
@@ -677,7 +683,7 @@ However, large deviations from a purely within-category prevalence account remai
 
 \subsection{Lifted-threshold model predictions}
 
-The model specified in Section \ref{sec:model} reasons about the likely prevalence that a generic implies given a distribution over the prevalence of the property. 
+The model specified in Section \ref{sec:model} reasons about the likely prevalence that a listener will infer given an informative speaker, a generic sentence and a distribution over the prevalence of the property. 
 In this way, the model takes into account the prevalence of the property both within- and across-categories.
 We explore the predictions of this model, using the empirical priors elicited in Expt.~1a. 
 We compare these predictions to the truth judgment data observed in Expt.~1b.
@@ -685,8 +691,11 @@ We compare these predictions to the truth judgment data observed in Expt.~1b.
 \subsubsection{Posterior over model parameter}
 
 The model has one free parameter, the speaker rationality in Equation \ref{eq:S1}. 
+We also explicitly model guessing behavior as a source of contamination of the observed data. This is done by positing the data generating process is a mixture of random guessing and pragmatic reasoning. We put uncertainty over the mixture parameter $\phi$, which represents the proportion of the data that can be better explained by random guessing than by our model of pragmatic reasoning.
+In this way, $\phi$ provides a crude measure of goodness of fit. 
 We put a uniform prior over this variable and infer its credible values using a Bayesian statistical model. 
-To learn about the \emph{a posteriori} credible values of our model parameter, we used the probabilistic programming language WebPPL \cite{dippl} to collect 2 chains of 10,000 samples using the Metropolis-Hastings algorithm. 
+
+To learn about the \emph{a posteriori} credible values of our model parameter, we used the probabilistic programming language WebPPL \cite{dippl} to collect \red{X} chains of \red{Y} samples using the Metropolis-Hastings algorithm. 
 The estimated posterior density of this parameter is shown in Figure \ref{fig:rationality}. 
 This parameter represents the speaker's belief in how rational the hypothetical listener believes he is when choosing to say the generic (over saying nothing). 
 The 95\% Credible Interval is [3.79,4.70].
@@ -1291,7 +1300,7 @@ Generics are vague, but predictable and useful.
 
 \appendix
 \section{Stimuli used in Experiment 1}
-\label{sec:appendix}
+\label{sec:appendix}	
 
 \begin{table}[h]
 \begin{tabular}{| l || l | l | l |}
@@ -1324,6 +1333,8 @@ Novel                         & 21. Mosquitos attack swimmers.       &          
 \hline
 
 \end{tabular}
+\caption{Stimuli used in Experiment 1.}
+\label{tab:expt1}
 \end{table}
 
 
