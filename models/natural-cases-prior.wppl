@@ -33,7 +33,7 @@ var Truthdata = truthutils.readCSV("data/real-kinds-truth-1-trials-formatted.csv
 var df_prior = dataFrame(Priordata)
 var df_truth = dataFrame(Truthdata)
 
-var properties = _.uniq(_.pluck(df_prior,"Property"))
+// var properties = _.uniq(_.pluck(df_prior,"Property"))
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
@@ -68,6 +68,8 @@ var getProbsFromERP = function(myERP, orderedSupport){
 	}, orderedSupport)
 }
 
+var properties = ["are female", "carry malaria"]
+
 var prevalenceModel = function(){
 	foreach(properties, function(p){
 		var propertyData = subset(df_prior, "Property", p)
@@ -79,19 +81,34 @@ var prevalenceModel = function(){
 			var gamma = uniform(0,1)
 			var delta = uniform(0,20)
 
-			console.log(gamma, delta)
 
-			var scr = reduce(function(dataPoint, memo) {
-						console.log(avoidEnds(dataPoint/100))
-							    return memo + betaERP.score([shape_alpha(gamma, delta),
-							    							 shape_beta(gamma,delta)], 
-							    							 avoidEnds(dataPoint/100))
-								}, 0, categoryData)
+			var discreteBetaProbs = discretizeBeta(gamma, delta)
+			var discreteBetaProbsNormalized = map(function(x){return x/sum(discreteBetaProbs)}, discreteBetaProbs)
+
+
+			// console.log(gamma, delta)
+
+			var scr = reduce(function(d, memo) {
+						// console.log(p+ k+ ' prev = ' +  d + '  aligned prev = ' + alignPrevalence(d))
+						// console.log(bins.indexOf(alignPrevalence(d)))
+						// console.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
+						var x = Math.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
+					    return memo + x
+						}, 0, categoryData)
+
+			// var scr = reduce(function(dataPoint, memo) {
+			// 			console.log(avoidEnds(dataPoint/100))
+			// 				    return memo + betaERP.score([shape_alpha(gamma, delta),
+			// 				    							 shape_beta(gamma,delta)], 
+			// 				    							 avoidEnds(dataPoint/100))
+			// 					}, 0, categoryData)
 
 			factor(scr)
 			// console.log(scr)
 
 			var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
+			var postpred = bins[discrete(discreteBetaProbsNormalized)]
+
 			query.add(["prevalence",p, k, "gamma"], gamma)
 			query.add(["prevalence",p, k, "delta"], delta)
 			query.add(["prevalence",p, k, "beta"], postpred)
@@ -106,3 +123,14 @@ var prevalenceModel = function(){
 }
 
 var mhiter = 50000
+
+
+var resultsERP = IncrementalMH(prevalenceModel, mhiter, {"verbose":"true"})
+// resultsERP
+// var outfile = 'results/generics-tj-prevalencePrior_hasFUNIF-has0-postpred-incr'+mhiter+'a.csv'
+var outfile = 'results/generics-tj-prevalence_discreteBeta-delta50-postpred-incr'+mhiter+'a.csv'
+
+truthutils.erpWriter(resultsERP, outfile)
+console.log('wrote to... ' + outfile)
+
+
