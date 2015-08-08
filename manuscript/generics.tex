@@ -531,26 +531,95 @@ Complete instructions given to participants can be seen in Appendix \ref{sec:pri
 
 
 
+\subsubsection{Bayesian data analysis}
+\label{sec:bda1}
 
+There is important latent structure in the prior elicitation task. 
+Responses $d$ can be categorized into those that reflect the property is present in the species or absent in the species. 
+If the property is absent, then the response is 0\% of the species has the property. 
+The number of 0 responses act as an indicator of the prevalence of the property \emph{across categories} $\theta_{across}$ (for example, ``are female'' would have very few 0\% responses, whereas ``have feathers'' would receive appreciably more, owing to the fact the prevalence of these properties \emph{across categories} is different).
+
+\begin{align*}
+d_{across} & \sim \text{Bernoulli}(\theta_{across}) \\
+d_{across} & = \begin{cases}
+				1 & \mbox{if } d > 0 \\
+				0 & \mbox{if } d = 0 
+				\end{cases}
+\end{align*}
+
+For those responses that reflect the property is present ($d > 0$), assume those responses come from a distribution with some mean and variance ($\gamma_{within}, \gamma_{across}$), and try to infer that distribution. 
+Since the responses vary between 0 - 100, the natural distribution is a Beta distribution. 
+
+$$
+d_{across} \sim \text{Beta}(\gamma_{within}, \gamma_{across})   \mbox{ if } d > 0
+$$
+
+We implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{across}, \gamma_{within}, \delta_{within}$ with X chains of Y samples.
+
+To reconstruct the likely distribution of  prevalence both within- and across- categories, we took samples from the posterior predictive distribution of $d$ by running the forward model: 
+
+\begin{align*}
+h & \sim \text{Bernoulli}(\theta_{across}) \\
+x & \sim \begin{cases} 
+		\text{Beta}(\gamma_{within}, \delta_{within}) &\mbox{if } h = 1 \\ 
+				0 & \mbox{if } h=0
+				\end{cases} 
+\end{align*}
+
+where, $h$ is a variable indicating whether or not the property is present within a particular species. 
+
+%\begin{align*}
+%d_{across} \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\
+%d_{within} \sim \text{Beta}(\gamma_{within}, \delta_{within}) 
+%\end{align*}
+%The parameters $\gamma$ and $\delta$ correspond to the mean and variance (formally, the concentration), respectively, of prevalence for each of the across- and within- distributions. 
+%We put identical, uninformative priors on these parameters:
+%\begin{align*}
+%\gamma & \sim \text{Uniform}(0,1) \\
+%\delta & \sim \text{Uniform}(0,10)
+%\end{align*}
+%To construct single prevalence distributions reflecting both the within- and across- category prevalence (as we have for Expt.~1a), we assume that the distribution is a mixture of categories that have the property and categories that don't have the property\footnote{This is similar in spirit to Hurdle Models of count data used in clinical trials where the observed proportion of zeros is greater than one would expect from classical models of count data like the Poisson model.}. Whether or not a category has a property is determined by flipping a coin, weighted by the prevalence across categories
+%\begin{align*}
+%\theta_{across} & \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\ 
+%h & \sim \text{Bernoulli}(\theta_{across}) \\
+%x & \sim \begin{cases} 
+%		\text{Beta}(\gamma_{within}, \delta_{within}) &\mbox{if } h = 1 \\ 
+%				0 & \mbox{if } h=0. 
+%				\end{cases} 
+%\end{align*}
 
 \subsubsection{Results}
 
-We expected the prevalence priors to be qualitatively different for the different properties. Each participant gave responses to the 12 animal categories that were fixed as well as to 10 animal categories that the participant herself produced. 
+We expected the prevalence priors to be qualitatively different for the different properties. 
+Each participant gave responses to the 12 animal categories that were fixed as well as to 10 animal categories that the participant herself produced. 
 
 From the 300 free responses for the animal production part of the task, 105 distinct animal names were extracted. The top 5 ranking animal names produced were Dog, Cat, Elephant, Giraffe, and Bear; these responses accounted for 20.3\% percent of the total produced animal names.
 
 \begin{figure}
 \centering
     \includegraphics[width=0.8\columnwidth]{priors-exp1a-4types}
-    \caption{Four example elicited prevalence priors. Density plots reveal qualitatively different distributions for different properties. Each sample from these distributions can be considered to correspond to a particular animal category, representing the prevalence of the property within that animal category.}
+    \caption{Four example elicited prevalence priors inferred using a Bayesian statistical model. 
+    Density plots reveal qualitatively different distributions for different properties. 
+    Each sample from these distributions can be thought of to correspond to a particular animal category, representing the prevalence of the property within that animal category.}
   \label{fig:priors1a}
 \end{figure}
 
-We aggregated responses for each property by rounding responses to the nearest 10 and constructing a histogram. 
-There are fewer responses for some animal categories relative to others, owing to idiosyncratic differences in the availability during the production part of the experiment (e.g. ``Dog'' is produced 10 times more than ``Bee'') as well as the fact that our 12 target categories were presented to every participant (whereas the freely-produced categories were not). 
-As a result, these distributions may be biased to over-represent certain animal categories. 
-However, the distributions produced by analyzing the data on a by-response or by-category were qualitatively similar. 
-In addition, model predictions between the the model using the by-response prior distribution and the by-category distribution had a correlation of \red{r = X.XX}, suggesting that the variability that is leads to different rates of generic acceptability were captured by the shared variance of these distributions. 
+%We aggregated responses for each property by rounding responses to the nearest 10 and constructing a histogram. 
+
+We analyzed responses for each property using the Bayesian data analytic approach described in Section \ref{sec:bda1}.	
+The most likely prevalence priors inferred from the data are shown in Figure \ref{fig:priors1a} for 4 example properties.
+We observe substantial differences between the priors over prevalence. 
+In accord with intuition, the property ``is male'' is highly prevalent across categories, but within a category is only present in about 50\% of cases.
+By contrast, ``has manes'' is rare across categories, but has the same prevalence within-categories as ``is male'', reflected by the bump in density around 50\% (Figure \ref{fig:priors1a} bottom left).
+The property ``has wings'' is also relatively rare across categories, but within a category is widespread, as reflected by the bimodal distribution. 
+Finally, ``has malaria'' is an example of a property that is both rare across-species and within-species. 
+The property is absent from most animal species, and even when it is present, it is only present in a small number of cases.
+
+
+%There are fewer responses for some animal categories relative to others, owing to idiosyncratic differences in the availability during the production part of the experiment (e.g. ``Dog'' is produced 10 times more than ``Bee'') as well as the fact that our 12 target categories were presented to every participant (whereas the freely-produced categories were not). 
+%As a result, these distributions may be biased to over-represent certain animal categories. 
+%However, the distributions produced by analyzing the data on a by-response or by-category were qualitatively similar. 
+%In addition, model predictions between the the model using the by-response prior distribution and the by-category distribution had a correlation of \red{r = X.XX}, suggesting that the variability that is leads to different rates of generic acceptability were captured by the shared variance of these distributions. 
 
 
 \subsection{Experiment 1b: \emph{Truth judgments of natural cases}}
