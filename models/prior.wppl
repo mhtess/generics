@@ -17,6 +17,16 @@ var marginalize = function(myERP, index){
   })
 }
 
+// var discretizeBeta = function(gamma, delta){
+// 	var shape_alpha = gamma * delta
+// 	var shape_beta = (1-gamma) * delta
+// 	var betaPDF = function(x){
+// 	  return Math.pow(x,shape_alpha-1)*
+// 	      Math.pow((1-x),shape_beta-1)
+// 	}
+// 	return map(betaPDF, bins)
+// }
+
 var subset = function(df, field, value){
 	return filter(function(d){
 		return (d[field]==value)
@@ -47,35 +57,96 @@ var avoidEnds = function(response){
 }
 
 
-var priorModel = function(c){
+var priorModel = function(){
 
-	var conditionData = subset(df, "type", c)
+	var phi = uniform(0,1)
 
-	foreach(["response0","response1"],
-		function(r){
+	foreach(conditions,
+		function(c){
 
-			var gamma = uniform(0,1)
-			var delta = uniform(0,10)
+			var conditionData = subset(df, "type", c)
 
-			var responseData = _.pluck(conditionData,r)
-			// console.log(responseData)
-			var scr = reduce(function(dataPoint, memo) {
-							    return memo + betaERP.score([
-									shape_alpha(gamma,delta),
-									shape_beta(gamma,delta)
-									], avoidEnds(dataPoint))
-								}, 0, responseData)
+			foreach(["response0","response1"],
+				function(r){
 
-			factor(scr)
-			// console.log(scr)
+					var gamma = uniform(0,1)
+					var delta = uniform(0,10)
 
-//			query.add(r, [gamma, delta])
-			query.add([c,r,'gamma'], gamma)
-			query.add([c,r,'delta'], delta)
-		}
-	)
+					var responseData = _.pluck(conditionData,r)
+					// console.log(responseData)
+					var scr = reduce(function(dataPoint, memo) {
+									    return memo + Math.log(
+									    					(phi*Math.exp(betaERP.score([1,1],avoidEnds(dataPoint))) +
+									    			 		(1-phi)* Math.exp(betaERP.score([
+																			shape_alpha(gamma,delta),
+																			shape_beta(gamma,delta)
+																			], avoidEnds(dataPoint)))
+									    			 		))
+										}, 0, responseData)
+
+					factor(scr)
+					// console.log(scr)
+
+		//			query.add(r, [gamma, delta])
+					query.add([c,r,'gamma'], gamma)
+					query.add([c,r,'delta'], delta)
+				}
+			)
+
+	})
+
+	query.add(["na","na","phi"], phi)
+
 	return query
 }
+
+
+  // var heirarchicalERP = IncrementalMH(function(){return priorModel(key)}, 1000)
+var mhiter = 50000
+var heirarchicalERP = IncrementalMH(priorModel, mhiter, {"verbose":true})
+var outfile = "results/generics-asym-prior-incrmh"+mhiter+".csv"
+
+// var outfile = "results/priorERP-incrmh1000_"+key+".csv"
+asymutils.erpWriter(heirarchicalERP, outfile)
+console.log("prior written to " +outfile)
+
+
+
+// IncrementalMH(function(){return priorModel("vague")}, 1000)
+
+
+
+// var priorModel = function(c){
+
+// 	var conditionData = subset(df, "type", c)
+
+// 	foreach(["response0","response1"],
+// 		function(r){
+
+// 			var gamma = uniform(0,1)
+// 			var delta = uniform(0,10)
+
+// 			var responseData = _.pluck(conditionData,r)
+// 			// console.log(responseData)
+// 			var scr = reduce(function(dataPoint, memo) {
+// 							    return memo + betaERP.score([
+// 									shape_alpha(gamma,delta),
+// 									shape_beta(gamma,delta)
+// 									], avoidEnds(dataPoint))
+// 								}, 0, responseData)
+
+// 			factor(scr)
+// 			// console.log(scr)
+
+// //			query.add(r, [gamma, delta])
+// 			query.add([c,r,'gamma'], gamma)
+// 			query.add([c,r,'delta'], delta)
+// 		}
+// 	)
+// 	return query
+// }
+
+
 
 // Priordata
 
@@ -94,15 +165,15 @@ var priorModel = function(c){
 // 		// var kindDoesntHaveF_prevalence = 0.01
 // 		var kindDoesntHaveF_prevalence = 0
 
-		var discretizeBeta = function(gamma, delta){
-			var shape_alpha = gamma * delta
-			var shape_beta = (1-gamma) * delta
-			var betaPDF = function(x){
-			  return Math.pow(x,shape_alpha-1)*
-			      Math.pow((1-x),shape_beta-1)
-			}
-			return map(betaPDF, bins)
-		}
+		// var discretizeBeta = function(gamma, delta){
+		// 	var shape_alpha = gamma * delta
+		// 	var shape_beta = (1-gamma) * delta
+		// 	var betaPDF = function(x){
+		// 	  return Math.pow(x,shape_alpha-1)*
+		// 	      Math.pow((1-x),shape_beta-1)
+		// 	}
+		// 	return map(betaPDF, bins)
+		// }
 
 // 		var s = sample(heirarchicalERP)
 
@@ -137,14 +208,5 @@ var priorModel = function(c){
 
 // map(function(key){
 
-//   var heirarchicalERP = IncrementalMH(function(){return priorModel(key)}, 1000)
-//   var outfile = "results/priorERP-incrmh1000_"+key+".csv"
-//   asymutils.erpWriter(heirarchicalERP, outfile)
-//   console.log("prior written to " +outfile)
-// },
-// ["accidental_low","accidental_high","color","vague","part"])
-
-
-//IncrementalMH(function(){return priorModel("vague")}, 1000)
 
 // getPriorERP("vague")

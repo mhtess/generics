@@ -23,6 +23,13 @@ var dataFrame = function(rawCSV){
     }, rawCSV.slice(1))
 }
 
+var marginalizeERP = cache(function(myERP, label){
+	Enumerate(function(){
+		var x = sample(myERP)
+		return x[label]
+	})
+})
+
 
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
@@ -36,6 +43,10 @@ var df_prior = dataFrame(Priordata)
 var df_truth = dataFrame(Truthdata)
 
 var properties = _.uniq(_.pluck(df_prior,"Property"))
+// var properties = _.uniq(_.pluck(df_truth,"Property"))
+
+
+
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
@@ -80,6 +91,7 @@ var prevalenceModel = function(){
 	var phi = uniform(0,1)
 
 	foreach(properties, function(p){
+
 		var propertyData = subset(df_prior, "Property", p)
 		var categories = _.uniq(_.pluck(subset(df_truth, "Property", p), "Category"))
 
@@ -93,7 +105,7 @@ var prevalenceModel = function(){
 			var discreteBetaProbs = discretizeBeta(gamma, delta)
 			var discreteBetaProbsNormalized = map(function(x){return x/sum(discreteBetaProbs)}, discreteBetaProbs)
 
-
+			// console.log(categoryData)
 			// console.log(gamma, delta)
 
 			// var scr = reduce(function(d, memo) {
@@ -133,7 +145,7 @@ var prevalenceModel = function(){
 			// var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
 			// var postpred = bins[discrete(discreteBetaProbsNormalized)]
 
-			query.add([k,p], gamma)
+			query.add([k,p], avoidEnds(Math.round(gamma*10)/10))
 
 			// query.add(["prevalence",p, k, "gamma"], gamma)
 			// query.add(["prevalence",p, k, "delta"], delta)
@@ -153,19 +165,12 @@ var prevalenceModel = function(){
 	return query
 }
 
-var mhiter = 10000
+properties
 
+// marginalizeERP(prevalenceERP, ["Ducks","have wings"])
 
-var resultsERP = IncrementalMH(prevalenceModel, mhiter, {"verbose":"true"})
-
-var marginalizeERP = function(myERP, label){
-	Enumerate(function(){
-		var x = sample(resultsERP)
-		return x[label]
-	})
-}
-
-marginalizeERP(resultsERP, ["Leopards", "have spots"])
+// prevalenceERP
+// marginalizeERP(resultsERP, ["Leopards", "have spots"])
 
 // resultsERP
 // var outfile = 'results/generics-tj-prevalencePrior_hasFUNIF-has0-postpred-incr'+mhiter+'a.csv'

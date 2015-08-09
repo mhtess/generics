@@ -29,6 +29,12 @@ var discretizedPriorModel = function(hasF, g1, d1){
 }
 
 
+var marginalizeERP = cache(function(myERP, label){
+	Enumerate(function(){
+		var x = sample(myERP)
+		return x[label]
+	})
+})
 
 
 //var scoreFunction = function(d, prob_hasF, a, b){
@@ -71,13 +77,12 @@ var priorModel = function(){
 		// console.log(scr1)
 		factor(scr1)
 
-		query.add(["prevalencePrior",p,"na","prob_hasF"], prob_hasF)
+		// query.add(["prevalencePrior",p,"na","prob_hasF"], prob_hasF)
 
 		var gamma = uniform(0,1)
 		var delta = uniform(0,50)
 
 
-		// var discretized_prevalence = discretizedPriorModel(prob_hasF, gamma, delta)
 		var discreteBetaProbs = discretizeBeta(gamma, delta)
 		var discreteBetaProbsNormalized = map(function(x){return x/sum(discreteBetaProbs)}, discreteBetaProbs)
 
@@ -111,12 +116,20 @@ var priorModel = function(){
 		// 					}, 0, propertyData)
 		// console.log(p+' ' +scr2)
 		factor(scr2)
+
+
+		var discretized_prevalence = discretizedPriorModel(prob_hasF, gamma, delta)
+
 		// var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
 		// var postpred = sample(discreteBeta)
 		// var postpred = bins[discrete(discreteBetaProbsNormalized)]
-		// query.add(["prevalencePrior",p,"na","prob_hasF"], prob_hasF)
-		query.add(["prevalencePrior",p,"na","gamma_within"], gamma)
-		query.add(["prevalencePrior",p,"na","delta_within"], delta)
+
+
+		// query.add(["prevalencePrior",p,"na","gamma_within"], gamma)
+		// query.add(["prevalencePrior",p,"na","delta_within"], delta)
+
+		query.add(p, discretized_prevalence)
+
 		// query.add(["prevalencePrior",p,])
 		// console.log(discretized_prevalence)
 		// query.add(["prevalencePrior",p,"na","beta"], postpred)
@@ -125,20 +138,24 @@ var priorModel = function(){
 		// )
 	})
 
-	query.add(["prevalencePrior","na","na","phi"], phi)
+	// query.add(["prevalencePrior","na","na","phi"], phi)
 
 	return query
 }
 
-var mhiter = 10000
 
-var resultsERP = IncrementalMH(priorModel, mhiter, {"verbose":"true"})
+
+// marginalizeERP(resultsERP, "have wings")
+
 // resultsERP
 // var outfile = 'results/generics-tj-prevalencePrior_hasFUNIF-has0-postpred-incr'+mhiter+'a.csv'
-var outfile = 'results/generics-tj-prevalencePrior_discreteBeta-hasFUNIF-delta50-has0-phi-incr'+mhiter+'a.csv'
 
-truthUtils.erpWriter(resultsERP, outfile)
-console.log('wrote to... ' + outfile)
+
+
+// var outfile = 'results/generics-tj-prevalencePrior_discreteBeta-hasFUNIF-delta50-has0-phi-incr'+mhiter+'a.csv'
+
+// truthUtils.erpWriter(resultsERP, outfile)
+// console.log('wrote to... ' + outfile)
 
 
 // properties
