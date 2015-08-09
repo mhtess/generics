@@ -719,8 +719,9 @@ Inference over prevalence of category-property pairs
 m.path<-"~/Documents/research/generics/models/results/"
 
 samples = 50000
+prefix<-'generics-tj-prevalence_discreteBeta-delta50-postpred-incr'
 m<-read.csv(paste(m.path,
-                  'generics-tj-prevalenceGammaUNIF20-incr', 
+                  prefix, 
                   samples, 'a.csv', sep=''))
 str(m)
 
@@ -741,6 +742,13 @@ m1 <- m %>% filter(Negation=='gamma')
 m1 <- m %>% filter(Negation=='delta')
 m1 <- m %>% filter(Negation=='beta')
 
+
+m %>% filter(Negation == 'gamma') %>%
+  group_by(Property, Category) %>%
+  summarise(expectation = mean(Value),
+            med = median(Value),
+            credLow = quantile(Value, probs=0.025),
+            credHigh= quantile(Value, probs = 0.975))
 
 
 m.prev<- m1 %>%
@@ -804,8 +812,9 @@ samples = 50000
 m<-read.csv(paste(m.path,
                   #'generics-tj-prevalencePrior-incr', 
                   #'generics-tj-prevalencePrior_hasFUNIF-has0-incr', 
-                  'generics-tj-prevalencePrior_hasFUNIF-has0-postpred-incr', 
+                  'generics-tj-prevalencePrior_discreteBeta-hasFUNIF-delta50-has0-postpred-incr', 
                   samples, 'a.csv', sep=''))
+
 
 m <- data.frame(Parameter =  rep(m$Parameter, 
                                    1+samples*m$Probability),
@@ -888,10 +897,11 @@ shape1 = function(gamma,delta){return (gamma * delta)}
 shape2= function(gamma,delta){return ((1-gamma) * delta)}
 
 
-m.sansHyper <- m %>% filter((Negation =='prob_hasF') | (Negation=='beta'))
+m.sansHyper <- m %>% filter((Negation =='prob_hasF') | 
+                              (Negation=='beta'))
 
 # for model with "flat" hasProperty levels
-for (i in 1:1000){
+for (i in 1:10000){
 
 #   d.samp<-m %>%
 #     group_by(Property, Negation) %>%
@@ -902,7 +912,7 @@ for (i in 1:1000){
 #            bet = shape2(gamma_within, delta_within))%>%
 #     group_by(Property) %>%
 #     mutate(doesHaveF = rbinom(1,1,prob_hasF)) %>%
-#    select(-gamma_within, -delta_within) %>%
+#    select(-gamma_within, -delta_within) %     >%
 #     group_by(Property) %>%
 #     mutate(prevalence = if(doesHaveF==0) {0} 
 #               else {rbeta(1, alph, bet)})
@@ -924,16 +934,25 @@ for (i in 1:1000){
   if ((i %% 100)==0) { print(i) }
 }
 
+target<- c("are male", "have manes", "carry malaria", "have wings")
 # ggplot(d.samples %>% filter(prevalence!=0), 
-ggplot(d.samples, 
-          aes(x=prevalence, color=Property))+
+ggplot(d.samples %>% filter(Property %in% target), 
+          aes(x=prevalence))+
   geom_histogram()+
-  #scale_color_brewer(palette='Set1')+
+  #geom_density(adjust=1, size=1, fill='grey')+
+  #scale_color_brewer(palette='Dark2')+
   xlab("Prevalence")+
   ylab("Posterior density")+
   theme(legend.position=c(0.7,0.65))+
-  guides(color=F)+ 
-  facet_wrap(~Property)
+  guides(color =F)+ 
+  facet_wrap(~Property, scales='free')+
+  xlim(0,1)
+
+
+ggsave(file='~/Documents/research/generics/manuscript/figures/prevalence_priors_inferred-gammas.pdf')
+
+
+
 
 ### discretize and write to file: inferred prevalence priors
 prevprior = data.frame()
@@ -965,17 +984,18 @@ write.csv(h, file = '~/Documents/research/generics/models/data/inferredPrevalenc
 m.path<-"~/Documents/research/generics/models/results/"
 #m<-read.csv(paste(m.path, 'generics_truthJudge_rationality-n100_hashmh10000a.csv', sep=''))
 
-samples=100000
-prioriter<-50
+samples=10000
+prioriter<-10000
 #prefix<-paste('fullBayesian-wPrev-so-priorhash',prioriter,'_hashmh',samples,sep='')
 prefix<-paste('fullBayesian-samplePrevfromBeta-so-incrmh',samples,sep='')
 prefix<-paste('fullBayesian-so-priorhash',prioriter,'_hashmh',samples,sep='')
 prefix<-paste('fullBayesian-samplePrev-so-priorhash',prioriter,'_hashmh',samples,sep='')
 prefix<-paste('test_incrmh',samples,sep='')
 prefix<-paste('test_incrmh100000',sep='')
-
+prefix<-paste('sequential-prevalenceGamma-priors',prioriter,'_mh',samples,sep='')
 
 prefix<- paste('fullBayesian-prevGamma-so-incrmh',samples, sep='')
+prefix<-paste('sequential-discretePriorConditioning-gammaPrevalence-priors', prioriter, '_mh', samples, sep='')
 
 m<-read.csv(paste(m.path, 'generics-tj-',prefix, '.csv', sep=''))
 
