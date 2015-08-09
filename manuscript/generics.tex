@@ -1,4 +1,30 @@
-%todo:
+
+%%
+% bayesian data analyses
+% expt1a
+%	- prevalence for categories (e..g "lions" that "have manes"):  
+%          - phi (uniform 0 1)
+%         -  Beta(gamma, delta)  --- gamma (uniform 0 1); delta  (uniform 0 50)
+% 		- using posterior on gamma for model
+%   - prevalence prior for properties (e.g. "have manes"): 
+%		- theta_across (uniform 0 1)	
+%          - phi (uniform 0 1)
+%         -  Beta(gamma_within, delta_within)  --- gamma (uniform 0 1); delta  (uniform 0 50)
+% 		-  using posterior on beta for model
+% expt1b
+%   - speaker optimality
+%	- phi
+% expt 2a
+%  - Beta_across (gamma_across, delta_across) - 
+%  - Beta_within (gamma_within, delta_within) -
+%  - phi
+% expt 2b
+%   - speaker optimality (truth conditions)
+%   - speaker optimality (implied prevalence)
+%	- phi
+
+
+
 
 
 % mh 7/19
@@ -1153,6 +1179,45 @@ Notice, however, that the underlying dimension that these properties would be co
 %Additionally, the measurements made in the truth conditions task might also be too coarse: In these experiments, truth conditions are measured by categorical judgments (\emph{true} or \emph{false}) at prevalence intervals of 20\%. It's possible that more graded judgments at finer prevalence scales would be helpful in mediating this. However, it's also possible that with an uncertain threshold for the generics, participants will adapt to whatever prevalence sampling an experimenter presents. At the end of the day, the truth conditions task is interested in measuring the prevalence level at which the generic is true. It's likely that other, convergent measures would be helpful in assessing this. 
 %
 %A second possibility for the seeming failure to account for the magnitude of the effect in truth judgments for different property types is because prevalence alone is not being used as the only measuring stick for assessing the generic. It's possible that something about the salience of the property (e.g. instantiated in its dangerousness) leads ones to be more flexible in its usage\cite{Leslie2008}. This explanation could be cashed out in a model of nonliteral language like the one in presented by \citeA{Kao2014}. The idea here would be that using a generic to describe a salient (e.g. dangerous) property of a kind would be like using hyperbolic language. This type of generic, then, would convey the idea of prevalence in addition to an affective message, like ``be careful''. We leave for future work exploring this type of explanation in more detail.
+\subsection{Resilience to counter-examples}
+
+Another main staple of generic utterances is that they are resilient to counter-examples. 
+For example, observing a few (perhaps, well-behaved) dogs that do not bark does not falsify ``Dogs bark.'' 
+If generic statements are indeed vague, this phenomenon is very similar to the Sorites' Paradox, wherein a vague utterance and a plausible inductive premise can lead to unintuitive conclusions.
+
+To see the similarity, consider the Sorites Paradox for ``The Empire State Building is tall.'' The paradox comes out when the following argument is considered:
+
+\begin{quotation}
+
+The Empire State Building is tall.
+
+Any building 0.5 meters shorter than a tall building is still tall.
+
+Therefore, a single-story building is tall.
+
+\end{quotation} 
+
+The first premise is true with a high probability. 
+The second premise, is true with high probability but becomes less plausible the shorter in height one's reference gets. 
+
+For generics, the version of the Sorites would look like
+
+\begin{quotation}
+Dogs bark. 
+
+If we observe one dog that doesn't bark, then we could still say ``Dogs bark''. 
+
+Therefore, if there were no dogs that barked, we would still conclude ``Dogs bark''.
+\end{quotation} 
+
+One thing to notice is that generics' resilience to counter-examples bears a strong similarity to the traditional inductive premise of the Sorites. 
+It may be that the this feature of generics falls out of the inherent uncertainty of the meaning (i.e. its vagueness).
+
+It's also interesting to consider the conclusion of this generic Sorites. 
+This takes a very similar form of classic thought-experiments in the linguistics literature (e.g. ``Even t.
+
+
+
 \subsection{What are generics?}
 
 Intuitions about what qualifies as a generic statement have led to the consensus that there are generic and non-generic meanings that can be derived from similar syntactic forms. For example,
@@ -1175,6 +1240,8 @@ Consider the following
 	
 	(5) Tigers are in open grasslands.
 \end{quotation}
+
+Many would argue that (3) is not generic. At the same time, it does seem to implicate more tigers than (2). The same can be observed by comparing (4) to (3). Indeed, (5) has the intuitive appeal of applying to a large chunk of the category. (5) could be interpreted generically. 
 
 It seems that as you go from (3) - (5), the likely implied prevalence also increases, to the point where (5) might apply to category as a whole. 
 With a generic whose meaning is vague, as we propose here, listeners need not make categorical distinctions to interpret a sentence. 
@@ -1203,7 +1270,6 @@ Rather, the listener is expected to come to the conversation with some beliefs a
 
 
 %
-%\subsection{Resilience to counter-examples}
 %
 %\subsection{A parallel problem of generic identification}
 
