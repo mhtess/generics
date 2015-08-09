@@ -1,4 +1,4 @@
-// time webppl natural-cases-prior.wppl --require-js ./truthutils.js 
+// time webppl natural-cases-prior.wppl --require-js ./truthUtils.js 
 
 var foreach = function(lst, fn) {
     var foreach_ = function(i) {
@@ -27,13 +27,15 @@ var dataFrame = function(rawCSV){
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
-var Priordata = truthutils.readCSV("data/real-kinds-prior-2-trials-formatted.csv").data
-var Truthdata = truthutils.readCSV("data/real-kinds-truth-1-trials-formatted.csv").data
+var Priordata = truthUtils.readCSV("data/real-kinds-prior-2-trials-formatted.csv").data
+// var Priordata = _.flatten([Priordata0, Priordata0.slice(1)],true)
+
+var Truthdata = truthUtils.readCSV("data/real-kinds-truth-1-trials-formatted.csv").data
 
 var df_prior = dataFrame(Priordata)
 var df_truth = dataFrame(Truthdata)
 
-// var properties = _.uniq(_.pluck(df_prior,"Property"))
+var properties = _.uniq(_.pluck(df_prior,"Property"))
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
@@ -68,9 +70,15 @@ var getProbsFromERP = function(myERP, orderedSupport){
 	}, orderedSupport)
 }
 
-var properties = ["are female", "carry malaria"]
+// var properties = ["are female", "carry malaria"]
+
+var guessing = 1/bins.length;
+
 
 var prevalenceModel = function(){
+
+	var phi = uniform(0,1)
+
 	foreach(properties, function(p){
 		var propertyData = subset(df_prior, "Property", p)
 		var categories = _.uniq(_.pluck(subset(df_truth, "Property", p), "Category"))
@@ -88,13 +96,29 @@ var prevalenceModel = function(){
 
 			// console.log(gamma, delta)
 
-			var scr = reduce(function(d, memo) {
-						// console.log(p+ k+ ' prev = ' +  d + '  aligned prev = ' + alignPrevalence(d))
-						// console.log(bins.indexOf(alignPrevalence(d)))
-						// console.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
-						var x = Math.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
-					    return memo + x
-						}, 0, categoryData)
+			// var scr = reduce(function(d, memo) {
+			// 			// console.log(p+ k+ ' prev = ' +  d + '  aligned prev = ' + alignPrevalence(d))
+			// 			// console.log(bins.indexOf(alignPrevalence(d)))
+			// 			// console.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
+			// 			var x = Math.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
+			// 		    return memo + x
+			// 			}, 0, categoryData)
+
+				var scr = reduce(function(d, memo) {
+									// console.log(p+ ' prev = ' +  d + '  aligned prev = ' + alignPrevalence(d))
+									// console.log(bins.indexOf(alignPrevalence(d)))
+									// console.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
+									var x = Math.log(
+											(phi*guessing) + 
+											((1-phi) * discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
+											)
+								    return memo + x
+									}, 0, categoryData)
+
+
+
+
+
 
 			// var scr = reduce(function(dataPoint, memo) {
 			// 			console.log(avoidEnds(dataPoint/100))
@@ -106,12 +130,16 @@ var prevalenceModel = function(){
 			factor(scr)
 			// console.log(scr)
 
-			var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
-			var postpred = bins[discrete(discreteBetaProbsNormalized)]
+			// var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
+			// var postpred = bins[discrete(discreteBetaProbsNormalized)]
 
-			query.add(["prevalence",p, k, "gamma"], gamma)
-			query.add(["prevalence",p, k, "delta"], delta)
-			query.add(["prevalence",p, k, "beta"], postpred)
+			query.add([k,p], gamma)
+
+			// query.add(["prevalence",p, k, "gamma"], gamma)
+			// query.add(["prevalence",p, k, "delta"], delta)
+
+
+			// query.add(["prevalence",p, k, "beta"], postpred)
 
 			// var discretized_prevalence = discretizeBeta(gamma, delta)
 			// foreach(_.zip(discretized_prevalence, bins),
@@ -119,18 +147,31 @@ var prevalenceModel = function(){
 			// )
 		})
 	})
+
+	// query.add(["prevalence","na", "na", "phi"], phi)
+
 	return query
 }
 
-var mhiter = 50000
+var mhiter = 10000
 
 
 var resultsERP = IncrementalMH(prevalenceModel, mhiter, {"verbose":"true"})
+
+var marginalizeERP = function(myERP, label){
+	Enumerate(function(){
+		var x = sample(resultsERP)
+		return x[label]
+	})
+}
+
+marginalizeERP(resultsERP, ["Leopards", "have spots"])
+
 // resultsERP
 // var outfile = 'results/generics-tj-prevalencePrior_hasFUNIF-has0-postpred-incr'+mhiter+'a.csv'
-var outfile = 'results/generics-tj-prevalence_discreteBeta-delta50-postpred-incr'+mhiter+'a.csv'
+// var outfile = 'results/generics-tj-prevalence_discreteBeta-delta50-phi-incr'+mhiter+'a.csv'
 
-truthutils.erpWriter(resultsERP, outfile)
-console.log('wrote to... ' + outfile)
+// truthUtils.erpWriter(resultsERP, outfile)
+// console.log('wrote to... ' + outfile)
 
 
