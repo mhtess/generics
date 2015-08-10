@@ -563,8 +563,8 @@ Complete instructions given to participants can be seen in Appendix \ref{sec:pri
 \subsubsection{Bayesian data analysis}
 \label{sec:bda1}
 
-There is important latent structure in the prior elicitation task. We describe the model with respect to a particular property (e.g. ``lays eggs''). 
-The same general structure is implemented for each item independently\footnote{The models share one parameter: the data-analytic noise parameter $\phi$, described in more detail below.}. 
+There is important latent structure in the prior elicitation task. We describe the model from the perspective of inferring the distribution of a particular property (e.g. ``lays eggs''). 
+The same general structure is implemented for each item independently, with the slight except that the item-wise models share a data-analytic noise parameter $\phi$, described in more detail below. 
 
 Responses $d$ can be categorized into those that reflect the property is either present or absent in the species. 
 If the property is absent, then the response is 0\% of the species has the property. 
@@ -590,7 +590,7 @@ d_{within} \sim \begin{cases}
 				\end{cases}
 \end{align*}
 
-We make no assumptions about the amount of noise in the data, and we put uninformative priors over the mean and concentration 
+We make no assumptions about the amount of noise in the data, and we put uninformative priors over the means and concentrations of the prevalence distributions. 
 
 \begin{align*}
  \phi \sim \text{Uniform}(0,1) \\
@@ -598,9 +598,9 @@ We make no assumptions about the amount of noise in the data, and we put uninfor
 \delta_{within} \sim \text{Uniform}(0,50)
 \end{align*}
 
-We implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{across}, \gamma_{within}, \delta_{within}$ with X chains of Y samples.
+We implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{across}, \gamma_{within}, \delta_{within}, and \phi$ with X chains of Y samples.
 
-To reconstruct the likely distribution of  prevalence both within- and across- categories, we took samples from the posterior predictive distribution of $d$ by running the forward model: 
+To reconstruct the likely distribution of  prevalence reflecting both within- and across- category prevalence, we took samples from the posterior predictive distribution of $d$ by running the forward model: 
 
 \begin{align*}
 h & \sim \text{Bernoulli}(\theta_{across}) \\
@@ -613,9 +613,9 @@ x & \sim \begin{cases}
 where, $h$ is a variable indicating whether or not the property is present within a particular species. 
 
 
-We also inferred the likely prevalence of each animal category and property pair of interest, to be used in the generic truth judgment task (Expt.~1b). 
+We also inferred the likely prevalence of each animal category and property pair of interest, to be used as the measure of prevalence in the generic truth judgment task (Expt.~1b). 
 For this, we assume the data was generated from a Beta distribution with unknown mean and concentration. 
-We also assume some amount of noise in the data.
+We also assume some global amount of noise in the data.
 
 \begin{align*}
 d \sim \begin{cases}
@@ -658,7 +658,7 @@ From the 300 free responses for the animal production part of the task, 105 dist
 \centering
     \includegraphics[width=0.8\columnwidth]{prevalence_priors_inferred-betas.pdf}
     \caption{Four example elicited prevalence priors inferred using a Bayesian statistical model. 
-    Dotted lines show density by removing the mass at zero. (For display purposes, this is not done for ``have wings'', for which all of the mass is at 1.)
+    Dotted lines show density by removing the mass at zero. (For display purposes, this is omitted for ``have wings'', for which the density is off the scale.)
     Density plots reveal qualitatively different distributions for different properties. 
     Each sample from these distributions can be thought of to correspond to a particular animal category, representing the prevalence of the property within that animal category.}
   \label{fig:priors1a}
@@ -670,7 +670,7 @@ We analyzed responses for each property using the Bayesian data analytic approac
 The most likely prevalence priors inferred from the data are shown in Figure \ref{fig:priors1a} for 4 example properties.
 We observe substantial differences between the priors over prevalence. 
 In accord with intuition, the property ``is male'' is highly prevalent across categories, but within a category is only present in about 50\% of cases.
-By contrast, ``has manes'' is rare across categories, but has the same prevalence within-categories as ``is male'', reflected by the bump in density around 50\% (Figure \ref{fig:priors1a} bottom left).
+By contrast, ``has manes'' is rare across categories, and has considerable  prevalence within-categories as ``is male'', reflected by the bump in density around 50\% (Figure \ref{fig:priors1a} bottom left).
 The property ``has wings'' is also relatively rare across categories, but within a category is widespread, as reflected by the bimodal distribution. 
 Finally, ``has malaria'' is an example of a property that is both rare across-species and within-species. 
 The property is absent from most animal species, and even when it is present, it is only present in a small number of cases.
