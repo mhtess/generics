@@ -23,12 +23,12 @@ var dataFrame = function(rawCSV){
     }, rawCSV.slice(1))
 }
 
-var marginalizeERP = cache(function(myERP, label){
-	Enumerate(function(){
-		var x = sample(myERP)
-		return x[label]
-	})
-})
+// var marginalizeERP = cache(function(myERP, label){
+// 	Enumerate(function(){
+// 		var x = sample(myERP)
+// 		return x[label]
+// 	})
+// })
 
 
 var shape_alpha = function(gamma,delta){return gamma * delta}
@@ -165,7 +165,7 @@ var prevalenceModel = function(){
 	return query
 }
 
-properties
+// properties
 
 // marginalizeERP(prevalenceERP, ["Ducks","have wings"])
 

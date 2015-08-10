@@ -29,12 +29,12 @@ var discretizedPriorModel = function(hasF, g1, d1){
 }
 
 
-var marginalizeERP = cache(function(myERP, label){
+var marginalizeERP = function(myERP, label){
 	Enumerate(function(){
 		var x = sample(myERP)
 		return x[label]
 	})
-})
+}
 
 
 //var scoreFunction = function(d, prob_hasF, a, b){
