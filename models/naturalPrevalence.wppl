@@ -1,4 +1,4 @@
-// time webppl natural-prevalence.wppl --require-js ./truthutils.js 
+// time webppl naturalPrevalence.wppl --require-js ./truthUtils.js 
 
 var foreach = function(lst, fn) {
     var foreach_ = function(i) {
@@ -26,8 +26,8 @@ var dataFrame = function(rawCSV){
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
-var Priordata = truthutils.readCSV("data/real-kinds-prior-2-trials-formatted.csv").data
-var Truthdata = truthutils.readCSV("data/real-kinds-truth-1-trials-formatted.csv").data
+var Priordata = truthUtils.readCSV("data/real-kinds-prior-2-trials-formatted.csv").data
+var Truthdata = truthUtils.readCSV("data/real-kinds-truth-1-trials-formatted.csv").data
 
 var df_prior = dataFrame(Priordata)
 var df_truth = dataFrame(Truthdata)
@@ -60,6 +60,20 @@ var discretizeBeta = function(gamma, delta){
 	return map(betaPDF, bins)
 }
 
+var discretizeBetaERP = function(gamma, delta){
+	var shape_alpha =  gamma * delta
+	var shape_beta = (1-gamma) * delta
+	var betaPDF = function(x){
+	  return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
+	}
+	var probs = map(betaPDF, bins)
+	return Enumerate(function(){
+		var x = bins[discrete(probs)]
+		return x
+	})
+}
+
+
 var getProbsFromERP = function(myERP, orderedSupport){
 	return map(function(s){
 		Math.exp(myERP.score([], s))
@@ -76,17 +90,41 @@ var prevalenceModel = function(p, k){
 	var gamma = uniform(0,1)
 	var delta = uniform(0,20)
 
+	var discreteBetaProbs = discretizeBeta(gamma, delta)
+	var discreteBetaProbsNormalized = map(function(x){return x/sum(discreteBetaProbs)}, discreteBetaProbs)
 
-	var scr = reduce(function(dataPoint, memo) {
-					    return memo + betaERP.score([shape_alpha(gamma, delta),
-					    							 shape_beta(gamma,delta)], 
-					    							 avoidEnds(dataPoint/100))
-						}, 0, categoryData)
+
+	// console.log(gamma, delta)
+
+	var scr = reduce(function(d, memo) {
+				// console.log(p+ k+ ' prev = ' +  d + '  aligned prev = ' + alignPrevalence(d))
+				// console.log(bins.indexOf(alignPrevalence(d)))
+				// console.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
+				var x = Math.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
+			    return memo + x
+				}, 0, categoryData)
+
+	// var scr = reduce(function(dataPoint, memo) {
+	// 				    return memo + betaERP.score([shape_alpha(gamma, delta),
+	// 				    							 shape_beta(gamma,delta)], 
+	// 				    							 avoidEnds(dataPoint/100))
+	// 					}, 0, categoryData)
 
 	factor(scr)
 	// console.log(scr)
 
-	var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
+	// var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
+	// var postpred = sample(discreteBeta)
+	return alignPrevalence(Math.round(gamma*10)/10)
+	// return bins[discrete(discreteBetaProbs)]
+	// return postpred
 
-	return avoidEnds(Math.round(postpred*10)/10)
+	// return avoidEnds(Math.round(postpred*10)/10)
+	// return avoidEnds(Math.round(gamma*10)/10)
+	// return [gamma, delta]
 }
+
+// var resultsERP = HashMH(function(){return prevalenceModel("lay eggs", "Ducks")},
+// 	10)
+
+// resultsERP

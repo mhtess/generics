@@ -23,12 +23,14 @@ function closest(arr, closestTo){
 };
 
 var erpWriter = function(erp, filename) {
+ console.log('writing to csv')
  var supp = erp.support([]);
  var csvFile = fs.openSync(filename, 'w');
 // fs.writeSync(csvFile,'Item,Value,Probability\n')
  fs.writeSync(csvFile,'Parameter,Property, Category, Negation,Value,Probability\n')
  supp.forEach(function(s) {supportWriter(s, Math.exp(erp.score([], s)), csvFile);})
  fs.closeSync(csvFile);
+ console.log('writing complete.')
 }
 
 var naturalpriorERPWriter = function(erp, filename) {

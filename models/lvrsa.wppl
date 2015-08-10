@@ -52,7 +52,7 @@ var wordUtterancePrior = function() {
 
 var meaning = function(utt,state, theta) {
   return _.isNumber(utt) ? state == utt :
-  		utt=="generic is true"? state>theta :
+  		   utt=="generic is true"? state>theta :
          utt=="generic is false"? state<=theta :
          utt=="some is true"? state>0 :
          utt=="some is false"? state==0 :
@@ -83,7 +83,7 @@ var listener0 = cache(function(utterance, theta, prior) {
 var speaker1 = cache(function(state, theta, prior) {
   Enumerate(function(){
   	// console.log('enter speaker 1')
-  	// console.log(state, theta, domain)
+  	// console.log(state, theta, domain + ' = domain')
     // console.log(prior)
     var utterance = wordUtterancePrior()
     var L0 = listener0(utterance, theta, prior)

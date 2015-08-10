@@ -1,4 +1,4 @@
-// time webppl natural-prior.wppl --require-js ./truthutils.js --require-wppl ./natural-prevalence.wppl 
+// time webppl naturalPrior.wppl --require-js ./truthUtils.js --require-wppl ./naturalPrevalence.wppl 
 
 
 // var discretizedPriorModel = function(g0, d0, g1, d1){
@@ -46,17 +46,32 @@ var priorModel = function(p){
 
 	var gamma = uniform(0,1)
 	var delta = uniform(0,20)
-	
+
+	var discreteBetaProbs = discretizeBeta(gamma, delta)
+	var discreteBetaProbsNormalized = map(function(x){return x/sum(discreteBetaProbs)}, discreteBetaProbs)
 
 	var scr2 = reduce(function(d, memo) {
-						// console.log(d)
-						var x = d==0? 0 : betaERP.score([shape_alpha(gamma, delta), 
-					    								shape_beta(gamma, delta)], 
-					    								alignPrevalence(d))
+						var x = d==0? 0 :  Math.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
 					    return memo + x
 						}, 0, propertyData)
+
+	// var scr2 = reduce(function(d, memo) {
+	// 					// console.log(d)
+	// 					var x = d==0? 0 : discreteBeta.score([], alignPrevalence(d))
+	// 				    return memo + x
+	// 					}, 0, propertyData)
+
+	
+
+	// var scr2 = reduce(function(d, memo) {
+	// 					// console.log(d)
+	// 					var x = d==0? 0 : betaERP.score([shape_alpha(gamma, delta), 
+	// 				    								shape_beta(gamma, delta)], 
+	// 				    								alignPrevalence(d))
+	// 				    return memo + x
+	// 					}, 0, propertyData)
 	factor(scr2)
-	// console.log(scr)
+	// console.log(scr2)
 	return discretizedPriorModel(prob_hasF, gamma, delta)
 }
 

@@ -1047,8 +1047,14 @@ summary(rs.implications)
 ```{r priors2.FBT}
 d<-read.csv("~/Documents/research/generics/analysis/FBT-priors/results/priors4_betas_byItem_incrMH10000.csv")
 d<-read.csv("~/Documents/research/generics/analysis/FBT-priors/results/priors4_betas_byType_incrMH50000.csv")
-d.tidy <- d %>% 
-  gather(Parameter, Value, Gamma, Delta)
+
+d<-read.csv("~/Documents/research/generics/models/results/generics-asym-prior-incrmh50000.csv")
+
+d.tidy <- d %>% rename(
+  Question = Item,
+  Item = Parameter,
+  Parameter = Prevalence
+  )
 
 samples = 50000
 
@@ -1061,10 +1067,20 @@ d.params<-data.frame(Item = rep(d.tidy$Item,
                 Response = rep(d.tidy$Value, 
                                1+samples*d.tidy$Probability))
 
+
+d.phi <- d.params %>% filter(Parameter=='phi')
+
+ggplot(d.phi, aes(x=Response))+
+  geom_histogram()+
+  xlim(0,1)
+
 fmt <- function(){
     f <- function(x) as.character(round(x,2))
     f
 }
+
+d.params <- d.params %>% filter(!(Parameter=='phi')) 
+
 d.params$Item<- factor(d.params$Item, levels=c("accidental_low",
                                                "accidental_high",
                                                "color",
@@ -1132,18 +1148,18 @@ for (i in 1:1000){
     sample_n(1) %>%
     ungroup() %>%
     spread(Parameter, Response) %>%
-    mutate(alph = shape1(Gamma,Delta),
-           bet = shape2(Gamma, Delta))%>%
+    mutate(alph = shape1(gamma,delta),
+           bet = shape2(gamma, delta))%>%
     group_by(Item, Question) %>%
     mutate(prev = rbeta(1,alph,bet),
            hasF = rbinom(1,1,prev)) %>%
-    select(-Gamma, -Delta, -alph, -bet) %>%
+    select(-gamma, -delta, -alph, -bet) %>%
     group_by(Item) %>%
     summarise(prevalence = if(hasF[Question=='response0']==0) {0} 
               else {prev[Question=='response1']})
   
   d.samples<-bind_rows(d.samples, d.samp)
-  print(i)
+  if ((i %% 10)==0) { print(i) }
 }
 
 ggplot(d.samples, aes(x=prevalence))+

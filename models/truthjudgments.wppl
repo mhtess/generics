@@ -1,36 +1,80 @@
-// time webppl truthjudgments.wppl --require-js ./truthutils.js --require-wppl ./lvrsa.wppl --require-wppl ./natural-prior.wppl --require-wppl ./natural-prevalence.wppl  
+// time webppl truthJudgments.wppl --require-js ./truthUtils.js --require-wppl ./lvRSA.wppl --require-wppl ./natural-priors.wppl --require-wppl ./natural-cases-prior.wppl  
 
 var isNegation = function(property){
 	return (property.split(' ')[0].slice(0,5)=='don&q')
 }
 
-var prioriters = 50
+// var prioriters = 10000
 
-var prevalenceERPobject = _.object(map(function(property){
-			var cats = _.uniq(_.pluck(subset(df_truth, "Property", property),"Category"))
-			return [property, _.object(map(function(k){
-				console.log('inferring prevalence of ' + property + ' ' + k)
-				return [k, HashMH(function(){return prevalenceModel(property,k)}, prioriters, {"verbose":false})]
-			},cats))]
-},properties))
+// var prevalenceERPobject = _.object(map(function(property){
+// 			var cats = _.uniq(_.pluck(subset(df_truth, "Property", property),"Category"))
+// 			return [property, _.object(map(function(k){
+// 				console.log('inferring prevalence of ' + property + ' ' + k)
+// 				return [k, HashMH(function(){return prevalenceModel(property,k)}, prioriters, {"verbose":false})]
+// 			},cats))]
+// },properties))
 
-// var prevalenceData = truthutils.readCSV("data/inferredPrevalence_gammas.csv").data
+// var prevalenceData = truthUtils.readCSV("data/inferredPrevalence_gammas.csv").data
 // var df_prevalence = dataFrame(prevalenceData)
 // console.log(_.keys(prevalenceERPobject))
 
-var priorERPobject = _.object(map(function(property){
-	console.log('inferring prevalence prior of ' + property)
-	return [property, HashMH(function(){return priorModel(property)}, prioriters, {"verbose":false})]
+// var priorERPobject = _.object(map(function(property){
+// 	console.log('inferring prevalence prior of ' + property)
+// 	return [property, HashMH(function(){return priorModel(property)}, prioriters, {"verbose":false})]
+// }, properties))
+		
+var previter = 50000
+console.log('inferring prevalence of property-category pairs...')
+var prevalenceERP = IncrementalMH(prevalenceModel, previter, {"verbose":"true"})
+console.log('prevalence of property-category pairs inferred!')
+
+
+var prevalenceERPobject = _.object(map(function(p){
+	var categories = _.uniq(_.pluck(subset(df_truth, "Property", p), "Category"))
+	return [p, _.object(map(function(k){
+		[k, marginalizeERP(prevalenceERP, [k,p])]
+	}, categories))]
 }, properties))
+
+
+var prevprioriter = 50000
+console.log('inferring prevalence priors...')
+var priorERP = IncrementalMH(priorModel, prevprioriter, {"verbose":"true"})
+console.log('prevalence priors inferred!')
+
+
+var priorERPobject = _.object(map(function(p){
+	return [p, marginalizeERP(priorERP, p)]
+}, properties))
+
 
 
 var softmaxSpeaker2 = function(myERP, softmax){
 	Enumerate(function(){
-		var p = truthutils.softmax(Math.exp(myERP.score([], "generic is true")), softmax)
+		var p = truthUtils.softmax(Math.exp(myERP.score([], "generic is true")), softmax)
 		var response = flip(p) ? "generic is true" : "mu"
 		return response
 	})
 }
+
+// var marginalizeERP = function(myERP, label){
+// 	Enumerate(function(){
+// 		var x = sample(myERP)
+// 		return x[label]
+// 	})
+// }
+
+var guessingLink = function(myERP, phi){
+	Enumerate(function(){
+
+		var x = flip(1-phi) ? 
+					sample(myERP) :
+					["generic is true","mu"][discrete([0.5,0.5])]
+		return x
+	})
+}
+
+
 
 var responseDictionary = {
 	"agree-key":"generic is true",
@@ -40,25 +84,33 @@ var responseDictionary = {
 
 var modelAnalysis = function(){
 
-	var speakerOptimality = uniform(0,10)
+	var speakerOptimality = uniform(0,20)
 	// var cost = uniform(0,5)
 	var cost = 1
+	var phi = uniform(0,1)
 	// var softmax = uniform(0,5)
 	// console.log(properties)
 	foreach(properties,
 		function(property){
-			console.log(property)
-			var propertyData = subset(df_truth, "positiveProperty", property)
+			// console.log(property)
+			// var propertyData = subset(df_truth, "positiveProperty", property)
+			var propertyData = subset(df_truth, "Property", property)
+
 			var categories = _.uniq(_.pluck(propertyData, "Category"))
 
-			var priorProbs = sample(priorERPobject[property])
+			// var priorProbs = sample(priorERPobject[property])
+			// var priorProperty_ERP = marginalizeERP(priorERP, property)
+			var priorProperty_ERP = priorERPobject[property]
+			// var priorProbs = sample(priorProperty_ERP)
+			var prior = sample(priorProperty_ERP)
+
 			// console.log(priorProbs)
 
 			foreach(categories,
 				function(k){
-					console.log(k)
+					// console.log(k)
 					var categoryData = subset(propertyData, "Category", k)
-					var negations = _.uniq(_.pluck(categoryData, "negation"))
+					// var negations = _.uniq(_.pluck(categoryData, "negation"))
 
 					// var prevalenceInformation = subset(subset(df_prevalence, "Category", k), "Property", property)
 					// var prevBins = _.pluck(prevalenceInformation, "b")
@@ -66,51 +118,95 @@ var modelAnalysis = function(){
 					// console.log(probs)
 					// console.log(prevBins)
 					// var positivePropertyPrevalence = prevBins[discrete(probs)-1]// 
-					var positivePropertyPrevalence = sample(prevalenceERPobject[property][k])
-					// console.log(positivePropertyPrevalence)
-					foreach(negations, 
-						function(n){
-						 var responseData = _.pluck(subset(categoryData, "negation", n), "response")
-						 var prior = (n==1) ? priorProbs.reverse() : priorProbs
-						 // console.log(bins.length)
-						 var prevalence = (n==1) ? avoidEnds(Math.round((1 - positivePropertyPrevalence)/10)/10) : 
-													positivePropertyPrevalence
-						console.log(prevalence)
-						console.log(prior)
-						console.log(speakerOptimality)
-			     		 var predictionERP = truthSpeaker2(prevalence, prior, speakerOptimality, 1)
-			     		 console.log('after prediction')
-							var scr = reduce(function(d, memo) {
-										    return memo + predictionERP.score([], responseDictionary[d])
-												}, 0, responseData)
-							console.log(scr)
-							factor(scr)
+					// var positivePropertyPrevalence = sample(prevalenceERPobject[property][k])
+					// var prevalencePropCat = marginalizeERP(prevalenceERP, [k,property])
+					var prevalencePropCat = prevalenceERPobject[property][k]
+					var prevalence = sample(prevalencePropCat)
 
-						query.add(["generic",property, k, n], 
-									Math.exp(predictionERP.score([], "generic is true")))
-					})
-					
-					query.add(["prevalence",property, k, "0"], positivePropertyPrevalence)
+
+					// console.log(positivePropertyPrevalence)
+					// foreach(negations, 
+					// 	function(n){
+					var responseData = _.pluck(categoryData, "response")
+						// var responseData = _.pluck(subset(categoryData, "negation", n), "response")
+						 // var prior = (n==1) ? priorProbs.reverse() : priorProbs
+						 // console.log(bins.length)
+						 // var prevalence = (n==1) ? avoidEnds(Math.round((1 - positivePropertyPrevalence)*10)/10) : 
+							// 						positivePropertyPrevalence
+						// console.log(prevalence)
+						// console.log(prior)
+						// console.log(speakerOptimality)
+			     	var predictionERP = truthSpeaker2(prevalence, prior, speakerOptimality, 1)
+
+			     	var linkedERP = guessingLink(predictionERP, phi)
+			     		 // console.log('after prediction')
+					var scr = reduce(function(d, memo) {
+								    return memo + linkedERP.score([], responseDictionary[d])
+										}, 0, responseData)
+					// console.log(scr)
+					factor(scr)
+
+					query.add(["generic_linked",property, k, "0"], 
+								Math.exp(linkedERP.score([], "generic is true")))
+
+					query.add(["generic_pred",property, k, "0"], 
+								Math.exp(predictionERP.score([], "generic is true")))
+
+					query.add(["prevalence",property, k, "0"], prevalence)
+
+					// })
 				})
 
-			foreach(_.zip(priorProbs, bins),
-				function(x){query.add(['prevalencePrior',property,x[1],"0"], x[0])}
-				)
+			// foreach(_.zip(prior, bins),
+			// 	function(x){query.add(['prevalencePrior',property,x[1],"0"], x[0])}
+			// 	)
 		})
 
+// 	query.add("key", value)
+
 	query.add(["speakerOptimality","na","na","na"], speakerOptimality)
+	query.add(["phi","na","na","na"], phi)
+
 	// query.add("cost", cost)
 	// query.add("softmax", softmax)
 	return query
 }
 
-// //var tfbt = Enumerate(dataAnalysis)
-var mhiter = 10
+// var priorProbs = sample(marginalizeERP(priorERP, property))
+
+// prevalenceERPobject
+// priorERPobject
+
+var mhiter = 100000
+console.log('doing the full bayesian dance...')
 var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true})
-// properties
+console.log('FBT complete')
 // tfbt
+// // properties
+// // tfbt.support()[0]
 // var outfile = 'results/'+ 'generics-tj-fullBayesian-samplePrev-so-priorhash'+prioriters+'_hashmh'+mhiter+'.csv'
 
-var outfile = 'results/'+ 'generics-tj-test'+prioriters+'_mh'+mhiter+'.csv'
-truthutils.erpWriter(tfbt, outfile)
+// var outfile = 'results/'+ 'generics-tj-test'+prioriters+'_mh'+mhiter+'.csv'
+var outfile = 'results/generics-tj-so-phi20-sequential-discretePriorConditioning-gammaPrevalence-explicitNegation-previter'+previter+
+				'_prevprioriter'+prevprioriter+'_mh'+mhiter+'b.csv'
+
+truthUtils.erpWriter(tfbt, outfile)
 console.log('wrote to... ' + outfile )
+	
+
+// var prior = sample(marginalizeERP(priorERP, "have wings"))
+// var prevalence = sample(marginalizeERP(prevalenceERP, ["Ducks","have wings"]))
+
+
+// var predictionERP = truthSpeaker2(prevalence, prior, 5, 1)
+
+
+// console.log(map(function(s){return Math.exp(predictionERP.score([],s))}, ["generic is true","mu"]))
+// var linkedERP = guessingLink(predictionERP, 0.5)
+// linkedERP
+
+
+// predictionERP
+
+
+// truthSpeaker2(prevalence, prior, 2, 1)
