@@ -836,8 +836,8 @@ Our model of a speaker considering a listener who has uncertainty about the true
 \section{Experiment 2: Generics carry strong implications}
 
 Generic statements are endorsed for a seemingly puzzlingly wide range of prevalence levels. 
-However, this puzzle is resolved when a speaker understands the generic to be vague and takes into account the distribution of the property in question within- and across- categories. 
-A second puzzle surrounds how a listener is to interpret a generic utterances.
+However, this puzzle is resolved when a speaker understands the generic to be vague and takes into account the distribution of the property in question. 
+The second puzzle in the psychology of generic language surrounds how listeners interpret generic utterances.
 Some of the earliest psychological work on generics brought this out, suggesting that generics ``once accepted psychologically, ... appear to be commonly taken in a rather strong sense, as if the qualifier \emph{always} had implicitly crept into their interpretation'' \cite{Abelson1966}. \red{[Note: this is the same quote that Cimpian2010 use... is this okay?}.
 %
 \citeA{Gelman2002} found that adults interpret novel generic statements about familiar kinds (e.g. ``Bears like to eat ants.'') as implying that almost all of the category has the property (e.g. almost all bears like to eat ants).
@@ -851,12 +851,12 @@ Similarly, upon hearing such an utterance, one is likely to infer that 100\% of 
 This symmetric relationship was found to hold with the quantifier ``most'', but generic utterances don't behave in this way \cite{Cimpian2010}.
 %Participants judged ``most'' sentences true when between 50-100\% of the category had the property (on average: 75\%). 
 %Similarly, upon hearing an utterance with ``most'', participants on average inferred a prevalence of about 75\%. 
-Generic statements are judged true for a wide range of prevalence levels, but upon hearing a generic utterance, participants were wont to infer that \emph{all} or \emph{almost all} of the category have the property. 
-Thus, the implications of generic statements go far beyond the evidence needed to accept them as valid.
+Generic statements are judged true for a wide range of prevalence levels, but upon hearing a generic utterance, participants were wont to infer that \emph{almost all} of the category have the property. 
+Thus, the implications of generic statements go far beyond the evidence needed to accept them as valid utterances.
 
 Not all statements in bare plural form carry these implications, however. 
-Indeed, interpretations of these sentences are sensitive to listener's beliefs about the properties in question. 
-\citeA{Cimpian2010} observed that predicating with accidental properties (e.g. ``Lorches have muddy feathers.'') significantly reduced participants' judgments about the implied prevalence of these statements.
+Indeed, interpretations of these sentences are sensitive to listeners' beliefs about the properties in question. 
+\citeA{Cimpian2010} observed that predicating bare plurals with accidental properties (e.g. ``Lorches have muddy feathers.'') significantly reduced participants' judgments about the implied prevalence of these statements.
 
 %That is, when the property in question was dangerous and distinct, participants required a lower overall prevalence (e.g. 10\% of lorches had purple feathers) to assert that the generic statement was true.
 
@@ -870,8 +870,8 @@ We show that the language understanding model predicts this asymmetry between tr
 
 \subsection{Experiment 2a: \emph{Prior elicitation for properties of novel animals}}
 
-In this experiment, we measured participants' beliefs about the distribution of the prevalence of a certain property within- and across- animal kinds. 
-We used materials from \citeA{Cimpian2010} which consisted of novel animal categories (e.g. glippets) and various properties (e.g. have orange legs; have broken legs).
+In this experiment, we measured participants' beliefs about the distribution of the prevalence of certain properties within- and across- animal kinds. 
+We expanded the stimulus set from \citeA{Cimpian2010} which consisted of novel animal categories (e.g. glippets) and various properties (e.g. have orange legs; have broken legs).
 
 
 \subsubsection{Participants}
@@ -882,40 +882,42 @@ We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Tu
 
 In Expt.~1a, participants filled out a table with rows corresponding to different animal kinds and columns corresponding to different properties. 
 Pilot testing suggested this was a pragmatically strange setup for this paradigm: answering ``What percentage of lorches have purple feathers?'', when participants knew nothing about lorches was difficult.
-We thus generalized the procedure to ask simpler questions and used a Bayesian statistical model to infer the underlying distribution. 
+We took advantage of the latent structure in the task, described in Section \ref{sec:bda1}, and used a Bayesian statistical model to infer the underlying distribution. 
 We then used these distributions in our language model to make predictions about the implications of generic sentences.
 
-Participants were asked about the prevalence across categories by asking them the likelihood of there existing a K that has F, where K was a novel animal categories and F was a property (e.g. ``how likely is it that there is a lorch that is female?''). 
+Participants were asked about the prevalence across categories by asking them the likelihood of there existing a K that has F, where K was a novel animal category and F was a property (e.g. ``how likely is it that there is a lorch that is female?''). 
 Prevalence within categories was measured by asking participants about the percentage of Ks that have Fs, given that at least one does.
+Participants responded using slider bars that ranged from ``unlikely'' to ``likely'', and ``0\%'' to ``100\%'', respectively.
 Complete instructions shown to participants are in Appendix \ref{sec:prior2instruct}. 
 
-Participants responded using slider bars that ranged from ``unlikely'' to ``likely'', and ``0\%'' to ``100\%'', respectively.
-
 Materials---novel animal names and familiar properties---built upon those from \citeA{Cimpian2010}. 
-Classic work in generalization suggested to us that there may be differences in the distributions of different types of biological properties \cite{Nisbett1983}. 
+Classic work in generalization suggested to us that there may be differences in the implications of generic statements of different types of biological properties \cite{Nisbett1983}. 
 We expanded the stimulus set to include four different types of properties: biological parts (e.g. ``feathers''), colored parts (e.g. ``purple feathers''), vague parts (e.g. ``smooth feathers''), and accidental parts (e.g. ``broken feathers''). 
-Pilot testing revealed a lot of variability in the estimated prevalences of accidental properties relative to the other types of properties. 
-To test the quantitative predictive power of the generic interpretation model, we used twice as many exemplars of the accidental class of properties, with the aim to make a ``common accidental'' and a ``rare accidental'' class of properties. 
+Pilot testing revealed a lot of variability across items in the accidental properties relative to the other types of properties. 
+To test the quantitative predictive power of the generic interpretation model, we used twice as many exemplars of accidental properties, with the aim to make a ``common accidental'' and a ``rare accidental'' class of properties. 
 We used 8 exemplars of each of the three non-accidental properties (``parts'', ``colored parts'', ``vague parts'') and 16 exemplars of accidental properties.
 Materials are in Appendix \ref{sec:materials2}.
 
-\subsubsection{Data analysis}
+\subsubsection{Bayesian data analysis}
 
 In order to recover single belief distributions representing prevalence both within- and across- categories (analogous to those elicited in Expt.~1a and shown in Figure \ref{fig:priors1a}), we built a simple Bayesian statistical model of the task questions and their relation to the desired distribution. 
 
-Participants' responses to each question (slider bar values) were assumed to be samples from Beta distributions with unknown parameters. 
+Participants' responses to each question (slider bar values) were assumed to be samples from Beta distributions with unknown means and concentrations. 
 The responses to the questions ($d_{across}, d_{within}$) were used to estimate the parameters of the distributions of prevalence across- and within- categories, separately. 
 \begin{align*}
 d_{across} \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\
 d_{within} \sim \text{Beta}(\gamma_{within}, \delta_{within}) 
 \end{align*}
-The parameters $\gamma$ and $\delta$ correspond to the mean and variance (formally, the concentration), respectively, of prevalence for each of the across- and within- distributions. 
+The parameters $\gamma$ and $\delta$ correspond to the mean and variance (formally, the concentration), respectively, of prevalence for each of the across- and within- distributions.
+As in our other models, we assume some global proportion of noise in the experimental data $\phi$. 
 We put identical, uninformative priors on these parameters:
 \begin{align*}
+\phi & \sim \text{Uniform}(0,1) \\
 \gamma & \sim \text{Uniform}(0,1) \\
-\delta & \sim \text{Uniform}(0,10)
+\delta & \sim \text{Uniform}(0,20) 
 \end{align*}
-To construct single prevalence distributions reflecting both the within- and across- category prevalence (as we have for Expt.~1a), we assume that the distribution is a mixture of categories that have the property and categories that don't have the property\footnote{This is similar in spirit to Hurdle Models of count data used in clinical trials where the observed proportion of zeros is greater than one would expect from classical models of count data like the Poisson model.}. Whether or not a category has a property is determined by flipping a coin, weighted by the prevalence across categories
+To construct single prevalence distributions reflecting both the within- and across- category prevalence (as we have for Expt.~1a), we assume that the distribution is a mixture of categories that have the property and categories that don't have the property\footnote{This is similar in spirit to Hurdle Models of count data used in clinical trials where the observed proportion of zeros is greater than one would expect from classical models of count data like the Poisson model.}. Whether or not a category has a property ($h$) is driven by the prevalence across categories ($\theta_{across}$).
+%
 \begin{align*}
 \theta_{across} & \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\ 
 h & \sim \text{Bernoulli}(\theta_{across}) \\
@@ -924,15 +926,17 @@ x & \sim \begin{cases}
 				0 & \mbox{if } h=0. 
 				\end{cases} 
 \end{align*}
-
-Marginal posterior distributions for $x$ for estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking 50,000 samples using the Metropolis-Hastings algorithm.
+%
+Marginal posterior distributions for $x$ were estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking 50,000 samples using the Metropolis-Hastings algorithm.
 
 \subsubsection{Results}
 
 Our focus for this experiment is to see if the distributions on prevalence differ between the different types of properties.
 We analyzed the data first by item in order to split the accidental properties into two categories: common accidental properties (e.g. wet fur) and rare accidental properties (e.g. broken legs). We then ran the model again analyzing the data by type of property.
 
-Figure \ref{fig:prior2} Left shows the posterior predictive distributions for prevalence $x$ for 5 different types of properties.Figure \ref{fig:prior2} Right shows the region of interest of these distributions by removing the all the mass at 0. These distributions form the prevalence priors used in the language understanding model. 
+Figure \ref{fig:prior2} (left) shows the posterior predictive distributions for prevalence $x$ for 5 different types of properties
+.Figure \ref{fig:prior2} (right) shows the region of interest of these distributions by removing the mass at 0. 
+These distributions form the prevalence priors used in the language understanding model for Expt.~2b. 
 With the exception of the body part category, properties are mostly likely to be absent from the category (Figure \ref{fig:prior2} left; modes of distributions are at 0).
 If the property is present in the category, the most likely prevalence for biological properties (``part'', ``color part'', and ``vague part'') is 100\% (Figure \ref{fig:prior2} right; modes of blue, green, and red distributions are at 1).
 This is not the case with the prevalence priors for accidental properties, for which lower values are more likely (Figure \ref{fig:prior2} right; modes of orange and purples distributions are at some low prevalence).
