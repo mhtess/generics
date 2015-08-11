@@ -721,7 +721,8 @@ Five additional participants were excluded for listing a language other than Eng
 \end{figure}
 
 
-The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false (Figure \ref{fig:tj1b}). We entered participants' agreement judgments into a mixed-effect logistic regression with random by-participant effects of intercept. 
+The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false (Figure \ref{fig:tj1b}). 
+We entered participants' agreement judgments into a mixed-effect logistic regression with random by-participant effects of intercept. 
 This \emph{a priori} distinction was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$).
 Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
 
@@ -741,21 +742,21 @@ However, large deviations from a purely within-category prevalence account remai
 
 \subsection{Lifted-threshold model predictions}
 
-The model specified in Section \ref{sec:model} reasons about the likely prevalence that a listener will infer given an informative speaker, a generic sentence and a distribution over the prevalence of the property. 
-In this way, the model takes into account the prevalence of the property both within- and across-categories.
+The speaker model specified in Section \ref{sec:model} reasons about the likely prevalence that a listener will infer given  a generic sentence and assuming an informative speaker and a distribution over the prevalence of the property. 
+In this way, the model takes into account the prevalence of the property both within- and across-categories as well as communicative principles.
 We explore the predictions of this model, using the empirical priors elicited in Expt.~1a. 
 We compare these predictions to the truth judgment data observed in Expt.~1b.
 
 \subsubsection{Posterior over model parameters}
 
-The full model has one free parameter, the speaker rationality $\lambda$ in Equation \ref{eq:S1}, and the one data analysis parameter, the contamination parameter $\phi$ .
-To learn about the \emph{a posteriori} credible values of our model parameter, we used the probabilistic programming language WebPPL \cite{dippl} to collect \red{X} chains of \red{Y} samples using the Metropolis-Hastings algorithm. 
+The full model has one free parameter, the speaker rationality $\lambda$ in Equation \ref{eq:S1}, and one data analytic parameter, a contamination parameter $\phi$.
+To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect \red{X} chains of \red{Y} samples using the Metropolis-Hastings algorithm. 
 %The estimated posterior density of the speaker rationality parameter is shown in Figure \ref{fig:rationality}. 
 The speaker rationality parameter represents the speaker's belief in how rational the hypothetical listener believes he is when choosing to say the generic (over saying nothing). 
 The 95\% Highest Probability Density (HPD) Interval is [7.86,10.29].
 
 In the data analysis, we also include a contamination parameter $\phi$ to account for noise in the data.  
-This represents the proportion of the data that can be better explained by random guessing than by our model of generic meaning.
+This represents the proportion of the data that can be better explained by random guessing than by our model of generic language.
 In this way, $\phi$ provides a crude measure of goodness of fit. 
 The 95\% HPD Interval is [0.006,0.05]. 
 This suggests that there is not a substantial amount of noise in the data, possibly owing to the simplicity of the task. 
@@ -799,7 +800,7 @@ This difference is likely driven by greater uncertainty about the prevalence of 
 \subsection{Discussion}
 
 In Expt.~1, we asked whether or not participants' truth judgments on a set of generic sentences covering a range of conceptual distinctions could be explained by a language understanding model with a truth-functional threshold sensitive to the prior distribution over prevalence. 
-In Expt.~1a, we empirically measured the prior distribution of prevalence by asking participants about their beliefs of how prevalent certain properties are across many animal categories. 
+In Expt.~1a, we empirically measured the prior distribution of prevalence by asking participants about the prevalence of certain properties across many animal categories. 
 Here, we observed qualitatively different distributions corresponding to properties that are common within-categories and common across-categories (e.g. ``are male''), common within-categories but rare across-categories (e.g. ``have manes''), rare within-categories and rare across-categories (e.g. ``carries malaria''). Interestingly, these same distinctions are made between generics of these properties \cite{Prasada2013}. 
 Our empirical and modeling results suggest these distinctions are a result of different belief distributions about the prevalence of the properties.
 
@@ -808,14 +809,12 @@ Here, the prevalence prior plays a critical role in determining where the generi
 In setting the threshold, the pragmatic listener $L_{1}$ balances the truth of the utterance with the informativeness of the utterance. 
 If the pragmatic listener hears ``Lions haves manes.'', she will likely set the threshold $\theta$ below 50\%, as this is necessary to make the utterance true (Figure \ref{fig:priors1a} bottom left). 
 At the same time, the listener believes the message to be informative, so she will probably set $\theta$ above 10\%. 
-Since the posterior inferred prevalence has to be greater than the threshold in order to make the utterance true, the most likely inferred prevalence $x$ will be about 50\% (i.e. after ruling out everything below 10\%, the most probably prevalence will be 50\%). 
-Since this matches the speaker's believed prevalence of having manes among lions, the speaker concludes the generic is a helpful thing to say.
+Since the posterior inferred prevalence has to be greater than the threshold in order to make the utterance true, the expected value of inferred prevalence $x$ will be about 50\% (i.e. after ruling out everything below 10\% and integrating over the conditional distribution, the inference is that 50\% of the species has the property). 
+Since this matches the speaker's known prevalence of having manes among lions, the speaker concludes the generic is a helpful thing to say (relative to saying nothing, or saying the opposite).
 %These differences, coupled with a vague meaning for the generic, produce different acceptance probabilities for a range of generic sentences. 
 %For example, ``Mosquitos carry malaria'' is true, because the prevalence of malaria among mosquitos is higher than prevalence of malaria among most (possibly all) other animal species. 
 %``Lions have manes'' is true for the same reason. 
 At the same time, participants judged ``Lions are male'' to be neither true nor false; the model exhibits the same behavior because the prevalence of being male among lions is neither significantly more nor less than prevalence of being male among other animal species. 
-
-The conceptual distinctions among generics \cite{Prasada2013} explored in this experiment can be explained by differences in the distribution of the prevalence of these properties. 
 Our model of a speaker considering a listener who has uncertainty about the true threshold on prevalence produces truth judgments highly similar to those of our participants.
 
 %The speaker selects the utterance according to a soft-max decision rule governed by parameter $\lambda$\footnote{It's conceivable that this $\lambda$ is different from the parameter that governs the selection of $S_{1}$'s utterances. For simplicity here we assume they are the same.}.
