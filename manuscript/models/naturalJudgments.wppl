@@ -1,0 +1,92 @@
+// time webppl naturalJudgments.wppl --require-js ./naturalUtils.js --require-wppl ./lvRSA.wppl --require-wppl ./naturalPriors.wppl --require-wppl ./naturalPrevalence.wppl --require-wppl ./naturalUtils.wppl   
+
+var previter = 100
+console.log('inferring prevalence of property-category pairs...')
+var prevalenceERP = IncrementalMH(prevalenceModel, previter, {"verbose":"true"})
+console.log('prevalence of property-category pairs inferred!')
+
+
+var prevalenceERPobject = _.object(map(function(p){
+	var categories = _.uniq(_.pluck(subset(df_truth, "Property", p), "Category"))
+	return [p, _.object(map(function(k){
+		[k, marginalizeERP(prevalenceERP, [k,p])]
+	}, categories))]
+}, properties))
+
+
+var prevprioriter = 100
+console.log('inferring prevalence priors...')
+var priorERP = IncrementalMH(priorModel, prevprioriter, {"verbose":"true"})
+console.log('prevalence priors inferred!')
+
+var priorERPobject = _.object(map(function(p){
+	return [p, marginalizeERP(priorERP, p)]
+}, properties))
+
+var responseDictionary = {
+	"agree-key":"generic is true",
+	"disagree-key":"mu"
+}
+
+var modelAnalysis = function(){
+
+	var speakerOptimality = uniform(0,20)
+	var cost = 1
+	var phi = uniform(0,1)
+
+	foreach(properties,
+		function(property){
+
+			var propertyData = subset(df_truth, "Property", property)
+			var categories = _.uniq(_.pluck(propertyData, "Category"))
+
+			var priorProperty_ERP = priorERPobject[property]
+			var prior = sample(priorProperty_ERP)
+
+			foreach(categories,
+				function(k){
+					var categoryData = subset(propertyData, "Category", k)
+					var prevalencePropCat = prevalenceERPobject[property][k]
+					var prevalence = sample(prevalencePropCat)
+					var responseData = _.pluck(categoryData, "response")
+
+			     	var predictionERP = truthSpeaker2(prevalence, prior, speakerOptimality, 1)
+			     	var linkedERP = guessingLink(predictionERP, phi)
+					var scr = reduce(function(d, memo) {
+								    return memo + linkedERP.score([], responseDictionary[d])
+										}, 0, responseData)
+					// console.log(scr)
+					factor(scr)
+
+					query.add(["generic_linked",property, k, "0"], 
+								Math.exp(linkedERP.score([], "generic is true")))
+
+					query.add(["generic_pred",property, k, "0"], 
+								Math.exp(predictionERP.score([], "generic is true")))
+
+					query.add(["prevalence",property, k, "0"], prevalence)
+
+					// })
+				})
+
+			// foreach(_.zip(propertyrior, bins),
+			// 	function(x){query.add(['prevalencePrior',property,x[1],"0"], x[0])}
+			// 	)
+		})
+	query.add(["speakerOptimality","na","na","na"], speakerOptimality)
+	query.add(["phi","na","na","na"], phi)
+	return query
+}
+
+
+var mhiter = 100
+console.log('doing the full bayesian dance...')
+var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true})
+console.log('FBT complete')
+
+var outfile = '../model-results/generics-truthJudgment-previter'+previter+
+				'_prevprioriter'+prevprioriter+'_mh'+mhiter+'c.csv'
+
+naturalUtils.erpWriter(tfbt, outfile)
+console.log('wrote to... ' + outfile )
+	
