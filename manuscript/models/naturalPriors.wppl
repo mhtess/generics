@@ -17,6 +17,8 @@ var priorModel = function(){
 							}, 0, responseData)
 		factor(scr1)
 
+		// for just doing inference over the priors 
+		query.add(["prevalencePrior",p,"na","prob_hasF"], prob_hasF)
 
 		var gamma = uniform(0,1)
 		var delta = uniform(0,50)
@@ -34,12 +36,26 @@ var priorModel = function(){
 							}, 0, responseData)
 
 		factor(scr2)
-
-
-		var discretized_prevalence = discretizedPriorModel(prob_hasF, gamma, delta)
-		query.add(p, discretized_prevalence)
+		
+		// for linking with truthJudgments.wppl
+		// var discretized_prevalence = discretizedPriorModel(prob_hasF, gamma, delta)
+		// query.add(p, discretized_prevalence)
+		// for just doing inference over the priors 
+		query.add(["prevalencePrior",p,"na","gamma"], gamma)
+		query.add(["prevalencePrior",p,"na","delta"], delta)
 
 	})
-
+	
+	query.add(["prevalencePrior","na","na","phi"], phi)
 	return query
 }
+
+// for just doing inference 
+var mhiter = 10000
+var resultsERP = IncrementalMH(priorModel, mhiter, {verbose:"true"})
+var outfile = '../model-results/generics-naturalPriors-incrMH'+mhiter+'a.csv'
+naturalUtils.erpWriter(resultsERP, outfile)
+console.log('wrote to... ' + outfile)
+
+
+

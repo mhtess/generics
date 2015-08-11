@@ -40,10 +40,25 @@ var prevalenceModel = function(){
 			factor(scr)
 			// console.log(scr)
 
-			query.add([k,p], avoidEnds(Math.round(gamma*10)/10))
-
+			// for linking with truthJudgments.wppl
+			// query.add([k,p], avoidEnds(Math.round(gamma*10)/10))
+			// for just doing inference over the prevalence 
+			query.add(["prevalence",p, k, "gamma"], gamma)
+			query.add(["prevalence",p, k, "delta"], delta)
 		})
 	})
-
+	
+	// for just doing inference over the prevalence 
+	query.add(["prevalence","na", "na", "phi"], phi)
 	return query
 }
+
+// for just doing inference 
+// var mhiter = 100000
+// var resultsERP = IncrementalMH(prevalenceModel, mhiter, {verbose:"true"})
+// var outfile = '../model-results/generics-naturalPrevalence-incrMH'+mhiter+'a.csv'
+// naturalUtils.erpWriter(resultsERP, outfile)
+// console.log('wrote to... ' + outfile)
+
+
+
