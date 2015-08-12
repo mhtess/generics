@@ -804,6 +804,13 @@ contrasts(d.implied$type)<- cbind(acc_high = c(1, 0, 0,0,0),
                                   part = c(0, 0, 0,1,0) )
 
 rs1<-lmer(data=d.implied, response~ type + (1 + type | workerid))
+rs2<-lmer(data=d.implied, response~ type + (1 | workerid))
+
+#rs3<-lmer(data=d.implied, response~ type + (1 + type | workerid)+
+#                                            (1 | stim_property))
+summary(rs3)
+
+anova(rs1,rs2)
 summary(rs1)
 
 ```

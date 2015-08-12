@@ -80,6 +80,7 @@ var getProbsFromERP = function(myERP, orderedSupport){
 	}, orderedSupport)
 }
 
+
 var prevalenceModel = function(p, k){
 
 	var propertyData = subset(df_prior, "Property", p)

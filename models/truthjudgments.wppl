@@ -157,7 +157,7 @@ var modelAnalysis = function(){
 					// })
 				})
 
-			// foreach(_.zip(prior, bins),
+			// foreach(_.zip(propertyrior, bins),
 			// 	function(x){query.add(['prevalencePrior',property,x[1],"0"], x[0])}
 			// 	)
 		})
@@ -188,7 +188,7 @@ console.log('FBT complete')
 
 // var outfile = 'results/'+ 'generics-tj-test'+prioriters+'_mh'+mhiter+'.csv'
 var outfile = 'results/generics-tj-so-phi20-sequential-discretePriorConditioning-gammaPrevalence-explicitNegation-previter'+previter+
-				'_prevprioriter'+prevprioriter+'_mh'+mhiter+'b.csv'
+				'_prevprioriter'+prevprioriter+'_mh'+mhiter+'c.csv'
 
 truthUtils.erpWriter(tfbt, outfile)
 console.log('wrote to... ' + outfile )
