@@ -2,7 +2,8 @@
 
 var previter = 100
 console.log('inferring prevalence of property-category pairs...')
-var prevalenceERP = IncrementalMH(prevalenceModel, previter, {"verbose":"true"})
+var prevalenceERP = IncrementalMH(prevalenceModel, previter, {"verbose":"true",
+																"burnin": previter/2})
 console.log('prevalence of property-category pairs inferred!')
 
 
@@ -16,7 +17,8 @@ var prevalenceERPobject = _.object(map(function(p){
 
 var prevprioriter = 100
 console.log('inferring prevalence priors...')
-var priorERP = IncrementalMH(priorModel, prevprioriter, {"verbose":"true"})
+var priorERP = IncrementalMH(priorModel, prevprioriter, {"verbose":"true",
+														"burnin": prevprioriter/2})
 console.log('prevalence priors inferred!')
 
 var priorERPobject = _.object(map(function(p){
@@ -81,12 +83,15 @@ var modelAnalysis = function(){
 
 var mhiter = 100
 console.log('doing the full bayesian dance...')
-var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true})
+var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true,
+												"burnin":mhiter/2}
+												)
 console.log('FBT complete')
 
-var outfile = '../model-results/generics-truthJudgment-previter'+previter+
-				'_prevprioriter'+prevprioriter+'_mh'+mhiter+'c.csv'
 
-naturalUtils.erpWriter(tfbt, outfile)
-console.log('wrote to... ' + outfile )
+// var outfile = '../model-results/generics-truthJudgment-previter'+previter+
+// 				'_prevprioriter'+prevprioriter+'_mh'+mhiter+'c.csv'
+
+// naturalUtils.erpWriter(tfbt, outfile)
+// console.log('wrote to... ' + outfile )
 	
