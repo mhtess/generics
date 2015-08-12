@@ -45,3 +45,6 @@ bgh2014-replication/mturk/
 *mturk-and-gmail.txt
 *key
 experiments/turk*
+*.DS_Store
+manuscript/models/node_modules/naturalUtils/node_modules
+*npm-debug.log
