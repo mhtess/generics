@@ -47,4 +47,5 @@ bgh2014-replication/mturk/
 experiments/turk*
 *.DS_Store
 manuscript/models/node_modules/naturalUtils/node_modules
+manuscript/models/node_modules/asymUtils/node_modules
 *npm-debug.log
