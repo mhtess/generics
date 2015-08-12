@@ -1,0 +1,134 @@
+---
+title: "natural-prevalence.Rmd"
+author: "mht"
+date: "August 11, 2015"
+output: html_document
+---
+```{r helpers}
+estimate_mode <- function(s) {
+  d <- density(s)
+  return(d$x[which.max(d$y)])
+}
+HPDhi<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","upper"])
+}
+HPDlo<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","lower"])
+}
+
+```
+
+```{r}
+m.path<-"~/Documents/research/generics/manuscript/model-results/"
+
+samples = 100000
+prefix<-'generics-naturalPrevalence-incrMH100000' 
+m<-read.csv(paste(m.path, prefix, 'a.csv', sep=''))
+
+
+str(m)
+
+m <- data.frame(Parameter =  rep(m$Parameter, 
+                                   1+samples*m$Probability),
+                Property =  rep(m$Property, 
+                                   1+samples*m$Probability),
+                Category =  rep(m$Category, 
+                                   1+samples*m$Probability),
+                Negation =  rep(m$Negation, 
+                                   1+samples*m$Probability),
+                Value = rep(m$Value, 
+                                   1+samples*m$Probability))
+
+
+m.phi <- m %>% filter(Negation=='phi')
+
+phi.summary<-m.phi %>% 
+  summarise(map = estimate_mode(Value),
+            credHi = HPDhi(Value),
+            credLo = HPDlo(Value))
+write.csv(phi.summary, 
+          file='~/Documents/research/generics/manuscript/model-results/natural-prevalence-phi.csv')
+
+
+m.summary<- m %>% filter(Negation == 'gamma') %>%
+  group_by(Property, Category) %>%
+  summarise(#expectation = mean(Value),
+            #med = median(Value),
+            map = estimate_mode(Value),
+            credLow =HPDlo(Value),
+            credHigh= HPDhi(Value))
+
+write.csv(m.summary, 
+          file='~/Documents/research/generics/manuscript/model-results/natural-prevalence-intervals.csv')
+
+```
+
+Distributions on (e.g.) gamma
+
+```{r}
+ggplot(m.phi, aes(x=Value))+
+  geom_histogram()+
+  xlim(0,1)
+
+
+m.prev<- m1 %>%
+  unite(Pairing, Property, Category) 
+
+ggplot(m.prev, aes(x=Value))+
+  #geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
+  geom_histogram(aes(y=..count../sum(..count..)))+
+  facet_wrap(~Pairing, scales='free')+
+  xlim(0,1)+
+  xlab("Prevalence")+
+  ylab("Posterior probability")
+
+```
+
+
+Reconstruct prevalence prior by forward sampling
+
+```{r}
+
+d.samples<-data.frame()
+
+shape1 = function(gamma,delta){return (gamma * delta)}
+shape2= function(gamma,delta){return ((1-gamma) * delta)}
+
+
+m.params<-m1 %>% unite(Pairing, Category, Property)
+
+for (i in 1:100){
+
+  d.samp<-m.params %>%
+    group_by(Pairing,Negation) %>%
+    sample_n(1) %>%
+    ungroup() %>%
+    spread(Negation, Value) %>%
+    mutate(alpha = shape1(gamma,delta),
+           beta = shape2(gamma, delta))
+  
+  for (k in 1:length(d.samp$Pairing)){
+    d.iter<-data.frame(
+               Pairing = d.samp[k,1],
+               Prevalence = rbeta(100, d.samp[[k, "alpha"]], 
+                                       d.samp[[k, "beta"]]
+                                  )
+               )
+    d.samples<-bind_rows(d.samples, d.iter)
+  }
+  
+  if ((i %% 10)==0) { print(i) }
+
+}
+
+ggplot(d.samples, aes(x=Prevalence))+
+  geom_histogram()+
+  facet_wrap(~Pairing, scales='free')+
+  xlim(0,1)
+
+
+
+
+```

@@ -1,0 +1,128 @@
+---
+title: "natural-priors"
+author: "mht"
+date: "August 12, 2015"
+output: html_document
+---
+
+
+```{r helpers}
+estimate_mode <- function(s) {
+  d <- density(s)
+  return(d$x[which.max(d$y)])
+}
+HPDhi<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","upper"])
+}
+HPDlo<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","lower"])
+}
+
+```
+
+```{r}
+m.path<-"~/Documents/research/generics/manuscript/model-results/"
+
+samples = 100000
+prefix<-'generics-naturalPriors-incrMH100000' 
+m<-read.csv(paste(m.path, prefix, 'a.csv', sep=''))
+
+
+str(m)
+
+m <- data.frame(Parameter =  rep(m$Parameter, 
+                                   1+samples*m$Probability),
+                Property =  rep(m$Property, 
+                                   1+samples*m$Probability),
+                Negation =  rep(m$Negation, 
+                                   1+samples*m$Probability),
+                Value = rep(m$Value, 
+                                   1+samples*m$Probability))
+
+
+m.phi <- m %>% filter(Negation=='phi')
+
+phi.summary<-m.phi %>% 
+  summarise(map = estimate_mode(Value),
+            credHi = HPDhi(Value),
+            credLo = HPDlo(Value))
+
+write.csv(phi.summary, 
+          file='~/Documents/research/generics/manuscript/model-results/natural-priors-phi.csv')
+
+
+```
+
+
+
+Reconstruct prevalence prior by forward sampling
+
+```{r}
+
+d.samples<-data.frame()
+
+shape1 = function(gamma,delta){return (gamma * delta)}
+shape2= function(gamma,delta){return ((1-gamma) * delta)}
+
+d.params <- m %>% filter(!(Negation=='phi')) %>%
+  select(-Parameter) %>%
+  rename(Parameter=Negation)
+
+for (i in 1:100){
+
+  d.samp<-d.params %>%
+    group_by(Property, Parameter) %>%
+    sample_n(1) %>%
+    ungroup() %>%
+    spread(Parameter, Value) %>%
+    mutate(alpha = shape1(gamma,delta),
+           beta = shape2(gamma, delta)) %>%
+    group_by(Property) %>%
+    mutate(doesHaveF = rbinom(1,1,prob_hasF)) %>%
+    select(-gamma, -delta)
+
+  
+  for (k in 1:length(d.samp$Property)){
+    d.iter<-data.frame(
+               Pairing = d.samp[k,1],
+               
+               Prevalence = if (d.samp[[k,"doesHaveF"]]==1){
+                                rbeta(10, d.samp[[k, "alpha"]], 
+                                          d.samp[[k, "beta"]]
+                                    )
+                                } else {rep(0,10)}
+               )
+    d.samples<-bind_rows(d.samples, d.iter)
+  }
+  
+  if ((i %% 10)==0) { print(i) }
+}
+
+#target<- c("are female", "lay eggs", "carry malaria", "have wings")
+target<- c("are male", "have manes", "carry malaria", "have wings")
+#ggplot(d.samples %>% filter(Prevalence!=0), 
+ggplot(d.samples %>% filter(Property %in% target), 
+          aes(x=Prevalence))+
+  #geom_histogram()+
+  geom_density(adjust=1, size=1, fill='grey')+
+  geom_density(data = d.samples %>% filter((Prevalence!=0) & 
+                                           (Property %in% target)&
+                                             (Property!="have wings")), 
+               aes(x=Prevalence), color='blue', linetype =2)+
+  #scale_color_brewer(palette='Dark2')+
+  xlab("Prevalence")+
+  ylab("Posterior density")+
+  theme(legend.position=c(0.7,0.65))+
+  guides(color =F)+ 
+  facet_wrap(~Property, scales='free')+
+  xlim(0,1)
+
+#ggsave(file='~/Documents/research/generics/manuscript/figures/prevalence_priors_inferred-betas.pdf')
+
+
+```
+
+
+
