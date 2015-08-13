@@ -30,45 +30,11 @@
 % mh 7/19
 % in experiment 1 and model, take the speaker perspective when talking about how the model works
 
-
-
-
-%from noah 1/30 am:
-%-add some more points to the x axis in figure 6 so the mosquitos prior looks bimodal. perhaps show as curves instead of bars?
-
-
-% - get tiny URLs for experiment links
-% - set up forest page
-% - fit into space and proof read.
-
-
-% - if time: look at "order effect" in prior elicitation (taboo sampling hypothesis... first sample is 0, second is 100, third - fifth are meh)
-% - make figures 1 & 2 as pretty as 3 & 4
-
-
-
-
-% - try rationality parameter in tfbt model
-% - look at "order effect" in prior elicitation (taboo sampling hypothesis... first sample is 0, second is 100, third - fifth are meh)
-% - do we really want posterior predictives that include the guessing parameter? (the guessing parameter is part of the analysis model, not the cognitive model...)
-%- what kind of evidence do we want to use at the end to relate inferred priors to elicited? 
-%	- is eye-balling the elicited prior and the mean inferred priors sufficient?
-%	- i tried TFBT on the elicited priors to back out gamma & deltas, but gammas don't seem to come apart for DD vs. plain (as they do in the inferred priors from Exp 1 &2)
-%	- one possible way to get this sort of "ordered gammas" evidence would be to repeat the prior elicitation with more items per trial
-%		- the thought is that in our prior elicitation, i used 5 animals per slide (and 6 trials)
-%			- probably there was not enough dynamic range for Plain vs DD to come apart 
-%		- i think with 10 items, it would be better (but does that mean just 3 trials, one in each context, per subj?) [there are only 30 animals]
-%% --- not sure if the above comments about prior elicitation still hold with the fixed TFBT model, but Noah's suggestion was for 1 animal at a time
-
-%		
 %todo after cogsci:
 %-run additional contexts. e.g. separate dangerous and distinct.
 %-look again at finer-grained truth judgement task?
 %-think about the weird cases of generics in the literature. e.g. ``robins lay eggs''.
 % - try an S2 model of prevalence judgement task, too. does it reduce to the L1 model?
-
-%
-
 
 % comments from workshop class 4/29
 %
@@ -82,9 +48,7 @@
 %
 % Maybe add talk of stereotypes?
 % Craig: Use speaker / listener actors more; think about the person and the thing they're doing
-% 
-% Simulations of theoretical analysis: first sentence WHOA
-%
+% %
 %  beef up penultimate paragraph in intro: talk about why distinctive and dangerous are important
 % ---- unpack distinctive and dangerous (use experimental materials)
 %
@@ -115,9 +79,6 @@
 % in conclusion: what do the tools allow us to do? (e.g. w/ stereotyping) 
 % differences in prior knowledge --> how does this contribute to language change?
 % 
-
-
-
 
 \documentclass[10pt,letterpaper]{article}
 % Default margins are too wide all the way around. I reset them here
@@ -249,15 +210,6 @@ This work suggests that the semantics of generic statements can treated as scala
 %this work relating to the pragmatics of experimental contexts.
 
 
-%demonstrated that the endorsement rate of generic statements differs by context, and that generics can be endorsed based on weak evidence while the same sentences are interpreted strongly. Here, we replicate these effects in Exp.~1 and investigate how models based on prevalence (the probability of the property given the category) can account for this behavior. 
-%Using Bayesian data analysis techniques, %to make inferences about the putative threshold used as well as to arbitrate between competing accounts. 
-%we show how a simple scalar prevalence semantics is untenable, but that the same semantics within a probabilistic pragmatics framework can account for the data. 
-%In this model, the generic has an underspecified meaning, but this uncertainty is resolved by context and interaction. 
-%Context effects are predicted if the prior distribution of prevalence differs by context; in Exp.~2 we find direct evidence that this is so.
-%The differences between verification and interpretation are understood as different tasks within a communicative framework. 
-%We use a Bayesian analysis again to infer a prior distribution, for which we then find confirmatory evidence in Exp. 2. 
-
-
 \textbf{Keywords:} 
 generics; probabilisitic pragmatics
 \end{abstract}
@@ -274,35 +226,56 @@ generics; probabilisitic pragmatics
 %Few would argue with the truth of this sentence, yet its meaning is difficult to specify. 
 
 
-Imagine talking with a 3-year-old about oxygen. Oxygen is difficult to explain because it is so rarely observable and the function of oxygen is abstract. 
-You might offer, ``Animals breathe oxygen to live.''. 
-Few would argue with the truth of this sentence, yet its meaning is difficult to specify. 
+%Imagine talking with a 3-year-old about oxygen. 
+%Oxygen is difficult to explain because it is so rarely observable and the function of oxygen is abstract. 
+%You might say something generic like, ``Animals breathe oxygen to live.''. 
+%Few would argue with the truth of this sentence, yet its meaning is difficult to specify. 
+
+Imagine discussing the importance of wearing shoes with a 3-year-old. 
+The toddler is making a good case why she shouldn't have to wear shoes if she doesn't want to. 
+You counter with something generic like, ``Shoes have arch support, which is good for staying on your feet.''. 
+Indeed, these shoes do; many shoes do.
+Few would argue with the truth of this sentence, yet its precise meaning is difficult to specify. 
+
+%Imagine discussing the importance of taking vitamins with a 3-year-old. 
+%Vitamins are difficult to describe because they the category is so variable.
+%You offer something generic like, ``Vitamins are have beneficial qualities.'. 
+%Few would argue with the truth of this sentence, yet its meaning is difficult to specify. 
+
+%other openers:
+% "Vitamins make you strong."
+% Why do I have to wear shoes? "Shoes have arch support."
 
 %Is it synonymous with ``All animals breathe Oxygen to live''? %It's false that \emph{all} animals breathe oxygen (e.g. fish), yet intuitively the sentence seems to convey something stronger than the weak \emph{some} animals breathe oxygen. 
 %If you were talking with an adult, you might use a more nuanced statement (e.g. by talking about the subcategory Mammals).
 %Words are vague because ideas are vague, Locke argues. In making this argument, he falls into the habit of communication that we all fall into: using generalizations about members of a category---in this case, \emph{[articulate] sounds}. 
 %
-This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category (e.g. \emph{animals}).  
-Generics are one of the simplest linguistic constructs. 
+This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category (e.g. \emph{shoes}).  
+Generics are one of the simplest linguistic constructs and are ubiquitous in everyday conversation, child-directed speech \cite{Gelman2008}, and are the primary vessel by which speakers discuss social categories, making them central to communicating stereotypes \cite{GelmanEtAl2004, Cimpian2010motivation, Leslie2015}.
 They have no explicitly marked operator and yet children as young as two or three can correctly understand that they refer to categories and not just a plurality in a scene \cite{Cimpian2008}. 
-Generics are ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008} and are thought to be essential to the growth of conceptual knowledge \cite{Gelman2004}. 
-At the same time, generics are the primary vehicle by which stereotypes are conveyed \cite{GelmanEtAl2004, Cimpian2010motivation, Leslie2015}.
-Despite their centrality to cognitive development and everyday conversation, generic utterances have elusive meanings. % stable meanings for generic sentences are hard to come by.
+They are thought to be essential to the growth of conceptual knowledge \cite{Gelman2004}. 
+Despite their centrality to cognitive development and everyday conversation, the semantics of generic language is not well characterized. 
+% stable meanings for generic sentences are hard to come by.
 
 The semantics of generics is often contrasted with that of quantifier sentences, which are commonly understood in terms of the prevalence of a property and are straightforward to evaluate for truth. 
-For example, for ``\emph{Some} animals breathe oxygen.'' to be true, then there must be at least one animal that does so. 
-``\emph{Most} animals breathe oxygen.'' is true because more than half do. 
-``\emph{All} animals breathe oxygen.'' is actually not true because there are three species of creatures called \emph{lorica} that live 2.2 miles underwater on the ocean floor in an oxygen-free environment \cite{Danovaro2010}; ``all'' means 100\%. 
-%then there really can be no exceptions: 100\% of animals must breathe oxygen for the sentence to be valid. 
-But what about ``Animals breathe oxygen.''? 
+%For example, ``\emph{Some} animals breathe oxygen.'' is true because there are animals that do. 
+%``\emph{Most} animals breathe oxygen.'' is true because more than half do. 
+%``\emph{All} animals breathe oxygen.'' is actually not true because there are three species of creatures called \emph{lorica} that live 2.2 miles underwater on the ocean floor in an oxygen-free environment \cite{Danovaro2010}; ``all'' means 100\%. 
+%But what about ``Animals breathe oxygen.''? 
+For example, ``\emph{Some} shoes have arch support.'' is true because there are shoes that do. 
+``\emph{Most} shoes have arch support.'' is probably true because probably more than half of shoes do have support. 
+``\emph{All} shoes have arch support.'' is definitely not true because of the existence of Vibram 5 toes, flat sandals, and many others.
+But what about ``Shoes have arch support.''? 
 Is there some prevalence beyond which the generic becomes true?
 
+
+
 Prevalence based accounts are difficult to defend. 
-At first glance, generics seem like universally-quantified statements (i.e. ``All animals breathe oxygen''), but generics are resilient to counter-examples like \emph{lorica}. 
+At first glance, generics seem like universally-quantified statements (i.e. ``All shoes have arch support''), but generics are resilient to counter-examples like \emph{Vibrams}. 
 Interpreting the generic as meaning ``most'' captures many cases, but cannot explain why ``Robins lay eggs'' and ``Mosquitos carry West Nile Virus'' both seem true, despite the fact that only adult female robins lay eggs and that less than 1\% of mosquitos actually carry West Nile Virus. 
 The only quantifier that could satisfy all of these conditions is the weak ``some''.  
 Yet, the semantics for ``some'' cannot be the semantics of generics:  Upon hearing a generic, listeners are wont to interpret the sentence as applying to \emph{all or nearly all} of a category \cite{Gelman2002, Cimpian2010}. 
-``Some animals breathe oxygen'' does not carry the same generalizability.
+``Some shoes have arch support.'' does not carry the same generalizability.
 
 %This flexibility in meaning poses a challenge for linguists and philosophers, but seemingly little trouble for the language learner. Three-year-olds can use pragmatic cues to recognize generics as referring to instances beyond those in a particular scene \cite{Cimpian2008}. Preschoolers have adult-like interpretations of novel generic sentences about both familiar and unfamiliar categories \cite{Gelman2002, Brandone2014}. Finally, generics are ubiquitous in child-directed speech, being both produced by the caregiver and the child from age two \cite{Gelman2008}. The meaning of generic sentences are hard to pin down formally, yet children seem to master the relevant interpretative skills at a very young age.
 %
@@ -321,9 +294,6 @@ Yet, the semantics for ``some'' cannot be the semantics of generics:  Upon heari
 
 What could be the stable meaning of a generic given this extreme flexibility? 
 We propose these phenomena can be explained as the effects of pragmatic inference filling in a meaning that is underspecified in the language. 
-%
- %We propose that the meaning of a generic is underspecified in the language and these phenomena can be explained as the effects of pragmatic inference over this underspecified meaning. %
- %
 In particular, we posit that generics are a vague description of prevalence in much the same way that gradable adjectives like \emph{tall} are vague descriptions of height. 
 To understand the vagueness of ``tall'', consider the conditions by which a person is ``tall'' versus the conditions for a building to qualify as ``tall''.
 This context-sensitivity of meaning can be accounted for by treating the condition for tallness (i.e. the threshold beyond which something counts as tall) as an unknown property of the language, and modeling the listener as inferring this threshold in context \cite{Lassiter2015}. 
