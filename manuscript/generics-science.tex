@@ -267,6 +267,79 @@ Eq.~\eqref{eq:S2} is a model of generic production: For a given prevalence, is t
 \subsubsection{Begin experiment: 1400 words to this point} 
 
 We tested the degree to which Eq.~\eqref{eq:S2} predicted that a given category--prevalence pair (e.g. ``Lions'' and ``have manes'') would result in a good generic (e.g. ``Lions have manes.''). 
+ The probabilisitic model is fully specified by Eqs.~\eqref{eq:literalgeneric} -- \eqref{eq:S2}, with the exception of the speaker rationality parameter $\lambda$ and the prior distribution on prevalences $P(x)$. 
+ We use Bayesian data analytic techniques to integrate out $\lambda$, which is not of theoretical interest here. 
+ $P(x)$ describes the belief distribution on the prevalence of a given property (e.g. ``have manes''). 
+ This distribution is conceivably different for different types of properties. 
+ Thus, we measure it empirically by asking participants ($n=30$) about the prevalence of different types of properties for many different animal categories\footnote{Our experiments stay within the animal kingdom because we expect there to be considerably less variability in participants beliefs about animals than about other types of categories (e.g. social categories)}. 
+ 
+We analyzed responses for each property using the Bayesian data analytic approach described in Section \ref{sec:bda1}.	
+The most likely prevalence priors inferred from the data are shown in Figure \ref{fig:priors1a} for 4 example properties.
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.8\columnwidth]{prevalence_priors_inferred-betas.pdf}
+    \caption{Four example elicited prevalence priors. 
+    Dotted lines show density by removing the mass at zero (corresponding to within-category prevalence). 
+    For display purposes, this is omitted for ``have wings'', for which the density is off the scale and all at 1.
+    Density plots reveal qualitatively different distributions for different properties. 
+    Each sample from these distributions can be thought of to correspond to a particular animal category, representing the prevalence of the property within that animal category.
+    Note the scale of the y-axis differs for each panel.}
+  \label{fig:priors1a}
+\end{figure}
+
+There are substantial differences among the priors over prevalence between different types of properties. 
+The distribution of ``has manes'' has the feature of being relatively rare across categories (large density at 0), and within a category has an expected value of around 50\%, though there is considerable uncertainty in judgments as to what percentage of an arbitrary animal kind to expect to have manes (Figure \ref{fig:priors1a} bottom left; within-category prevalence given by blue dotted line). 
+By contrast, the distribution over ``is male'' has a lot less uncertainty: the property is highly prevalent across categories (almost no mass at 0), and within a category it is present in about 50\% of cases.
+The property ``has wings'' is not particularly rare across categories (probably owing to the fact that bird categories are heavily represented in our stimulus set), and within a category is widespread, as reflected by the bimodal distribution. 
+Finally, ``has malaria'' is an example of a property that is both rare across-species and within-species. 
+The property is absent from most animal species, and even when it is present, it is only present in a small number of cases.
+
+With $P(x)$ empirically measured, the probabilistic model is fully specified. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+in addition to the prevalence estimates of category--property pairs later in the generic language model to predict the acceptability of generics of natural cases.
+The Maximum A-Posteriori (MAP) estimates and 95\% Bayesian Highest Density Intervals (HDI) over the mean prevalence for each property--category pairing of interest can be seen in Table \ref{tab:expt1}. 
+We use these estimates as the prevalence of property for the target category in the model. 
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  
  
@@ -299,131 +372,6 @@ The lifted-threshold RSA model specified in Eq.~\ref{eq:S2} predicts probabiliti
 In Expt.~1a, we measure the distribution on prevalence of certain target properties by asking participants about the percentage of a kind with the property \footnote{So as to not bias the measurement in favor of a small number of stipulated animal categories, we ask participants to generate their own animal categories.}. 
 In Expt.~1b, we measure the acceptability of a number of generic statements about the properties measured in Expt. 1a. 
 We show how the prevalence within a property alone is insufficient to explain the diversity of truth judgments of these generics, but how a model of a pragmatic speaker who considers the distribution on prevalence can explain this wide range of truth judgments.
-
-\subsection{Experiment 1a: \emph{Eliciting the prior}}
-
-The goal of this experiment was to measure participants' beliefs about the distributions of the prevalence of various properties within and across categories.
-
-\subsubsection{Participants}
-
-We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 10 minutes and participants were compensated \$1.00.
-
-\subsubsection{Procedure and materials}
-
-On each trial of the experiment, the participant filled out a table where each row was an animal category and each column was a property\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/experiments/real-kinds/prior-2.html}}. 
-Participants were asked to respond with the percentage of the species that had the property.
-The list of animal categories was only partially pre-specified with animal categories that would be used in the generic truth judgment task.
-%These names were randomly sampled from a larger set of categories of interest (see Appendix \ref{sec:appendix} for full list of animals and properties used). 
-Participants were asked to add five of their own animal names to the list. 
-Upon completion, the next column appeared with a property (e.g. ``has manes'') as the column header and text-boxes where the participants could put their estimated prevalence. 
-%Participants were asked: ``For each kind of animal, what percentage of the species do you think [property]?'' 
-This procedure was repeated for 8 properties in total. 
-The animal kind column was unable to be modified once completed. 
-The prevalence columns, however, could be modified at a later stage (i.e. the participant could go back and change her estimates after seeing more properties). 
-Participants completed this procedure on each of 2 trials.
-
-We used a set of properties associated with generics of theoretical interest (16 properties in total), motivated in part by conceptual distinctions pointed out by \citeA{Prasada2013}. 
-The conceptual categories used to generate the generics were: majority characteristic (e.g. ``Leopards have spots''), minority characteristic (e.g. ``Lions have manes''), striking (e.g. ``Sharks attack swimmers.''), and majority false generalizations (e.g. ``Ducks are female.'') \cite{Prasada2013}. In addition, we included false sentences (e..g ``Lions lay eggs''), to cover the full range of possible truth values .
-For a full list of the generic sentences used in this experiment, see Appendix \ref{sec:appendix}.
-Complete instructions given to participants can be seen in Appendix \ref{sec:prior1instruct}.
-
-
-
-\subsubsection{Bayesian data analysis}
-\label{sec:bda1}
-
-There is important latent structure in the prior elicitation task. We will describe the model from the perspective of inferring the distribution of a particular property (e.g. ``lays eggs''). 
-The same general structure is implemented for each item independently, with the slight except that the item-wise models share a data-analytic noise parameter $\phi$, described in more detail below. 
-
-Responses $d$ can be categorized into those that reflect the property is either present or absent in the species. 
-If the property is absent, then the response is 0\% (of the species has the property). 
-The number of 0 responses act as an indicator of the prevalence of the property \emph{across categories} $\theta_{across}$ (for example, ``are female'' would have very few 0\% responses, whereas ``lays eggs'' would receive appreciably more, owing to the fact the prevalence of these properties \emph{across categories} is different). \emph{A priori}, we assume nothing about the prevalence across categories $\theta_{across} \sim \text{Uniform} (0, 1)$. 
-%
-\begin{align*}
-d_{across} & \sim \text{Bernoulli}(\theta_{across}) \\
-d_{across} & = \begin{cases}
-				1 & \mbox{if } d > 0 \\
-				0 & \mbox{if } d = 0 
-				\end{cases}
-\end{align*}
-%
-For those responses that reflect the property is present ($d > 0$), we assume those responses come from a distribution with unknown mean ($\gamma_{within}$) and variance ($\delta_{within}$). 
-Since the responses vary between 0 - 100, the natural distribution is a Beta distribution. 
-We model the observed data as being generated by a mixture of this model and a model of random guessing behavior. 
-Modeling random guessing explicitly is important for recovering reliable estimates of the parameters of the model, which would otherwise be contaminated by this data \cite{LW2014}. 
-%
-\begin{align*}
-d_{within} \sim \begin{cases}
-					\text{Beta}(\gamma_{within}, \delta_{within})  &  \mbox{ if } d_{observed} > 0 \text{ and }  \text{Bernoulli} (\phi) = 0 \\
-					\text{Uniform}(0,1) & \mbox{ if } \text{Bernoulli} (\phi) = 1
-				\end{cases}
-\end{align*}
-%
-In principle, $\phi$ could be vary by participant (some participants produce noisier data than others). For simplicity, we assume some global ``guessing rate'', and thus $\phi$ is an experiment-wide variable.
-We make no assumptions about the amount of noise in the data and we put uninformative priors over it, as well as over the means and concentrations of the prevalence distributions. 
-%
-\begin{align*}
- \phi \sim \text{Uniform}(0,1) \\
-\gamma_{within} \sim \text{Uniform}(0,1) \\
-\delta_{within} \sim \text{Uniform}(0,50)
-\end{align*}
-%
-We implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{across}, \gamma_{within}, \delta_{within}, and \phi$ with X chains of Y samples.
-
-To reconstruct the likely distribution of  prevalence reflecting both within- and across- category prevalence, we took samples from the posterior predictive distribution of $d$ by running the forward model: 
-%
-\begin{align*}
-h & \sim \text{Bernoulli}(\theta_{across}) \\
-x & \sim \begin{cases} 
-		\text{Beta}(\gamma_{within}, \delta_{within}) &\mbox{if } h = 1 \\ 
-				0 & \mbox{if } h=0
-				\end{cases} 
-\end{align*}
-%
-where, $h$ is a variable indicating whether or not the property is present within a particular species. 
-
-We also estimated the likely prevalence of each animal category and property pair of interest (e.g. the prevalence of ``laying eggs'' among ``Ducks''), to be used as the measure of prevalence in the generic truth judgment task (Expt.~1b). 
-For this, we assume the data was generated from a Beta distribution with unknown mean and concentration. 
-We also assume some global amount of noise in the data.
-
-\begin{align*}
-d \sim \begin{cases}
-					\text{Beta}(\gamma, \delta)  &  \mbox{ if } \text{Bernoulli} (\phi) = 0 \\
-					\text{Uniform}(0,1) & \mbox{ if } \text{Bernoulli} (\phi) = 1
-				\end{cases}
-\end{align*}
-
-
-\subsubsection{Results}
-
-The Maximum A-Posteriori (MAP) estimates and 95\% Bayesian Highest Density Intervals (HDI) over the mean prevalence $\gamma$ for each property--category pairing of interest can be seen in Table \ref{tab:expt1}. 
-We use these estimates as the prevalence of property for the target category in the model. 
-
-We expected the prevalence priors to be qualitatively different for the different properties. 
-Each participant gave responses to the 12 animal categories that were fixed as well as to 10 animal categories that the participant herself produced. 
-From the 300 free responses for the animal production part of the task, 105 distinct animal names were extracted. 
-The top 5 ranking animal names produced were Dog, Cat, Elephant, Giraffe, and Bear; these responses accounted for 20.3\% percent of the total produced animal names.
-
-\begin{figure}
-\centering
-    \includegraphics[width=0.8\columnwidth]{prevalence_priors_inferred-betas.pdf}
-    \caption{Four example elicited prevalence priors inferred using a Bayesian statistical model. 
-    Dotted lines show density by removing the mass at zero. (For display purposes, this is omitted for ``have wings'', for which the density is off the scale.)
-    Density plots reveal qualitatively different distributions for different properties. 
-    Each sample from these distributions can be thought of to correspond to a particular animal category, representing the prevalence of the property within that animal category.}
-  \label{fig:priors1a}
-\end{figure}
-
-We analyzed responses for each property using the Bayesian data analytic approach described in Section \ref{sec:bda1}.	
-The most likely prevalence priors inferred from the data are shown in Figure \ref{fig:priors1a} for 4 example properties.
-We observe substantial differences between the priors over prevalence. 
-In accord with intuition, the property ``is male'' is highly prevalent across categories, but within a category is only present in about 50\% of cases.
-By contrast, ``has manes'' is rare across categories, and has an expected value of around 50\% within-categories, though there is considerable uncertainty in participants' judgments as to what percentage of an arbitrary animal kind to expect to have manes (Figure \ref{fig:priors1a} bottom left).
-The property ``has wings'' is not particularly rare across categories (probably owing to the fact that bird categories are heavily represented in our stimulus set), and within a category is widespread, as reflected by the bimodal distribution. 
-Finally, ``has malaria'' is an example of a property that is both rare across-species and within-species. 
-The property is absent from most animal species, and even when it is present, it is only present in a small number of cases.
-
-We will use these recovered prevalence priors in addition to the prevalence estimates of category--property pairs later in the generic language model to predict the acceptability of generics of natural cases.
 
 
 \subsection{Experiment 1b: \emph{Truth judgments of natural cases}}
