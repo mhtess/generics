@@ -1,0 +1,199 @@
+
+\documentclass[10pt,letterpaper]{article}
+% Default margins are too wide all the way around. I reset them here
+%\setlength{\topmargin}{-.5in} \setlength{\textheight}{9in}
+%\setlength{\oddsidemargin}{.125in} \setlength{\textwidth}{6in}
+
+\usepackage{setspace}
+\doublespacing
+
+\usepackage{geometry}
+\geometry{legalpaper, margin=1in}
+
+\usepackage{pslatex}
+\usepackage{apacite}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+\usepackage{lipsum}
+
+
+\graphicspath{{figures/}}
+
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil(#1)%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}}
+  {\signed{\usebox\mybox}\end{quote}}
+
+
+ \newcommand{\denote}[1]{\mbox{ $[\![ #1 ]\!]$}}
+
+\definecolor{Red}{RGB}{255,0,0}
+\newcommand{\red}[1]{\textcolor{Red}{#1}}  
+
+\usepackage{titlesec}
+
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+
+\title{Generic supplement}
+
+
+\begin{document}
+
+\maketitle
+
+
+
+\appendix
+\section{Stimuli used in Experiment 1}
+\label{sec:appendix}	
+
+\begin{table}[h]
+\begin{tabular}{| l || l | l | l |}
+\hline
+Conceptual type               & Item                    & Truth judgment & Prevalence estimate \\
+\hline \hline
+Majority characteristic       & 1. Leopards have spots.    &                &                     \\
+                                          & 2. Ducks have wings.                       &                &                     \\
+                                          & 3. Cardinals are red.                       &                &                     \\
+                                          & 4. Swans are white.                       &                &                     \\
+Minority characteristic       & 5. Lions have manes.       &                &                     \\
+                                          & 6. Kangaroos have pouches.                        &                &                     \\
+                                          & 7. Robins lay eggs.                        &                &                     \\
+Striking                      & 8. Sharks attack swimmers. &                &                     \\
+                                  & 9. Mosquitos carry malaria.                        &                &                     \\
+                                  & 10. Ticks carry lyme disease.                        &                &                     \\
+                                  & 11. Tigers eat people.                        &                &                     \\
+Majority false generalization & 12. Robins are female.      &                &                     \\
+                                              & 13.  Lions are male.                       &                &                     \\
+False                         & 14. Leopards have wings.       &                &                    \\
+                                              & 15. Kangaroos have spots.                       &                &                     \\
+                                              & 16.  Tigers have pouches.                       &                &                     \\
+                                              & 17.  Robins carry malaria.                       &                &                     \\
+                                              & 18. Sharks have manes.                       &                &                     \\
+                                              & 19. Lions lay eggs.                       &                &                     \\
+                                              & 20. Swans attack swimmers.                       &                &                     \\
+Novel                         & 21. Mosquitos attack swimmers.       &                &                    \\
+                         & 22. Sharks lay eggs.       &                &                    \\
+                         & 23. Frogs have spots.       &                &                   \\
+\hline
+
+\end{tabular}
+\caption{Stimuli used in Experiment 1.}
+\label{tab:expt1}
+\end{table}
+
+
+\section{Instructions used in Experiment 1a: prior elicitation for familiar categories}
+\label{sec:prior1instruct}
+
+Participants were told 
+\begin{quote}
+In this study, we are interested in how prevalent certain properties are within different kinds of animals. We will give you examples of the kinds of animals we have in mind and ask you to list a few of your own.
+
+Then, you will estimate the \emph{percentage of the individual members} of the animal species that have certain properties.
+
+On each trial, you will rate 8 properties. The properties will be revealed to you one at a time. Essentially, you will be filling out a big table. You are allowed to go back and revise your answers, if you think there is a more realistic estimate you could give. You will do this 2 times (2 big tables). 
+
+\end{quote}
+
+
+\section{Instructions used in Experiment 2a: prior elicitation for novel categories}
+\label{sec:prior2instruct}
+
+Participants were again told they were on a newly discovered island with lots of new animals on it. They were then given the following instructions
+
+\begin{quote}
+One day, you are roaming through the library when you encounter a data-collection robot. The robot doesn't know very much about the world and is asking you questions to learn more. Today, it wants to learn about properties of animals. It is randomly selecting an animal from its memory and a property from its memory, and asking you if the animal is likely to have the property.
+
+Of course, you're new to this island so you don't really know anything about these animals. The properties, however, will be familiar. Try to provide your best guess given your own experience.
+\end{quote}
+
+Participants were then run through a practice trial where they were familiarized with the questions that would be asked on them. 
+On each trial, the data-collection robot introduced a new animal (e.g. ``We recently discovered animals called glippets.''). 
+The robot then asked how likely it was that ``there was \emph{a} glippet with [[property]]''. 
+This question aimed to get at the prevalence of the property \emph{across} categories (e.g. it's very likely that there is a glippet that is female, less likely that there is a glippet that has wings, and even less likely that there is a glippet has purple wings). 
+The second question was about the prevalence \emph{within} categories. The robot asked, ``Suppose there is a glippet that has wings. What percentage of glippets do you think have wings?''
+
+\section{Stimuli used in Experiment 2}
+\label{sec:materials2}
+
+Many of these materials were originally used in \citeA{Cimpian2010}.
+
+\begin{table}[h]
+\begin{tabular}{| l || l | l | l |}
+\hline
+Property type               & Item                    & Across-category prevalence estimate  & Within-category prevalence estimate \\
+\hline \hline
+Body part       			& 1. Teeth    &   &                     \\
+                                          & 2. Fur                       &                &                     \\
+                                          & 3. Tails                     &                &                     \\
+                                          & 4. Claws                       &                &                     \\
+                                          & 5. Feathers                       &                &                     \\
+                                          & 6. Ears                       &                &                     \\
+                                          & 7. Legs                       &                &                     \\
+                                          & 8. Skin                       &                &                     \\
+Colored part      	 & 9. Pink teeth       &                &                     \\
+                                          & 10. Yellow fur                       &                &                     \\
+                                          & 11. Orange tails                         &                &                     \\
+                                          & 12. Blue claws                       &                &                     \\
+                                          & 13. Purple feathers                      &                &                     \\
+                                          & 14. Orange ears                    &                &                     \\
+                                          & 15. Silver legs                       &                &                     \\
+                                          & 16. Violet skin                      &                &                     \\       
+Vague part      	 & 17. Long teeth       &                &                     \\
+                                          & 18. Curly fur                       &                &                     \\
+                                          & 19. Long tails                         &                &                     \\
+                                          & 20. Big claws                       &                &                     \\
+                                          & 21. Smooth feathers                      &                &                     \\
+                                          & 22. Small ears                    &                &                     \\
+                                          & 23. Long legs                       &                &                     \\
+                                          & 24. Rough skin                      &                &                     \\ 
+Common accidental part    & 25. Wet fur       &                &                     \\
+                                          & 26. Dusty skin                       &                &                     \\
+                                          & 27. Worn-out claws                         &                &                     \\
+                                          & 28. Fungus-covered fur                      &                &                     \\
+                                          & 29. Muddy feathers                      &                &                     \\
+                                          & 30. Rotten teeth                   &                &                     \\
+                                          & 31. Torn feathers                       &                &                     \\
+                                          & 32. Itchy tails                      &                &                     \\  
+Rare accidental part    & 33. Sore legs       &                &                     \\
+                                          & 34. Torn tails                       &                &                     \\
+                                          & 35. Cracked claws                         &                &                     \\
+                                          & 36. Sore teeth                       &                &                     \\
+                                          & 37. Swollen ears                      &                &                     \\
+                                          & 38. Infected ears                    &                &                     \\
+                                          & 39. Burned skin                       &                &                     \\
+                                          & 40. Broken legs                     &                &                     \\                                                                                          
+                                           \hline
+
+\end{tabular}
+\end{table}
+
+\bibliographystyle{apacite}
+
+\setlength{\bibleftmargin}{.125in}
+\setlength{\bibindent}{-\bibleftmargin}
+
+\bibliography{generics}
+
+\end{document}
+
