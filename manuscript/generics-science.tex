@@ -337,11 +337,12 @@ Generics ``once accepted psychologically, ... appear to be commonly taken in a r
 
 Interpretations of generic language are readily explored in our model of a listener (Eq.~\ref{eq:L1}) who hears a generic and is trying to infer what the world is like. 
 Again, $P(x)$ was measured empirically.
-Here, following \citeA{Cimpian2010}, we use novel animal categories and property (e.g. ``Lorches'' and ``has purple feathers'') to explore how beliefs are updated by generic language. 
-It is pragmatically awkward to ask about participants beliefs about these novel category -- property pairs directly.
-Rather, we took advantage of the latent structure in the prior elicitation task (Expt.~1a) to ask participants ($n=40$) about the prevalence of a property (e.g. ``has purple feathers'') within-categories and across-categories, separately. 
+Here, following \citeA{Cimpian2010}, we use novel animal categories and properties (e.g. ``Lorches'' and ``has purple feathers'') to explore how beliefs are updated by generic language. 
+It is strange to measure participants' beliefs about these novel category---property pairs directly (e.g. answering ``How many lorches have purple feathers?'', without knowing what a lorch is).
+Instead, we took advantage of the latent structure in the prior elicitation task (Expt.~1a) to ask participants ($n=40$) about the prevalence of a property (e.g. ``has purple feathers'') across-categories (e.g. ``How likely is it that \emph{there is a} lorch that has purple feathers?'') and within-categories (e.g. ``Suppose there is a lorch with purple feathers. What percentage of lorches do you think have purple feathers?''), separately. 
 We used a hierarchical Bayesian approach to reconstruct the prevalence priors of a similar form to Expt.~1a (see Section \ref{sec:bda2} for details).
 
+Classic work in generalization suggests that these prevalence distributions are different for different types of properties, including different types of conceivably biological properties \cite{Nisbett1983}. 
 We used 4 different types of properties: body parts (e.g. ``has claws'') , colored body parts (e.g. ``has purple feathers''), biological adjectives (e.g. ``has small wings''), and common accidental or disease states (e.g. ``has wet fur'') and rare accidental or disease states (e.g. ``has broken legs'')\footnote{The distinction between common and rare accidental properties was determined empirically by oversampling those properties, analyzing the data first by item, and performing a median split based on the \emph{a priori} believed prevalence of the property}.
 
 Figure \ref{fig:prior2} (left) shows the inferred distributions for prevalence $x$ for 5 different types of properties. 
@@ -358,14 +359,14 @@ This is not the case with the prevalence priors for accidental properties, for w
   \label{fig:prior2}
 \end{figure}
 
-We compared the interpretations of the pragmatic listener in Eq.~\ref{eq:L1} to the participants judgments ($n=40$) about the likely prevalence of the property after hearing a generic (e.g. ``Lorches have purple feathers.''), in the same spirit as \citeA{Gelman2002, Cimpian2010}. Also following \citeA{Cimpian2010}, we recruited participants ($n=40$) to help determine the average prevalence at which a speaker would assent to the generic, which was previously found to be not as sensitive to participants beliefs about the property (but, cf. \citeA{Cimpian2010}, Expt.~4).
+We compared the interpretations of the pragmatic listener in Eq.~\ref{eq:L1} to the participants judgments ($n=40$) about the likely prevalence of the property after hearing a generic (e.g. ``Lorches have purple feathers.''), in the same spirit as \citeA{Gelman2002}. Also following \citeA{Cimpian2010}, we recruited participants ($n=40$) to help determine the average prevalence at which a speaker would assent to the generic, which was previously found to be not as sensitive to participants beliefs about the property (but, cf. \citeA{Cimpian2010}, Expt.~4).
 
 Implied prevalence of the generic was affected by the type of property in question (Figure \ref{fig:exp2b} Left; dark bars). 
 %Of theoretical interest is whether or not the median split we performed on the accidental properties based on the results of the prior elicitation experiment resulted in different implications for the associated generic.
-Interestingly, we observe greater implied prevalence of common accidental properties than rare accidental properties ($\beta=0.061; SE = 0.025; t(39) = 2.47; p = 0.018$, given our median split based on the prior elicitation task \footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}).
-Implications of generics of body parts was significantly greater than those of the biological properties used by \citeA{Cimpian2010} (here, ``color parts'') ($\beta=0.118; SE = 0.024; t(39) = 4.74; p < 0.001$).
+Interestingly, we observe greater implied prevalence of common accidental properties than rare accidental properties, given our median split based on the prior elicitation task ($\beta=0.061; SE = 0.025; t(39) = 2.47; p = 0.018$) \footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}.
+Implications of generics of body parts was significantly greater than those of the biological properties used by \citeA{Cimpian2010} (here, ``color parts'') ($\beta=0.118; SE = 0.024; t(39) = 4.74; p < 0.001$), possibly due to the belief that the same kind of animal can come in many different colors (e.g. dogs).
 There was also a trending effect for the implications of vague body parts (e.g. curly fur) to be greater than those of color parts (e.g. yellow fur) ($\beta=0.032; SE = 0.016, t(54.8) = 1.95; p = 0.056$).
-Also consistent with previous findings, there were no differences in the tendency to agree with the generic based on property type (Figure \ref{fig:exp2b} (Left; light bars)
+Also consistent with previous findings, there were no differences in the tendency to agree with the generic based on property type (Figure \ref{fig:exp2b} left; light bars)
 
 \begin{figure}
 \centering
@@ -380,19 +381,21 @@ Also consistent with previous findings, there were no differences in the tendenc
 \end{figure}
 
 
-As for Expt.~1, we modeled the truth conditions task as a speaker (Eq.~\ref{eq:S2}) and submitted our model to the same analysis as the data (see Supplement). 
-Of more interest here, generic interpretation is modeled as a listener (Eq.~\ref{eq:L1} and produces variable interpretations contingent on the type of property under discussion (Figure \ref{fig:exp2b}, Right, dark bars). These inferences align almost perfectly with participants interpretations of generic utterances ($r^2(10) = 0.97$). 
+We compared this behavioral data to our model by using the speaker model (Eq.~\ref{eq:S2}) to predict the truth judgments task (as in Expt.~1) and using the listener model (Eq.~\ref{eq:L1}) to predict the interpretation task. 
+We submitted our speaker model to the same analysis as the truth judgments data, following \citeA{Cimpian2010} (see Supplement). 
+The speaker model did not make different predictions as to the average acceptability prevalence to produce the generic (Figure \ref{fig:exp2b}, Right, light bars). 
+At the same time, the listener model produced variable interpretations contingent on the type of property under discussion (Figure \ref{fig:exp2b}, Right, dark bars). These inferences align almost perfectly with participants productions and interpretations of novel generic utterances ($r^2(10) = 0.97$). 
 
-
-To understand the behavior of the model, consider again the beliefs about the properties inferred from Expt.~2a (Figure \ref{fig:prior2}). 
+How does the model capture these fine-grained inferences that listeners draw?
+Consider again the belief distributions about the properties inferred from Expt.~2a (Figure \ref{fig:prior2}). 
 All of the properties have substantial mass at 0 (Figure \ref{fig:prior2} Left). 
-This gives the speaker validity in saying the generic at low prevalence levels (though his confidence in doing so increases as prevalence increases).
+This gives the speaker validity in saying the generic at low prevalence levels (though the speaker's confidence in doing so increases as prevalence increases).
 The listener has the complementary task: She brings \emph{a priori} uncertainty about the generic threshold to the table.
-For illustration, consider what would happen if she inferred the most conservative threshold (0) and responded with the \emph{maximum a posteriori} (MAP) of the distribution. 
+Consider what would happen if she inferred the most conservative threshold (0) and responded with the \emph{maximum a posteriori} (MAP) of the distribution. 
 A threshold of 0 produces Figure \ref{fig:prior2} (right), because it only rules out the possibility that 0\% of the category has the property. 
 The resulting peaks (MAPs) of the distributions are near 1 for biological properties (parts, color parts, vague parts) and around 10\% for accidental properties (both rare and common). This alone would produce variable interpretations. 
-Our listener, however, does something wiser: She integrates over her uncertainty about the threshold (believing the speaker to be both truthful and informative), and produces implications that both take into account the peaks and the shapes of the resulting distributions.
-This results in subtle differences between the implications of body parts (e.g. ``Lorches have wings.'') and  color parts (e.g.``Lorches have purple wings.''). 
+Our listener, however, does something wiser: She integrates over her uncertainty about the threshold (believing the speaker to be not just truthful but informative as well), and produces interpretations that both take reflect the whole distribution.
+This results in subtle differences between the implications of body parts (e.g. ``Lorches have wings.'') and  color parts (e.g.``Lorches have purple wings.''), and differences in interpretations of rare and common accidental properties. 
 
 
 
