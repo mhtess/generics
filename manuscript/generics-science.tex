@@ -157,11 +157,11 @@ generics; semantics; probabilisitic pragmatics
 \end{abstract}
 
 Imagine talking with a 2-year-old about colors.
-Colors are difficult to describe because they take shape in many different physical forms and the function of color is abstract.
+Colors are difficult to describe because they take shape in different physical forms and the function of color is abstract.
 You might offer the toddler something generic like, ``Apples are red.''. 
 Few would argue with the truth of this sentence, yet its precise meaning is difficult to specify. 
 
-This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category (e.g. \emph{shoes}).  
+This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category (e.g. \emph{apples}).  
 Generics are one of the simplest linguistic constructs and are ubiquitous in everyday conversation, child-directed speech \cite{Gelman2008}, and are the primary vessel by which speakers discuss social categories, making them central to communicating stereotypes \cite{GelmanEtAl2004, Cimpian2010motivation, Leslie2015}.
 They have no explicitly marked operator and yet children as young as two or three correctly understand that they refer to categories and not just a plurality in a scene \cite{Cimpian2008}. 
 They are believed to be essential to the growth of conceptual knowledge \cite{Gelman2004} and how we represent kinds \cite{Leslie2008}.
@@ -170,7 +170,8 @@ Despite their centrality to cognitive development and everyday conversation, a f
 At first glance, generics seem like universally-quantified statements (i.e. ``All apples are red.''), but unlike universals, generics are resilient to counter-examples like \emph{Granny Smith apples}. 
 Interpreting the generic as meaning ``most'' (i.e. ``Most apples are red.'') captures many cases, but cannot explain why ``Lions have manes'' and ``Mosquitos carry malaria.'' both seem true, despite the fact that among lions, only the adult males have manes and that a very small percentage of mosquitos actually carry malaria.
 The only quantifier that could satisfy all of these conditions is the weak ``some'' (i.e. ``Some apples are red.'').  
-Yet, the semantics for ``some'' is not the semantics of generics:  Upon hearing a generic, listeners are wont to interpret the sentence as applying to \emph{nearly all} of a category \cite{Gelman2002, Cimpian2010}. 
+Yet, the semantics for ``some'' is not the semantics of generics:  Generics have strong implications. 
+Listeners are wont to interpret the sentence as applying to \emph{nearly all} of a category \cite{Gelman2002, Cimpian2010}. 
 ``Some apples are red.'' does not carry the same generalizability as ``Apples are red.''.
 Additionally puzzling is the fact that while ``Lions have manes.'' is a fine generic utterance, ``Lions are male.'' is not, even though the prevalences of the two properties are the same for the category of lions.
 
@@ -190,8 +191,8 @@ Pragmatic reasoning in communication has recently been formalized in probabilisi
 We build upon this tradition to explain the semantics and pragmatics of generic language: We posit that generics are a vague description of prevalence in much the same way that gradable adjectives like \emph{tall} are vague descriptions of height. 
 To understand the vagueness of ``tall'', consider the criteria by which a person is ``tall'' (e.g. \emph{$\sim$ 6 feet}) versus the conditions for a building to qualify as ``tall'' (e.g. \emph{$\sim$ 1000 feet}).
 This context-sensitivity of meaning can be accounted for by positing the semantics of the word (``tall'') is a distribution over criteria (``anything could count as tall given the right context''). 
-Probabilistic pragmatic approaches have formalized how this uncertainty is resolved by a listener consulting her beliefs about the domain in question (``what are probable heights of a person?'') as well as taking into account the communicative force of a speech act (``why did the speaker bother to say ``John is tall'' when he could have not said anything?'') \cite{Lassiter2013, Qing2014}.
-
+Probabilistic pragmatic approaches have shown how this uncertainty is resolved by a listener consulting her beliefs about the domain in question (``what are probable heights of a person?'') as well as taking into account the communicative force of a speech act (``why did the speaker bother to say ``John is tall'' when he could have not said anything?'') \cite{Lassiter2013, Qing2014}.
+We present a semantics of generics can be thought of in the same way, as a vague description of the prevalence of a property.
 %listeners arrive at rich interpretations of utterances by considering the thought-processes of a speaker whose goal is to be informative.
 %The has provided formal, computational accounts of understanding utterances with quantifiers \cite{Goodman2013}, gradable adjectives \cite{Lassiter2015}, and nonliteral usages \cite{Kao2014}.
 % for by treating the condition for tallness (i.e. the threshold beyond which something counts as tall) as an unknown property of the language, and modeling the listener as inferring this threshold in context \cite{Lassiter2015}. 
@@ -207,11 +208,11 @@ Probabilistic pragmatic approaches have formalized how this uncertainty is resol
 %We propose that generics are vague in the same way that gradable adjectives, like \emph{tall}, are vague. 
 
 We propose the literal semantics of a generic sentence ``K has F'' (e.g. ``Lions have manes.'') is a standard truth-functional, threshold meaning such that a category in question K has property F if the prevalence $x$ of F within K is greater than some threshold $\theta_{generic}$.
-
+%
 \begin{flalign}
 \denote{\text{K has F}} = \{x^{\text{F}}_{K} : x^{\text{F}}_{K} = p(\text{F} | \text{K}) > \theta_{generic}\} \label{eq:literalgeneric}
 \end{flalign}
-
+%
 The threshold $\theta_{generic}$, however, is left underspecified in the semantics.
 Listeners have uncertainty about the threshold $\theta_{generic}$ \emph{a priori} and actively must reason about it in context to derive a realistic but informative meaning. 
 
@@ -252,7 +253,7 @@ To make ``tall'' maximally truthful, the listener would set $\theta$ to be very 
  The lifted-variable pragmatics model seeks a balance between these two pressures. 
  The result is a threshold that signifies that ``John is tall'' means he is ``significantly taller than average''.
  
-Eq.~\ref{eq:L1} is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?'
+Eq.~\ref{eq:L1} is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
 A generic production rule would then naturally be specified by a speaker who has this sort of listener in mind:
 %To explain the different conditions under which a generic utterance can be true, we extend the lifted-threshold model of \citeA{Lassiter2013} to include a model of a speaker who is deciding whether or not to produce the utterance. 
 \begin{equation} 
@@ -364,8 +365,8 @@ We compared the interpretations of the pragmatic listener in Eq.~\ref{eq:L1} to 
 Implied prevalence of the generic was affected by the type of property in question (Figure \ref{fig:exp2b} Left; dark bars). 
 %Of theoretical interest is whether or not the median split we performed on the accidental properties based on the results of the prior elicitation experiment resulted in different implications for the associated generic.
 Interestingly, we observe greater implied prevalence of common accidental properties than rare accidental properties, given our median split based on the prior elicitation task ($\beta=0.061; SE = 0.025; t(39) = 2.47; p = 0.018$) \footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}.
-Implications of generics of body parts was significantly greater than those of the biological properties used by \citeA{Cimpian2010} (here, ``color parts'') ($\beta=0.118; SE = 0.024; t(39) = 4.74; p < 0.001$), possibly due to the belief that the same kind of animal can come in many different colors (e.g. dogs).
-There was also a trending effect for the implications of vague body parts (e.g. curly fur) to be greater than those of color parts (e.g. yellow fur) ($\beta=0.032; SE = 0.016, t(54.8) = 1.95; p = 0.056$).
+Implications of generics of body parts was significantly greater than those of the biological properties used by \citeA{Cimpian2010} (here, ``color parts'') ($\beta=0.118; SE = 0.024; t(39) = 4.74; p < 0.001$).
+There was also a trending effect for the implications of vague body parts (e.g. curly fur) to be greater than those of color parts (e.g. yellow fur) ($\beta=0.032; SE = 0.016, t(54.8) = 1.95; p = 0.056$), possibly due to the belief that the same kind of animal can come in many different colors (e.g. dogs).
 Also consistent with previous findings, there were no differences in the tendency to agree with the generic based on property type (Figure \ref{fig:exp2b} left; light bars)
 
 \begin{figure}
