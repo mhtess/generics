@@ -67,7 +67,7 @@
 
 \section{Experiment 1a: \emph{Measuring $P(x)$ for familiar categories}}
 
-The goal of this experiment was to measure participants' beliefs about the distributions of the prevalence of various properties within and across categories.
+The goal of this experiment was to measure participants' beliefs about the distributions of the prevalence of various properties.
 
 \subsection{Participants}
 
@@ -97,12 +97,12 @@ Complete instructions given to participants can be seen in Appendix \ref{sec:pri
 \subsection{Bayesian data analysis}
 \label{sec:bda1}
 
-There is important latent structure in the prior elicitation task. We will describe the model from the perspective of inferring the distribution of a particular property (e.g. ``lays eggs''). 
-The same general structure is implemented for each item independently, with the slight except that the item-wise models share a data-analytic noise parameter $\phi$, described in more detail below. 
+There is important latent structure in the prior elicitation task. We will describe the model from the perspective of inferring the distribution of a particular property (e.g. ``has manes''). 
+The same general structure is implemented for each item independently. 
 
 Responses $d$ can be categorized into those that reflect the property is either present or absent in the species. 
 If the property is absent, then the response is 0\% (of the species has the property). 
-The number of 0 responses act as an indicator of the prevalence of the property \emph{across categories} $\theta_{across}$ (for example, ``are female'' would have very few 0\% responses, whereas ``lays eggs'' would receive appreciably more, owing to the fact the prevalence of these properties \emph{across categories} is different). \emph{A priori}, we assume nothing about the prevalence across categories $\theta_{across} \sim \text{Uniform} (0, 1)$. 
+The number of 0 responses act as an indicator of the prevalence of the property \emph{across categories} $\theta_{across}$ (for example, ``are male'' would have very few 0\% responses, whereas ``has manes'' would receive appreciably more, owing to the fact the prevalence of these properties \emph{across categories} is different).
 %
 \begin{align*}
 d_{across} & \sim \text{Bernoulli}(\theta_{across}) \\
@@ -118,10 +118,7 @@ Since the responses vary between 0 - 100, the natural distribution is a Beta dis
 %Modeling random guessing explicitly is important for recovering reliable estimates of the parameters of the model, which would otherwise be contaminated by this data \cite{LW2014}. 
 %
 \begin{align*}
-d_{within} & \sim \begin{cases}
-					\text{Beta}(\gamma_{within}, \delta_{within})  &  \mbox{ if } d_{observed} > 0 \\
-					0& \mbox{ if } d = 0 
-\end{cases}
+d_{within} & \sim \text{Beta}(\gamma_{within}, \delta_{within})  \mbox{ if } d_{observed} > 0
 \end{align*}
 %
 %\begin{align*}
@@ -133,16 +130,17 @@ d_{within} & \sim \begin{cases}
 %
 %In principle, $\phi$ could be vary by participant (some participants produce noisier data than others). For simplicity, we assume some global ``guessing rate'', and thus $\phi$ is an experiment-wide variable.
 %We make no assumptions about the amount of noise in the data and 
-We put uninformative priors over the means and concentrations of the prevalence distributions. 
+We put uninformative priors over the means and concentrations of the prevalence distributions.  As well, we assume nothing \emph{a priori} about the prevalence across categories. 
 %
 \begin{align*}
 % \phi \sim \text{Uniform}(0,1) \\
-\gamma_{within} \sim \text{Uniform}(0,1) \\
-\delta_{within} \sim \text{Uniform}(0,50)
+\theta_{across} \sim \text{Uniform} (0, 1) \\
+\gamma_{within} \sim \text{Uniform}(0, 1) \\
+\delta_{within} \sim \text{Uniform}(0, 50)
 \end{align*}
 %
 We implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. 
-We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{across}, \gamma_{within}$, and$  \delta_{within}$ with X chains of Y samples.
+We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{across}, \gamma_{within}$, and $\delta_{within}$ with X chains of Y samples.
 
 To reconstruct the likely distribution of  prevalence reflecting both within- and across- category prevalence, we took samples from the posterior predictive distribution of $d$ by running the forward model: 
 %
@@ -206,7 +204,7 @@ Five additional participants were excluded for listing a language other than Eng
 %  \label{fig:tj1b}
 %\end{figure}
 
-The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false (Figure \ref{fig:tj1b}). 
+The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false. 
 We entered participants' agreement judgments into a mixed-effect logistic regression with random by-participant effects of intercept. 
 This \emph{a priori} distinction was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$).
 Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
@@ -225,13 +223,29 @@ However, large deviations from a purely within-category prevalence account remai
 
 
 
-\subsection{Lifted-threshold model predictions}
+\subsection{Lifted-variable model predictions}
 
 The speaker model specified in Section \ref{sec:model} reasons about the likely prevalence that a listener will infer given  a generic sentence and assuming an informative speaker and a distribution over the prevalence of the property. 
 In this way, the model takes into account the prevalence of the property both within- and across-categories as well as communicative principles.
 We explore the predictions of this model, using the empirical priors elicited in Expt.~1a. 
 We compare these predictions to the truth judgment data observed in Expt.~1b.
 \subsubsection{Priors}
+
+The model of generic language has 1 parameter: the speaker optimality parameter $\lambda$. We put an uninformative prior over this parameter, with a range consistent with previous literature using the same model class.
+
+$$
+\lambda \sim \text{Uniform}(0,1)
+$$
+
+In addition, we include a data-analytic ``contamination'' parameter to account for data that is more consistent with a model of random guessing. 
+Modeling random guessing explicitly is important for recovering reliable estimates of the parameters of the model, which would otherwise be contaminated by this data \cite{LW2014}.
+The data is modeled as a mixture of behavior derived from the generics model and random guessing behavior. 
+We put an informative prior over the mixture parameter $\phi$.
+
+$$
+\phi \sim \text{Uniform}(0,1)
+$$
+
 
 \subsubsection{Posterior over model parameters}
 
@@ -252,26 +266,6 @@ This suggests that there is not a substantial amount of noise in the data, possi
 We evaluate the model by examining the posterior predictive distribution of responses. The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the lifted-threshold model and the observed data. This is akin to fitting the parameters and is an important step in model validation: It shows what data is actually predicted by the model. 
 Figure \ref{fig:modeldataScatter} shows the Maximum A-Posteriori (MAP) values of the model predictions compared against the observed data. 
 The model predicts graded endorsements for the generic statements used in Expt.~1b. 
-
-
-
-\subsection{Discussion}
-
-In Expt.~1, we asked whether or not participants' truth judgments on a set of generic sentences covering a range of conceptual distinctions could be explained by a language understanding model with a truth-functional threshold sensitive to the prior distribution over prevalence. 
-In Expt.~1a, we empirically measured the prior distribution of prevalence by asking participants about the prevalence of certain properties across many animal categories. 
-Here, we observed qualitatively different distributions corresponding to properties that are common within-categories and common across-categories (e.g. ``are male''), common within-categories but rare across-categories (e.g. ``have manes''), rare within-categories and rare across-categories (e.g. ``carries malaria''). Interestingly, these same distinctions are made between generics of these properties \cite{Prasada2013}. 
-Our empirical and modeling results suggest these distinctions are a result of different belief distributions about the prevalence of the properties.
-
-How does the model arrive at different truth judgments for generics of different properites?
-Here, the prevalence prior plays a critical role in determining where the generic-threshold $\theta$ (and, consequently, the resulting inferred prevalence $x$) is likely to fall (see Figure \ref{fig:priors1a} for examples of the relevant priors). 
-In setting the threshold, the pragmatic listener $L_{1}$ balances the truth of the utterance with the informativeness of the utterance. 
-If the pragmatic listener hears ``Lions haves manes.'', she will likely set the threshold $\theta$ below 50\%, as this is necessary to make the utterance true (Figure \ref{fig:priors1a} bottom left). 
-At the same time, the listener believes the message to be informative, so she will probably set $\theta$ above 10\%. 
-Since the posterior inferred prevalence has to be greater than the threshold in order to make the utterance true, the expected value of inferred prevalence $x$ will be about 50\% (i.e. after ruling out everything below 10\% and integrating over the conditional distribution, the inference is that 50\% of the species has the property). 
-Since this matches the speaker's known prevalence of having manes among lions, the speaker concludes the generic is a helpful thing to say (relative to saying nothing, or saying the opposite).
-At the same time, participants judged ``Lions are male'' to be neither true nor false; the model exhibits the same behavior because the prevalence of being male among lions is neither significantly more nor less than prevalence of being male among other animal species. 
-Our model of a speaker considering a listener who has uncertainty about the true threshold on prevalence produces truth judgments highly similar to those of our participants.
-
 
 
 \section{Experiment 2a: \emph{Measuring $P(x)$ for unfamiliar categories}}
@@ -315,7 +309,7 @@ d_{across} \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\
 d_{within} \sim \text{Beta}(\gamma_{within}, \delta_{within}) 
 \end{align*}
 The parameters $\gamma$ and $\delta$ correspond to the mean and variance (formally, the concentration), respectively, of prevalence for each of the across- and within- distributions.
-As in our other models, we assume some global proportion of noise in the experimental data $\phi$. 
+%As in our other models, we assume some global proportion of noise in the experimental data $\phi$. 
 We put identical, uninformative priors on these parameters:
 \begin{align*}
 %\phi & \sim \text{Uniform}(0,1) \\
@@ -334,26 +328,6 @@ x & \sim \begin{cases}
 \end{align*}
 %
 Marginal posterior distributions for $x$ were estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking 50,000 samples using the Metropolis-Hastings algorithm.
-
-\subsection{Results}
-
-Our focus for this experiment is to see if the distributions on prevalence differ between the different types of properties.
-We analyzed the data first by item in order to split the accidental properties into two categories: common accidental properties (e.g. wet fur) and rare accidental properties (e.g. broken legs). We then ran the model again analyzing the data by type of property.
-
-Figure \ref{fig:prior2} (left) shows the posterior predictive distributions for prevalence $x$ for 5 different types of properties
-.Figure \ref{fig:prior2} (right) shows the region of interest of these distributions by removing the mass at 0. 
-These distributions form the prevalence priors used in the language understanding model for Expt.~2b. 
-With the exception of the body part category, properties are mostly likely to be absent from the category (Figure \ref{fig:prior2} left; modes of distributions are at 0).
-If the property is present in the category, the most likely prevalence for biological properties (``part'', ``color part'', and ``vague part'') is 100\% (Figure \ref{fig:prior2} right; modes of blue, green, and red distributions are at 1).
-This is not the case with the prevalence priors for accidental properties, for which lower values are more likely (Figure \ref{fig:prior2} right; modes of orange and purples distributions are at some low prevalence).
-
-
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{prior2_prevalenceprior-50k.pdf}
-    \caption{Prevalence priors inferred from the prior elicitation experiment  (Expt.~1a). Right plot shows all non-zero probability mass. This corresponds to the expected within-category prevalence. Different types of properties have different likely prevalence values.}
-  \label{fig:prior2}
-\end{figure}
 
 \section{Experiment 2b: mismatches between \emph{truth conditions} and \emph{implications}}
 
@@ -422,13 +396,9 @@ Accidental &             &                                                      
 
 \end{table}
 
-\subsubsection{Results}
-
-\subsubsection{Priors}
 
 
-Results are shown in Figure~\ref{fig:exp2b} (Left). 
-\subsection{Lifted-threshold model predictions}
+\subsection{Lifted-variable model predictions}
 
 In Expt.~1, the acceptability of the generic was modeled as a speaker (Eq.~\ref{eq:S2}) reasoning about whether or not to produce the generic given some known prevalence. 
 We use the same model to make predictions for the \emph{truth conditions} data.
@@ -436,18 +406,21 @@ The \emph{implied prevalence} task is slightly different: Here, the participant 
 This is the model of the listener in Eq.~\ref{eq:L1}. 
 We use this model to predict the data from the implied prevalence task.
 
+\subsubsection{Priors}
+
+
 Each of these models has a parameter governing the optimality of the hypothetical speaker in Eq.~\ref{eq:S1}. 
 Since the supports of the distributions produced by the two models are different ($S_2$ returns a distribution over ``agree'' and ``disagree'', whereas $L_1$ generates a distribution prevalence levels), there is no reason to believe the speaker optimality parameters would be the same for the two models. 
 Hence, we put independent prior distributions over the two parameters: $\lambda_{\text{truth conditions}}, \lambda_{\text{implied prevalence}} \sim \text{Uniform}(0, 20)$.
 
-We model the observed data as being generated by a mixture of our generics model and a model of random guessing behavior. 
-Modeling random guessing explicitly is important for recovering reliable estimates of the parameters of the model, which would otherwise be contaminated by this data \cite{LW2014}.
-We put an uniformative prior over this mixture parameter $\phi \sim \text{Uniform}(0,1)$, and infer its credible values from the data.
+As before, we model the observed data as being generated by a mixture of our generics model and a model of random guessing behavior. 
+We use a guessing parameter for each task independently, since guessing behavior is fundamentally different between the two tasks (\emph{truth conditions}: 50\% chance of choosing a particular response; \emph{implied prevalence}: 1\% chance of choosing a particular response).
+We put an uninformative prior over these mixture parameter $\phi_{task} \sim \text{Uniform}(0,1)$, and infer its credible values from the data.
 
 \subsubsection{Posteriors over model parameters}
 
 To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 100,000 samples using the Metropolis-Hastings algorithm. 
-The estimated posterior distribution of the contamination parameter $\phi$ parameter is shown in Figure \ref{fig:phi2}. 
+The estimated posterior distributions of the contamination parameters $\phi_{task}$ are shown in Figure \ref{fig:phi2}. 
 This parameter represents the proportion of the data that is better explained by a model of random guessing than by the prevalence-based generics model. 
 The 95\% Credible interval is [0.06, 0.15]. 
 

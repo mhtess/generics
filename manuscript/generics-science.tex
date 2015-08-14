@@ -1,14 +1,14 @@
 
 %%
 % bayesian data analyses
+
+% guessing parameter only used in language tasks, not in prior elicitation
 % expt1a
 %	- prevalence for categories (e..g "lions" that "have manes"):  
-%          - phi (uniform 0 1)
 %         -  Beta(gamma, delta)  --- gamma (uniform 0 1); delta  (uniform 0 50)
 % 		- using posterior on gamma for model
 %   - prevalence prior for properties (e.g. "have manes"): 
 %		- theta_across (uniform 0 1)	
-%          - phi (uniform 0 1)
 %         -  Beta(gamma_within, delta_within)  --- gamma (uniform 0 1); delta  (uniform 0 50)
 % 		-  using posterior on beta for model
 % expt1b
@@ -21,7 +21,7 @@
 % expt 2b
 %   - speaker optimality (truth conditions)
 %   - speaker optimality (implied prevalence)
-%	- phi
+%	- 2 phis (1 per task)
 
 
 
@@ -130,7 +130,7 @@
 
 
 
-\title{Generic language is vague yet rationally / pragmatically understood}
+\title{Generic language is vague yet \{rationally / pragmatically\} \{used / understood\}}
 
 \author{{\large \bf Michael Henry Tessler} (mtessler@stanford.edu)\\ {\large \bf Noah D. Goodman} (ngoodman@stanford.edu) \\
   Department of Psychology, Stanford University}
@@ -141,7 +141,7 @@
 
 
 \begin{abstract}
-Generic utterances (e.g. ``Dogs bark'') express ideas about categories in the world and are ubiquitous in everyday conversation. 
+Generic utterances (e.g. ``Dogs bark.'') are the primary vessel by which speakers express ideas about categories in the world and are ubiquitous in everyday conversation. 
 Despite their prevalence, the meanings of generic statements are puzzling to formal theories. 
 It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). 
 If this is correct, however, there should be some threshold on the percentage of the category that must display the property (e.g. some criterion number of dogs that bark) for the utterance to be true.
@@ -149,7 +149,7 @@ This threshold is notoriously difficult to define for generics, which are flexib
 Here, we formalize a semantics and pragmatics for generic language understanding, based on the idea that generics are vague: The threshold for acceptance is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
 We explain how this simple semantics can account for two central phenomena surrounding generic language: The flexible conditions by which a generic is true and the variable implications of generic language. 
 Inferences from the model are driven largely by the listeners' \emph{a priori} beliefs about the property, which we measure empirically.
-This work suggests that the semantics of generic statements can treated as scalar and that listeners' expectations in the form of prior beliefs heavily govern generic interpretation. 
+This demonstrates that the semantics of generic statements can treated as scalar and suggests that listeners' expectations in the form of prior beliefs heavily govern generic interpretation. 
 
 
 \textbf{Keywords:} 
@@ -371,7 +371,7 @@ Also consistent with previous findings, there were no differences in the tendenc
 
 \begin{figure}
 \centering
-    \includegraphics[width=\columnwidth]{asym-data-model-2opts-phi-100k.pdf}
+    \includegraphics[width=\columnwidth]{asym-data-model-2phi-2so-50k.pdf}
     \caption{Generic utterances of unfamiliar categories truth conditions and implied prevalence (left) and model predictions (right). 
     This replicates and extends Cimpian et al. (2010). 
     Generic statements are accepted for a range of prevalences, resulting in an intermediate average prevalence (light bars) for ``truth conditions''. 
@@ -385,7 +385,7 @@ Also consistent with previous findings, there were no differences in the tendenc
 We compared this behavioral data to our model by using the speaker model (Eq.~\ref{eq:S2}) to predict the truth judgments task (as in Expt.~1) and using the listener model (Eq.~\ref{eq:L1}) to predict the interpretation task. 
 We submitted our speaker model to the same analysis as the truth judgments data, following \citeA{Cimpian2010} (see Supplement). 
 The speaker model did not make different predictions as to the average acceptability prevalence to produce the generic (Figure \ref{fig:exp2b}, Right, light bars). 
-At the same time, the listener model produced variable interpretations contingent on the type of property under discussion (Figure \ref{fig:exp2b}, Right, dark bars). These inferences align almost perfectly with participants productions and interpretations of novel generic utterances ($r^2(10) = 0.97$). 
+At the same time, the listener model produced variable interpretations contingent on the type of property under discussion (Figure \ref{fig:exp2b}, Right, dark bars). These inferences align almost perfectly with participants productions and interpretations of novel generic utterances ($r^2(10) = 0.93$). 
 
 How does the model capture these fine-grained inferences that listeners draw?
 Consider again the belief distributions about the properties inferred from Expt.~2a (Figure \ref{fig:prior2}). 
@@ -399,8 +399,28 @@ Our listener, however, does something wiser: She integrates over her uncertainty
 This results in subtle differences between the implications of body parts (e.g. ``Lorches have wings.'') and  color parts (e.g.``Lorches have purple wings.''), and differences in interpretations of rare and common accidental properties. 
 
 
-
 \subsubsection{Conclusions (4000 words up to now)}
+
+It might seem paradoxical that a part of language that gets so much usage should be vague. 
+Shouldn't speakers want to express their ideas as clearly as possible?
+Language evolutionary pressures suggest that, to the contrary, such underspecification is in fact useful, given that there is some context through which the uncertainty can be resolved \cite{Piantadosi2012}.
+In this work, context takes the shape of a listener and speaker's shared beliefs (i.e. common ground) about the property in question. 
+This, coupled with standard inferences from conversational pragmatics, allows the listener to figure out the meaning of the otherwise underspecified utterance.
+
+Interpretation of generic language is strongly governed by listeners' beliefs about the domain in question. 
+The generic, it would seem, doesn't convey any additional information beyond what the listener already knew about the domain.
+This shouldn't surprise us. 
+In much the same way, ``John is tall'' does not actually tell a listener about what \emph{tall} means\footnote{However, ``John is a person'' does tell a listener about what \emph{tall} means in ``John is tall''.}. 
+Rather, the listener is expected to come to the conversation with some beliefs about heights, and knowing that John is a person, be able to infer likely meanings for \emph{tall}.
+
+Where might these shared beliefs come from?
+It is quite plausible that these distributions are derived from higher-order conceptual knowledge about the nature of these properties \cite{Gelman2005, Keil1992}.
+Much of the psychological and philosophical work has looked beyond prevalence and focused on conceptual distinctions among generics \cite{Prasada2013, Leslie2008}. For example, \citeauthor{Prasada2013} has argued for a distinction between \emph{characteristic} properties (e.g. ``Diapers are absorbent.'') and \emph{statistical} properties (e.g. ``Diapers are white.'').
+ Where in the prevalence-based semantics could such conceptual distinctions come into play?
+Probabilistic models are a useful way to represent rich, structured knowledge of world \cite{Goodmanconcepts}. It's plausible that the prevalence distributions focused on in this work are derived from richer conceptual knowledge. For the purpose of the semantics of generics, prevalence is sufficient to capture the range of truth judgments  and interpretations for these sentences. How interlocutors arrive at estimates of the prevalence, or the prevalence distribution at large, may be the result of a probabilistic, conceptual model of the world. 
+
+This formalism gives a new, computational perspective on how ideas are conveyed and how beliefs play a central role in understanding language.
+Generics are vague, but predictable and useful.
 
 
 \bibliographystyle{apacite}
