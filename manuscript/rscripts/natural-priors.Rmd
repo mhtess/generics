@@ -25,10 +25,13 @@ HPDlo<- function(s){
 ```{r}
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 
-samples = 100000
-prefix<-'generics-naturalPriors-incrMH100000' 
-m<-read.csv(paste(m.path, prefix, 'a.csv', sep=''))
+samples = 50000
+prefix<-'generics-naturalPriors-incrMH100000_burn50000' 
+m1<-read.csv(paste(m.path, prefix, 'a.csv', sep=''))
+m2<-read.csv(paste(m.path, prefix, 'b.csv', sep=''))
+m3<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
 
+m<-bind_rows(m1,m2,m3)
 
 str(m)
 
@@ -42,26 +45,71 @@ m <- data.frame(Parameter =  rep(m$Parameter,
                                    1+samples*m$Probability))
 
 
-m.phi <- m %>% filter(Negation=='phi')
-
-phi.summary<-m.phi %>% 
-  summarise(map = estimate_mode(Value),
-            credHi = HPDhi(Value),
-            credLo = HPDlo(Value))
-
-write.csv(phi.summary, 
-          file='~/Documents/research/generics/manuscript/model-results/natural-priors-phi.csv')
+# m.phi <- m %>% filter(Negation=='phi')
+# 
+# phi.summary<-m.phi %>% 
+#   summarise(map = estimate_mode(Value),
+#             credHi = HPDhi(Value),
+#             credLo = HPDlo(Value))
+# 
+# write.csv(phi.summary, 
+#           file='~/Documents/research/generics/manuscript/model-results/natural-priors-phi.csv')
 
 
 ```
 
+```{r}
+m.prev <- filter(m, Negation=='gamma')
 
+plt1<-ggplot(m.prev, aes(x=Value))+
+  #geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
+  geom_histogram(aes(y=..count../sum(..count..)))+
+  facet_wrap(~Property, scales='free')+
+  xlim(0,1)+
+  xlab("Gamma")+
+  ylab("Posterior probability")
+
+ggsave(plt1,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPriors-gammas-allChains.pdf', width = 15, height=15)
+
+
+m.prev <- filter(m, Negation=='delta')
+
+plt2<-ggplot(m.prev, aes(x=Value))+
+  #geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
+  geom_histogram(aes(y=..count../sum(..count..)))+
+  facet_wrap(~Property, scales='free')+
+  #xlim(0,50)+
+  xlab("Delta")+
+  ylab("Posterior probability")
+
+# delta.summary<-m.prev %>% 
+#   group_by(Property) %>%
+#   summarise(map = estimate_mode(Value), 
+#             credHi = HPDhi(Value),
+#             credLo = HPDlo(Value))
+
+ggsave(plt2,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPriors-deltas-allChains.pdf', width = 15, height=15)
+
+
+m.prev <- filter(m, Negation=='prob_hasF')
+
+plt3<-ggplot(m.prev, aes(x=Value))+
+  #geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
+  geom_histogram(aes(y=..count../sum(..count..)))+
+  facet_wrap(~Property, scales='free')+
+  xlim(0,1)+
+  xlab("Thetas")+
+  ylab("Posterior probability")
+
+ggsave(plt3,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPriors-thetas-allChains.pdf', width = 15, height=15)
+
+
+```
 
 Reconstruct prevalence prior by forward sampling
 
 ```{r}
 
-d.samples<-data.frame()
 
 shape1 = function(gamma,delta){return (gamma * delta)}
 shape2= function(gamma,delta){return ((1-gamma) * delta)}
@@ -69,6 +117,10 @@ shape2= function(gamma,delta){return ((1-gamma) * delta)}
 d.params <- m %>% filter(!(Negation=='phi')) %>%
   select(-Parameter) %>%
   rename(Parameter=Negation)
+
+
+d.samples<-data.frame()
+
 
 for (i in 1:100){
 
@@ -89,10 +141,10 @@ for (i in 1:100){
                Pairing = d.samp[k,1],
                
                Prevalence = if (d.samp[[k,"doesHaveF"]]==1){
-                                rbeta(10, d.samp[[k, "alpha"]], 
+                                rbeta(50, d.samp[[k, "alpha"]], 
                                           d.samp[[k, "beta"]]
                                     )
-                                } else {rep(0,10)}
+                                } else {rep(0,50)}
                )
     d.samples<-bind_rows(d.samples, d.iter)
   }
