@@ -130,7 +130,9 @@
 
 
 
-\title{Generic language is vague yet \{rationally / pragmatically\} \{used / understood\}}
+\title{Generic language is vague yet rationally understood}
+%\title{Generic language is vague yet pragmatically understood}
+%\title{Generic language is vague yet pragmatically used}
 
 \author{{\large \bf Michael Henry Tessler} (mtessler@stanford.edu)\\ {\large \bf Noah D. Goodman} (ngoodman@stanford.edu) \\
   Department of Psychology, Stanford University}
@@ -144,9 +146,9 @@
 Generic utterances (e.g. ``Dogs bark.'') are the primary vessel by which speakers express ideas about categories in the world and are ubiquitous in everyday conversation. 
 Despite their prevalence, the meanings of generic statements are puzzling to formal theories. 
 It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). 
-If this is correct, however, there should be some threshold on the percentage of the category that must display the property (e.g. some criterion number of dogs that bark) for the utterance to be true.
+If this is correct, however, there should be some threshold on the number of instances that display the property (e.g. some criterion number of dogs that bark) for the utterance to be true.
 This threshold is notoriously difficult to define for generics, which are flexible enough to be true based on very little evidence while also implying near-universality of the property. 
-Here, we formalize a semantics and pragmatics for generic language understanding, based on the idea that generics are vague: The threshold for acceptance is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
+Here, we formalize a semantics and pragmatics for generic language understanding, centered on the idea that generics are vague: The threshold for acceptance is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
 We explain how this simple semantics can account for two central phenomena surrounding generic language: The flexible conditions by which a generic is true and the variable implications of generic language. 
 Inferences from the model are driven largely by the listeners' \emph{a priori} beliefs about the property, which we measure empirically.
 This demonstrates that the semantics of generic statements can treated as scalar and suggests that listeners' expectations in the form of prior beliefs heavily govern generic interpretation. 
@@ -156,7 +158,7 @@ This demonstrates that the semantics of generic statements can treated as scalar
 generics; semantics; probabilisitic pragmatics
 \end{abstract}
 
-Imagine talking with a 2-year-old about colors.
+Imagine talking with a 2-year-old about the color red.
 Colors are difficult to describe because they take shape in different physical forms and the function of color is abstract.
 You might offer the toddler something generic like, ``Apples are red.''. 
 Few would argue with the truth of this sentence, yet its precise meaning is difficult to specify. 
@@ -167,7 +169,7 @@ They have no explicitly marked operator and yet children as young as two or thre
 They are believed to be essential to the growth of conceptual knowledge \cite{Gelman2004} and how we represent kinds \cite{Leslie2008}.
 Despite their centrality to cognitive development and everyday conversation, a formal account of generic meaning remains elusive.
 
-At first glance, generics seem like universally-quantified statements (i.e. ``All apples are red.''), but unlike universals, generics are resilient to counter-examples like \emph{Granny Smith apples}. 
+At first glance, generics seem like universally-quantified statements (i.e. ``All apples are red.''), but unlike universals, generics are resilient to counter-examples (e.g. Granny Smith apples). 
 Interpreting the generic as meaning ``most'' (i.e. ``Most apples are red.'') captures many cases, but cannot explain why ``Lions have manes'' and ``Mosquitos carry malaria.'' both seem true, despite the fact that among lions, only the adult males have manes and that a very small percentage of mosquitos actually carry malaria.
 The only quantifier that could satisfy all of these conditions is the weak ``some'' (i.e. ``Some apples are red.'').  
 Yet, the semantics for ``some'' is not the semantics of generics:  Generics have strong implications. 
@@ -187,12 +189,13 @@ Additionally puzzling is the fact that while ``Lions have manes.'' is a fine gen
 
 What could be the stable meaning of a generic given this extreme flexibility? 
 We propose these phenomena can be explained as the effects of pragmatic inference filling in a meaning that is underspecified in the language. 
-Pragmatic reasoning in communication has recently been formalized in probabilisitic models of language understanding \cite{Frank2012, Goodman2013, Franke2009} and explain how assumptions of truthful and informative interlocutors \cite{Clark1996, Grice1975, Levinson2000} produce rich meanings of linguistic expressions in context. 
+Pragmatic reasoning in communication has recently been formalized in probabilisitic models of language understanding \cite{Frank2012, Goodman2013, Franke2009} and explain how the assumptions of truthful and informative interlocutors \cite{Clark1996, Grice1975, Levinson2000} produce rich meanings of linguistic expressions in context. 
 We build upon this tradition to explain the semantics and pragmatics of generic language: We posit that generics are a vague description of prevalence in much the same way that gradable adjectives like \emph{tall} are vague descriptions of height. 
+
 To understand the vagueness of ``tall'', consider the criteria by which a person is ``tall'' (e.g. \emph{$\sim$ 6 feet}) versus the conditions for a building to qualify as ``tall'' (e.g. \emph{$\sim$ 1000 feet}).
-This context-sensitivity of meaning can be accounted for by positing the semantics of the word (``tall'') is a distribution over criteria (``anything could count as tall given the right context''). 
-Probabilistic pragmatic approaches have shown how this uncertainty is resolved by a listener consulting her beliefs about the domain in question (``what are probable heights of a person?'') as well as taking into account the communicative force of a speech act (``why did the speaker bother to say ``John is tall'' when he could have not said anything?'') \cite{Lassiter2013, Qing2014}.
-We present a semantics of generics can be thought of in the same way, as a vague description of the prevalence of a property.
+Probabilistic pragmatic approaches have explained this context-sensitivity of meaning by positing the semantics of the word (``tall'') is a distribution over criteria (``anything could count as tall given the right context''). 
+This uncertainty is resolved by a listener consulting her beliefs about the domain in question (``what are probable heights of a person?'') as well as taking into account the communicative force of a speech act (``why did the speaker bother to say ``John is tall''?'') \cite{Lassiter2013, Qing2014}.
+We explore the idea that the semantics of generics can be thought of in the same way, as a vague description of the prevalence of a property.
 %listeners arrive at rich interpretations of utterances by considering the thought-processes of a speaker whose goal is to be informative.
 %The has provided formal, computational accounts of understanding utterances with quantifiers \cite{Goodman2013}, gradable adjectives \cite{Lassiter2015}, and nonliteral usages \cite{Kao2014}.
 % for by treating the condition for tallness (i.e. the threshold beyond which something counts as tall) as an unknown property of the language, and modeling the listener as inferring this threshold in context \cite{Lassiter2015}. 
@@ -224,14 +227,14 @@ The probabilistic model for generic interpretation, with an uncertain prevalence
 %
 Eq.~\ref{eq:L1} is a model of a listener ($L_{1}$) who has been told a generic statement $g$ (e.g. ``Lions have manes.''). She has uncertainty about the prevalence of the property $x$ (``how many lions have manes?'') as well as the meaning of the generic $\theta$ (``what does this sentence even mean?''), and is trying to figure out what these are. 
 $P(\theta)$ represents the listener's \emph{a priori} beliefs about the semantic variable $\theta$; we assume no informative beliefs about the threshold (i.e. $\theta \sim \text{Uniform}(0,1)$).
-The listener resolves her uncertainty, in context, by consulting her prior beliefs about the property $P(x)$ and assuming that utterance was produced by a speaker $S_{1}$, whose goal was to be informative about the prevalence of the property $x$:
+The listener resolves her uncertainty, in context, by consulting her prior beliefs about the property $P(x)$ and assuming that the utterance was produced by a speaker $S_{1}$, whose goal was to be informative about the prevalence of the property $x$:
 %
 \begin{flalign}
 & P_{S_{1}}(g \mid x, \theta) \propto \exp(\lambda \ln {P_{L_{0}}(x \mid g, \theta)}) \label{eq:S1}
 \end{flalign}
 %
 The speaker knows the prevalence $x$ (e.g. knows that adult, male lions have manes). 
-The listener ($L_{1}$) believes the speaker ($S_{1}$) to actually know the threshold $\theta$, and be a soft-max optimally informative speaker to a degree governed by $\lambda$ \cite{Luce1959}. 
+The listener ($L_{1}$) believes the speaker ($S_{1}$) to actually know the threshold $\theta$ (i.e. believes the speaker had a particular meaning in mind), and be a soft-max optimally informative speaker to a degree governed by $\lambda$ \cite{Luce1959}. 
 This intuitive theory of a speaker is used to resolve this threshold and the prevalence $x$ by assuming the speaker was trying to be informative to a hypothetical literal listener:
 %
 \begin{flalign}
@@ -251,10 +254,10 @@ To make ``tall'' maximally truthful, the listener would set $\theta$ to be very 
  A maximally informative ``tall'' would correspond to a threshold that carries with it the maximum surprisal or information gain on the part of the listener. 
  This would be a threshold that very few individuals could cross (e.g. 7 feet tall); this would correspond to something like ``the tallest''. 
  The lifted-variable pragmatics model seeks a balance between these two pressures. 
- The result is a threshold that signifies that ``John is tall'' means he is ``significantly taller than average''.
+With a prior distribution over heights that is roughly-normal, the result is a threshold that signifies that ``John is tall'' means he is ``significantly taller than average''.
  
 Eq.~\ref{eq:L1} is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
-A generic production rule would then naturally be specified by a speaker who has this sort of listener in mind:
+The question of what conditions allow for a good generic is naturally captured by a production rule of a speaker who has this sort of listener in mind:
 %To explain the different conditions under which a generic utterance can be true, we extend the lifted-threshold model of \citeA{Lassiter2013} to include a model of a speaker who is deciding whether or not to produce the utterance. 
 \begin{equation} 
 P_{S_{2}}(g \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_{1}}(x \mid g)
@@ -307,9 +310,9 @@ The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true
 This \emph{a priori} distinction was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$), as revealed by a mixed-effect logistic regression with random by-participant effects of intercept.
 Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
 
-About half of the variance in truth judgments are explained the prevalence of the property for the target category alone ($r^2 = 0.527$). 
+About half of the variance in truth judgments are explained the prevalence of the property for the target category alone ($r^2 = 0.561$). 
 This is, of course, expected given the existence of high-prevalence true generics (e.g. ``Leopards have spots.'') and low-prevalence false generics (e.g. ``Leopards have wings.''). 
-However, large deviations from a purely within-category prevalence account remain: Generics with intermediate prevalences (prevalence quartiles 2 and 3: $ 22\% < prevalence < 62\%$), were not explained at all by prevalence ($r_{Q2,3}^2 = 0.006$).
+However, large deviations from a purely within-category prevalence account remain: Generics with intermediate prevalences (prevalence quartiles 2 and 3: $ 20\% < prevalence < 64\%$), were not explained at all by prevalence ($r_{Q2,3}^2 = 1 x 10^{-7}$).
 
 \begin{figure}
 \centering
@@ -325,8 +328,8 @@ However, large deviations from a purely within-category prevalence account remai
 %  \label{fig:modeldataScatter}
 %\end{figure}
 
-The probabilisitic pragmatics model does a much better job of explaining the truth judgments ($r^2=0.974$). 
-Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (top and bottom portions of Figure \ref{fig:modeldataBars}). Unlike the model based on within-category prevalence alone, the lifted-threshold model does not break down for generics of categories with intermediate prevalence of the property (for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.975$. 
+The probabilisitic pragmatics model does a much better job of explaining the truth judgments ($r^2=0.984$). 
+Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (top and bottom portions of Figure \ref{fig:modeldataBars}). Unlike the model based on within-category prevalence alone, the lifted-threshold model does not break down for generics of categories with intermediate prevalence of the property (for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.962$. 
 
 \subsubsection{Generics have strong implications (2500 words to this point)} 
 

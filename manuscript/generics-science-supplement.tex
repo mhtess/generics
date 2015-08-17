@@ -146,7 +146,7 @@ We put uninformative priors over the means and concentrations of the prevalence 
 \end{align*}
 %
 We implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. 
-We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{across}, \gamma_{within}$, and $\delta_{within}$ with X chains of Y samples.
+We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{across}, \gamma_{within}$, and $\delta_{within}$ with 3 chains of 100,000 iterations removing the first 50,000 iterations.
 
 To reconstruct the likely distribution of  prevalence reflecting both within- and across- category prevalence, we took samples from the posterior predictive distribution of $d$ by running the forward model: 
 %
@@ -256,14 +256,14 @@ $$
 \subsubsection{Posterior over model parameters}
 
 The full model has one free parameter, the speaker rationality $\lambda$ in Equation \ref{eq:S1}, and one data analytic parameter, a contamination parameter $\phi$.
-To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect \red{X} chains of \red{Y} samples using the Metropolis-Hastings algorithm. 
+To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 3 chains of 100,000 iterations removing the first 50,000 iterations using the Metropolis-Hastings algorithm. 
 The speaker rationality parameter represents the speaker's belief in how rational the hypothetical listener believes he is when choosing to say the generic (over saying nothing). 
-The 95\% Highest Probability Density (HPD) Interval is [7.86,10.29].
+The 95\% Highest Probability Density (HPD) Interval is [3.36, 4.98].
 
 In the data analysis, we also include a contamination parameter $\phi$ to account for noise in the data.  
 This represents the proportion of the data that can be better explained by random guessing than by our model of generic language.
 In this way, $\phi$ provides a crude measure of goodness of fit. 
-The 95\% HPD Interval is [0.006,0.05]. 
+The 95\% HPD Interval is [0.026,0.049]. 
 This suggests that there is not a substantial amount of noise in the data, possibly owing to the simplicity of the task. 
 
 
