@@ -1,4 +1,4 @@
-// time webppl naturalPriors.wppl --require-js ./naturalUtils.js --require-wppl ./naturalPrevalence.wppl --require-wppl ./naturalUtils.wppl
+// time webppl naturalPriors.wppl --require naturalUtils
 
 var priorModel = function(){
 
@@ -19,7 +19,7 @@ var priorModel = function(){
 		factor(scr1)
 
 		// for just doing inference over the priors 
-		// query.add(["prevalencePrior",p,"na","prob_hasF"], prob_hasF)
+		query.add(["prevalencePrior",p,"na","prob_hasF"], prob_hasF)
 
 		var gamma = uniform(0,1)
 		var delta = uniform(0,50)
@@ -39,11 +39,11 @@ var priorModel = function(){
 		factor(scr2)
 		
 		// for linking with truthJudgments.wppl
-		var discretized_prevalence = discretizedPriorModel(prob_hasF, gamma, delta)
-		query.add(p, discretized_prevalence)
+		// var discretized_prevalence = discretizedPriorModel(prob_hasF, gamma, delta)
+		// query.add(p, discretized_prevalence)
 		// for just doing inference over the priors 
-		// query.add(["prevalencePrior",p,"na","gamma"], gamma)
-		// query.add(["prevalencePrior",p,"na","delta"], delta)
+		query.add(["prevalencePrior",p,"na","gamma"], gamma)
+		query.add(["prevalencePrior",p,"na","delta"], delta)
 
 	})
 	
@@ -52,11 +52,12 @@ var priorModel = function(){
 }
 
 // for just doing inference 
-// var mhiter = 100000
-// var resultsERP = IncrementalMH(priorModel, mhiter, {verbose:"true"})
-// var outfile = '../model-results/generics-naturalPriors-incrMH'+mhiter+'a.csv'
-// naturalUtils.erpWriter(resultsERP, outfile)
-// console.log('wrote to... ' + outfile)
+var mhiter = 100000
+var burn = mhiter/2
+var resultsERP = IncrementalMH(priorModel, mhiter, {verbose:"true", burnin: burn})
+var outfile = '../model-results/generics-naturalPriors-incrMH'+mhiter+'_burn'+burn+'c.csv'
+naturalUtils.erpWriter(resultsERP, outfile)
+console.log('wrote to... ' + outfile)
 
 
 

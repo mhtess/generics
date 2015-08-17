@@ -1,0 +1,111 @@
+// webppl asymmetry_0params.wppl --require-js ./asymutils.js --require-wppl ./lvrsa.wppl --require-wppl ./prior.wppl 
+
+
+var data = asymutils.readCSV("data/asymmetry-1-trials.csv").data
+
+var df_asym = map(
+	function(lst){
+		return _.object(_.zip(data[0],lst))
+	},
+	data.slice(1))
+
+// var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
+// //var stimTypes = _.uniq(_.pluck(df_asym, "stim_type"))
+// var stimTypes = _.keys(priorERP)
+
+// var df_accepted = subset(df_asym, "trial_type", "truth_conditions")
+// var df_implied = subset(df_asym, "trial_type", "implied_prevalence")
+
+// var prevalenceLevels = _.uniq(_.pluck(df_accepted, "stim_prevalence"))
+
+var alignAgree = {"Agree":"generic is true",
+				  "Disagree": "mu"}
+
+var alignImplied = function(number){
+	return avoidEnds(Math.round(number/10)/10)
+}
+
+var addGuessing = function(myERP, task, phi){
+	Enumerate(function(){
+	var x = flip(1-phi) ? sample(myERP) : 
+		    (task=="truth_conditions") ? 
+		    		flip(0.5) ? "generic is true" 
+		    				  : "mu" : 
+			uniformDraw(bins)
+	return x
+	})
+}
+
+
+
+var s1opt = 1
+var number_s1opt = 1
+var phi = 0
+
+
+
+var truthProbs = cache(function(property_type){
+	return map(
+		function(p){
+			var truthERP = truthSpeaker2(p, property_type, 1, 1)
+			var theta =	Math.exp(truthERP.score([], "generic is true"))
+			return theta
+		},
+		[.1,.3,.5,.7,.9]
+		)
+})
+
+
+var sampleSubject = function(thetas,trials){
+	var responses = map(
+		function(theta){
+			var truthJudge = binomial(theta,trials)
+			return truthJudge
+		},
+		thetas)
+	
+	return sum(
+		map(function(xp){
+			return xp[0]*xp[1]
+		},
+		_.zip(responses, [.1,.3,.5,.7,.9])
+		)
+		)/sum(responses)
+}
+
+var simulateSampleMean = function(property_type){
+	var subjects = repeat(50, function(){return sampleSubject(truthProbs(property_type), 2)})
+	var mean = sum(subjects)/50
+	return mean
+}
+
+
+var bootstrapSampleMean = function(property_type){
+	return repeat(1000, function(){return simulateSampleMean(property_type)})
+}
+
+
+// bootstrapSampleMean("color")
+
+
+var impliedERP = numberSpeaker2("generic is true", "color", 1, 1)
+var ahimpliedERP = numberSpeaker2("generic is true", "accidental_high", 1, 1)
+var alimpliedERP = numberSpeaker2("generic is true", "accidental_low", 1, 1)
+var vimpliedERP = numberSpeaker2("generic is true", "vague", 1, 1)
+var pimpliedERP = numberSpeaker2("generic is true", "part", 1, 1)
+
+console.log("part truth ... " + simulateSampleMean("part"))
+console.log("part implications ... " + expectation(pimpliedERP))
+
+console.log("color truth ... " + simulateSampleMean("color"))
+console.log("color implications ... " + expectation(impliedERP))
+
+console.log("vague truth ... " + simulateSampleMean("vague"))
+console.log("vague implications ... " + expectation(vimpliedERP))
+
+console.log("accidental high truth ... " + simulateSampleMean("accidental_high"))
+console.log("accidental high implications ... " + expectation(ahimpliedERP))
+
+console.log("accidental  low truth ... " + simulateSampleMean("accidental_low"))
+console.log("accidental low implications ... " + expectation(alimpliedERP))
+

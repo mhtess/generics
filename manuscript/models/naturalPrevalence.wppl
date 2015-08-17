@@ -1,4 +1,4 @@
-// time webppl naturalPrevalence.wppl --require-js ./naturalUtils.js --require-wppl ./naturalUtils.wppl
+// time webppl naturalPrevalence.wppl --require naturalUtils
 var fpath = "/Users/mht/Documents/research/generics/manuscript/data/"
 var Priordata = naturalUtils.readCSV(fpath+"real-kinds-prior-2-trials-formatted.csv").data
 var Truthdata = naturalUtils.readCSV(fpath+"real-kinds-truth-1-trials-formatted.csv").data
@@ -45,10 +45,10 @@ var prevalenceModel = function(){
 			factor(scr)
 
 			// for linking with truthJudgments.wppl
-			query.add([k,p], avoidUpperBound(Math.round(gamma*10)/10))
+			// query.add([k,p], avoidEnds(Math.round(gamma*10)/10))
 			// for just doing inference over the prevalence 
-			// query.add(["prevalence",p, k, "gamma"], gamma)
-			// query.add(["prevalence",p, k, "delta"], delta)
+			query.add(["prevalence",p, k, "gamma"], gamma)
+			query.add(["prevalence",p, k, "delta"], delta)
 		})
 	})
 	
@@ -58,11 +58,13 @@ var prevalenceModel = function(){
 }
 
 // for just doing inference 
-// var mhiter = 100000
-// var resultsERP = IncrementalMH(prevalenceModel, mhiter, {verbose:"true"})
-// var outfile = '../model-results/generics-naturalPrevalence-incrMH'+mhiter+'a.csv'
-// naturalUtils.erpWriter(resultsERP, outfile)
-// console.log('wrote to... ' + outfile)
+var mhiter = 100000
+var burn = mhiter/2
+var resultsERP = IncrementalMH(prevalenceModel, mhiter, {verbose:"true",
+														burnin: burn})
+var outfile = '../model-results/generics-naturalPrevalence-incrMH'+mhiter+'_burn'+burn+'c.csv'
+naturalUtils.erpWriter(resultsERP, outfile)
+console.log('wrote to... ' + outfile)
 // console.log(df_truth)
 
 
