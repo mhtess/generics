@@ -83,7 +83,7 @@
 \documentclass[10pt,letterpaper]{article}
 
 \usepackage{setspace}
-\doublespacing
+%\doublespacing
 \usepackage{geometry}
 \geometry{legalpaper, margin=1in}
 
@@ -118,6 +118,8 @@
 
 \definecolor{Red}{RGB}{255,0,0}
 \newcommand{\red}[1]{\textcolor{Red}{#1}}  
+\definecolor{Green}{RGB}{10,200,100}
+\newcommand{\ndg}[1]{\textcolor{Green}{[ndg: #1]}}  
 
 \usepackage{titlesec}
 
@@ -141,6 +143,7 @@
 
 
 \begin{abstract}
+\ndg{to revise: higher level, less technical, more punchy.}
 Generic utterances (e.g. ``Dogs bark.'') are the primary vessel by which speakers express ideas about categories in the world and are ubiquitous in everyday conversation. 
 Despite their prevalence, the meanings of generic statements are puzzling to formal theories. 
 It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). 
