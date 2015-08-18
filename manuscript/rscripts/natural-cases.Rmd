@@ -1505,4 +1505,4 @@ f.params <- data.frame(Value = rep(m$V1, 1+samples*m$V2))
 
 qplot(data=f.params, x=Value,geom='histogram')
 
-  ```
+```

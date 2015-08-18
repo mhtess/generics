@@ -1,6 +1,6 @@
-// time webppl naturalJudgments.wppl --require-js ./naturalUtils.js --require-wppl ./lvRSA.wppl --require-wppl ./naturalPriors.wppl --require-wppl ./naturalPrevalence.wppl --require-wppl ./naturalUtils.wppl   
+// time webppl naturalJudgments.wppl --require naturalUtils
 
-var previter = 100
+var previter = 50000
 console.log('inferring prevalence of property-category pairs...')
 var prevalenceERP = IncrementalMH(prevalenceModel, previter, {"verbose":"true",
 																"burnin": previter/2})
@@ -15,7 +15,7 @@ var prevalenceERPobject = _.object(map(function(p){
 }, properties))
 
 
-var prevprioriter = 100
+var prevprioriter = 50000
 console.log('inferring prevalence priors...')
 var priorERP = IncrementalMH(priorModel, prevprioriter, {"verbose":"true",
 														"burnin": prevprioriter/2})
@@ -63,8 +63,8 @@ var modelAnalysis = function(){
 					query.add(["generic_linked",property, k, "0"], 
 								Math.exp(linkedERP.score([], "generic is true")))
 
-					query.add(["generic_pred",property, k, "0"], 
-								Math.exp(predictionERP.score([], "generic is true")))
+					// query.add(["generic_pred",property, k, "0"], 
+					// 			Math.exp(predictionERP.score([], "generic is true")))
 
 					query.add(["prevalence",property, k, "0"], prevalence)
 
@@ -81,17 +81,18 @@ var modelAnalysis = function(){
 }
 
 
-var mhiter = 100
+var mhiter = 100000
+var burn = mhiter/2
 console.log('doing the full bayesian dance...')
 var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true,
-												"burnin":mhiter/2}
+												"burnin":burn}
 												)
 console.log('FBT complete')
 
 
-// var outfile = '../model-results/generics-truthJudgment-previter'+previter+
-// 				'_prevprioriter'+prevprioriter+'_mh'+mhiter+'c.csv'
+var outfile = '../model-results/generics-truthJudgment-previter'+previter+
+				'_prevprioriter'+prevprioriter+'-priord50Zero_mh'+mhiter+'_burn'+burn+'c.csv'
 
-// naturalUtils.erpWriter(tfbt, outfile)
-// console.log('wrote to... ' + outfile )
+naturalUtils.erpWriter(tfbt, outfile)
+console.log('wrote to... ' + outfile )
 	

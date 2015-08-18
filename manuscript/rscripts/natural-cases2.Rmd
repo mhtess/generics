@@ -1,0 +1,633 @@
+---
+title: "generics-of-natural-cases"
+author: "mht"
+date: "August 11, 2015"
+output: html_document
+---
+
+
+# Prior: Prevalence priors for 16 properties
+
+
+```{r helpers.prior echo=F}
+upperFirst <- function(name){
+  return (paste(toupper(substr(name, 1, 1)), substr(name, 2, nchar(name)), sep=""))
+}
+
+removeS <- function(name.in){
+  exceptions = c("Turtles", "Bees", "Horses", "Giraffes","Whales","Beetles","Eagles","Snakes","Moles")
+  bluejays =  c("Blue jay","Blue Jay","Bluejay")
+  fleas = c("Flea", "Fly")
+  name<-removeSpace(name.in)
+  last<-substr(name,nchar(name),nchar(name))
+  last2<-substr(name,nchar(name)-1,nchar(name))
+  if (name%in%exceptions){
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else if (name%in%bluejays){
+    name.singular <- "Bluejay"
+  } else if (name%in%fleas){
+    name.singular <- "Flea"
+  } else if (name=="Wolves") {
+    name.singular <- "Wolf"
+  } else if (name=='Dolpin') {
+    name.singular <- "Dolphin"
+  } else if (name=='Giraffs') {
+    name.singular <- "Giraffe"
+  }  else if (last2=='es') {
+    name.singular <- substr(name,1,nchar(name)-2)
+  } else if (last=='s') {
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else {
+    name.singular <- name
+  }
+  
+return(name.singular)
+}
+
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+
+removeSpace <- function(name){
+  if (substrRight(name,1)==' ') {
+    name.edit <- substr(name,1, nchar(name)-1)
+  } else {
+    name.edit <- name
+  }
+  return(name.edit)
+}
+
+library(coda)
+```
+
+
+```{r prior.input}
+
+setwd(dir = '~/Documents/research/generics/analysis/')
+generics.of.interest <- data.frame(
+  animal=c("Robin","Leopard","Duck","Lion","Mosquito","Shark","Cardinal","Kangaroo","Peacock","Tiger","Tick","Swan"),
+  property=c("lay eggs", "have spots","have wings","have manes","carry malaria",
+              "attacks swimmers","are red","have pouches","have beautiful feathers","eat people","carry Lyme disease","are white"))
+
+d<-read.csv(file = '../experiments/turk/real-kinds-prior-2/real-kinds-2-trials.csv')
+d0<-read.csv(file='../experiments/turk/real-kinds-prior-2/real-kinds-2pilot5/real-kinds-2-trials.csv')
+
+d0$workerid = max(d$workerid) + d0$workerid+1
+d<-bind_rows(d,d0)
+
+d[d$property=='are juveline',]$property<-'are juvenile'
+
+
+d$animal.parsed<- factor(unlist(Map(removeS, upperFirst(as.character(d$animal)))))
+
+```
+
+
+Resolve differences between coding of prior elicitation and truth judgment task
+```{r tj.prior.out}
+
+d.out<-d %>% select(workerid, trial_type, property, prevalence, animal)
+d.out[d.out$property == 'attacks swimmers',]$property <- 'attack swimmers'
+
+rexp <- "^(\\w+)\\s?(.*)$"
+d.path <- "~/Documents/research/generics/data/real-kinds/"
+
+c <- read.csv(file = paste(d.path,'real-kinds-truth-1-catch_trials.csv', sep=''))
+
+nonenglish<-c(1,4,19,38,39)
+catch<-c[c$pass==0,]$workerid
+
+tj <-read.csv(file = paste(d.path,'real-kinds-truth-1-trials.csv',sep=''))
+tj <- tj %>% filter(!(workerid %in% c(nonenglish, catch)))
+
+tj<- tj %>% 
+  mutate(Category = sub(rexp,"\\1",sentence),
+         Property = sub(rexp,"\\2",sentence),
+         Property = gsub('&quotechar','',Property),
+         Property = gsub('lyme','Lyme',Property)         
+         ) %>%
+  select(-rt, -sentence) %>%
+  mutate(Property = factor(substr(Property,1,nchar(Property)-1)))
+
+
+d.out <- d.out %>%
+  rename(Property = property,
+         Category = animal)
+
+
+tj$negation <- 0
+tj[grepl("dont", tj$Property),]$negation <-1
+
+tj$positiveProperty <- gsub("^.*?dont ","",tj$Property)
+
+
+negations<- c("dont carry Lyme disease", "dont eat people", 
+              "dont attack swimmers", "dont carry malaria", 
+              "dont have beautiful feathers")
+
+for (n in negations){
+  posprop <- gsub("dont ","",n)
+  d.temp<-d.out %>%filter (Property == posprop)
+  d.temp$Property<-n
+  d.temp$prevalence <- 100-d.temp$prevalence
+  d.out<-bind_rows(d.temp, d.out)
+}
+
+
+
+
+#write.csv(d.out,file='~/Documents/research/generics/models/data/real-kinds-prior-2-trials-formatted.csv', row.names=F)
+#write.csv(tj,file='~/Documents/research/generics/models/data/real-kinds-truth-1-trials-formatted.csv',row.names=F)
+
+
+```
+
+
+
+
+# Animal production data
+
+```{r exp2.newAnimals, fig.height=25, fig.width=16}
+
+# retrieve novel animals (and count only one instance per subject)
+animals.produced<-filter(d,
+                         (!(animal.parsed %in% generics.of.interest$animal)&
+                            (property_index==0)|(property_index==8)))
+
+
+anim.free<-animals.produced %>%
+  group_by(animal.parsed) %>%
+  summarise(n = length(animal.parsed))
+
+anim.free<-anim.free[order(anim.free$n,decreasing=T),]
+top5<-anim.free %>% filter(animal.parsed %in% c("Dog","Kangaroo",'Elephant',"Giraffe","Bear"))
+sum(top5$n)/300
+
+
+sort(table(animals.produced$animal.parsed))[sort(table(animals.produced$animal.parsed))>10]
+levels(factor(d[!(d$animal.parsed%in%generics.of.interest$animal),]$animal.parsed))
+```
+
+
+
+## Estimates for each animal.
+
+Some of these animals have very few responses, owing to the fact that they were produced by just one or a few subjects. Ordering is alphabetical by animal name. Light blue bars indicate the category of interest for each property (for the generic).
+
+```{r exp2.estimatesByAnimal, fig.height=15, fig.width=36}
+
+d.tidy<- d %>%
+  group_by(property,animal.parsed) %>%
+  summarise(prev = mean(prevalence),
+            sterr=sem(prevalence)) %>%
+  filter(!(is.na(sterr)))
+
+generics.of.interest$combined <- paste(generics.of.interest$property, 
+                                       generics.of.interest$animal)
+d.tidy$combined <- paste(d.tidy$property, d.tidy$animal.parsed)
+
+d.tidy$interest<-d.tidy$combined %in% generics.of.interest$combined
+
+d.tidy.sub <- d.tidy %>% 
+  filter(animal.parsed %in% generics.of.interest$animal)
+
+
+```
+
+
+
+
+```{r tj1}
+
+d.path <- "~/Documents/research/generics/data/real-kinds/"
+tj <-read.csv(file = paste(d.path,'real-kinds-truth-1-trials.csv',sep=''))
+c <- read.csv(file = paste(d.path,'real-kinds-truth-1-catch_trials.csv', sep=''))
+s<- read.csv(file = paste(d.path,'real-kinds-truth-1-subject_information.csv', sep=''))
+nonenglish<-c(1,4,19,38,39)
+catch<-c[c$pass==0,]$workerid
+
+tj <- tj %>% filter(!(workerid %in% c(nonenglish, catch)))
+
+### bootstrap CI
+bootstrap.ci <- function(x){
+  agr = aggregate(response ~ sentence, data=x, FUN=mean)
+  agr$CILow = aggregate(response ~ sentence, data=x, FUN=ci.low)$response
+  agr$CIHigh = aggregate(response ~ sentence, data=x, FUN=ci.high)$response
+  agr$YMin = agr$response - agr$CILow
+  agr$YMax = agr$response + agr$CIHigh
+  return(agr)
+}
+
+
+tj.bs<-bootstrap.ci(tj %>% mutate(response = as.numeric(response=='agree-key')))
+
+tj.bs$sentence <- gsub('&quotechar','', tj.bs$sentence)
+tj.bs$sentence <- gsub('lyme','Lyme', tj.bs$sentence)
+
+tj.bs$sentence<-with(tj.bs, reorder(sentence, response, function(x) x))
+
+
+d.tidy.sub[d.tidy.sub$property == 'attacks swimmers',]$property <- 'attack swimmers'
+d.tidy.sub$sentence <- with(d.tidy.sub, 
+                            paste(paste(animal.parsed,'s',sep=''), 
+                                  paste(property,'.',sep='')))
+
+m.tidy<-left_join(tj.bs,d.tidy.sub, by="sentence")
+
+m.tidy[m.tidy$sentence=='Mosquitos dont carry malaria.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Mosquitos carry malaria.',]$prev
+
+m.tidy[m.tidy$sentence=='Sharks dont attack swimmers.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Sharks attack swimmers.',]$prev
+
+m.tidy[m.tidy$sentence=='Peacocks dont have beautiful feathers.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Peacocks have beautiful feathers.',]$prev
+
+m.tidy[m.tidy$sentence=='Ticks dont carry Lyme disease.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Ticks carry Lyme disease.',]$prev
+
+m.tidy[m.tidy$sentence=='Tigers dont eat people.',]$prev<-100-
+  m.tidy[m.tidy$sentence=='Tigers eat people.',]$prev
+
+m.tidy<-m.tidy %>%
+  filter(!is.na(prev))
+```
+
+
+
+
+#### posterior over parameters
+
+```{r fullBayesian.postparams}
+
+
+estimate_mode <- function(s) {
+  d <- density(s)
+  return(d$x[which.max(d$y)])
+}
+HPDhi<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","upper"])
+}
+HPDlo<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","lower"])
+}
+
+
+
+m.path<-"~/Documents/research/generics/manuscript/model-results/"
+prefix <- "generics-truthJudgment-previter50000_prevprioriter50000-nophi_mh100000c.csv"
+samples =10000
+previter = 50000
+prioriter = 50000
+m.path<-"~/Documents/research/generics/models/results/"
+
+
+prefix<-'generics-tj-so-phi20-sequential-discretePriorConditioning-gammaPrevalence-explicitNegation-previter' 
+m<-read.csv(paste(m.path,prefix,sep=''))
+m0<-read.csv(paste(m.path,
+                  prefix, 
+                  previter,
+                  '_prevprioriter',
+                  prioriter,
+                  '_mh',
+                  samples, '0a.csv', sep=''))
+
+m1<-read.csv(paste(m.path,
+                  prefix, 
+                  previter,
+                  '_prevprioriter',
+                  prioriter,
+                  '_mh',
+                  samples, '0b.csv', sep=''))
+m2<-read.csv(paste(m.path,
+                  prefix, 
+                  previter,
+                  '_prevprioriter',
+                  prioriter,
+                  '_mh',
+                  samples, '0c.csv', sep=''))
+
+
+m<-bind_rows(m1,m2)
+
+
+m<-m %>%
+  mutate(Probability = Probability/sum(Probability))
+  str(m)
+samples = 200000
+
+m <- data.frame(Parameter =  rep(m$Parameter, 
+                                   1+samples*m$Probability),
+                Property =  rep(m$Property, 
+                                   1+samples*m$Probability),
+                Category =  rep(m$Category, 
+                                   1+samples*m$Probability),
+                Negation =  rep(m$Negation, 
+                                   1+samples*m$Probability),
+                Value = rep(m$Value, 
+                                   1+samples*m$Probability))
+
+
+# m.phi <- m %>% filter(Parameter=='phi')
+# 
+# ggplot(m.phi, aes(x=Value))+
+#   geom_histogram()+
+#   xlim(0,1)
+
+
+
+
+
+m.prev <- m %>% 
+  filter(Parameter == 'prevalence') %>%
+  mutate(Negation = gsub(1," dont ", Negation),
+         Negation = gsub(0," ", Negation)) %>%
+  unite(Property1, Category, Negation, Property,sep='') %>%
+  rename(Item = Property1)
+
+ggplot(m.prev, aes(x=Value))+
+  geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
+  facet_wrap(~Item, scales='free')+
+  xlim(0,1)+
+  xlab("Prevalence")+
+  ylab("Posterior probability")
+  
+
+
+# m.prevPrior <- m %>%
+#   filter(substring(Item,1,11) == 'prevalenceP') %>%
+#   separate(Item, into=c("a", "Item","Bin"), sep = "_") %>%
+#   select(-a)
+
+m.prevPrior <- m %>%
+  filter(Parameter== 'prevalencePrior') %>%
+  group_by(Property, Category) %>%
+  summarise(expectation = mean(Value),
+            credLo = quantile(Value, probs=0.025),
+            credHi = quantile(Value, probs=0.975)) %>%
+  mutate(Bin = to.n(Category))
+# m.prevPrior <- data.frame(Item =  rep(m.prevPrior$Item, 
+#                                    1+prioriter*m.prevPrior$Probability),
+#                           Bin =  rep(m.prevPrior$Bin, 
+#                                    1+prioriter*m.prevPrior$Probability),
+#                          Value = rep(m.prevPrior$Value, 
+#                                      1+prioriter*m.prevPrior$Probability))
+
+# m.prevPriorStats <- m.prevPrior %>%
+#   group_by(Item, Bin) %>%
+#   summarise(expectation = mean(Value),
+#             credLo = quantile(Value, probs=0.025),
+#             credHi = quantile(Value, probs=0.975)) %>%
+#   mutate(Bin = to.n(Bin))
+
+
+ggplot(m.prevPrior, aes(x=Bin,y = expectation, fill=Property))+
+  geom_bar(stat='identity', position = position_dodge())+
+  geom_errorbar(aes(ymin=credLo, ymax=credHi), position=position_dodge())+
+  facet_wrap(~Property, scales='free')+
+  guides(fill=F)
+
+
+
+#m<- bind_rows(m,m0)
+#m$Probability <- m$Probability/2
+
+m.params<- m %>% filter(Parameter 
+                        %in% c("speakerOptimality", "cost", "softmax","phi")
+                        )
+
+ggplot(m.params, aes(x=Value))+
+  geom_histogram(aes(y=..count../sum(..count..)))+
+  #geom_density(adjust=2)+
+  facet_wrap(~Parameter, scales='free')+
+  #xlim(0,10)+
+  xlab("Speaker Optimality")+
+  ylab("Posterior probability")
+
+
+m.params %>% 
+  group_by(Parameter) %>%
+  summarise(postMode = estimate_mode(Value),
+            credHi = HPDhi(Value),
+            credLo = HPDlo(Value))
+
+#ggsave(file='~/Box Sync/talks/esslli-2015-generics/posterior-rationality-truthJudge.pdf')
+
+
+quantile(m.params$Value, probs = c(0.025,0.975))
+```
+
+#### posterior predictive
+```{r fullBayesian.pp}
+  
+m.pp<- m %>% filter(!((Parameter %in% 
+                         c("speakerOptimality", "cost", "softmax", 'gamma',
+                           'delta', "phi")) |
+                        (substring(Parameter,1,10) == 'prevalence'))) %>%
+    mutate(Negation = gsub(1," dont ", Negation),
+         Negation = gsub(0," ", Negation)) %>%
+    unite(sentence, Category, Negation, Property,sep='') %>%
+  filter(Parameter == 'generic_linked')
+
+
+
+
+m.pp.exp<- m.pp %>%
+  group_by(sentence) %>%
+  summarise(expectation = mean(Value),
+            posMode = estimate_mode(Value),
+            credHi = HPDhi(Value),
+            credLo = HPDlo(Value)) %>%
+  mutate(sentence = paste(sentence, '.', sep=''))
+
+
+combined.model.data<- left_join(m.pp.exp, m.tidy, by='sentence')
+combined.model.data$sentence<-with(combined.model.data, 
+                                   reorder(sentence, response, function(x) -x))
+
+
+
+qplot(data=combined.model.data,
+      x=posMode,y=response,
+      color=sentence)+
+  geom_point(size=4)+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                position=position_dodge(), size =1)+
+  geom_errorbarh(aes(xmin = credLo, xmax=credHi),
+                 position=position_dodge(), size = 1)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='black')+
+  xlab("\n model posterior predictive")+
+  ylab("proportion of agree's \n")+
+  guides(color=F)+
+  xlim(-0.05,1.05)+
+  ylim(-0.05,1.05)+
+  coord_fixed()
+
+
+
+
+with(combined.model.data, cor(posMode, response))^2
+
+with(filter(combined.model.data,
+            (prev>25 & prev < 75)), cor(posMode, response))
+
+with(filter(combined.model.data,
+            (prev > quantile(m.tidy$prev)["25%"] & 
+            prev < quantile(m.tidy$prev)["75%"])), cor(posMode,response))^2
+
+
+
+
+with(combined.model.data, cor(posMode, response, method='spearman'))
+
+
+with(combined.model.data, cor(prev, response))^2
+with(filter(combined.model.data,
+            (prev > quantile(m.tidy$prev)["25%"] & 
+            prev < quantile(m.tidy$prev)["75%"])), cor(prev,response))^2
+
+with(combined.model.data, cor(prev, response, method='spearman'))
+
+
+
+
+
+combined.model.data<- combined.model.data %>%
+  mutate(dev = abs(expectation-response))
+
+# ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPostpred_95hdi.pdf', width=10, height=5)
+
+cmd.tidy <- 
+  bind_rows(
+    combined.model.data %>% gather(src, value, posMode, response) %>%
+          filter(src=='posMode') %>%
+          select(sentence, credHi, credLo, src, value),
+    combined.model.data %>% gather(src, value, posMode, response) %>%
+          filter(src=='response') %>%
+          select(sentence, YMin, YMax, src, value) %>%
+          rename(credHi = YMax,
+                 credLo = YMin))
+
+cmd.tidy$sentence<-with(cmd.tidy %>% filter(src=='posMode'), 
+                        reorder(sentence, value, function(x) x))
+
+cmd.tidy<- cmd.tidy %>% rename(
+  Source = src
+  ) %>%
+  mutate(Source = factor(Source, levels = c("response", 
+                                            "posMode"),
+                         labels = c("Human judgments",
+                                    "Model predictions")))
+
+ggplot(data=cmd.tidy, aes(x=sentence, y=value-0.5, 
+                          fill = Source))+
+  geom_bar(stat='identity',
+           aes(x=sentence),
+           position=position_dodge(1), width=1,
+           color='black')+
+  geom_errorbar(aes(x=sentence, fill = Source,
+                    ymin=credLo-0.5,ymax=credHi-0.5), width=0.5, size = 1,
+                color='black',
+                position=position_dodge(1))+
+  scale_fill_brewer(palette=3, type='qual')+
+  #theme_blackDisplay()+
+  #theme(axis.text.x = element_text(angle = 45, hjust = 1,
+   #                                vjust=1))+
+ # ylim(-.5,0.5)+
+  xlab("")+
+  ylab(" proportion endorsement")+
+  scale_y_continuous(breaks=c(-0.5,0,0.5),labels=c("0","0.5","1"))+
+  coord_flip()
+
+ggsave(file="~/Documents/research/generics/manuscript/figures/tj_n100-postPred-byItem.pdf", width = 11, height = 7)
+
+
+```
+
+Doing TFBT with speaker optimality (at the S1 level) as a free parameter
+
+```{r}
+model.posteriorpred <-read.csv('../cbg2010-replication/models/model_predictions/generics_truthJudge_3_postpred_n100_mh1000.csv',header=F,
+                               col.names=c("sentence","posteriorPred"))
+
+model.posteriorpred <-read.csv('~/Documents/research/generics/cbg2010-replication/models/generics_truthJudge_3_rationality1_n100_hashmh100.csv')
+
+
+combined.model.data<- left_join(m.pp, m.tidy, by='sentence')
+
+with(combined.model.data, cor(posteriorPred, response))
+
+with(filter(combined.model.data,
+            (prev>25 & prev < 75)), cor(posteriorPred, response))
+
+with(filter(combined.model.data,
+            (prev > quantile(m.tidy$prev)["25%"] & 
+            prev < quantile(m.tidy$prev)["75%"])), cor(posteriorPred,response))
+
+
+
+
+with(combined.model.data, cor(posteriorPred, response, method='spearman'))
+
+
+with(combined.model.data, cor(prev, response))
+with(combined.model.data, cor(prev, response, method='spearman'))
+
+
+combined.model.data$sentence<-with(combined.model.data, reorder(sentence, response, function(x) -x))
+
+
+
+qplot(data=combined.model.data,
+      x=posteriorPred,y=response,
+      color=sentence)+
+  geom_point(size=4)+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                position=position_dodge(), size =2)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=2,color='black')+
+  xlab("\n model posterior predictive")+
+  ylab("proportion of agree's \n")+
+  guides(color=F)+
+  coord_fixed()
+#+
+#  theme_blackDisplay()
+  
+ggsave(file='~/Box Sync/talks/esslli-2015-generics/scatter-lvrsa.pdf',
+       width=13,height=13)
+
+qplot(data=combined.model.data,
+      x=prev,y=response,
+      color=sentence)+
+  geom_point(size=4)+
+    geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                position=position_dodge(), size =2)+
+  geom_abline(intercept=0,slope=0.01,linetype=2, size =2,color='white')+
+  xlab("\n (raw) prevalence")+
+  ylab("proportion of agree's \n")+
+  guides(color=F)+
+  coord_fixed(ratio=100)+
+  theme_blackDisplay()
+
+ggsave(file='~/Box Sync/talks/esslli-2015-generics/scatter-prevalence.pdf',
+       width=13,height=13)
+
+```
+
+
+```{r}
+m<-read.csv('~/Documents/research/generics/cbg2010-replication/models/generics_truthJudge_3_rationality_n100_mh1000.csv', header =F)
+samples  = 1000
+
+# f.params0<- data.frame(Parameter = rep(f.tidy$param, 1+samples*f.tidy$Probability),
+#                        Response = rep(f.tidy$Value, 1+samples*f.tidy$Probability))
+# f.params.tidy<- f.params0 %>%
+#   separate(Parameter, by='.', into=c("Item", "Question", "Parameter"))
+
+f.params <- data.frame(Value = rep(m$V1, 1+samples*m$V2))
+
+qplot(data=f.params, x=Value,geom='histogram')
+
+  ```
+

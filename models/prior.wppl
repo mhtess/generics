@@ -1,4 +1,4 @@
-// webppl prior.wppl --require-js ./asymutils.js 
+// time webppl prior.wppl --require asymutils
 
 var foreach = function(lst, fn) {
     var foreach_ = function(i) {
@@ -40,7 +40,8 @@ var bootstrap = function(lst){
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
-var Priordata = asymutils.readCSV("data/asymmetry-prior-4splitAccidental-trials.csv").data
+var Priordata0 = asymutils.readCSV("data/asymmetry-prior-4splitAccidental-trials.csv").data
+var Priordata = Priordata0.slice(0, Priordata0.length-1)
 
 var df0 = map(
 	function(lst){
@@ -51,6 +52,7 @@ var df0 = map(
 var df = df0//bootstrap(df0)
 
 var conditions = _.uniq(_.pluck(df,"type"))
+var properties = _.uniq(_.pluck(df, "stim_property"))
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
@@ -59,30 +61,37 @@ var avoidEnds = function(response){
 
 var priorModel = function(){
 
-	var phi = uniform(0,1)
-
-	foreach(conditions,
+	foreach(properties,
 		function(c){
-
-			var conditionData = subset(df, "type", c)
+			var conditionData = subset(df, "stim_property", c)
+			// var conditionData = subset(df, "type", c)
 
 			foreach(["response0","response1"],
 				function(r){
 
 					var gamma = uniform(0,1)
-					var delta = uniform(0,10)
+					var delta = uniform(0,50)
 
 					var responseData = _.pluck(conditionData,r)
 					// console.log(responseData)
+
 					var scr = reduce(function(dataPoint, memo) {
-									    return memo + Math.log(
-									    					(phi*Math.exp(betaERP.score([1,1],avoidEnds(dataPoint))) +
-									    			 		(1-phi)* Math.exp(betaERP.score([
+									    return memo + betaERP.score([
 																			shape_alpha(gamma,delta),
 																			shape_beta(gamma,delta)
-																			], avoidEnds(dataPoint)))
-									    			 		))
+																			], avoidEnds(dataPoint))
 										}, 0, responseData)
+
+
+					// var scr = reduce(function(dataPoint, memo) {
+					// 				    return memo + Math.log(
+					// 				    					(phi*Math.exp(betaERP.score([1,1],avoidEnds(dataPoint))) +
+					// 				    			 		(1-phi)* Math.exp(betaERP.score([
+					// 														shape_alpha(gamma,delta),
+					// 														shape_beta(gamma,delta)
+					// 														], avoidEnds(dataPoint)))
+					// 				    			 		))
+					// 					}, 0, responseData)
 
 					factor(scr)
 					// console.log(scr)
@@ -95,23 +104,24 @@ var priorModel = function(){
 
 	})
 
-	query.add(["na","na","phi"], phi)
+	// query.add(["na","na","phi"], phi)
 
 	return query
 }
 
 
   // var heirarchicalERP = IncrementalMH(function(){return priorModel(key)}, 1000)
-var mhiter = 50000
-var heirarchicalERP = IncrementalMH(priorModel, mhiter, {"verbose":true})
-var outfile = "results/generics-asym-prior-incrmh"+mhiter+".csv"
+var mhiter = 100000
+var burn = mhiter/2
+var heirarchicalERP = IncrementalMH(priorModel, mhiter, {"verbose":true,"burnin":burn})
+var outfile = "../manuscript/model-results/generics-asym-priorByItem-incrmh"+mhiter+"_burn"+burn+"b.csv"
 
 // var outfile = "results/priorERP-incrmh1000_"+key+".csv"
 asymutils.erpWriter(heirarchicalERP, outfile)
 console.log("prior written to " +outfile)
 
 
-
+// df
 // IncrementalMH(function(){return priorModel("vague")}, 1000)
 
 

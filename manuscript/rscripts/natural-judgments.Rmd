@@ -1,0 +1,334 @@
+---
+title: "natural-judgments"
+author: "mht"
+date: "August 16, 2015"
+output: html_document
+---
+
+Load prevalence estimates
+
+```{r prev}
+```{r}
+m.path<-"~/Documents/research/generics/manuscript/model-results/"
+
+samples = 50000
+prefix<-'generics-naturalPrevalence-incrMH100000_burn50000' 
+m1<-read.csv(paste(m.path, prefix, 'a.csv', sep=''))
+m2<-read.csv(paste(m.path, prefix, 'b.csv', sep=''))
+m3<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
+
+m<-bind_rows(m1,m2,m3)
+
+str(m)
+
+m <- data.frame(Parameter =  rep(m$Parameter, 
+                                   1+samples*m$Probability),
+                Property =  rep(m$Property, 
+                                   1+samples*m$Probability),
+                Category =  rep(m$Category, 
+                                   1+samples*m$Probability),
+                Negation =  rep(m$Negation, 
+                                   1+samples*m$Probability),
+                Value = rep(m$Value, 
+                                   1+samples*m$Probability))
+
+
+m.summary<- m %>% filter(Negation == 'gamma') %>%
+  group_by(Property, Category) %>%
+  summarise(#expectation = mean(Value),
+            #med = median(Value),
+            map = estimate_mode(Value),
+            credLow =HPDlo(Value),
+            credHigh= HPDhi(Value)) %>%
+  unite(sentence, Category, Property, sep =' ') %>%
+  mutate(sentence = paste(sentence, '.', sep=''))
+
+
+```
+
+
+
+```{r tj1}
+
+d.path <- "~/Documents/research/generics/data/real-kinds/"
+tj <-read.csv(file = paste(d.path,'real-kinds-truth-1-trials.csv',sep=''))
+c <- read.csv(file = paste(d.path,'real-kinds-truth-1-catch_trials.csv', sep=''))
+s<- read.csv(file = paste(d.path,'real-kinds-truth-1-subject_information.csv', sep=''))
+nonenglish<-c(1,4,19,38,39)
+catch<-c[c$pass==0,]$workerid
+
+tj <- tj %>% filter(!(workerid %in% c(nonenglish, catch)))
+
+### bootstrap CI
+bootstrap.ci <- function(x){
+  agr = aggregate(response ~ sentence, data=x, FUN=mean)
+  agr$CILow = aggregate(response ~ sentence, data=x, FUN=ci.low)$response
+  agr$CIHigh = aggregate(response ~ sentence, data=x, FUN=ci.high)$response
+  agr$YMin = agr$response - agr$CILow
+  agr$YMax = agr$response + agr$CIHigh
+  return(agr)
+}
+
+
+tj.bs<-bootstrap.ci(tj %>% mutate(response = as.numeric(response=='agree-key')))
+
+
+
+tj.bs$sentence <- gsub('&quotechar','', tj.bs$sentence)
+tj.bs$sentence <- gsub('lyme','Lyme', tj.bs$sentence)
+
+
+tj.wPrev<-left_join(tj.bs %>% select(-CILow, -CIHigh), 
+                    m.summary %>% rename(prev = map, 
+                                         prevHigh = credHigh,
+                                         prevLow = credLow), by = "sentence")
+
+with(tj.wPrev, cor(response,prev))^2
+
+write.csv(tj.wPrev, 
+          file='~/Documents/research/generics/manuscript/model-results/natural-judgments-means.csv')
+
+```
+
+Bayesian model evaluation results
+
+```{r fullBayesian.postparams}
+
+
+estimate_mode <- function(s) {
+  d <- density(s)
+  return(d$x[which.max(d$y)])
+}
+HPDhi<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","upper"])
+}
+HPDlo<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","lower"])
+}
+
+
+
+m.path<-"~/Documents/research/generics/manuscript/model-results/"
+samples =50000
+previter = 50000
+prioriter = 50000
+
+
+m1<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero_mh100000_burn50000a.csv",sep=''))
+m2<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero_mh100000_burn50000b.csv",sep=''))
+m3<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero_mh100000_burn50000c.csv",sep=''))
+
+m<- bind_rows(m1,m2,m3)
+
+#m<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero_mh100000_burn50000a.csv",sep=''))
+
+#m<-bind_rows(m1,m2)
+
+m <- data.frame(Parameter =  rep(m$Parameter, 
+                                   1+samples*m$Probability),
+                Property =  rep(m$Property, 
+                                   1+samples*m$Probability),
+                Category =  rep(m$Category, 
+                                   1+samples*m$Probability),
+                Negation =  rep(m$Negation, 
+                                   1+samples*m$Probability),
+                Value = rep(m$Value, 
+                                   1+samples*m$Probability))
+
+
+
+
+
+
+m.prev <- m %>% 
+  filter(Parameter == 'prevalence') %>%
+  mutate(Negation = gsub(1," dont ", Negation),
+         Negation = gsub(0," ", Negation)) %>%
+  unite(Property1, Category, Negation, Property,sep='') %>%
+  rename(Item = Property1)
+
+ggplot(m.prev, aes(x=Value))+
+  geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
+  facet_wrap(~Item, scales='free')+
+  xlim(0,1)+
+  xlab("Prevalence")+
+  ylab("Posterior probability")
+  
+
+
+
+
+
+m.params<- m %>% filter(Parameter 
+                        %in% c("speakerOptimality", "cost", "softmax","phi")
+                        )
+
+ggplot(m.params, aes(x=Value))+
+  geom_histogram(aes(y=..count../sum(..count..)))+
+  #geom_density(adjust=2)+
+  facet_wrap(~Parameter, scales='free')+
+  #xlim(0,10)+
+  xlab("Speaker Optimality")+
+  ylab("Posterior probability")
+
+
+m.params %>% 
+  group_by(Parameter) %>%
+  summarise(postMode = estimate_mode(Value),
+            credHi = HPDhi(Value),
+            credLo = HPDlo(Value))
+
+#ggsave(file='~/Box Sync/talks/esslli-2015-generics/posterior-rationality-truthJudge.pdf')
+
+
+```
+
+Scatter plot
+
+```{r fullBayesian.pp}
+  
+m.pp<- m %>% filter(!((Parameter %in% 
+                         c("speakerOptimality", "cost", "softmax", 'gamma',
+                           'delta', "phi")) |
+                        (substring(Parameter,1,10) == 'prevalence'))) %>%
+    mutate(Negation = gsub(1," dont ", Negation),
+         Negation = gsub(0," ", Negation)) %>%
+    unite(sentence, Category, Negation, Property,sep='') %>%
+  filter(Parameter == 'generic_linked')
+
+
+
+
+m.pp.exp<- m.pp %>%
+  group_by(sentence) %>%
+  summarise(expectation = mean(Value),
+            posMode = estimate_mode(Value),
+            credHi = HPDhi(Value),
+            credLo = HPDlo(Value)) %>%
+  mutate(sentence = paste(sentence, '.', sep=''))
+
+
+combined.model.data<- left_join(m.pp.exp, tj.wPrev, by='sentence')
+combined.model.data$sentence<-with(combined.model.data, 
+                                   reorder(sentence, response, function(x) -x))
+
+
+
+qplot(data=combined.model.data,
+      x=posMode,y=response,
+      color=sentence)+
+  geom_point(size=4)+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                position=position_dodge(), size =1)+
+  geom_errorbarh(aes(xmin = credLo, xmax=credHi),
+                 position=position_dodge(), size = 1)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='black')+
+  xlab("\n model posterior predictive")+
+  ylab("proportion of agree's \n")+
+  guides(color=F)+
+  xlim(-0.05,1.05)+
+  ylim(-0.05,1.05)+
+  coord_fixed()
+
+ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPostpred_95hdi.pdf', width=10, height=5)
+
+
+with(combined.model.data, cor(posMode, response))^2
+
+with(filter(combined.model.data,
+            (prev > quantile(combined.model.data$prev)["25%"] & 
+            prev < quantile(combined.model.data$prev)["75%"])), 
+     cor(posMode,response))^2
+
+
+with(combined.model.data, cor(posMode, response, method='spearman'))
+
+
+# 
+# qplot(data=combined.model.data,
+#       x=prev,y=response,
+#       color=sentence)+
+#   geom_point(size=4)+
+#   geom_errorbar(aes(ymin=YMin, ymax=YMax),
+#                 position=position_dodge(), size =1)+
+#   geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
+#                  position=position_dodge(), size = 1)+
+#   geom_abline(intercept=0,slope=1,linetype=2, size=1,color='black')+
+#   xlab("\n prevalence")+
+#   ylab("proportion of agree's \n")+
+#   guides(color=F)+
+#   xlim(-0.05,1.05)+
+#   ylim(-0.05,1.05)+
+#   coord_fixed()
+# 
+# ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsprev_95hdi.pdf', width=10, height=5)
+
+with(combined.model.data, cor(prev, response))^2
+with(filter(combined.model.data,
+            (prev > quantile(combined.model.data$prev)["25%"] & 
+            prev < quantile(combined.model.data$prev)["75%"])), 
+     cor(prev,response))^2
+
+with(combined.model.data, cor(prev, response, method='spearman'))
+
+
+combined.model.data<- combined.model.data %>%
+  mutate(dev = abs(expectation-response))
+
+
+```
+
+Bar plots
+
+
+```{r}
+cmd.tidy <- 
+  bind_rows(
+    combined.model.data %>% gather(src, value, posMode, response) %>%
+          filter(src=='posMode') %>%
+          select(sentence, credHi, credLo, src, value),
+    combined.model.data %>% gather(src, value, posMode, response) %>%
+          filter(src=='response') %>%
+          select(sentence, YMin, YMax, src, value) %>%
+          rename(credHi = YMax,
+                 credLo = YMin))
+
+cmd.tidy$sentence<-with(cmd.tidy %>% filter(src=='posMode'), 
+                        reorder(sentence, value, function(x) x))
+
+cmd.tidy<- cmd.tidy %>% rename(
+  Source = src
+  ) %>%
+  mutate(Source = factor(Source, levels = c("response", 
+                                            "posMode"),
+                         labels = c("Human judgments",
+                                    "Model predictions")))
+
+ggplot(data=cmd.tidy, aes(x=sentence, y=value-0.5, 
+                          fill = Source))+
+  geom_bar(stat='identity',
+           aes(x=sentence),
+           position=position_dodge(1), width=1,
+           color='black')+
+  geom_errorbar(aes(x=sentence, fill = Source,
+                    ymin=credLo-0.5,ymax=credHi-0.5), width=0.5, size = 1,
+                color='black',
+                position=position_dodge(1))+
+  scale_fill_brewer(palette=3, type='qual')+
+  #theme_blackDisplay()+
+  #theme(axis.text.x = element_text(angle = 45, hjust = 1,
+   #                                vjust=1))+
+ # ylim(-.5,0.5)+
+  xlab("")+
+  ylab(" proportion endorsement")+
+  scale_y_continuous(breaks=c(-0.5,0,0.5),labels=c("0","0.5","1"))+
+  coord_flip()
+
+ggsave(file="~/Documents/research/generics/manuscript/figures/tj_n100-postPred-byItem.pdf", width = 11, height = 7)
+
+
+  ```
+
+

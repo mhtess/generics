@@ -1,0 +1,100 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Long Lined Cover Letter
+% LaTeX Template
+% Version 1.0 (1/6/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Matthew J. Miller
+% http://www.matthewjmiller.net/howtos/customized-cover-letter-scripts/
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt,stdletter,dateno,sigleft]{newlfm} % Extra options: 'sigleft' for a left-aligned signature, 'stdletternofrom' to remove the from address, 'letterpaper' for US letter paper - consult the newlfm class manual for more options
+
+\usepackage{charter} % Use the Charter font for the document text
+
+\newsavebox{\Luiuc}\sbox{\Luiuc}{\parbox[b]{1.75in}{\vspace{0.5in}
+\includegraphics[width=1.2\linewidth]{logo.pdf}}} % Company/institution logo at the top left of the page
+\makeletterhead{Uiuc}{\Lheader{\usebox{\Luiuc}}}
+
+\newlfmP{sigsize=50pt} % Slightly decrease the height of the signature field
+\newlfmP{addrfromphone} % Print a phone number under the sender's address
+\newlfmP{addrfromemail} % Print an email address under the sender's address
+\PhrPhone{Phone} % Customize the "Telephone" text
+\PhrEmail{Email} % Customize the "E-mail" text
+
+\lthUiuc % Print the company/institution logo
+
+%----------------------------------------------------------------------------------------
+%	YOUR NAME AND CONTACT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\namefrom{Michael Henry Tessler\\
+		Noah D. Goodman} % Name
+
+\addrfrom{
+\today\\[12pt] % Date
+Stanford University \\ % Address
+Department of Psychology \\
+Jordan Hall, Building 420 \\
+450 Serra Mall \\ 
+Stanford, CA 94305
+}
+
+\phonefrom{(757) 561-7971} % Phone number
+
+\emailfrom{mtessler@stanford.edu \\
+		ngoodman@stanford.edu} % Email address
+
+%----------------------------------------------------------------------------------------
+%	ADDRESSEE AND GREETING/CLOSING
+%----------------------------------------------------------------------------------------
+
+\greetto{Dear Science Magazine,} % Greeting text
+\closeline{Sincerely yours,} % Closing text
+
+%\nameto{Mrs. Jane Smith} % Addressee of the letter above the to address
+
+%\addrto{
+%Recruitment Officer \\ % To address
+%The Corporation \\
+%123 Pleasant Lane \\
+%City, State 12345
+%}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+\begin{newlfm}
+
+%----------------------------------------------------------------------------------------
+%	LETTER CONTENT
+%----------------------------------------------------------------------------------------
+
+Attach please find a copy of the manuscript \emph{Generic language is vague yet rationally understood} for consideration for publication in \emph{Science Magazine}. This article provides a formal account (instantiated in a computational model) of ``generics'', the primary linguistic construct by which interlocutors talk about categories and concepts (e.g. ``\emph{Dogs} bark.'', ``\emph{Tall folks} are good at basketball.'', ``\emph{The French} eat snails.'').  Generic utterances are puzzling because they can be true based on very few instances (e.g. ``Mosquitos carry malaria''), while at the same time carry strong implications (e.g. in stereotypes). At the same time, the conditions by which generic utterances are true seem at once to be associated with the the number of instances with the property (e.g. ``Barns are red.'' is true because most barns are red) and not associated with it (e.g. ``Lions have manes.'' is a good generic utterance but ``Lions are male.'' is not, even though the set of lions that are male is a superset of those that have manes.)
+
+We propose to explain these phenomena as a result of pragmatic inference (reasoning in context) filling in a meaning that is underspecified in the semantics of language (i.e. there is not just a single criterion by which a generic can be true but a distribution over criteria). 
+The stable meaning of a generic is as simple as possible: a threshold on the number of instances with the property (i.e. the property's \emph{prevalence}), where the threshold is uncertain \emph{a priori} and only resolved by pragmatic reasoning.
+This simple semantics is consistent with the profound phenomenon from cognitive development: Generics are learned at a very young age.
+
+Using this vague semantics, we explain two outstanding puzzles in language understanding. 
+The first is that generic utterances can be true for a wide range of prevalences: from tigers with stripes ($\sim 100\%$) all the way down to mosquitos with malaria (very few). 
+How can the prevalence of the property alone explain what makes some generics good things to say and others not as good? 
+The insight is that with an uncertain semantics, the likely meaning of the generic (i.e. the likely threshold for acceptance) is inferred using listeners' \emph{a priori} beliefs and the communicative force of a speech act, in a probabilistic pragmatics framework. Speakers who takes this into account will have different criteria to satisfy (different thresholds) for different different types of properties (Expts.~1a and 1b). At the same time, listeners' inferences about the likely prevalence will often be stronger than what a speaker would to justify such a claim. This captures human inferences with a high degree of quantitative accuracy (Expts.~2a and 2b). 
+
+This work will be of general interest to psychologists, linguists and philosophers.
+
+%----------------------------------------------------------------------------------------
+
+\end{newlfm}
+\end{document}
