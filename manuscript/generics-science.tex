@@ -217,14 +217,17 @@ In this paper we offer a mathematical model of generics in terms of pragmatic in
 
 \subsubsection{The semantics and pragmatics of generic language  (400 words to this point)}
 
+\ndg{more about previous notions of the semantics of generics. eg motivate prevalence as a key component, mention prasada and leslie's notions of a special mental relation. then introduce RSA as formalizing something we know is in langauge and set up our model as the simple combination of prevalence with RSA. ie let's see how far we can get without a special kind of relation...}
+
 What could be the stable meaning of a generic given this extreme flexibility? 
 We propose these phenomena can be explained as the effects of pragmatic inference filling in a meaning that is underspecified in the language. 
 Pragmatic reasoning in communication has recently been formalized in probabilisitic models of language understanding \cite{Frank2012, Goodman2013, Franke2009} and explain how the assumptions of truthful and informative interlocutors \cite{Clark1996, Grice1975, Levinson2000} produce rich meanings of linguistic expressions in context. 
 We build upon this tradition to explain the semantics and pragmatics of generic language: We posit that generics are a vague description of prevalence in much the same way that gradable adjectives like \emph{tall} are vague descriptions of height. 
 
+\ndg{don't need to talk so much about tall etc -- just mention that we are building on the lassiter et al treatment of vagueness....}
 To understand the vagueness of ``tall'', consider the criteria by which a person is ``tall'' (e.g. \emph{$\sim$ 6 feet}) versus the conditions for a building to qualify as ``tall'' (e.g. \emph{$\sim$ 1000 feet}).
 Probabilistic pragmatic approaches have explained this context-sensitivity of meaning by positing the semantics of the word (``tall'') is a distribution over criteria (``anything could count as tall given the right context''). 
-This uncertainty is resolved by a listener consulting her beliefs about the domain in question (``what are probable heights of a person?'') as well as taking into account the communicative force of a speech act (``why did the speaker bother to say ``John is tall''?'') \cite{Lassiter2013, Qing2014}.
+This uncertainty is resolved by a listener consulting her beliefs about the domain in question (``what are probable heights of a person?'') as well as taking into account the communicative force of a speech act (``why did the speaker bother to say ``John is tall''?'') \cite{Lassiter2013,Lassiter2015,Qing2014}.
 We explore the idea that the semantics of generics can be thought of in the same way, as a vague description of the prevalence of a property.
 %listeners arrive at rich interpretations of utterances by considering the thought-processes of a speaker whose goal is to be informative.
 %The has provided formal, computational accounts of understanding utterances with quantifiers \cite{Goodman2013}, gradable adjectives \cite{Lassiter2015}, and nonliteral usages \cite{Kao2014}.
@@ -246,6 +249,7 @@ We propose the literal semantics of a generic sentence ``K has F'' (e.g. ``Lions
 \denote{\text{K has F}} = \{x^{\text{F}}_{K} : x^{\text{F}}_{K} = p(\text{F} | \text{K}) > \theta_{generic}\} \label{eq:literalgeneric}
 \end{flalign}
 %
+ \ndg{should be boolean. add theta to superscript on denotation.}
 The threshold $\theta_{generic}$, however, is left underspecified in the semantics.
 Listeners have uncertainty about the threshold $\theta_{generic}$ \emph{a priori} and actively must reason about it in context to derive a realistic but informative meaning. 
 
