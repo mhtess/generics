@@ -119,7 +119,9 @@
 \definecolor{Red}{RGB}{255,0,0}
 \newcommand{\red}[1]{\textcolor{Red}{#1}}  
 \definecolor{Green}{RGB}{10,200,100}
+\definecolor{Blue}{RGB}{10,100,200}
 \newcommand{\ndg}[1]{\textcolor{Green}{[ndg: #1]}}  
+\newcommand{\mht}[1]{\textcolor{Blue}{[mht: #1]}}  
 
 \usepackage{titlesec}
 
@@ -146,19 +148,36 @@
 
 \begin{abstract}
 \ndg{to revise: higher level, less technical, more punchy.}
-Generic utterances (e.g. ``Dogs bark.'') are the primary vessel by which speakers express ideas about categories in the world and are ubiquitous in everyday conversation. 
-Despite their prevalence, the meanings of generic statements are puzzling to formal theories. 
-It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). 
-If this is correct, however, there should be some threshold on the number of instances that display the property (e.g. some criterion number of dogs that bark) for the utterance to be true.
-This threshold is notoriously difficult to define for generics, which are flexible enough to be true based on very little evidence while also implying near-universality of the property. 
-Here, we formalize a semantics and pragmatics for generic language understanding, centered on the idea that generics are vague: The threshold for acceptance is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
-We explain how this simple semantics can account for two central phenomena surrounding generic language: The flexible conditions by which a generic is true and the variable implications of generic language. 
-Inferences from the model are driven largely by the listeners' \emph{a priori} beliefs about the property, which we measure empirically.
-This demonstrates that the semantics of generic statements can treated as scalar and suggests that listeners' expectations in the form of prior beliefs heavily govern generic interpretation. 
+
+\mht{revised: word-length realistic (limit 150)}
+
+Generalizations about categories (e.g. ``Dogs bark.'') are ubiquitous in everyday conversation. 
+Despite their prevalence, these \emph{generic} statements are puzzling to formal theories and their precise meanings are unknown. 
+%the most common way to express generalizations about categories.
+%Generic utterances (e.g. ``Dogs bark.'') are the primary vessel by which speakers express ideas about categories in the world and are ubiquitous in everyday conversation. 
+%It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). 
+%If this is correct, however, there should be some threshold on the number of instances that display the property (e.g. some criterion number of dogs that bark) for the utterance to be true.
+%This threshold is notoriously difficult to define for generics, which are flexible enough to be true based on very little evidence while also implying near-universality of the property. 
+We consider the idea that generic language is vague and demonstrate how a theory of pragmatic language understanding can 
+%introduce a semantics and pragmatics for generic language understanding, centered on the idea that generics are vague. 
+%The criterion for truth is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
+%We explain how this simple semantics can
+explain two outstanding puzzles central to generic language: Generics can in some instances be felicitous based on a small amount of evidence while other times require a lot of evidence to be true, and generic language tends to exaggerate how widespread the property being discussed \mht{better word?}  is. 
+%the variable implications of generic language. 
+%Inferences from the model are driven largely by the hypothetical interpreter's beliefs about the property.
+The hypothetical interpreter's higher-order expectations heavily govern generic interpretation in the model, highlighting that actionable psychological levers exist at levels of abstraction higher than the property being discussed.
+This mathematical bridge between how we represent concepts and how we speak about concepts further establishes \mht{something stronger?} the formal connection between language and thought.
+
+
+%demonstrates how the learning of concepts 
+%
+%This demonstrates that the semantics of generic statements can treated as scalar and 
+%
+%suggests that listeners' expectations in the form of prior beliefs heavily govern generic interpretation. 
 
 
 \textbf{Keywords:} 
-generics; semantics; probabilisitic pragmatics
+generic language; semantics; pragmatics; categories
 \end{abstract}
 
 \ndg{need to make sure the intro hooks people on the importance of generics and also the puzzling difficulty of pining down their meaning....}
