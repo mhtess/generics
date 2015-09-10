@@ -7,6 +7,7 @@ output: html_document
 
 
 ```{r helpers}
+library(coda)
 estimate_mode <- function(s) {
   d <- density(s)
   return(d$x[which.max(d$y)])
@@ -69,7 +70,7 @@ plt1<-ggplot(m.prev, aes(x=Value))+
   xlab("Gamma")+
   ylab("Posterior probability")
 
-ggsave(plt1,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPriors-gammas-allChains.pdf', width = 15, height=15)
+#ggsave(plt1,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPriors-gammas-allChains.pdf', width = 15, height=15)
 
 
 m.prev <- filter(m, Negation=='delta')
@@ -88,7 +89,7 @@ plt2<-ggplot(m.prev, aes(x=Value))+
 #             credHi = HPDhi(Value),
 #             credLo = HPDlo(Value))
 
-ggsave(plt2,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPriors-deltas-allChains.pdf', width = 15, height=15)
+#ggsave(plt2,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPriors-deltas-allChains.pdf', width = 15, height=15)
 
 
 m.prev <- filter(m, Negation=='prob_hasF')
@@ -101,7 +102,7 @@ plt3<-ggplot(m.prev, aes(x=Value))+
   xlab("Thetas")+
   ylab("Posterior probability")
 
-ggsave(plt3,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPriors-thetas-allChains.pdf', width = 15, height=15)
+#ggsave(plt3,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPriors-thetas-allChains.pdf', width = 15, height=15)
 
 
 ```
@@ -177,4 +178,43 @@ ggplot(d.samples %>% filter(Property %in% target),
 ```
 
 
+Make scatterplot: Across prevalence vs. Within prevalence
+
+```{r scatter}
+
+m.stats<- m %>% 
+  filter(Negation != 'delta') %>%
+  group_by(Property, Negation) %>%
+  summarise(MAP = estimate_mode(Value),
+            credHigh = HPDhi(Value),
+            credLow = HPDlo(Value))
+
+
+m.spread<- m.stats %>%
+  gather(key, val, MAP, credHigh, credLow) %>%
+  spread(Negation, val)
+
+m.join<- left_join(left_join(m.spread %>% filter(key=='MAP') %>% select(-key),
+                   m.spread %>% filter(key=='credHigh') %>% select(-key) %>%
+                     rename(credHigh_within = gamma,
+                            credHigh_across = prob_hasF)),
+                   m.spread %>% filter(key=='credLow') %>% select(-key) %>%
+                     rename(credLow_within = gamma,
+                            credLow_across = prob_hasF))
+
+
+ggplot(m.join, aes(x = gamma, y = prob_hasF))+
+  geom_point()+
+  geom_errorbar(aes(ymin = credLow_across, ymax = credHigh_across),
+                                position=position_dodge(), size =1)+
+  geom_errorbarh(aes(xmin = credLow_within, xmax = credHigh_within),                 
+                 position=position_dodge(), size =1)+
+  xlim(-0.05,1.05)+
+  ylim(-0.05,1.05)+
+  coord_fixed()+
+  xlab("Within-category prevalence")+
+  ylab("Across-category prevalence")
+
+
+```
 
