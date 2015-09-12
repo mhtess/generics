@@ -227,19 +227,32 @@ It makes further predictions about how the imputed prevalence should vary as a f
 \subsubsection{The semantics and pragmatics of generic language  (500 words to this point)}
 
 \ndg{more about previous notions of the semantics of generics. eg motivate prevalence as a key component, mention prasada and leslie's notions of a special mental relation. then introduce RSA as formalizing something we know is in langauge and set up our model as the simple combination of prevalence with RSA. ie let's see how far we can get without a special kind of relation...}
+ 
+ \mht{needs work}
+At the most fundamental level, generics express a relation between a kind (e.g. \emph{robins}) and a property (e.g. \emph{lay eggs}). 
+The nature of this relation is thought to depend, at least in part, on how prevalent the property is within the kind. For example, \emph{Lions lay eggs} is not true, because there are no lions that lay eggs. 
+%might be an acceptable utterances   the generic \emph{Apples have pepsin} better than if 1\% of apples have pepsin, it is an even better utterances if 99\% of apples have pepsin. 
+%Previous notions of the semantics of generics highlight how this relation is law-like and how generics are similar to f.
+An alternative perspective emphasizes the structure of generic knowledge \cite{Prasada2000}, and views generic utterances as the way of expressing these special mental relationships between kinds and properties \cite{Leslie2008, Prasada2012}. 
+
+We approach the problem of understanding generic language from a different starting point. 
+Understanding language depends on assumptions interlocutors make about each other, which lead to rich interpreted meanings in context \cite{Clark1996, Grice1975, Levinson2000}. 
+This pragmatic reasoning has recently been formalized in probabilisitic models of language understanding \cite{Frank2012, Goodman2013, Franke2009}, the rational speech acts (RSA) theory. 
+We explore how the puzzles of generic language might be understood as the effects of pragmatic reasoning about a generic meaning that is underspecified in the language.
 
 %What could be the stable meaning of a generic given this extreme flexibility? 
 %We propose these phenomena can be explained as the effects of pragmatic inference filling in a meaning that is underspecified in the language.
 
-For a given kind, $K$ (e.g.~\emph{lions}), and a property, $F$ (e.g.~\emph{has mane}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F|K)$, a the \emph{prevalence} of $F$ within $K$.\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability of an interlocutor, not the actual frequency in the world.}
-Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F|K)>0$, \emph{all} is $P(F|K)=1$). Extending this, it seems the simplest meaning for generic statements would be a similar threshold on prevalence: $P(F|K)>\theta$ \cite{Cohen1999}. However, no fixed value of the threshold, $\theta$, would allow for the extreme flexibility generics exhibit. 
+For a given kind, $K$ (e.g.~\emph{robins}), and a property, $F$ (e.g.~\emph{lay eggs}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F|K)$, as the \emph{prevalence} of $F$ within $K$
+\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability of an interlocutor, not the actual frequency in the world.}.
+Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F|K)>0$, \emph{all} is $P(F|K)=1$). 
+Extending this, it seems the simplest meaning for generic statements would be a similar threshold on prevalence: $P(F|K)>\theta$ \cite{Cohen1999}. 
+However, no fixed value of the threshold, $\theta$, would allow for the extreme flexibility generics exhibit (e.g. \emph{Robins lay eggs} vs. \emph{Robins are female}). 
 We suggest that generics do have a prevalence-threshold semantics, and that this threshold is established by pragmatic inference.
 This inference depends on property and category knowledge, but is otherwise a general mechanism of language not specific to interpreting generic statements.
 
  
-Pragmatic reasoning in communication depends on assumptions interlocutors make about each other, which lead to rich interpreted meanings in context \cite{Clark1996, Grice1975, Levinson2000}. This reasoning has recently been formalized in probabilisitic models of language understanding \cite{Frank2012, Goodman2013, Franke2009}, the rational speech acts (RSA) theory. 
-\citeA{Lassiter2013,Lassiter2015,Qing2014} have extended RSA to explain vague adjectives (e.g.~\emph{tall}) in terms of an underspecified threshold criterion. 
-We follow this treatment, adopting as the underlying scale the property prevalence.
+
 %
 %We build upon this tradition to explain the semantics and pragmatics of generic language: We posit that generics are a vague description of prevalence in much the same way that gradable adjectives like \emph{tall} are vague descriptions of height. 
 %
@@ -262,6 +275,8 @@ We follow this treatment, adopting as the underlying scale the property prevalen
 %%
 %%We propose that generics are vague in the same way that gradable adjectives, like \emph{tall}, are vague. 
 %
+\citeA{Lassiter2013,Lassiter2015,Qing2014} have extended RSA to explain vague adjectives (e.g.~\emph{tall}) in terms of an underspecified threshold criterion. 
+We follow this treatment, adopting as the underlying scale the property prevalence.
 We imagine a pragmatic listener concerned with learning the prevalence of a certain property in a certain category, $x=P(F|K)$, who reasons about an informative speaker, who in turn reasons about a literal listener:
 \begin{eqnarray}
 P_{L_{1}}(x , \theta \mid u) &\propto& P_{S_{1}}(u \mid x, \theta) \cdot P(x) \cdot P(\theta) \label{eq:L1}\\
