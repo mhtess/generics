@@ -158,7 +158,7 @@ Despite their prevalence, these \emph{generic} statements are puzzling to formal
 %It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). 
 %If this is correct, however, there should be some threshold on the number of instances that display the property (e.g. some criterion number of dogs that bark) for the utterance to be true.
 %This threshold is notoriously difficult to define for generics, which are flexible enough to be true based on very little evidence while also implying near-universality of the property. 
-We consider the idea that generic language is vague and demonstrate how a theory of pragmatic language understanding can 
+We explore the idea that generic language is vague and demonstrate how a theory of pragmatic language understanding can 
 %introduce a semantics and pragmatics for generic language understanding, centered on the idea that generics are vague. 
 %The criterion for truth is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
 %We explain how this simple semantics can
@@ -183,30 +183,38 @@ generic language; semantics; pragmatics; categories
 \ndg{need to make sure the intro hooks people on the importance of generics and also the puzzling difficulty of pining down their meaning.... also, need to set up more explicitly in intro the two key properties that we address: variable endorsement and imputed prevalence level higher than endorsement criterion. }
 
 
-Few would argue that \emph{Apples are red}, but certainly not all, or perhaps even most, apples are.
+Most would agree that \emph{Apples are red}, but certainly not all, or perhaps even most, apples are.
 %Imagine talking with a 2-year-old about the color red.
 %Colors are difficult to describe because they take shape in different physical forms and the function of color is abstract.
 %You might offer the toddler something generic like, ``Apples are red.''. 
 %Few would argue with the truth of this sentence, yet its precise meaning is difficult to specify. 
-This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category (e.g. \emph{apples}).  
-Generics are one of the morphologically simplest constructs across languages \ndg{true? cite..}, and are ubiquitous in everyday conversation and in child-directed speech \cite{Gelman2008}.
-They are the primary vessel by which speakers discuss social categories, making them potentially key to propagating stereotypes \cite{GelmanEtAl2004, Cimpian2010motivation, Leslie2015}.
-They have no explicitly marked operator and yet children as young as two or three correctly understand that they refer to categories and support generalization \cite{Cimpian2008}. 
-Indeed, they are believed to be essential to the growth of conceptual knowledge \cite{Gelman2004} and to how we represent kinds \cite{Leslie2008}.
-Despite their apparent simplicity and cognitive centrality a formal account of generic meaning remains elusive.
+This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category (i.e. \emph{apples}), which  need not actually apply to every instance of the category.  
+It is believed that every language can express generic meaning \cite{Behrens2005, Carlson1995}, and that generics are essential to the growth of conceptual knowledge \cite{Gelman2004} and how we represent kinds \cite{Leslie2008}.
+Generic language is ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008}, and children as young as two or three understand that generics refer to categories and support generalization \cite{Cimpian2008}.
+% and though English and many other languages do not possess an unambiguous form devoted to generic meaning \cite{Behrens2000, AlMalki2014}. 
+Additionally, generics are the primary way by which speakers discuss social categories, making them key to propagating stereotypes \cite{GelmanEtAl2004, Rhodes2012, Leslie2015} and impacting motivation \cite{Cimpian2010motivation}.
+Despite their apparent simplicity and cognitive centrality, a formal account of generic meaning remains elusive.
 
-At first glance, generics seem like universally-quantified statements (i.e. ``All apples are red.''), but unlike universals, generics are resilient to counter-examples (e.g. Granny Smith apples). 
-Interpreting the generic as meaning ``most'' (i.e. ``Most apples are red.'') captures many cases, but cannot explain others: \emph{Lions have manes} and \emph{Mosquitos carry malaria}, even though only the adult males have manes and a very small percentage of mosquitos actually carry malaria.
-The only logical quantifier that could satisfy all of these conditions is ``some'' (i.e. ``Some apples are red.''), yet generics have much stronger implications than ``some''. 
-Listeners are wont to interpret a novel generic as applying to \emph{nearly all} of a category \cite{Gelman2002, Cimpian2010} (compare \emph{some apples have pepsin} to \emph{apples have pepsin}).
-Indeed, it appears that any explanation in terms of the prevalence of the property within the category is incompatible with intiutions---for instance, while \emph{Lions have manes} is fine, \emph{Lions are male} is not, even though the prevalences of the two properties are the same (about 50\%) for the category of lions.
+A major hurdle to formalizing generic language arises when one tries to describe the conditions by which a generic is true.
+At first glance, generics seem like universally-quantified statements (i.e. \emph{All apples are red}), but unlike universals, generics are notoriously resilient to counter-examples (e.g. \emph{Granny Smith apples}). 
+Interpreting the generic as meaning ``most'' (i.e. \emph{Most apples are red}) captures many cases, but cannot explain others: \emph{Robins lay eggs} and \emph{Mosquitos carry malaria}, even though only the adult females lay eggs and a very small percentage of mosquitos actually carry malaria.
+Indeed, it appears that any explanation in terms of how common the property is within the category is incompatible with intuitions --- while \emph{Robins lay eggs} is fine, \emph{Robins are female} is not, even though the two properties are present in the same proportion (about 50\%) of the category of robins.
 
-\ndg{switch out lions for birds or something, because of the possibility that lions doesn't include lionesses.}
+\mht{needs work}
+A second central puzzle surrounds how generics are interpreted. 
+It seems that if \emph{Mosquitos carry malaria} is true, then the generic must mean ``some'' (i.e. \emph{Some apples are red.}). 
+Yet generics have much stronger implications than ``some'': 
+Listeners are wont to interpret a novel generic as applying to \emph{nearly all} of a category \cite{Gelman2002} (compare \emph{Some apples have pepsin} to \emph{Apples have pepsin}).
+In fact, generic language seems to exaggerate how widespread the property is: The imputed prevalence is higher than the prevalence needed to assent to the generic, for both adults and children \cite{Cimpian2010, Brandone2014}. 
 
-In this paper we offer a mathematical model of generic language in terms of pragmatic inference of the required degree of prevalence. We show that this model predicts the puzzling patterns, as well as quantitative detail, in human endorsement of generic sentences. It also captures a surprising d\'{e}colage \cite{cimpian} between the high prevalence inferred after hearing a novel generic and the lower prevalence required to endorse the same generic.
+How can generics have such flexible \emph{truth conditions} while simultaneously have such strong \emph{implications}?
+%\ndg{switch out lions for birds or something, because of the possibility that lions doesn't include lionesses.}
+In this paper we offer a mathematical model of generic language in terms of pragmatic inference of the required degree of prevalence. We show that this model predicts the puzzlingly hetereogenous patterns, as well as quantitative detail, in human endorsement of generic sentences. It also captures the surprising d\'{e}colage \cite{Cimpian2010} between the high prevalence imputed after hearing a novel generic and the lower prevalence required to endorse the same generic.
+It makes further predictions about how the imputed prevalence should vary as a function of beliefs about the property; these predictions are borne out.
  \ndg{revise to more clearly reflect what we do. keep short though.}
+ \mht{more specific?}
 
-\ndg{switch quotes to italics for example sentences?}
+%\ndg{switch quotes to italics for example sentences?}
 
 %The semantics of generics is often contrasted with that of quantifier sentences, which are classically understood in terms of the prevalence of a property and are straightforward to evaluate for truth. 
 %For example, ``\emph{Some} shoes have arch support.'' is true because there are shoes that do. 
@@ -216,7 +224,7 @@ In this paper we offer a mathematical model of generic language in terms of prag
 %Is there some prevalence beyond which the generic becomes true?
 %Prevalence based accounts of generic meaning are difficult to defend. 
 
-\subsubsection{The semantics and pragmatics of generic language  (400 words to this point)}
+\subsubsection{The semantics and pragmatics of generic language  (500 words to this point)}
 
 \ndg{more about previous notions of the semantics of generics. eg motivate prevalence as a key component, mention prasada and leslie's notions of a special mental relation. then introduce RSA as formalizing something we know is in langauge and set up our model as the simple combination of prevalence with RSA. ie let's see how far we can get without a special kind of relation...}
 
@@ -224,7 +232,7 @@ In this paper we offer a mathematical model of generic language in terms of prag
 %We propose these phenomena can be explained as the effects of pragmatic inference filling in a meaning that is underspecified in the language.
 
 For a given kind, $K$ (e.g.~\emph{lions}), and a property, $F$ (e.g.~\emph{has mane}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F|K)$, a the \emph{prevalence} of $F$ within $K$.\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability of an interlocutor, not the actual frequency in the world.}
-Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F|K)>0$, \emph{all} is $P(F|K)=1$). Extending this, it seems the simplest meaning for generic statements would be a similar threshold on prevalence: $P(F|K)>\theta$ \cite{cohen}. However, no fixed value of the threshold, $\theta$, would allow for the extreme flexibility generics exhibit. 
+Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F|K)>0$, \emph{all} is $P(F|K)=1$). Extending this, it seems the simplest meaning for generic statements would be a similar threshold on prevalence: $P(F|K)>\theta$ \cite{Cohen1999}. However, no fixed value of the threshold, $\theta$, would allow for the extreme flexibility generics exhibit. 
 We suggest that generics do have a prevalence-threshold semantics, and that this threshold is established by pragmatic inference.
 This inference depends on property and category knowledge, but is otherwise a general mechanism of language not specific to interpreting generic statements.
 
@@ -260,8 +268,8 @@ P_{L_{1}}(x , \theta \mid u) &\propto& P_{S_{1}}(u \mid x, \theta) \cdot P(x) \c
 P_{S_{1}}(u \mid x, \theta) &\propto& \exp(\lambda \ln {P_{L_{0}}(x \mid u, \theta)}) \label{eq:S1}\\
 P_{L_{0}}(x \mid u, \theta) &\propto& {\delta_{\denote{u}(x, \theta)} P(x)}. \label{eq:L0}
 \end{eqnarray}
-Eq.~\ref{eq:L1} models a listener ($L_{1}$) who has heard an utterance $u$, which is either a generic statement (e.g. ``Lions have manes.'') or an uninformative ``null'' utterance. \footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that lions have mains.'', as well as the generic of the negation, ``Lions do not have manes''.}% These alternatives are analogous to alternatives to ``John is tall'' of ``John is not tall'' and ``John is short'' in the vague adjective case.}
-She has uncertainty about the prevalence of the property $x$ (``how many lions have manes?'') as well as the meaning of the generic, $\theta$. 
+Eq.~\ref{eq:L1} models a listener ($L_{1}$) who has heard an utterance $u$, which is either a generic statement (e.g. ``Lions have manes.'') or an uninformative ``null'' utterance \footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that lions have mains.'', as well as the generic of the negation, ``Lions do not have manes''.}.% These alternatives are analogous to alternatives to ``John is tall'' of ``John is not tall'' and ``John is short'' in the vague adjective case.}
+She has uncertainty about the prevalence of the property $x \in [0, 1]$ (``how many lions have manes?'') as well as the meaning of the generic, $\theta$. 
 $P(\theta)$ represents the listener's \emph{a priori} beliefs about the semantic variable $\theta$; we assume no informative beliefs: $\theta \sim \text{Uniform}(0,1)$.
 The listener resolves her uncertainty, in context, by consulting her prior beliefs about the property prevalence, $P(x)$, and assuming that the utterance was produced by a speaker $S_{1}$, whose goal was to be informative about the prevalence, $x$.
 %The speaker knows the prevalence $x$ (e.g. knows that adult, male lions have manes). 
@@ -322,7 +330,7 @@ As with other RSA models \cite{Lassiter2015}, the final value of $\theta$ balanc
 %With a prior distribution over heights that is roughly-normal, the result is a threshold that signifies that ``John is tall'' means he is ``significantly taller than average''.
  
 Eq.~\ref{eq:L1} is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
-Following \cite{Degen}, we model felicity or truth judgements in terms of a speaker who has this sort of listener in mind:
+Following \citeA{Degen2014}, we model felicity or truth judgements in terms of a speaker who has this sort of listener in mind:
 %To explain the different conditions under which a generic utterance can be true, we extend the lifted-threshold model of \citeA{Lassiter2013} to include a model of a speaker who is deciding whether or not to produce the utterance. 
 \begin{equation} 
 P_{S_{2}}(u \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_{1}}(x \mid u)
@@ -346,7 +354,7 @@ This \emph{a priori} distinction was a significant predictor of the eventual tru
 Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
 
 
-The probabilisitic model is fully specified by Eqs.~\eqref{eq:literalgeneric} -- \eqref{eq:S2}, with the exception of the speaker rationality parameter $\lambda$ and the prior distribution on prevalences $P(x)$. Because $\lambda$ is not of theoretical interest here, it is marginalized according to Bayesian data analysis principles \cite{??}. 
+The probabilisitic model is fully specified by Eqs.~\eqref{eq:L1} -- \eqref{eq:S2}, with the exception of the speaker rationality parameter $\lambda$ and the prior distribution on prevalences $P(x)$. Because $\lambda$ is not of theoretical interest here, it is marginalized according to Bayesian data analysis principles \cite{LW2014}. 
  $P(x)$ describes the belief distribution on the prevalence of a given property (e.g. ``have manes'') across relevant categories. 
  This distribution, which is conceivably very different for different properties, is common-sense background knowledge. 
  We measure it empirically by asking participants ($n=30$) \ndg{double N} about the prevalence of our target properties for many different animal categories\footnote{Our experiments stay within the animal kingdom because we expect there to be considerably less variability in participants beliefs about animals than about other types of categories (e.g. social categories)}. 
