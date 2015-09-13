@@ -10,6 +10,9 @@ output: html_document
 # Prior 2: Prevalence priors for 16 properties
 
 
+
+
+
 ```{r echo=F}
 upperFirst <- function(name){
   return (paste(toupper(substr(name, 1, 1)), substr(name, 2, nchar(name)), sep=""))
@@ -57,6 +60,27 @@ removeSpace <- function(name){
   }
   return(name.edit)
 }
+```
+
+
+Check for duplicate subjects
+```{r}
+s1<-head(read.csv('~/Documents/research/generics/experiments/turk/real-kinds-prior-2/n30/real-kinds-2_invoice_first25.csv'),-3)
+s2<-head(read.csv('~/Documents/research/generics/experiments/turk/real-kinds-prior-2/real-kinds-2pilot5/real-kinds-2_invoice.csv'),-3)
+s3<-head(read.csv('~/Documents/research/generics/experiments/turk/real-kinds-prior-2/real-kinds-2_invoice.csv'),-3)
+
+allsubjects<- bind_rows(s1,s2,s3)
+
+unique(allsubjects$workerid)
+
+duplicate.subjects<- c("A3P74FP62XNVYI","A2G7N0X0PNX0EE","A2DXEPC4QFV4R1")
+duplicte.workerids<-c(1:30)[s3$workerid%in%duplicate.subjects]
+```
+
+
+
+
+```{r}
 
 setwd(dir = '~/Documents/research/generics/analysis/')
 generics.of.interest <- data.frame(
@@ -64,11 +88,22 @@ generics.of.interest <- data.frame(
   property=c("lay eggs", "have spots","have wings","have manes","carry malaria",
               "attacks swimmers","are red","have pouches","have beautiful feathers","eat people","carry Lyme disease","are white"))
 
-d<-read.csv(file = '../experiments/turk/real-kinds-prior-2/real-kinds-2-trials.csv')
+dwithDups<-read.csv(file = '../experiments/turk/real-kinds-prior-2/real-kinds-2-trials.csv')
+
+# remove duplicate subjects
+d<-dwithDups[!(dwithDups$workerid%in%duplicte.workerids),]
+
 d0<-read.csv(file='../experiments/turk/real-kinds-prior-2/real-kinds-2pilot5/real-kinds-2-trials.csv')
+d1<-read.csv(file='../experiments/turk/real-kinds-prior-2/n30/real-kinds-2-trials.csv')
+
 
 d0$workerid = max(d$workerid) + d0$workerid+1
-d<-bind_rows(d,d0)
+d1$workerid = max(d0$workerid) + d1$workerid + 1
+d<-bind_rows(d,d0,d1)
+
+e<- read.table(file='../experiments/turk/real-kinds-prior-2/real-kinds-2.results')
+
+
 
 d[d$property=='are juveline',]$property<-'are juvenile'
 
@@ -133,7 +168,7 @@ for (n in negations){
 
 
 
-#write.csv(d.out,file='~/Documents/research/generics/models/data/real-kinds-prior-2-trials-formatted.csv', row.names=F)
+write.csv(d.out,file='~/Documents/research/generics/models/data/real-kinds-prior-2-trials-n57-formatted.csv', row.names=F)
 #write.csv(tj,file='~/Documents/research/generics/models/data/real-kinds-truth-1-trials-formatted.csv',row.names=F)
 
 

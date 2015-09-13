@@ -7,12 +7,11 @@ output: html_document
 
 Load prevalence estimates
 
-```{r prev}
 ```{r}
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 
 samples = 50000
-prefix<-'generics-naturalPrevalence-incrMH100000_burn50000' 
+prefix<-'generics-naturalPrevalence-n57-incrMH100000_burn50000' 
 m1<-read.csv(paste(m.path, prefix, 'a.csv', sep=''))
 m2<-read.csv(paste(m.path, prefix, 'b.csv', sep=''))
 m3<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
@@ -85,8 +84,8 @@ tj.wPrev<-left_join(tj.bs %>% select(-CILow, -CIHigh),
 
 with(tj.wPrev, cor(response,prev))^2
 
-write.csv(tj.wPrev, 
-          file='~/Documents/research/generics/manuscript/model-results/natural-judgments-means.csv')
+#write.csv(tj.wPrev, 
+#          file='~/Documents/research/generics/manuscript/model-results/natural-judgments-means.csv')
 
 ```
 
@@ -116,9 +115,9 @@ previter = 50000
 prioriter = 50000
 
 
-m1<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero_mh100000_burn50000a.csv",sep=''))
-m2<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero_mh100000_burn50000b.csv",sep=''))
-m3<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero_mh100000_burn50000c.csv",sep=''))
+m1<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000a.csv",sep=''))
+m2<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000b.csv",sep=''))
+m3<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000c.csv",sep=''))
 
 m<- bind_rows(m1,m2,m3)
 
@@ -215,24 +214,39 @@ combined.model.data$sentence<-with(combined.model.data,
                                    reorder(sentence, response, function(x) -x))
 
 
+combined.model.data <- combined.model.data %>%
+  rename(Prevalence = prev)
+
 
 qplot(data=combined.model.data,
       x=posMode,y=response,
-      color=sentence)+
-  geom_point(size=4)+
+      color=Prevalence)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey39')+
   geom_errorbar(aes(ymin=YMin, ymax=YMax),
-                position=position_dodge(), size =1)+
+                size =1, position=position_dodge(),
+                subset = .(Prevalence >=0.5))+
   geom_errorbarh(aes(xmin = credLo, xmax=credHi),
-                 position=position_dodge(), size = 1)+
-  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='black')+
+                  size = 1,
+                 subset = .(Prevalence >=0.5))+
+  geom_point(size=4, subset = .(Prevalence >=0.5))+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                size =1,  position=position_dodge(),
+                 subset = .(Prevalence <0.5))+
+  geom_errorbarh(aes(xmin = credLo, xmax=credHi),
+                size = 1,  position=position_dodge(),
+                 subset = .(Prevalence <0.5))+
+  geom_point(size=4,  subset = .(Prevalence <0.5))+
   xlab("\n model posterior predictive")+
   ylab("proportion of agree's \n")+
-  guides(color=F)+
+#  guides()+
   xlim(-0.05,1.05)+
   ylim(-0.05,1.05)+
-  coord_fixed()
+  coord_fixed()+
+  #scale_color_gradient(low='#386cb0', high = '#f0027f')+
+  scale_color_gradient(low='black', high ='#e78ac3', limits=c(0,1),
+                       breaks=c(0,0.5,1))
 
-ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPostpred_95hdi.pdf', width=10, height=5)
+#ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPostpred_95hdi.pdf', width=10, height=5)
 
 
 with(combined.model.data, cor(posMode, response))^2

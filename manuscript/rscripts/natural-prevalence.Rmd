@@ -25,7 +25,7 @@ HPDlo<- function(s){
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 
 samples = 50000
-prefix<-'generics-naturalPrevalence-incrMH100000_burn50000' 
+prefix<-'generics-naturalPrevalence-n57-incrMH100000_burn50000' 
 m1<-read.csv(paste(m.path, prefix, 'a.csv', sep=''))
 m2<-read.csv(paste(m.path, prefix, 'b.csv', sep=''))
 m3<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
@@ -64,9 +64,18 @@ m.summary<- m %>% filter(Negation == 'gamma') %>%
             credLow =HPDlo(Value),
             credHigh= HPDhi(Value))
 
-# write.csv(m.summary, 
-#           file='~/Documents/research/generics/manuscript/model-results/natural-prevalence-intervals.csv')
+ write.csv(m.summary, 
+           file='~/Documents/research/generics/manuscript/model-results/natural-prevalence-intervals-n57.csv')
 
+
+m.sum<- read.csv('~/Documents/research/generics/manuscript/model-results/natural-prevalence-intervals.csv')
+
+
+m.sum <- m.sum %>% 
+  select(-credLow, -credHigh) %>%
+  rename(map2 = map)
+
+m.sum2<- left_join(m.summary, m.sum)
 ```
 
 Distributions on (e.g.) gamma
