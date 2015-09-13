@@ -223,35 +223,39 @@ It also captures the surprising d\'{e}colage \cite{Cimpian2010} between the stro
 %Is there some prevalence beyond which the generic becomes true?
 %Prevalence based accounts of generic meaning are difficult to defend. 
 
-\subsubsection{The semantics and pragmatics of generic language  (500 words to this point)}
+\subsubsection{The semantics and pragmatics of generic language  (550 words to this point)}
 
 \ndg{more about previous notions of the semantics of generics. eg motivate prevalence as a key component, mention prasada and leslie's notions of a special mental relation. then introduce RSA as formalizing something we know is in langauge and set up our model as the simple combination of prevalence with RSA. ie let's see how far we can get without a special kind of relation...}
  
- \mht{needs work}
-At the most fundamental level, generics express a relation between a kind (e.g. \emph{robins}) and a property (e.g. \emph{lay eggs}). 
-The nature of this relation is thought to depend, at least in part, on how prevalent the property is within the kind. For example, \emph{Lions lay eggs} is not true, because there are no lions that lay eggs. 
+Generics express a relation between a kind (e.g. \emph{robins}) and a property (e.g. \emph{lay eggs}). 
+The nature of this relation is thought to depend, at least in part, on how prevalent the property is within the kind. 
+For example, \emph{Barns are red} because an orange-colored oil useful for sealing barns was plentiful for hundreds of years \cite{barns}. 
+The property \emph{is red} is not central to the kind \emph{barns}; it is a mere statistical fact that makes the generic felicitous.
+%In modern times, barns are red for tradition's sake, and thus if farmers decided to paint 99\% of barns yellow then \emph{Barns are red} would presumably no longer be an felicitous utterance.
 %might be an acceptable utterances   the generic \emph{Apples have pepsin} better than if 1\% of apples have pepsin, it is an even better utterances if 99\% of apples have pepsin. 
 %Previous notions of the semantics of generics highlight how this relation is law-like and how generics are similar to f.
-An alternative perspective emphasizes the structure of generic knowledge \cite{Prasada2000}, and views generic utterances as the way of expressing these special mental relationships between kinds and properties \cite{Leslie2008, Prasada2012}. 
+An alternative perspective emphasizes the structure of generic knowledge \cite{Prasada2000}, and views generic utterances as the way of expressing special mental relationships between kinds and properties \cite{Leslie2008, Prasada2012}. 
+Statistical relations are a kind of relation, but there are others. 
+For example, even though less than one percent of mosquitos carry malaria, \emph{Mosquitos carry malaria} because malaria has dire consequences---it is a dangerous property---and is thus important to our conceptual representation of mosquitos.
 
-We approach the problem of understanding generic language from a different starting point. 
+We emphasize a different starting point. 
 Understanding language depends on assumptions interlocutors make about each other, which lead to rich interpreted meanings in context \cite{Clark1996, Grice1975, Levinson2000}. 
-This pragmatic reasoning has recently been formalized in probabilisitic models of language understanding \cite{Frank2012, Goodman2013, Franke2009}, the rational speech acts (RSA) theory. 
-We explore how the puzzles of generic language might be understood as the effects of pragmatic reasoning about a generic meaning that is underspecified in the language.
+This pragmatic reasoning has recently been formalized in probabilisitic models of language understanding \cite{Frank2012, Goodman2013, Franke2009}, the Rational Speech Acts (RSA) theory. 
+We explore how the puzzles of generic language might be understood as the effects of pragmatic reasoning about a prevalence-based meaning that is underspecified in the language.
 
 %What could be the stable meaning of a generic given this extreme flexibility? 
 %We propose these phenomena can be explained as the effects of pragmatic inference filling in a meaning that is underspecified in the language.
 
-For a given kind, $K$ (e.g.~\emph{robins}), and a property, $F$ (e.g.~\emph{lay eggs}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F|K)$, as the \emph{prevalence} of $F$ within $K$
-\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability of an interlocutor, not the actual frequency in the world.}.
+For a given kind, $K$ (e.g.~\emph{robins}), and a property, $F$ (e.g.~\emph{lay eggs}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F|K)$, as the \emph{prevalence} of $F$ within $K$\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability of an interlocutor, not the actual frequency in the world.}.
 Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F|K)>0$, \emph{all} is $P(F|K)=1$). 
 Extending this, it seems the simplest meaning for generic statements would be a similar threshold on prevalence: $P(F|K)>\theta$ \cite{Cohen1999}. 
 However, no fixed value of the threshold, $\theta$, would allow for the extreme flexibility generics exhibit (e.g. \emph{Robins lay eggs} vs. \emph{Robins are female}). 
-We suggest that generics do have a prevalence-threshold semantics, and that this threshold is established by pragmatic inference.
+
+We suggest that this threshold is not a fixed property of the language, but is established by pragmatic inference.
 This inference depends on property and category knowledge, but is otherwise a general mechanism of language not specific to interpreting generic statements.
-
- 
-
+%
+%
+%
 %
 %We build upon this tradition to explain the semantics and pragmatics of generic language: We posit that generics are a vague description of prevalence in much the same way that gradable adjectives like \emph{tall} are vague descriptions of height. 
 %
@@ -282,8 +286,8 @@ P_{L_{1}}(x , \theta \mid u) &\propto& P_{S_{1}}(u \mid x, \theta) \cdot P(x) \c
 P_{S_{1}}(u \mid x, \theta) &\propto& \exp(\lambda \ln {P_{L_{0}}(x \mid u, \theta)}) \label{eq:S1}\\
 P_{L_{0}}(x \mid u, \theta) &\propto& {\delta_{\denote{u}(x, \theta)} P(x)}. \label{eq:L0}
 \end{eqnarray}
-Eq.~\ref{eq:L1} models a listener ($L_{1}$) who has heard an utterance $u$, which is either a generic statement (e.g. ``Lions have manes.'') or an uninformative ``null'' utterance \footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that lions have mains.'', as well as the generic of the negation, ``Lions do not have manes''.}.% These alternatives are analogous to alternatives to ``John is tall'' of ``John is not tall'' and ``John is short'' in the vague adjective case.}
-She has uncertainty about the prevalence of the property $x \in [0, 1]$ (``how many lions have manes?'') as well as the meaning of the generic, $\theta$. 
+Eq.~\ref{eq:L1} models a listener ($L_{1}$) who has heard an utterance $u$, which is either a generic statement (e.g. ``Robins lay eggs.'') or an uninformative ``null'' utterance\footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that robins lay eggs.'', as well as the generic of the negation, ``Robins do not lay eggs''.}.% These alternatives are analogous to alternatives to ``John is tall'' of ``John is not tall'' and ``John is short'' in the vague adjective case.}
+She has uncertainty about the prevalence of the property $x \in [0, 1]$ (``how many robins lay eggs?'') as well as the meaning of the generic, $\theta$. 
 $P(\theta)$ represents the listener's \emph{a priori} beliefs about the semantic variable $\theta$; we assume no informative beliefs: $\theta \sim \text{Uniform}(0,1)$.
 The listener resolves her uncertainty, in context, by consulting her prior beliefs about the property prevalence, $P(x)$, and assuming that the utterance was produced by a speaker $S_{1}$, whose goal was to be informative about the prevalence, $x$.
 %The speaker knows the prevalence $x$ (e.g. knows that adult, male lions have manes). 
@@ -356,25 +360,33 @@ This decision is with respect to the alternative speech-act of saying nothing (t
 Importantly, $S_{2}$ doesn't actually have access to the threshold $\theta$, but knows that $L_{1}$ is thinking about it, and hence marginalizes over possible inferred values. 
 Eq.~\eqref{eq:S2} is a model of generic production: For a given prevalence, is the generic a good thing to say?
 
-\subsubsection{Generics have flexible truth conditions (1400 words to this point)} 
+\subsubsection{Generics have flexible truth conditions (1450 words to this point)} 
 
-We tested the degree to which Eq.~\eqref{eq:S2} predicted that a given category--property pair (e.g. ``Lions'' and ``have manes'') would result in a felicitous generic (e.g. ``Lions have manes.''). 
+We tested the degree to which Eq.~\eqref{eq:S2} predicted that a given category--property pair (e.g. ``Robins'' and ``lay eggs'') would result in a felicitous generic (e.g. ``Robins lay eggs.''). 
 We collected human judgments ($n=100$) about the acceptability of thirty generic sentences. 
-We chose the sentences to cover a range of conceptual distinctions outlined by \citeA{Prasada2013}, including characteristic (e.g. ``Ducks have wings.''), minority (e.g. ``Lions have manes.''), striking (e.g. ``Mosquitos carry malaria.''), false generalization (e.g. ``Lions are male.''), and false (e.g. ``Lions lay eggs.'') bare plurals.
-\ndg{maybe one more sentence about the desired range of variation: from true to false and in between, but also true with low prevalence, etc...?}
+We chose the sentences to cover a range of conceptual distinctions outlined by \citeA{Prasada2013}, including characteristic (e.g. \emph{Ducks have wings.}), minority (e.g. \emph{Robins lay eggs.}), striking (e.g. \emph{Mosquitos carry malaria.}), false generalization (e.g. \emph{Robins are female.}), and false (e.g. \emph{Lions lay eggs.}) bare plurals.
+The sentences were also chosen to elicit a range of acceptability judgments (``definitely acceptable'', ``definitely unacceptable'', and ``uncertain'') and include generics that were both acceptable and unacceptable with low-prevalence, medium-prevalence, and high-prevalence properties.
+%\ndg{maybe one more sentence about the desired range of variation: from true to false and in between, but also true with low prevalence, etc...?}
 %
-The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false (Figure \ref{fig:modeldataBars}, light bars). 
-This \emph{a priori} distinction was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$), as revealed by a mixed-effect logistic regression with random by-participant effects of intercept.
+%The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false (Figure \ref{fig:modeldataBars}, light bars). 
+This \emph{a priori} truth-judgment of generics was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$), as revealed by a mixed-effect logistic regression with random by-participant effects of intercept.
 Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
 
 
-The probabilisitic model is fully specified by Eqs.~\eqref{eq:L1} -- \eqref{eq:S2}, with the exception of the speaker rationality parameter $\lambda$ and the prior distribution on prevalences $P(x)$. Because $\lambda$ is not of theoretical interest here, it is marginalized according to Bayesian data analysis principles \cite{LW2014}. 
- $P(x)$ describes the belief distribution on the prevalence of a given property (e.g. ``have manes'') across relevant categories. 
+The probabilisitic model is fully specified by Eqs.~\eqref{eq:L1} -- \eqref{eq:S2}, with the exception of the speaker rationality parameter $\lambda$ and the prior distribution on prevalences $P(x)$. 
+Because $\lambda$ is not of theoretical interest here, it is marginalized according to Bayesian data analysis principles \cite{LW2014}. 
+ $P(x)$ describes the belief distribution on the prevalence of a given property (e.g. \emph{lays eggs}) across relevant categories. 
  This distribution, which is conceivably very different for different properties, is common-sense background knowledge. 
- We measure it empirically by asking participants ($n=30$) \ndg{double N} about the prevalence of our target properties for many different animal categories\footnote{Our experiments stay within the animal kingdom because we expect there to be considerably less variability in participants beliefs about animals than about other types of categories (e.g. social categories)}. 
+ We measure it empirically by asking participants ($n=57$) about the prevalence of our target properties for many different animal categories\footnote{Our experiments stay within the animal kingdom because we expect there to be considerably less variability in participants beliefs about animals than about other types of categories (e.g. social categories)}. 
  
-We inferred the most likely prevalence prior for each property from the data, using the Bayesian data analysis approach described in Section \ref{sec:bda1}.	
-Figure \ref{fig:priors1a} shows inferred priors for four example properties---there are substantial differences between different types of properties. 
+We inferred the most likely prevalence prior for each property from the prior elicitation data, using the Bayesian data analysis approach described in Section \ref{sec:bda1}.	
+Prevalence priors have two components: a density at 0\% prevalence, corresponding to all that categories for which the property is absent, and the remaining density, representing the prevalence of the property within the categories for which the property is present.
+The relative mass equal to 0\% vs. greater than 0\% is a measure of \emph{between-category prevalence} (e.g. there are few or no animal categories used that have 0\% females, and thus \emph{are female} is a highly prevalent property \emph{between categories}).
+The mean of the density not at 0\% is the measure of \emph{within-category prevalence} (e.g. for the categories for which \emph{lays eggs} is present, about 67\% of the category is believed to \emph{lay eggs}).
+Figure \ref{fig:priors1a} shows the between-category and within-category prevalence for all 21 different properties.
+%for four example properties---there are substantial differences between different types of properties. 
+
+
 \ndg{how about being more specific about what we mean by between and within category (mass on zero; mean of remaining mass?). say the model suggests these are important. make a plot showing these for all our properties..?}
 The property ``has manes'' is relatively rare across categories (large density at 0); even when some animals within a category have manes, there is considerable variation of the percent that do, though the expected value is around 50\% (Figure \ref{fig:priors1a} bottom left; within-category prevalence given by blue dotted line). 
 By contrast, the distribution over ``is male'' has a lot less diffuse: the property is highly prevalent across categories (almost no mass at 0), and within a category it is present in about 50\% of cases.
