@@ -380,14 +380,12 @@ Because $\lambda$ is not of theoretical interest here, it is marginalized accord
  We measure it empirically by asking participants ($n=57$) about the prevalence of our target properties for many different animal categories\footnote{Our experiments stay within the animal kingdom because we expect there to be considerably less variability in participants beliefs about animals than about other types of categories (e.g. social categories)}. 
  
 We inferred the most likely prevalence prior for each property from the prior elicitation data, using the Bayesian data analysis approach described in Section \ref{sec:bda1}.	
-Prevalence priors have two components: a density at 0\% prevalence, corresponding to all that categories for which the property is absent, and the remaining density, representing the prevalence of the property within the categories for which the property is present.
-The relative mass equal to 0\% vs. greater than 0\% is a measure of \emph{between-category prevalence} (e.g. there are few or no animal categories used that have 0\% females, and thus \emph{are female} is a highly prevalent property \emph{between categories}).
+Prevalence priors have two important components: one corresponds to the categories for which the property is absent and manifests as a density at 0\% prevalence; the other represents the categories for which the property is present and is the remaining density. 
+The relative mass at 0\% prevalence vs. greater than 0\% is a measure of \emph{between-category prevalence} (e.g. there are few or no animal categories used that have 0\% females, and thus \emph{are female} is a highly prevalent property \emph{between categories}).
 The mean of the density not at 0\% is the measure of \emph{within-category prevalence} (e.g. for the categories for which \emph{lays eggs} is present, about 67\% of the category is believed to \emph{lay eggs}).
-Figure \ref{fig:priors1a} shows the between-category and within-category prevalence for all 21 different properties.
+Figure \ref{fig:priors1a} shows the between-category and within-category prevalence for all 21 different properties as well as the full distribution on prevalence for 4 properties of interest.
 %for four example properties---there are substantial differences between different types of properties. 
-
-
-\ndg{how about being more specific about what we mean by between and within category (mass on zero; mean of remaining mass?). say the model suggests these are important. make a plot showing these for all our properties..?}
+%\ndg{how about being more specific about what we mean by between and within category (mass on zero; mean of remaining mass?). say the model suggests these are important. make a plot showing these for all our properties..?}
 The property ``has manes'' is relatively rare across categories (large density at 0); even when some animals within a category have manes, there is considerable variation of the percent that do, though the expected value is around 50\% (Figure \ref{fig:priors1a} bottom left; within-category prevalence given by blue dotted line). 
 By contrast, the distribution over ``is male'' has a lot less diffuse: the property is highly prevalent across categories (almost no mass at 0), and within a category it is present in about 50\% of cases.
 The property ``has wings'' is not particularly rare across categories (probably owing to the fact that bird categories are heavily represented in our stimulus set), and within a category is widespread, as reflected by the bimodal distribution. 
@@ -396,14 +394,11 @@ The property is absent from most animal species, and even when it is present, it
 
 \begin{figure}
 \centering
-    \includegraphics[width=0.8\columnwidth]{prevalence_priors_inferred-betas.pdf}
-    \caption{Four example elicited prevalence priors. 
-    Dotted lines show density by removing the mass at zero (corresponding to within-category prevalence). 
-    For display purposes, this is omitted for ``have wings'', for which the density is off the scale and all at 1.
-    Density plots reveal qualitatively different distributions for different properties. 
-    Each sample from these distributions can be thought of to correspond to a particular animal category, representing the prevalence of the property within that animal category.
-    Note the scale of the y-axis differs for each panel.}
-    \ndg{do we need the blue dotted lines? they seem kind of distracting... is there a cool summary graph of the priors? eg mass on 0 vs mean? then pop out the examples?}
+    \includegraphics[width=0.8\columnwidth]{prevalence-scatter-wDists.pdf}
+    \caption{Between- and within-category prevalence for the properties tested with five example prevalence priors and posteriors.
+    Properties were selected to cover a range of prevalence levels, both within- and between- categories.
+    Pop-out plots display example distributions over prevalence, which are mixtures of the between- and within- category prevalence (see main text for details). 
+    Posterior distributions show what happens to a listener's belief after hearing the associated generic. }
   \label{fig:priors1a}
 \end{figure}
 
@@ -416,7 +411,7 @@ However, large deviations from a purely within-category prevalence account remai
 
 \begin{figure}
 \centering
-    \includegraphics[width=\columnwidth]{tj_n100-postPred-byItem.pdf}
+    \includegraphics[width=0.7\columnwidth]{truthjudge-scatter-wLabels.pdf}
     \caption{Truth judgments from for thirty generic utterances and the predictive distribution for the pragmatic model using empirical elicited priors. Order of the Y-axis corresponds to the rank-ordered model predictions. Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions.}
   \label{fig:modeldataBars}
 \end{figure}
