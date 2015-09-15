@@ -297,7 +297,10 @@ This speaker has the goal of informing a hypothetical literal listener ($L_0$), 
 The literal listener simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
 The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)=x>\theta$; while the null utterance is always true, $\denote{null}(x, \theta)=T$.
 % $\denote{g(\theta)}: X \rightarrow \text{Boolean}$ is a truth-function specifying the literal meaning of the generic given a threshold $\theta$, as in Eq.~\ref{eq:literalgeneric}. 
-As with other RSA models \cite{Lassiter2015}, the final value of $\theta$ balances truthfulness against informativity, and depends greatly on the prevalence prior, $P(x)$.
+
+As with other RSA models \cite{Lassiter2015}, the final value of $\theta$ balances truthfulness against informativity, and depends greatly on the listener's prior beliefs about the prevalence of the property, $P(x)$.
+For properties that are extremely rare (e.g. carrying malaria), a lower overall prevalence might result in an acceptable generic utterance. 
+
 \ndg{could give more intuition about model predictions here, but then should have some example posteriors... maybe add as a line to fig 1?}
 
 
@@ -395,7 +398,7 @@ Figure \ref{fig:priors1a} shows the between-category and within-category prevale
 
 \begin{figure}
 \centering
-    \includegraphics[width=0.8\columnwidth]{prevalence-scatter-wDists.pdf}
+    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists-black.pdf}
     \caption{Between- and within-category prevalence for the properties tested with five example prevalence priors and posteriors.
     Properties were selected to cover a range of prevalence levels, both within- and between- categories.
     Pop-out plots display example distributions over prevalence, which are mixtures of the between- and within- category prevalence (see main text for details). 
@@ -413,7 +416,7 @@ However, large deviations from a purely within-category prevalence account remai
 
 \begin{figure}
 \centering
-    \includegraphics[width=0.7\columnwidth]{truthjudge-scatter-wLabels.pdf}
+    \includegraphics[width=0.6\columnwidth]{truthjudge-scatter-wLabels.pdf}
     \caption{Truth judgments from for thirty generic utterances and the predictive distribution for the pragmatic model using empirically elicited priors. 
     Color denotes within-category prevalence of the property, with darker colors indicating lower prevalence. 
     Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions.
@@ -462,11 +465,11 @@ This is not the case with the prevalence priors for accidental properties, for w
 
 \begin{figure}
 \centering
-    \includegraphics[width=\columnwidth]{prevalence-asymmetry-scatterwDists.pdf}
-    \caption{Prevalence priors inferred from the prior elicitation experiment. 
-    Right plot shows all non-zero probability mass. 
-    This corresponds to the expected within-category prevalence. 
-    Different types of properties have different likely prevalence values.}
+    \includegraphics[width=1\columnwidth]{prevalence-asymmetry-scatterwDists.pdf}
+    \caption{Prevalence priors inferred from the prior elicitation experiment, plotted on a two-dimensional between- and within-category prevalence space. 
+    Pop-out plots show prior distributions over prevalence (which includes both between- and within- category information) and posterior distributions after hearing the corresponding generic. 
+    
+    }
   \label{fig:prior2}
 \end{figure}
 
@@ -484,12 +487,12 @@ Consistent with previous findings, no such gradient was observed for the truth c
 
 \begin{figure}
 \centering
-    \includegraphics[width=\columnwidth]{asym-lines-data-model-2phi-2so-50kx3.pdf}
+    \includegraphics[width=1\columnwidth]{asym-lines-data-model-2phi-2so-50kx3.pdf}
     \caption{Generic utterances of unfamiliar categories truth conditions and implied prevalence (left) and model predictions (right). 
     This replicates and extends Cimpian et al. (2010). 
-    Generic statements are accepted for a range of prevalences, resulting in an intermediate average prevalence (light bars) for ``truth conditions''. 
-    Upon hearing a generic statement about biological properties, participants' infer that a high proportion of the category has the property (dark bars: red, blue and green). 
-    Generics about accidental properties do not result in such a high implied prevalence (dark bars: purple and orange).  
+    Generic statements are accepted for a range of prevalences, resulting in an intermediate average prevalence (dotted line) for ``truth conditions''. 
+    Upon hearing a generic statement about biological properties, participants infer that a high proportion of the category has the property (solid line: red, blue and green). 
+    Generics about accidental properties do not result in such a high implied prevalence (solid line: purple and orange).  
     Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
   \label{fig:exp2b}
 \end{figure}
@@ -498,7 +501,8 @@ Consistent with previous findings, no such gradient was observed for the truth c
 We compared this behavioral data to our model using the speaker model (Eq.~\ref{eq:S2}) to predict the truth judgments task (as in Expt.~1) and using the listener model (Eq.~\ref{eq:L1}) to predict the interpretation task. 
 We submitted our speaker model to the same analysis as the truth judgments data, following \citeA{Cimpian2010} (see Supplement). 
 The speaker model did not make appreciably different predictions as to the average acceptability prevalence to produce the generic (Figure \ref{fig:exp2b}, Right, dotted line). 
-At the same time, the listener model produced variable interpretations contingent on the type of property under discussion and its corresponding prevalence prior (Figure \ref{fig:exp2b}, Right, solid line). 
+Consistent with the effects reported by \citeA{Cimpian2010}, biological properties (body, vague, and color parts) have stronger interpretations than their truth conditions would suggest (Figure \ref{fig:exp2b}; solid vs. dotted lines; green, blue and red points), whereas accidental properties receive more modest interpretations (orange and purple points).
+Like the behavioral data, the listener model produced a gradient of interpretations contingent on the type of property under discussion and its corresponding \emph{a priori} within-category prevalence (Figure \ref{fig:exp2b}, Right, solid line). 
 These inferences align almost perfectly with participants productions and interpretations of novel generic utterances ($r^2(10) = 0.923$). 
 
 How does the model capture these fine-grained inferences that listeners draw?
