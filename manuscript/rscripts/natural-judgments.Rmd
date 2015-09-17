@@ -4,6 +4,23 @@ author: "mht"
 date: "August 16, 2015"
 output: html_document
 ---
+```{r helpers}
+library(coda)
+estimate_mode <- function(s) {
+  d <- density(s)
+  return(d$x[which.max(d$y)])
+}
+HPDhi<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","upper"])
+}
+HPDlo<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","lower"])
+}
+
+```
+
 
 Load prevalence estimates
 
@@ -94,21 +111,6 @@ Bayesian model evaluation results
 ```{r fullBayesian.postparams}
 
 
-estimate_mode <- function(s) {
-  d <- density(s)
-  return(d$x[which.max(d$y)])
-}
-HPDhi<- function(s){
-  m <- HPDinterval(mcmc(s))
-  return(m["var1","upper"])
-}
-HPDlo<- function(s){
-  m <- HPDinterval(mcmc(s))
-  return(m["var1","lower"])
-}
-
-
-
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 samples =50000
 previter = 50000
@@ -140,21 +142,21 @@ m <- data.frame(Parameter =  rep(m$Parameter,
 
 
 
-
-m.prev <- m %>% 
-  filter(Parameter == 'prevalence') %>%
-  mutate(Negation = gsub(1," dont ", Negation),
-         Negation = gsub(0," ", Negation)) %>%
-  unite(Property1, Category, Negation, Property,sep='') %>%
-  rename(Item = Property1)
-
-ggplot(m.prev, aes(x=Value))+
-  geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
-  facet_wrap(~Item, scales='free')+
-  xlim(0,1)+
-  xlab("Prevalence")+
-  ylab("Posterior probability")
-  
+# 
+# m.prev <- m %>% 
+#   filter(Parameter == 'prevalence') %>%
+#   mutate(Negation = gsub(1," dont ", Negation),
+#          Negation = gsub(0," ", Negation)) %>%
+#   unite(Property1, Category, Negation, Property,sep='') %>%
+#   rename(Item = Property1)
+# 
+# ggplot(m.prev, aes(x=Value))+
+#   geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
+#   facet_wrap(~Item, scales='free')+
+#   xlim(0,1)+
+#   xlab("Prevalence")+
+#   ylab("Posterior probability")
+#   
 
 
 
@@ -217,6 +219,11 @@ combined.model.data$sentence<-with(combined.model.data,
 combined.model.data <- combined.model.data %>%
   rename(Prevalence = prev)
 
+labeled.points <- c("Sharks dont attack swimmers.",
+                    "Mosquitos carry malaria.",
+                    "Robins lay eggs.",
+                    "Robins are female.",
+                    "Ducks have wings.")
 
 qplot(data=combined.model.data,
       x=posMode,y=response,
@@ -236,24 +243,54 @@ qplot(data=combined.model.data,
                 size = 1,  position=position_dodge(),
                  subset = .(Prevalence <0.5))+
   geom_point(size=4,  subset = .(Prevalence <0.5))+
-  xlab("\n model posterior predictive")+
-  ylab("proportion of agree's \n")+
+  xlab("\n Model posterior predictive")+
+  ylab("Human endorsement \n")+
 #  guides()+
   xlim(-0.05,1.05)+
   ylim(-0.05,1.05)+
   coord_fixed()+
   #scale_color_gradient(low='#386cb0', high = '#f0027f')+
   scale_color_gradient(low='black', high ='#e78ac3', limits=c(0,1),
-                       breaks=c(0,0.5,1))
+                       breaks=c(0,0.5,1))+
+  theme(legend.title = element_text(hjust=0))
 
-#ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPostpred_95hdi.pdf', width=10, height=5)
+#ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPostpred_95hdi-colorPrev.pdf', width=12, height=6)
+
+
+# labeled.points <- c("Sharks dont attack swimmers.",
+#                     #"Mosquitos carry malaria.",
+#                     #"Robins lay eggs.",
+#                     #"Robins are female."
+#                     "Ducks have wings."
+#                   )
+# 
+# 
+# qplot(data=combined.model.data %>% filter(sentence %in% labeled.points),
+#       x=posMode,y=response,
+#       label=sentence,
+#       color=Prevalence)+
+#   geom_text(vjust=2,hjust=0,size=16)+
+#   xlab("\n Model posterior predictive")+
+#   ylab("Human endorsement \n")+
+# #  guides()+
+#   xlim(-0.05,1.05)+
+#   ylim(-0.05,1.05)+
+#   coord_fixed()+
+#   #scale_color_gradient(low='#386cb0', high = '#f0027f')+
+#   scale_color_gradient(low='black', high ='#e78ac3', limits=c(0,1),
+#                        breaks=c(0,0.5,1))+
+#   theme(legend.title = element_text(hjust=0))
+# 
+# ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPostpred_forLabels.pdf', width=42, height=16)
+# 
+
 
 
 with(combined.model.data, cor(posMode, response))^2
 
 with(filter(combined.model.data,
-            (prev > quantile(combined.model.data$prev)["25%"] & 
-            prev < quantile(combined.model.data$prev)["75%"])), 
+            (Prevalence > quantile(combined.model.data$Prevalence)["25%"] & 
+            Prevalence < quantile(combined.model.data$Prevalence)["75%"])), 
      cor(posMode,response))^2
 
 
@@ -279,13 +316,13 @@ with(combined.model.data, cor(posMode, response, method='spearman'))
 # 
 # ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsprev_95hdi.pdf', width=10, height=5)
 
-with(combined.model.data, cor(prev, response))^2
+with(combined.model.data, cor(Prevalence, response))^2
 with(filter(combined.model.data,
-            (prev > quantile(combined.model.data$prev)["25%"] & 
-            prev < quantile(combined.model.data$prev)["75%"])), 
-     cor(prev,response))^2
+            (Prevalence > quantile(combined.model.data$Prevalence)["25%"] & 
+            Prevalence < quantile(combined.model.data$Prevalence)["75%"])), 
+     cor(Prevalence,response))^2
 
-with(combined.model.data, cor(prev, response, method='spearman'))
+with(combined.model.data, cor(Prevalence, response, method='spearman'))
 
 
 combined.model.data<- combined.model.data %>%

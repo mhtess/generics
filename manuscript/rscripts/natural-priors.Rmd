@@ -23,16 +23,18 @@ HPDlo<- function(s){
 
 ```
 
+
 ```{r}
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 
 samples = 50000
-prefix<-'generics-naturalPriors-incrMH100000_burn50000' 
+prefix<-'generics-naturalPriors-n57-incrMH100000_burn50000' 
 m1<-read.csv(paste(m.path, prefix, 'a.csv', sep=''))
 m2<-read.csv(paste(m.path, prefix, 'b.csv', sep=''))
 m3<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
 
 m<-bind_rows(m1,m2,m3)
+#m<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
 
 str(m)
 
@@ -154,23 +156,24 @@ for (i in 1:100){
 }
 
 #target<- c("are female", "lay eggs", "carry malaria", "have wings")
-target<- c("are male", "have manes", "carry malaria", "have wings")
-#ggplot(d.samples %>% filter(Prevalence!=0), 
-ggplot(d.samples %>% filter(Property %in% target), 
-          aes(x=Prevalence))+
-  #geom_histogram()+
-  geom_density(adjust=1, size=1, fill='grey')+
-  geom_density(data = d.samples %>% filter((Prevalence!=0) & 
-                                           (Property %in% target)&
-                                             (Property!="have wings")), 
-               aes(x=Prevalence), color='blue', linetype =2)+
-  #scale_color_brewer(palette='Dark2')+
-  xlab("Prevalence")+
-  ylab("Posterior density")+
-  theme(legend.position=c(0.7,0.65))+
-  guides(color =F)+ 
-  facet_wrap(~Property, scales='free')+
-  xlim(0,1)
+# target<- c("are male", "lay eggs", "carry malaria", "have wings")
+# #ggplot(d.samples %>% filter(Prevalence!=0), 
+# #ggplot(d.samples %>% filter(Property %in% target), 
+# ggplot(d.samples, 
+#        aes(x=Prevalence))+
+#   #geom_histogram()+
+#   geom_density(aes(y = ..scaled..),adjust=1, size=1, fill='grey')+
+# #   geom_density(data = d.samples %>% filter((Prevalence!=0) & 
+# #                                            (Property %in% target)&
+# #                                              (Property!="have wings")), 
+# #                aes(x=Prevalence), color='blue', linetype =2)+
+#   #scale_color_brewer(palette='Dark2')+
+#   xlab("Prevalence")+
+#   ylab("Posterior density")+
+#   theme(legend.position=c(0.7,0.65))+
+#   guides(color =F)+ 
+#   facet_wrap(~Property, scales='free')+
+#   xlim(0,1)
 
 #ggsave(file='~/Documents/research/generics/manuscript/figures/prevalence_priors_inferred-betas.pdf')
 
@@ -203,18 +206,147 @@ m.join<- left_join(left_join(m.spread %>% filter(key=='MAP') %>% select(-key),
                             credLow_across = prob_hasF))
 
 
-ggplot(m.join, aes(x = gamma, y = prob_hasF))+
-  geom_point()+
-  geom_errorbar(aes(ymin = credLow_across, ymax = credHigh_across),
-                                position=position_dodge(), size =1)+
-  geom_errorbarh(aes(xmin = credLow_within, xmax = credHigh_within),                 
-                 position=position_dodge(), size =1)+
-  xlim(-0.05,1.05)+
+ggplot(m.join, aes(x = gamma, y = prob_hasF, label=Property))+
+   geom_point(size =3)+
+   geom_errorbar(aes(ymin = credLow_across, ymax = credHigh_across),
+                                 position=position_dodge(), size =1)+
+   geom_errorbarh(aes(xmin = credLow_within, xmax = credHigh_within),                 
+                  position=position_dodge(), size =1)+
+#  geom_text(position=position_jitter(height=0.035, width=0.0))+
+  xlim(-0.05,1.2)+
   ylim(-0.05,1.05)+
   coord_fixed()+
   xlab("Within-category prevalence")+
-  ylab("Across-category prevalence")
+  ylab("Between-category prevalence")
+
+#ggsave(file='~/Documents/research/generics/manuscript/figures/prevalences-scatter.pdf', width=12, height=6)
+
+```
+
+
+
+Add posterior thresholds to prevalence prior plots
+
+```{r}
+
+prefix<-'generics-truthJudgment-wState-previter10000_prevprioriter10000-priord50Zero-n57_mh50000_burn25000'
+
+t<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
+
+
+t.tidy <- t %>%
+  #filter(Parameter=='thetaPosterior' & Property %in% target) %>%
+  filter(Parameter=='statePosterior') %>%
+  select(-Negation, -Parameter) %>%
+  rename(bin = Category)
+
+
+t.dy <- data.frame(
+                Property =  rep(t.tidy$Property, 
+                                   1+samples*t.tidy$Probability),
+                bin =  rep(t.tidy$bin,
+                                   1+samples*t.tidy$Probability),
+                Value = rep(t.tidy$Value, 
+                                   1+samples*t.tidy$Probability))
+
+t.stats<- t.dy %>%
+  group_by(Property, bin) %>%
+  summarize(MAP = estimate_mode(Value),
+            credLow = HPDlo(Value),
+            credHigh = HPDhi(Value)) %>%
+    mutate(bin = to.n(bin)) %>%
+  group_by(Property) %>%
+  mutate(cdf = cumsum(MAP)) %>%
+  mutate(cdfLow = cdf - (MAP-credLow),
+         cdfHigh = cdf + (credHigh - MAP)) 
+  
+
+t.interp<- data.frame()
+for (p in levels(t.stats$Property)){
+  mh = data.frame(with(t.stats 
+                       %>% filter(Property==p), 
+                       approx(x=bin, y = MAP, n = 100)))
+  mh$Property  = p
+  t.interp<- bind_rows(t.interp, mh)  
+}
+
+
+t.dy <- data.frame(
+                Property =  rep(t.interp$Property, 
+                                   1+samples*t.interp$y),
+                Prevalence = rep(t.interp$x,
+                                   1+samples*t.interp$y))
+
+
+t.dy$src= "Posterior prevalence"
+d.samples$src<- "Prior prevalence"
+
+d.sty <- bind_rows(t.dy, d.samples)
+# t.stats %>% filter(Property=='are male')
+# 
+target<- c("are female", "lay eggs", "carry malaria", "have wings",
+           "dont attack swimmers")
+
+d.sty$src<-factor(d.sty$src, levels=c("Prior prevalence", "Posterior prevalence"))
+
+for (t in target){
+#  ggplot(d.samples %>% filter(Property == t), 
+#          aes(x=Prevalence))+
+   ggplot(d.sty%>% filter(Property == t), 
+          aes(x=Prevalence, linetype=src, color=src, alpha=src))+
+    geom_density(aes(y=..scaled..), size=1, color ='black',
+                 fill='black')+
+  #  scale_linetype_manual(values = c(1, 3))+
+  #geom_histogram()+
+#    geom_density(data=t.stats %>% filter(Property == t),
+#                 aes(x=bin, y=MAP), size =1,
+#                 stat='identity')+
+#   geom_density(aes(y = ..scaled..), size=1, linetype =3)+
+  #  geom_density(size=1, linetype =3)+
+  #geom_bar(data = t.stats, 
+  #             aes(x=as.numeric(bin), y =MAP), stat='identity')+
+  #scale_color_brewer(palette='Dark2')+
+  scale_linetype_manual(values=c(1,2))+
+  scale_alpha_manual(values=c(0.6,0.1))+
+  #scale_color_manual(values=c("#bdbdbd","#f0f0f0"))+
+  xlab("Prevalence")+
+  ylab("Density")+
+  #theme(legend.position=c(0.7,0.65))+
+  #guides(color =F)+ 
+  facet_wrap(~Property, scales='free')+
+  scale_x_continuous(limits=c(0,1), breaks=c(0,0.5,1))+
+  scale_y_continuous(limits=c(0,1), breaks=c(0,0.5,1))+
+  ylab("Scaled density")+
+  theme(#axis.text.y=element_blank(),
+        strip.text.x=element_text(size=16))
+    
+ggsave(file=paste('~/Documents/research/generics/manuscript/figures/truthjudge-prevalences-priors-posteriors',t,'.pdf',sep=''), 
+       width=7, height=3)
+  
+}
+
+
+# 
+# 
+# ggplot(t.stats, aes(x=bin, y= MAP))+
+#   #geom_line() + 
+#    geom_density(stat='identity')+
+#   #geom_smooth(aes(ymin=credLow, ymax=credHigh), stat='identity')+
+#   facet_wrap(~Property, scales='free')+
+#   ylim(-0.05,1.05)
+# 
+# 
+# 
+# 
+# ggplot(t.stats, aes(x=bin, y= cdf))+
+#   #geom_line() + 
+#   geom_density(stat='identity')+
+# #  geom_smooth(aes(ymin=cdfLow, ymax=cdfHigh), stat='identity')+
+#   facet_wrap(~Property, scales='free')+
+#   ylim(-0.05,1.05)
+
 
 
 ```
+
 
