@@ -154,19 +154,23 @@
 
 Generalizations about categories (e.g. ``Dogs bark.'') are ubiquitous in everyday conversation. 
 Despite their prevalence, these \emph{generic} statements are puzzling to formal theories and their precise meanings are unknown. 
+Generics can in some instances be felicitous based on a small amount of evidence while other times require a lot of evidence to be true. 
+Generics are also difficult to understand formally because they tend to exaggerate how widespread the property (e.g. ``barks'') is within the category (e.g. ``dogs'').
+% tends to exaggerate how widespread the property being discussed \mht{better word?}  is.
 %the most common way to express generalizations about categories.
 %Generic utterances (e.g. ``Dogs bark.'') are the primary vessel by which speakers express ideas about categories in the world and are ubiquitous in everyday conversation. 
 %It is believed that generic utterances behave somewhat like quantified ones (e.g. ``Most dogs bark.''). 
 %If this is correct, however, there should be some threshold on the number of instances that display the property (e.g. some criterion number of dogs that bark) for the utterance to be true.
 %This threshold is notoriously difficult to define for generics, which are flexible enough to be true based on very little evidence while also implying near-universality of the property. 
-We explore the idea that generic language is vague and demonstrate how a theory of pragmatic language understanding can 
+We explore the idea that the meaning of generic language is vague or uncertain and demonstrate how a theory of pragmatic language understanding can 
 %introduce a semantics and pragmatics for generic language understanding, centered on the idea that generics are vague. 
 %The criterion for truth is represented as an unknown property of the language and is actively reasoned about in context by a listener who assumes she is in conversation with an informative speaker. 
 %We explain how this simple semantics can
-explain two outstanding puzzles central to generic language: Generics can in some instances be felicitous based on a small amount of evidence while other times require a lot of evidence to be true, and generic language tends to exaggerate how widespread the property being discussed \mht{better word?}  is. 
+operate over this under-specific meaning to explain these two outstanding puzzles. 
 %the variable implications of generic language. 
 %Inferences from the model are driven largely by the hypothetical interpreter's beliefs about the property.
-The hypothetical interpreter's higher-order expectations heavily govern generic interpretation in the model, highlighting that actionable psychological levers exist at levels of abstraction higher than the property being discussed.
+The model of language interpretation relies upon higher-order beliefs shared by the interlocutors in conversation, highlighting that common beliefs are necessary for successful communication.
+%actionable psychological levers exist at levels of abstraction higher than the property being discussed.
 This mathematical bridge between how we represent concepts and how we speak about concepts further strengthens the formal connection between language and thought.
 
 
@@ -543,11 +547,22 @@ These inferences align almost perfectly with participants productions and interp
 
 \subsubsection{Conclusions (3200 words up to now)}
 
+
+We explored a minimal extension of a general-purpose probabilistic model of language understanding wherein social-cognitive mechanisms act on uncertainty in the meaning of a generic utterance to produce a less uncertain meaning.
+This less uncertain meaning is a blend of the listener's beliefs about the property in question and the communicative force of a speech-act. 
+The system of equations can model both the role of the speaker to produce felicitous generic utterances and the role of the listener to interpret those utterances in context, with high quantitative accuracy.
+%general-purpose language understanding mechanisms are 
+
 It might seem paradoxical that a part of language that is so common in communication and central to learning should be vague. 
 Shouldn't speakers and teachers want to express their ideas as clearly as possible?
 Language evolutionary pressures suggest that, to the contrary, such underspecification is in fact useful, given that there is some context through which the uncertainty can be resolved \cite{Piantadosi2012}.
 In our work, context takes the form of a listener and speaker's shared beliefs about the property in question. 
-This, coupled with standard inferences from conversational pragmatics, allows the listener to arrive at a specific meaning of the otherwise underspecified utterance.
+%This, coupled with standard inferences from conversational pragmatics, allows the listener to arrive at a specific meaning of the otherwise underspecified utterance.
+The dark side of this is that herein lies one potential avenue for miscommunication or deceit: A speaker might assert a generic utterance that he himself would never accept, but get away with it if the listener's beliefs are sufficiently na\"{i}ve.  
+This listener would then have a belief distribution even further from the truth. 
+The other side of this coin is that generics are a powerful way to communicate and learn generalizations about categories, which could otherwise be difficult or costly to learn through direct evidence.
+
+
 
 %%this paragraph isn't needed and is confusing....
 %Interpretation of generic language is strongly governed by listeners' beliefs about the domain in question. 
@@ -556,19 +571,28 @@ This, coupled with standard inferences from conversational pragmatics, allows th
 %In much the same way, ``John is tall'' does not actually tell a listener about what \emph{tall} means\footnote{However, ``John is a person'' does tell a listener about what \emph{tall} means in ``John is tall''.}. 
 %Rather, the listener is expected to come to the conversation with some beliefs about heights, and knowing that John is a person, be able to infer likely meanings for \emph{tall}.
 
-Much psychological and philosophical work on generics has looked beyond prevalence and focused on conceptual distinctions and relations \cite{Prasada2013, Leslie2008}. 
+Much psychological and philosophical work on generics has looked beyond prevalence and focused on conceptual distinctions and relations \cite{Prasada2013, Leslie2007, Leslie2008}. 
 For example, \citeauthor{Prasada2013} has argued for a distinction between \emph{characteristic} properties (e.g. ``Diapers are absorbent.'') and \emph{statistical} properties (e.g. ``Diapers are white.'').
- Where in the prevalence-based semantics could such conceptual distinctions come into play?
-Probabilistic models are a useful way to represent rich, structured knowledge of world \cite{Goodmanconcepts}. 
-It's plausible that the prevalence distributions focused on in this work are derived from richer conceptual knowledge, including higher-order conceptual knowledge about the nature of properties \cite{Gelman2005, Keil1992}. 
+\citeauthor{Leslie2007} suggests \emph{reproduction} is a characteristic property of animals and information that is striking (e.g. ``Tigers eat people.'') is useful and thus permitted to be a generic.
+Where in the prevalence-based semantics could such conceptual distinctions come into play?
+Beliefs about prevalence are represented as probability distributions in a framework that is useful for representing rich, structured knowledge of the world \cite{Goodmanconcepts}. 
+It's plausible that the prevalence distributions focused on in this work are derived from richer conceptual knowledge, including higher-order conceptual knowledge about the nature of different properties \cite{Gelman2005, Keil1992}. 
 That is, for the purpose of the semantics of generics, prevalence may be sufficient to capture the range of truth judgments and interpretations. 
 How interlocutors arrive at estimates of the prevalence, and what other inferences are licensed in a context, may be the result of a deeper conceptual model of the world. 
+
+%This formalism gives a new, computational perspective on how ideas are conveyed and how beliefs play a central role in understanding language.
+Categories are inherently unobservable. 
+You cannot see the category \emph{dog}, only some number of instances of it.
+Language provides a way to orient to these unobservables, enabling the sharing of observations about these unobservables with others.
+It is inherently a process of fumbling in the dark, riddled with uncertainty. 
+Cooperation allows interlocutors to align their uncertainty and ensure knowledge, in fact, be transmitted across space.
 
 \ndg{need a head-nod to additional phenomena, such as dangerousness. also, reiterate that we are in some sense exploring a minimal model, given RSA.}
 
 \ndg{expand this slightly, to remind people that this is one of the central mechanisms for communicating and learning generalizations about categories...}
-This formalism gives a new, computational perspective on how ideas are conveyed and how beliefs play a central role in understanding language.
-Generics are vague, but predictable and useful.
+
+
+%Generics are vague, but predictable and useful.
 
 
 \bibliographystyle{apacite}
