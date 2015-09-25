@@ -85,6 +85,17 @@ The experiment took about 10 minutes and participants were compensated \$1.00.
 \subsection{Procedure and materials}
 
 On each trial of the experiment, participants filled out a table where each row was an animal category and each column was a property\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/experiments/real-kinds/prior-2.html}}.
+
+Participants were told 
+\begin{quote}
+In this study, we are interested in how prevalent certain properties are within different kinds of animals. We will give you examples of the kinds of animals we have in mind and ask you to list a few of your own.
+
+Then, you will estimate the \emph{percentage of the individual members} of the animal species that have certain properties.
+
+On each trial, you will rate 8 properties. The properties will be revealed to you one at a time. Essentially, you will be filling out a big table. You are allowed to go back and revise your answers, if you think there is a more realistic estimate you could give. You will do this 2 times (2 big tables). 
+
+\end{quote}
+
 The trial proceeded as follows:
 Participants were first shown a column of 6 pre-specified names of kinds of animals (chosen randomly from a larger set). 
 They were asked to add five of their own animal names to the column. 
@@ -99,6 +110,7 @@ The animal kind column was unable to be modified once completed.
 The prevalence columns, however, could be modified at a later stage (i.e. the participant could go back and change her estimates after seeing more properties). 
 Participants completed this procedure on each of 2 trials.
 
+
 We used a set of properties associated with generics of theoretical interest (21 properties in total), motivated in part by conceptual distinctions pointed out by \citeA{Prasada2013}. 
 The conceptual categories used to generate the generics were: majority characteristic (e.g. ``Leopards have spots''), minority characteristic (e.g. ``Lions have manes''), striking (e.g. ``Sharks attack swimmers.''), and majority false generalizations (e.g. ``Robins are female.'') \cite{Prasada2013}. 
 In addition, we included false sentences (e..g ``Lions lay eggs''), to cover the full range of possible truth values.
@@ -106,9 +118,6 @@ We aimed to include properties whose generics would be judged false even though 
 Instead, we took the complement of participants judgments of the positive property (e.g. ``have beautiful feathers''') as the estimate for the negation (e.g. ``don't have beautiful feathers'').
 
 For a full list of the generic sentences used in this experiment, see Appendix \ref{sec:appendix}.
-Complete instructions given to participants can be seen in Appendix \ref{sec:prior1instruct}.
-
-
 
 \subsection{Bayesian data analysis}
 \label{sec:bda1}
@@ -294,42 +303,67 @@ The model predicts graded endorsements for the generic statements used in Expt.~
 
 \section{Experiment 2a: \emph{Measuring $P(x)$ for unfamiliar categories}}
 
-In this experiment, we measured participants' beliefs about the distribution of the prevalence of certain properties within- and across- animal kinds. 
-We expanded the stimulus set from \citeA{Cimpian2010} which consisted of novel animal categories (e.g. glippets) and various properties (e.g. have orange legs; have broken legs).
+In this experiment, we measured participants' beliefs about the distinctiveness of certain properties and their corresponding expected prevalence within kinds.
+
+We built on the stimulus set from \citeA{Cimpian2010} which consisted of novel animal categories (e.g. glippets) and various properties (e.g. have orange legs; have broken legs).
 
 
 \subsection{Participants}
 
-We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 5-7 minutes and participants were compensated \$0.75.
+We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  
+Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
+All participants were native English speakers. 
+The experiment took about 5-7 minutes and participants were compensated \$0.75.
 
 \subsection{Procedure and materials}
 
-In Expt.~1a, participants filled out a table with rows corresponding to different animal kinds and columns corresponding to different properties. 
-Pilot testing suggested this was a pragmatically strange setup for this paradigm: answering ``What percentage of lorches have purple feathers?'', when participants knew nothing about lorches was difficult.
-We took advantage of the latent structure in the task, described in Section \ref{sec:bda1}, and used a Bayesian statistical model to infer the underlying distribution. 
-We then used these distributions in our language model to make predictions about the implications of generic sentences.
+In the truth judgments of natural cases experiments (Expt. 1a \& b), participants filled out a table with rows corresponding to different animal kinds and columns corresponding to different properties. 
+Pilot testing suggested this was a pragmatically strange setup when using novel kinds: answering ``What percentage of lorches have green feathers?'', when participants knew nothing about lorches, was difficult.
+Instead, we harnessed the latent structure in the task, described in Section \ref{sec:bda1}, and used a Bayesian statistical model to infer the underlying distribution. 
+We then used these distributions in our language model to make predictions about the truth conditions and implications of novel generic sentences.
 
-Participants were asked about the prevalence across categories by asking them the likelihood of there existing a K that has F, where K was a novel animal category and F was a property (e.g. ``how likely is it that there is a lorch that is female?''). 
-Prevalence within categories was measured by asking participants about the percentage of Ks that have Fs, given that at least one does.
-Participants responded using slider bars that ranged from ``unlikely'' to ``likely'', and ``0\%'' to ``100\%'', respectively.
-Complete instructions shown to participants are in Appendix \ref{sec:prior2instruct}. 
+
+Participants were told they were on a newly discovered island with lots of new animals on it. They were then given the following instructions
+
+\begin{quote}
+One day, you are roaming through the library when you encounter a data-collection robot. The robot doesn't know very much about the world and is asking you questions to learn more. Today, it wants to learn about properties of animals. It is randomly selecting an animal from its memory and a property from its memory, and asking you if the animal is likely to have the property.
+
+Of course, you're new to this island so you don't really know anything about these animals. The properties, however, will be familiar. Try to provide your best guess given your own experience.
+\end{quote}
+
+Participants were then run through a practice trial where they were familiarized with the questions that would be asked on them. 
+On each trial, the data-collection robot introduced a new animal (e.g. ``We recently discovered animals called glippets.''). 
+The robot then asked how likely it was that ``there was \emph{a} glippet with [[property]]''. 
+This question aimed to get at the property's \emph{distinctiveness}
+% prevalence of the property \emph{across} categories 
+(e.g. it's very likely that there is a glippet that is female, less likely that there is a glippet that has wings, and even less likely that there is a glippet has purple wings). 
+The second question was about the expected prevalence \emph{within} categories. 
+The robot asked, ``Suppose there is a glippet that has wings. What percentage of glippets do you think have wings?'' Participants responded using slider bars that ranged from ``unlikely'' to ``likely'', and ``0\%'' to ``100\%'', respectively.
+
+%Participants were asked about property distinctiveness by asking them the likelihood of there existing a K that has F, where K was a novel animal category and F was a property (e.g. ``how likely is it that there is a lorch that is female?''). 
+%Expected prevalence within categories was measured by asking participants about the percentage of Ks that have Fs, given that at least one does.
 
 Materials---novel animal names and familiar properties---built upon those from \citeA{Cimpian2010}. 
 Classic work in generalization suggested to us that there may be differences in the implications of generic statements of different types of biological properties \cite{Nisbett1983}. 
-We expanded the stimulus set to include four different types of properties: biological parts (e.g. ``feathers''), colored parts (e.g. ``purple feathers''), vague parts (e.g. ``smooth feathers''), and accidental parts (e.g. ``broken feathers''). 
-Pilot testing revealed a lot of variability across items in the accidental properties relative to the other types of properties. 
+We expanded the stimulus set to include four different types of properties: biological parts (e.g. ``feathers''), colored parts (e.g. ``green feathers''), vague parts (e.g. ``smooth feathers''), and accidental parts (e.g. ``broken feathers''). 
+Pilot testing revealed a lot of variability for items in the accidental properties relative to the other types of properties. 
 To test the quantitative predictive power of the generic interpretation model, we used twice as many exemplars of accidental properties, with the aim to make a ``common accidental'' and a ``rare accidental'' class of properties. 
 We used 8 exemplars of each of the three non-accidental properties (``parts'', ``colored parts'', ``vague parts'') and 16 exemplars of accidental properties.
 Materials are in Appendix \ref{sec:materials2}.
 
 \subsection{Bayesian data analysis}
-\ref{sec:bda2}
-In order to recover single belief distributions representing prevalence both within- and across- categories (analogous to those elicited in Expt.~1a and shown in Figure \ref{fig:priors1a}), we built a simple Bayesian statistical model of the task questions and their relation to the desired distribution. 
+\label{sec:bda2}
+
+In order to recover single belief distributions representing both the distinctiveness of properties and their expected prevalence within-categories (analogous to those elicited in Expt.~1a and shown in Figure 1), we built a simple Bayesian statistical model of the task questions and their relation to the prevalence distribution of interest. 
+
+This analysis was first completed by item, in order to determine the expected within-category prevalence for each item. 
+We performed a median split on the accidental properties type based on this criterion to construct ``rare accidental'' and ``common accidental'' properties types. 
+This identical analysis was then completed by property type (e.g. ``part'', ``color part'', etc...).
 
 Participants' responses to each question (slider bar values) were assumed to be samples from Beta distributions with unknown means and concentrations. 
-The responses to the questions ($d_{across}, d_{within}$) were used to estimate the parameters of the distributions of prevalence across- and within- categories, separately. 
+The responses to the questions ($d_{category}, d_{within}$) were used to estimate the parameters of the distributions of property distinctiveness and prevalence within-categories, separately. 
 \begin{align*}
-d_{across} \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\
+d_{category} \sim \text{Beta}(1-\gamma_{distinctive}, \delta_{distinctive}) \\
 d_{within} \sim \text{Beta}(\gamma_{within}, \delta_{within}) 
 \end{align*}
 The parameters $\gamma$ and $\delta$ correspond to the mean and variance (formally, the concentration), respectively, of prevalence for each of the across- and within- distributions.
@@ -340,11 +374,12 @@ We put identical, uninformative priors on these parameters:
 \gamma & \sim \text{Uniform}(0,1) \\
 \delta & \sim \text{Uniform}(0,20) 
 \end{align*}
-To construct single prevalence distributions reflecting both the within- and across- category prevalence (as we have for Expt.~1a), we assume that the distribution is a mixture of categories that have the property and categories that don't have the property\footnote{This is similar in spirit to Hurdle Models of count data used in clinical trials where the observed proportion of zeros is greater than one would expect from classical models of count data like the Poisson model.}. Whether or not a category has a property ($h$) is driven by the prevalence across categories ($\theta_{across}$).
+To construct single prevalence distributions reflecting both the property distinctiveness and the expected within-category prevalence (as we have for Expt.~1a), we assume that the distribution is a mixture of categories that have the property and categories that don't have the property\footnote{This is similar in spirit to Hurdle Models of count data used in clinical trials where the observed proportion of zeros is greater than one would expect from classical models of count data like the Poisson model.}. 
+Whether or not a category has a property ($h$) is driven by the distinctiveness of the property ($\theta_{distinctive}$).
 %
 \begin{align*}
-\theta_{across} & \sim \text{Beta}(\gamma_{across}, \delta_{across}) \\ 
-h & \sim \text{Bernoulli}(\theta_{across}) \\
+\theta_{distinctive} & \sim \text{Beta}(\gamma_{distinctive}, \delta_{distinctive}) \\ 
+h & \sim \text{Bernoulli}(1 - \theta_{distinctive}) \\
 x & \sim \begin{cases} 
 		\text{Beta}(\gamma_{within}, \delta_{within}) &\mbox{if } h = 1 \\ 
 				0 & \mbox{if } h=0. 
@@ -376,7 +411,7 @@ The experiment took about 5 minutes and participants were compensated \$0.60.
 In order to get participants motivated to reason about novel animals, they were told they were the resident zoologist of a team of scientists that recently discovered an island with many new animals; their task was to provide their expert opinion on questions about these animals\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/asymmetry/asymmetry-2.html}}. 
 We recruited 40 participants for the \emph{truth conditions} task and 40 participants for the \emph{implied prevalence task}. 
 
-Following \citeauthor{Cimpian2010}'s paradigm, in the \emph{truth conditions} task, participants were given an evidence statement consisting of the percentage of a novel animal category that had a property (e.g.~``30\% of glippets have yellow fur''). 
+Following \citeauthor{Cimpian2010}'s paradigm, in the \emph{truth conditions} task, participants were given a prevalence statement consisting of the percentage of a novel animal category that had a property (e.g.~``30\% of glippets have yellow fur''). 
 Participants were asked if they agreed or disagreed with the associated generic statement (i.e.~``Glippets have yellow fur.'').
 Prevalence varied between 10, 30, 50, 70, and 90\%.
 The experiment consisted of 25 trials: 5 trials for each of 5 types of properties measured in Expt.~2a (part, color part, vague part, common accidental, rare accidental). 
@@ -384,9 +419,9 @@ Each prevalence level appeared once for each property type (5 prevalence levels 
 
 Participants in the \emph{implied prevalence} task were supplied with the generic (e.g. ``Glippets have yellow fur.'') and asked to judge prevalence: ``What percentage of glippets do you think have yellow fur?''. Participants saw 25 trials: 5 for each of 5 property types.
 The original study by \citeauthor{Cimpian2010} found a difference in the implied prevalence between ``color parts'' (e.g. yellow fur) and accidental properties (e.g. wet fur).
-The prevalence priors inferred from Expt.~2a suggest that generic interpretation should be even more variable than simply strong vs. weak.
+The prevalence priors inferred from Expt.~2a suggest that generic interpretation should be even more variable.
 For this reason, we included three types of biological properties: parts (e.g. fur), color--part pairs (e.g. yellow fur) and gradable adjective--part pairs (e.g. curly fur). 
-We also coded the accidental properties from Expt.~2a as either ``common'' or ``rare'' using a by-item median split.
+We also coded the accidental properties from Expt.~2a as either ``common'' or ``rare'' using a by-item median split based on expected within-category prevalence.
 
  
 Most of the materials we used were from \citeauthor{Cimpian2010}. 
@@ -422,19 +457,26 @@ Accidental &             &                                                      
 
 
 
-\subsection{Lifted-variable model predictions}
+\subsection{Pragmatics model predictions}
 
-In Expt.~1, the acceptability of the generic was modeled as a speaker (Eq.~\ref{eq:S2}) reasoning about whether or not to produce the generic given some known prevalence. 
-We use the same model to make predictions for the \emph{truth conditions} data.
-The \emph{implied prevalence} task is slightly different: Here, the participant hears a generic and is asked to infer the likely prevalence of the property. 
-This is the model of the listener in Eq.~\ref{eq:L1}. 
+
+Of primary interest here is how the interpretations of novel generic utterances vary as a function of \emph{a priori} beliefs about the prevalence of the type of property in question.
+The model of the pragmatic listener $L_1$ in Eq.~1 is a natural model of this process.
 We use this model to predict the data from the implied prevalence task.
+Further, we use the model of the speaker $S_2$ in Eq.~4 as a model of the \emph{truth conditions} task.
+This is an analogous task to what was explored with generics of familiar categories in Expt.~1, also modeled by $S_2$. 
+The dependent measure for the \emph{truth conditions} task is \emph{average prevalence} at which the participants assent to the use of the generic. 
+This was previously shown not to be as sensitive to participants' beliefs about the properties in question (but, cf. \citeA{Cimpian2010}, Expt.~4).
+%In Expt.~1, the acceptability of the generic was modeled as a speaker $S_2$ (Eq.~4) reasoning about whether or not to produce the generic given some known prevalence. 
+%We use the same model to make predictions for the 
+%The \emph{implied prevalence} task is slightly different: Here, the participant hears a generic and is asked to infer the likely prevalence of the property. 
+%This is the model of the listener in Eq.~\ref{eq:L1}. 
 
-\subsubsection{Priors}
+\subsubsection{Data analysis model priors}
 
 
 Each of these models has a parameter governing the optimality of the hypothetical speaker in Eq.~\ref{eq:S1}. 
-Since the supports of the distributions produced by the two models are different ($S_2$ returns a distribution over ``agree'' and ``disagree'', whereas $L_1$ generates a distribution prevalence levels), there is no reason to believe the speaker optimality parameters would be the same for the two models. 
+Since the supports of the distributions produced by the two models are different ($S_2$ returns a distribution over ``agree'' and ``disagree'', whereas $L_1$ generates a distribution over prevalence levels), there is no reason to believe the speaker optimality parameters would be the same for the two models. 
 Hence, we put independent prior distributions over the two parameters: $\lambda_{\text{truth conditions}}, \lambda_{\text{implied prevalence}} \sim \text{Uniform}(0, 20)$.
 
 As before, we model the observed data as being generated by a mixture of our generics model and a model of random guessing behavior. 
@@ -457,7 +499,8 @@ The 95\% Credible interval is [0.06, 0.15].
 
 The estimated posterior distribution of the speaker rationality parameters $\lambda_{\text{truth conditions}}$ and $\lambda_{\text{implied prevalence}}$ are shown in Figure \ref{fig:rationality2}. 
 This parameter represents the belief in how rational the hypothetical speaker in Eq.~{ref:eqS1} is believed to be when choosing to say the generic (over saying nothing). 
-The 95\% credible interval for $\lambda_{\text{truth conditions}}$ is [0.23, 6.9] and $\lambda_{\text{implied prevalence}}$ is [1.30, 16.86]. The fact that these parameters are so different is expected given that the state space in the two tasks is also quite different.
+The 95\% credible interval for $\lambda_{\text{truth conditions}}$ is [0.23, 6.9] and $\lambda_{\text{implied prevalence}}$ is [1.30, 16.86]. 
+The fact that these parameters are so different is expected given that the state space in the two tasks is also quite different.
 
 
 \begin{figure}
@@ -516,38 +559,6 @@ False or Uncertain & 18. Leopards have wings.       &0.022	[0, 0.055]& 1.0 [0.0,
 \caption{Stimuli used in Experiment 1. Estimates are means for truth judgments and Maximum A-Posteriori (MAP) estimates for prevalence.  Brackets denote 95\% confidence intervals for truth judgments and 95\% credible intervals for prevalences.}
 \label{tab:expt1}
 \end{table}
-
-
-\section{Instructions used in Experiment 1a: prior elicitation for familiar categories}
-\label{sec:prior1instruct}
-
-Participants were told 
-\begin{quote}
-In this study, we are interested in how prevalent certain properties are within different kinds of animals. We will give you examples of the kinds of animals we have in mind and ask you to list a few of your own.
-
-Then, you will estimate the \emph{percentage of the individual members} of the animal species that have certain properties.
-
-On each trial, you will rate 8 properties. The properties will be revealed to you one at a time. Essentially, you will be filling out a big table. You are allowed to go back and revise your answers, if you think there is a more realistic estimate you could give. You will do this 2 times (2 big tables). 
-
-\end{quote}
-
-
-\section{Instructions used in Experiment 2a: prior elicitation for novel categories}
-\label{sec:prior2instruct}
-
-Participants were again told they were on a newly discovered island with lots of new animals on it. They were then given the following instructions
-
-\begin{quote}
-One day, you are roaming through the library when you encounter a data-collection robot. The robot doesn't know very much about the world and is asking you questions to learn more. Today, it wants to learn about properties of animals. It is randomly selecting an animal from its memory and a property from its memory, and asking you if the animal is likely to have the property.
-
-Of course, you're new to this island so you don't really know anything about these animals. The properties, however, will be familiar. Try to provide your best guess given your own experience.
-\end{quote}
-
-Participants were then run through a practice trial where they were familiarized with the questions that would be asked on them. 
-On each trial, the data-collection robot introduced a new animal (e.g. ``We recently discovered animals called glippets.''). 
-The robot then asked how likely it was that ``there was \emph{a} glippet with [[property]]''. 
-This question aimed to get at the prevalence of the property \emph{across} categories (e.g. it's very likely that there is a glippet that is female, less likely that there is a glippet that has wings, and even less likely that there is a glippet has purple wings). 
-The second question was about the prevalence \emph{within} categories. The robot asked, ``Suppose there is a glippet that has wings. What percentage of glippets do you think have wings?''
 
 \section{Stimuli used in Experiment 2}
 \label{sec:materials2}
