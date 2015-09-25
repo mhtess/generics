@@ -19,9 +19,10 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[10pt,stdletter,dateno,sigleft]{newlfm} % Extra options: 'sigleft' for a left-aligned signature, 'stdletternofrom' to remove the from address, 'letterpaper' for US letter paper - consult the newlfm class manual for more options
+\documentclass[11pt,stdletter,dateno,sigleft]{newlfm} % Extra options: 'sigleft' for a left-aligned signature, 'stdletternofrom' to remove the from address, 'letterpaper' for US letter paper - consult the newlfm class manual for more options
 
 \usepackage{charter} % Use the Charter font for the document text
+\usepackage{url}
 
 \newsavebox{\Luiuc}\sbox{\Luiuc}{\parbox[b]{1.75in}{\vspace{0.5in}
 \includegraphics[width=1.2\linewidth]{logo.pdf}}} % Company/institution logo at the top left of the page
@@ -95,39 +96,62 @@ Stanford, CA 94305
 Attach please find a copy of the manuscript XXX %\emph{Generic language is vague yet rationally understood} 
  for consideration for publication in \emph{Science Magazine}. 
 Generalizing properties to categories is central to human understanding of the world. 
-This paper explores a precise formalization of the psychological and linguistic means by which generalizations are conveyed.
+This paper explores a mathematical formalization of the psychological and linguistic means by which generalizations are conveyed.
  
 Categories are inherently unobservable; thus, language provides a useful way to transmit beliefs about categories, and generic language (e.g.~\emph{Swans are white.}) is a simple and ubiquitous way to do this. 
-Generic utterances are foundational to everyday conversation (``), child-directed speech (``Dogs are friendly.''), political and scientific discourse (``Taxes are high.'', ``Psychology experiments don't replicate''), stereotypes (``Boys are good at math.'') and motivation (``Big boys eat broccoli!'').
+Generic utterances are common in everyday conversation (\emph{Movie theaters are cold.}), child-directed speech (\emph{Dogs are friendly.}), political and scientific discourse (\emph{Taxes are high.}, \emph{Psychology experiments don't replicate.}), stereotypes (\emph{Boys are good at math.}) and motivation (\emph{Big boys eat broccoli!}).
 
-The meaning of generic language though is philosophically and psychologically puzzling and has resisted precise formalization. 
-Generic utterances can be felicitous based on only a minority displaying the property (e.g. ``Robins lay eggs'' even though only adult, female, fertile robins do), while properties with the same statistics generate infelicitous generics (e.g. ``Robins are female'').
-``Mosquitos carry malaria'' even though only 1\% of them do, and it's not useful to say ``Sharks don't attack swimmers'' even though the overwhelming majority don't. 
-Parallel with these flexible truth conditions are the surprisingly strong interpretations of generic utterances.
+Though this type of language is found everywhere, the meaning of generic language is philosophically puzzling and has resisted precise formalization. 
+One major roadblock has been specifying the conditions by which a generic utterance is true, or a felicitous thing to say.
+Generic utterances are often about majority characteristic properties (e.g. \emph{Dogs bark}) but still can be felicitous based on only a minority displaying the property (e.g. \emph{Robins lay eggs} even though only adult, female, fertile robins do). 
+Indeed, \emph{Mosquitos carry malaria} even though only 1\% of them do, highlighting that the acceptability of generics can be as flexible as to include cases where only the weakest quantifier would suffice. 
+The acceptability of generics seems not to have to do with the statistics of the property because while \emph{Robins lay eggs} is true, \emph{Robins are female} is not, despite the prevalence of the property being equivalent. 
+
+%properties with the same statistics generate infelicitous generics (e.g. ``Robins are female'').
+% and it's not useful to say ``Sharks don't attack swimmers'' even though the overwhelming majority don't. 
+Parallel to these extremely flexible truth conditions are the surprisingly strong interpretations of generic utterances.
 Generic language seems to exaggerate the statistics of the property; listeners typically interpret ``Bears like to eat ants.'' as ``\emph{Almost all} bears like to eat ants.''
+Indeed it is this strength of meaning that is believed to be the foundation for stereotype propagation. 
 
 
 % This article provides a formal account (instantiated in a computational model) of ``generics'', the primary linguistic construct by which interlocutors talk about categories and concepts (e.g. ``\emph{Dogs} bark.'', ``\emph{Tall folks} are good at basketball.'', ``\emph{The French} eat snails.'').  
 % 
 % At the same time, the conditions by which generic utterances are true seem at once to be associated with the the number of instances with the property (e.g. ``Barns are red.'' is true because most barns are red) and not associated with it (e.g. ``Lions have manes.'' is a good generic utterance but ``Lions are male.'' is not, even though the set of lions that are male is a superset of those that have manes.)
 
-We explore a meaning of the generic that is based on the statistics (``what \% of the category has the property?'') but 
-whose criterion is left underspecified in the language.
-We instantiate this idea in a probabilistic model of pragmatic reasoning. 
-We show how the basic communicative principles coupled with listener's beliefs about the property in the question (which we measure empirically) are sufficient to explain the paradoxical phenomena of flexible truth conditions with simultaneously strong implications.
+We explore a meaning of the generic that is in fact based on the statistics (``what \% of the category has the property?'') but 
+whose criterion is left underspecified in the language, and must be resolved in context.
+We instantiate this idea in a probabilistic model of pragmatic reasoning, encompassing the basic communicative qualities to be truthful and informative. 
+We show how these basic communicative principles coupled with the listener's beliefs about the property in the question (which we measure empirically) are sufficient to explain the paradoxical phenomena of flexible truth conditions with simultaneously strong implications.
 The model explains almost all of the variance in human judgments for the evaluation and comprehension of generic utterances.
 
 This work will be of general interest to psychologists, linguists and philosophers.
+We resolve the philosophical paradoxes in the meaning of generic utterances by positing a stable meaning that is as simple as possible: a threshold on the number of instances with the property (i.e. the property's \emph{prevalence}), where the threshold is uncertain \emph{a priori} and only resolved by pragmatic reasoning.
+This simple semantics is consistent with the phenomenon from cognitive development that generics are learned at a very young age and are important for conceptual development.
+Interlocutors' beliefs about the prevalence of properties are represented as probability distribution; a framework that is useful for representing rich, structured knowledge of the world. 
+This work thus furthers the mathematical connection between language and the mind, by providing a bridge between the quantifiable properties of the world and the stuff of thought. 
 
 
-The stable meaning of a generic is as simple as possible: a threshold on the number of instances with the property (i.e. the property's \emph{prevalence}), where the threshold is uncertain \emph{a priori} and only resolved by pragmatic reasoning.
-This simple semantics is consistent with the profound phenomenon from cognitive development: Generics are learned at a very young age.
 
-Using this vague semantics, we explain two outstanding puzzles in language understanding. 
-The first is that generic utterances can be true for a wide range of prevalences: from tigers with stripes ($\sim 100\%$) all the way down to mosquitos with malaria (very few). 
-How can the prevalence of the property alone explain what makes some generics good things to say and others not as good? 
-The insight is that with an uncertain semantics, the likely meaning of the generic (i.e. the likely threshold for acceptance) is inferred using listeners' \emph{a priori} beliefs and the communicative force of a speech act, in a probabilistic pragmatics framework. Speakers who takes this into account will have different criteria to satisfy (different thresholds) for different different types of properties (Expts.~1a and 1b). At the same time, listeners' inferences about the likely prevalence will often be stronger than what a speaker would to justify such a claim. This captures human inferences with a high degree of quantitative accuracy (Expts.~2a and 2b). 
 
+
+
+%Using this vague semantics, we explain two major puzzles surrounding generic language. 
+
+%This look provides insight into the stable properties 
+
+%The first is that generic utterances can be true for a wide range of prevalences: from tigers with stripes ($\sim 100\%$) all the way down to mosquitos with malaria (very few). 
+%How can the prevalence of the property alone explain what makes some generics good things to say and others not as good? 
+%The insight is that with an uncertain semantics, the likely meaning of the generic (i.e. the likely threshold for acceptance) is inferred using listeners' \emph{a priori} beliefs and the communicative force of a speech act, in a probabilistic pragmatics framework. Speakers who takes this into account will have different criteria to satisfy (different thresholds) for different different types of properties (Expts.~1a and 1b). At the same time, listeners' inferences about the likely prevalence will often be stronger than what a speaker would to justify such a claim. This captures human inferences with a high degree of quantitative accuracy (Expts.~2a and 2b). 
+%
+
+
+We suggest the following reviewers:
+
+Greg N. Carlson, Department of Linguistics, University of Rochester \url{carlson@ling.rochester.edu}\\
+Susan A. Gelman, Department of Psychology, University of Michigan \url{gelamn@umich.edu}\\
+Sarah-Jane Leslie, Department of Philosophy, Princeton University \url{sjleslie@princeton.edu} \\
+Andrei Cimpian, Department of Psychology, University of Illinois at Urbana-Champaign \url{acimpian@illinois.edu}\\
+Sandeep Prasada, Department of Psychology, Hunter College \url{sprasada@hunter.cuny.edu}
 
 [need to sell the general interest, novelty, and impact a lot more. need to suggest reviewers.]
 
