@@ -196,12 +196,12 @@ generic language; semantics; pragmatics; categories
 
 \ndg{maybe switch from apples are red to swans are white?}
 
-Most would agree that \emph{Apples are red}, but certainly not all, or perhaps even most, apples are.
+Most would agree that \emph{Swans are white}, but certainly not all swans are.
 %Imagine talking with a 2-year-old about the color red.
 %Colors are difficult to describe because they take shape in different physical forms and the function of color is abstract.
 %You might offer the toddler something generic like, ``Apples are red.''. 
 %Few would argue with the truth of this sentence, yet its precise meaning is difficult to specify. 
-This type of utterance is generic \cite{Carlson1977, Leslie2008} in that it conveys a generalization about a category (i.e. \emph{apples}), which  need not actually apply to every instance of the category.  
+This type of utterance conveys a generalization about a category (i.e. \emph{swans}) and is known as a generic utterance \cite{Carlson1977, Leslie2008}.
 It is believed that every language can express generic meaning \cite{Behrens2005, Carlson1995}, and that generics are essential to the growth of conceptual knowledge \cite{Gelman2004} and how kinds are represented in the mind \cite{Leslie2008}.
 Generic language is ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008}, and children as young as two or three understand that generics refer to categories and support generalization \cite{Cimpian2008}.
 % and though English and many other languages do not possess an unambiguous form devoted to generic meaning \cite{Behrens2000, AlMalki2014}. 
@@ -209,20 +209,21 @@ Additionally, generics are the primary way by which speakers discuss social cate
 Despite their apparent simplicity and cognitive centrality, a formal account of generic meaning remains elusive.
 
 One major hurdle to formalizing generic language arises when one tries to describe the conditions by which a generic is true.
-At first glance, generics seem like universally-quantified statements (i.e. \emph{All apples are red}), but unlike universals, generics are resilient to counter-examples (e.g. \emph{Granny Smith apples}). 
-Interpreting the generic as meaning ``most'' (i.e. \emph{Most apples are red}) captures many cases, but cannot explain others: \emph{Robins lay eggs} and \emph{Mosquitos carry malaria}, even though only the adult females lay eggs and a very small percentage of mosquitos actually carry malaria.
-Indeed, it appears that any explanation in terms of how common the property is within the category is incompatible with intuitions --- while \emph{Robins lay eggs} is fine, \emph{Robins are female} is not, even though the two properties are present in the same proportion (about 50\%) of the category of robins.
+At first glance, generics seem like universally-quantified statements (i.e. \emph{All swans are white}), but unlike universals, generics are resilient to counter-examples (e.g. \emph{black swans}). 
+Interpreting the generic as meaning ``most'' (i.e. \emph{Most swans are white}) captures many cases, but cannot explain others: Only adult female robins lay eggs yet \emph{Robins lay eggs} is true and \emph{Mosquitos carry malaria} in spite of the fact that a very small percentage of mosquitos actually carry the virus.
+Indeed, it appears that any explanation in terms of how common the property is within the category is incompatible with intuitions --- while \emph{Robins lay eggs} is fine, \emph{Robins are female} is not, even though the two properties are present in the same proportion (about 50\%) in the category of robins.
 %\ndg{No precise meaning formalized in the mathematical language of logic seems to be sufficient to capture the meaning of natural language generics.}
 
 A second important puzzle surrounds how generics are interpreted. 
-It seems that if \emph{Mosquitos carry malaria} is true, then the generic must in some way be analogous to ``some'' (i.e. \emph{Some apples are red.}). 
+It seems that if \emph{Mosquitos carry malaria} is true, then the generic must in some way be analogous to ``some'' (i.e. \emph{Some swans are white.}). 
 Yet generics often imply the property is widespread: 
-Listeners interpret a novel generic as applying to \emph{nearly all} of a category \cite{Gelman2002} (compare \emph{Some apples have pepsin} to \emph{Apples have pepsin}).
+Listeners interpret a novel generic as applying to \emph{nearly all} of a category \cite{Gelman2002} (compare \emph{Some swans have hollow bones} to \emph{Swans have hollow bones}).
 Both children and adults believe the property is more widespread after hearing a generic than when asked how common the property would need to be for the generic to apply \cite{Cimpian2010, Brandone2014}, suggesting that communicating with generics can exaggerate evidence.
 
 How can generics have such flexible truth conditions while simultaneously having strong implications?
 %\ndg{switch out lions for birds or something, because of the possibility that lions doesn't include lionesses.}
-In this paper we offer a mathematical model of generic language in terms of pragmatic inference of the degree of evidence required to assert a generic.  \ndg{i think 'degree of evidence' is misleading, since belief is sufficient without evidece...}
+In this paper we offer a mathematical model of generic language in terms of pragmatic inference of the statistical degree required to assert a generic.  
+\ndg{i think 'degree of evidence' is misleading, since belief is sufficient without evidence...}
 We show that this model predicts the puzzlingly heterogeneous patterns, as well as quantitative detail, in human endorsement of generic sentences. 
 It also captures the surprising d\'{e}colage \cite{Cimpian2010} between the strong evidence imputed after hearing a novel generic and the weaker evidence required to endorse the same generic, with quantitative predictions about how the imputed evidence should vary as a function of beliefs about the property.
 
@@ -257,7 +258,7 @@ This latter perspective emphasizes the structure of generic knowledge \cite{Pras
 
 However, generic language is not unique in its flexibility.
 Language understanding in general depends on assumptions interlocutors make about each other, which can lead to complex sensitivity of interpreted meanings to context \cite{Clark1996, Grice1975, Levinson2000}. This has recently been formalized in probabilisitic models of language understanding, the Rational Speech Acts (RSA) theory \cite{Frank2012, Goodman2013, Franke2009}. 
-Perhaps the puzzles of generic language can be partly understood as the effects of pragmatic reasoning?
+Perhaps then, the puzzles of generic language can be partly understood as the effects of pragmatic reasoning.
 If this is the case, then a relatively simple semantic theory, phrased in terms of statistical regularities, could be enough to formalize generic language.
 
 %We explore how the puzzles of generic language might be understood as the effects of pragmatic reasoning about a prevalence-based meaning that is underspecified in the language.
@@ -319,8 +320,8 @@ The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)
 
 Example posterior distributions, $P_{L_{1}}(x , \theta \mid u)$, after hearing the generic utterance can be seen in Figure \ref{fig:priors1a}. 
 Also shown are the corresponding prior beliefs, $P(x)$, about the prevalence of the property (which are also the posteriors that $L_1$ would have after hearing the null utterance).
-We see that the interpretation of the generic depends a great deal on the shape of the prior.
-When the prior is very left-skewed, then $\theta$ can plausibly be low while still being informative; if the prior is right-skewed a low threshold would not result in an informative utterance, and so would render the generic unlikely to be used by speaker $S_1$.
+We see that the interpretation of the generic depends a great deal on the shape of the prior, which can be summarized by the ``Property Distinctiveness'' (i.e. how common the property is \emph{across} different categories) and the ``Expected within-category prevalence'' (i.e. how common the property is expected to be \emph{within} a category, assuming the property is present; Figure \ref{fig:priors1a} scatterplot).
+When the prior is very left-skewed (i.e. the property is highly distinct, as in the case of \emph{carries malaria}), then $\theta$ can plausibly be low while still being informative; if the prior is right-skewed (i.e. the property is not very distinct and is expected to be highly prevalent within-categories) a low threshold would not result in an informative utterance, and so would render the generic unlikely to be used by speaker $S_1$. The same general phenomenon can be observed for other nondistinctive properties and highly 
 
 
 
@@ -580,15 +581,16 @@ The model was able to explain two qualitative puzzles of generics, their extreme
 
 %%this paragraph isn't needed and is confusing....
 %Interpretation of generic language is strongly governed by listeners' beliefs about the domain in question. 
-%The generic, it would seem, doesn't convey any additional information beyond what the listener already knew about the domain.
+%The generic, it would seem, doesn't convey any additional information beyond what the liste	ner already knew about the domain.
 %This shouldn't surprise us. 
 %In much the same way, ``John is tall'' does not actually tell a listener about what \emph{tall} means\footnote{However, ``John is a person'' does tell a listener about what \emph{tall} means in ``John is tall''.}. 
 %Rather, the listener is expected to come to the conversation with some beliefs about heights, and knowing that John is a person, be able to infer likely meanings for \emph{tall}.
 
-Previous psychological and philosophical work on generics has looked beyond prevalence and focused on conceptual distinctions and relations \cite{Prasada2013, Leslie2007, Leslie2008}. 
+Previous psychological and philosophical work on generics has looked beyond prevalence and focused on conceptual distinctions and relations \cite{Gelman2005, Prasada2013, Leslie2007, Leslie2008}. 
 For example, \citeauthor{Prasada2013} has argued for a distinction between \emph{characteristic} properties (e.g.~\emph{Diapers are absorbent.}) and \emph{statistical} properties (e.g.~\emph{Diapers are white.}).
-\citeauthor{Leslie2007} suggests information that is striking (e.g.~\emph{tigers eat people.}) is useful and thus permitted to be a generic.
-\ndg{mention also Gelman connection with essential properties.}
+\citeauthor{Leslie2007} suggests information that is striking (e.g.~\emph{Tigers eat people.}) is useful and thus permitted to be a generic.
+\citeauthor{Gelman2005} outlines how generics express qualities that are relatively timeless, enduring, and essential, and that generic language can increase the psychological coherence of a category.
+\citeA{GelmanEtAl2004} finds that child-parent conversations contains many generics about animal kinds than about artifact kinds, possibly owing to the belief that animal kinds are more richly structured than artifact kinds. 
 Where in the prevalence-based semantics could such conceptual distinctions come into play?
 Beliefs about prevalence are represented as probability distributions; a framework that is useful for representing rich, structured knowledge of the world \cite{Goodmanconcepts}. 
 It is plausible that the prevalence distributions focused on in this work are derived from richer conceptual knowledge, including higher-order conceptual knowledge about the nature of different properties and categories \cite{Gelman2005, Keil1992}. 
@@ -601,7 +603,8 @@ To the contrary, such underspecification can be efficient, given that context ca
 In our work, context takes the form of a listener and speaker's shared beliefs about the property in question. 
 By leveraging this common ground, generics provide a powerful way to communicate and learn generalizations about categories, which could otherwise be difficult or costly to learn through direct evidence.
 %This, coupled with standard inferences from conversational pragmatics, allows the listener to arrive at a specific meaning of the otherwise underspecified utterance.
-The dark side of this flexibility is the potential for miscommunication or deceit: A speaker might assert a generic utterance that he himself would not accept, conveying a too-strong generalization to a na\"{i}ve listener.  Our model predicts this potential particularly for properties which are widespread in a category when the category has them at all---we showed that biological properties are believed to have this distribution, but many properties of social categories may as well \cite{cimpian}.
+The dark side of this flexibility is the potential for miscommunication or deceit: A speaker might assert a generic utterance that he himself would not accept, conveying a too-strong generalization to a na\"{i}ve listener.  
+Our model predicts this potential particularly for properties which are widespread in a category when the category has them at all---we showed that biological properties are believed to have this distribution, but many properties of social categories may as well \cite{Cimpian2011a, Cimpian2012b, Rhodes2012}.
 %This listener would then have a belief distribution even further from the truth. 
 
 
