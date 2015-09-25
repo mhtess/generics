@@ -77,24 +77,34 @@ The goal of this experiment was to measure participants' beliefs about the distr
 
 \subsection{Participants}
 
-We recruited 30 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 10 minutes and participants were compensated \$1.00.
+We recruited 60 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
+2 participants were excluded for self-reporting a native language other than English. 
+3 participants' responses were removed because those participants had already completed the experiment once before.
+The experiment took about 10 minutes and participants were compensated \$1.00.
 
 \subsection{Procedure and materials}
 
-On each trial of the experiment, the participant filled out a table where each row was an animal category and each column was a property\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/experiments/real-kinds/prior-2.html}}. 
-Participants were asked to respond with the percentage of the species that had the property.
-The list of animal categories was only partially pre-specified with animal categories that would be used in the generic truth judgment task.
+On each trial of the experiment, participants filled out a table where each row was an animal category and each column was a property\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/experiments/real-kinds/prior-2.html}}.
+The trial proceeded as follows:
+Participants were first shown a column of 6 pre-specified names of kinds of animals (chosen randomly from a larger set). 
+They were asked to add five of their own animal names to the column. 
+Upon completion, a column appeared with a property as the column header (e.g. ``are female'').
+Participants were asked to fill in each row with the percentage of each of the  species that had the property (e.g. ``50\%'').
+The pre-specified animal categories were those that would be used in generic truth judgment task.
 %These names were randomly sampled from a larger set of categories of interest (see Appendix \ref{sec:appendix} for full list of animals and properties used). 
-Participants were asked to add five of their own animal names to the list. 
-Upon completion, the next column appeared with a property (e.g. ``has manes'') as the column header and text-boxes where the participants could put their estimated prevalence. 
+%Upon completion, the next column appeared with a property (e.g. `lays eggs'') as the column header and text-boxes where the participants could put their estimated prevalence. 
 %Participants were asked: ``For each kind of animal, what percentage of the species do you think [property]?'' 
 This procedure was repeated for 8 properties in total. 
 The animal kind column was unable to be modified once completed. 
 The prevalence columns, however, could be modified at a later stage (i.e. the participant could go back and change her estimates after seeing more properties). 
 Participants completed this procedure on each of 2 trials.
 
-We used a set of properties associated with generics of theoretical interest (16 properties in total), motivated in part by conceptual distinctions pointed out by \citeA{Prasada2013}. 
-The conceptual categories used to generate the generics were: majority characteristic (e.g. ``Leopards have spots''), minority characteristic (e.g. ``Lions have manes''), striking (e.g. ``Sharks attack swimmers.''), and majority false generalizations (e.g. ``Ducks are female.'') \cite{Prasada2013}. In addition, we included false sentences (e..g ``Lions lay eggs''), to cover the full range of possible truth values .
+We used a set of properties associated with generics of theoretical interest (21 properties in total), motivated in part by conceptual distinctions pointed out by \citeA{Prasada2013}. 
+The conceptual categories used to generate the generics were: majority characteristic (e.g. ``Leopards have spots''), minority characteristic (e.g. ``Lions have manes''), striking (e.g. ``Sharks attack swimmers.''), and majority false generalizations (e.g. ``Robins are female.'') \cite{Prasada2013}. 
+In addition, we included false sentences (e..g ``Lions lay eggs''), to cover the full range of possible truth values.
+We aimed to include properties whose generics would be judged false even though the majority of the species has the property. To achieve this, 5 of the properties were negations (e.g. ``don't attack swimmers'') and were not measured separately from the corresponding positive form. 
+Instead, we took the complement of participants judgments of the positive property (e.g. ``have beautiful feathers''') as the estimate for the negation (e.g. ``don't have beautiful feathers'').
+
 For a full list of the generic sentences used in this experiment, see Appendix \ref{sec:appendix}.
 Complete instructions given to participants can be seen in Appendix \ref{sec:prior1instruct}.
 
@@ -103,28 +113,33 @@ Complete instructions given to participants can be seen in Appendix \ref{sec:pri
 \subsection{Bayesian data analysis}
 \label{sec:bda1}
 
-There is important latent structure in the prior elicitation task. We will describe the model from the perspective of inferring the distribution of a particular property (e.g. ``has manes''). 
+The prior elicitation task has an important latent structure. 
+We will describe the model from the perspective of inferring the distribution of a particular property (e.g. ``lays eggs''). 
 The same general structure is implemented for each item independently. 
 
-Responses $d$ can be categorized into those that reflect the property is either present or absent in the species. 
+Responses $d$ can be categorized into those that reflect the property is either present or absent in the species: $d_{category}$ is 1 if the prevalence $d$ is greater than 0, and 0 otherwise. 
 If the property is absent, then the response is 0\% (of the species has the property). 
-The number of 0 responses act as an indicator of the prevalence of the property \emph{across categories} $\theta_{across}$ (for example, ``are male'' would have very few 0\% responses, whereas ``has manes'' would receive appreciably more, owing to the fact the prevalence of these properties \emph{across categories} is different).
+The number of 0 responses act as an indicator of the prevalence of the property \emph{across categories} $\theta_{across}$ (for example, ``are female'' would have very few 0\% responses, whereas ``lays eggs'' would receive appreciably more, owing to the fact the prevalence of these properties \emph{across categories} is different).
+We term the complement of the \emph{across category} prevalence as the ``property distinctiveness''.  We assume nothing \emph{a priori} about the distinctiveness of the property. 
 %
 \begin{align*}
-d_{across} & \sim \text{Bernoulli}(\theta_{across}) \\
-d_{across} & = \begin{cases}
-				1 & \mbox{if } d > 0 \\
-				0 & \mbox{if } d = 0 
+\theta_{distinctive} & \sim \text{Uniform}(0,1) \\
+d_{category} & \sim \text{Bernoulli}(1 - \theta_{distinctive}) \\
+d_{category} & = \begin{cases}
+				1 & \mbox{if } d_{observed} > 0 \\
+				0 & \mbox{if } d_{observed} = 0 \\
 				\end{cases}
 \end{align*}
 %
 For those responses that reflect the property is present ($d > 0$), we assume those responses come from a distribution with unknown mean ($\gamma_{within}$) and variance ($\delta_{within}$). 
-Since the responses vary between 0 - 100, the natural distribution is a Beta distribution. 
+Since the responses vary between 1 - 100, the natural generative distribution is a Beta distribution. We put uninformative priors over the means and concentrations of the prevalence distributions
 %We model the observed data as being generated by a mixture of this model and a model of random guessing behavior. 
 %Modeling random guessing explicitly is important for recovering reliable estimates of the parameters of the model, which would otherwise be contaminated by this data \cite{LW2014}. 
 %
 \begin{align*}
-d_{within} & \sim \text{Beta}(\gamma_{within}, \delta_{within})  \mbox{ if } d_{observed} > 0
+\gamma_{within} & \sim \text{Uniform}(0, 1) \\
+\delta_{within} & \sim \text{Uniform}(0, 50) \\
+d_{within} & \sim \text{Beta}(\gamma_{within}, \delta_{within})  \mbox{ if } d > 0
 \end{align*}
 %
 %\begin{align*}
@@ -136,22 +151,16 @@ d_{within} & \sim \text{Beta}(\gamma_{within}, \delta_{within})  \mbox{ if } d_{
 %
 %In principle, $\phi$ could be vary by participant (some participants produce noisier data than others). For simplicity, we assume some global ``guessing rate'', and thus $\phi$ is an experiment-wide variable.
 %We make no assumptions about the amount of noise in the data and 
-We put uninformative priors over the means and concentrations of the prevalence distributions.  As well, we assume nothing \emph{a priori} about the prevalence across categories. 
+. 
 %
-\begin{align*}
-% \phi \sim \text{Uniform}(0,1) \\
-\theta_{across} \sim \text{Uniform} (0, 1) \\
-\gamma_{within} \sim \text{Uniform}(0, 1) \\
-\delta_{within} \sim \text{Uniform}(0, 50)
-\end{align*}
-%
-We implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. 
-We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{across}, \gamma_{within}$, and $\delta_{within}$ with 3 chains of 100,000 iterations removing the first 50,000 iterations.
 
-To reconstruct the likely distribution of  prevalence reflecting both within- and across- category prevalence, we took samples from the posterior predictive distribution of $d$ by running the forward model: 
+We implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. 
+We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{distinctive}, \gamma_{within}$, and $\delta_{within}$ with 3 chains of 100,000 iterations removing the first 50,000 iterations.
+
+To reconstruct the likely distribution of  prevalence reflecting both the property distinctiveness and the expected within-category prevalence, we took samples from the posterior predictive distribution of $d$ by running the forward model: 
 %
 \begin{align*}
-h & \sim \text{Bernoulli}(\theta_{across}) \\
+h & \sim \text{Bernoulli}(1 - \theta_{distinctive}) \\
 x & \sim \begin{cases} 
 		\text{Beta}(\gamma_{within}, \delta_{within}) &\mbox{if } h = 1 \\ 
 				0 & \mbox{if } h=0
@@ -160,7 +169,7 @@ x & \sim \begin{cases}
 %
 where, $h$ is a variable indicating whether or not the property is present within a particular species. 
 
-We also estimated the likely prevalence of each animal category and property pair of interest (e.g. the prevalence of ``has manes'' among ``Lions''), to be used as the measure of prevalence in the generic truth judgment task (Expt.~1b). 
+We also estimated the likely prevalence of each animal category and property pair of interest (e.g. the prevalence of ``lays eggs'' among ``Robins''), to be used as the measure of prevalence in the generic truth judgment task (Expt.~1b). 
 For this, we assume the data was generated from a Beta distribution with unknown mean and concentration. 
 %We also assume some global amount of noise in the data.
 
@@ -171,7 +180,9 @@ For this, we assume the data was generated from a Beta distribution with unknown
 %				\end{cases}
 %\end{align*}
 \begin{align*}
-d \sim \text{Beta}(\gamma, \delta) 
+\gamma_{kind::property} & \sim \text{Uniform}(0, 1) \\
+\delta_{kind::property} & \sim \text{Uniform}(0, 50) \\
+d_{kind::property} & \sim \text{Beta}(\gamma_{kind::property}, \delta_{kind::property}) 
 \end{align*}
 
 
@@ -182,26 +193,29 @@ The goal of this experiment was to measure participants' beliefs about the accep
 
 \subsection{Participants}
 
-We recruited 100 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. All participants were native English speakers. The experiment took about 3 minutes and participants were compensated \$0.35.
+We recruited 100 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
+5 participants were excluded for self-reporting a native language other than English. 
+The experiment took about 3 minutes and participants were compensated \$0.35.
 
 \subsection{Procedure and materials}
 
 We used a two-alternative forced-choice (2AFC) paradigm to measure participants' beliefs about the acceptability of 30 generic sentences. 
-Data reported in \citeA{Prasada2013} revealed that participants assign midpoint ratings on a Likert scale to anomalous generics like ``Birds are female''. 
+Data reported in \citeA{Prasada2013} revealed that participants assign midpoint Likert scale ratings to anomalous generics like ``Birds are female''. 
 We hypothesized that these ``neither true nor false'' ratings would be translated into more graded responses across the population using the 2AFC (i.e. subjects would be closer to chance).
 
 Participants were asked to report whether they agreed or disagreed with generic sentences presented in bare plural form (e.g. ``Birds lay eggs.''). 
 Items were presented sequentially, and participants reported whether or not they agreed with the sentence by pressing either ``P'' or ``Q'' (randomized between-subjects). 
 
 Generic sentences were selected to correspond with the prevalence distributions elicited in Expt.~1a. 
-They covered a range of conceptual categories: Characteristic (e.g. ``Ducks have wings.''), Minority (e.g. ``Lions have manes.''), Striking (e.g. ``Mosquitos carry malaria.''), False generalization (e.g. ``Lions are male.''), and false (e.g. ``Lions lay eggs.'').
+They covered a range of conceptual categories: Characteristic (e.g. ``Ducks have wings.''), Minority (e.g. ``Robins lay eggs.''), Striking (e.g. ``Mosquitos carry malaria.''), False generalization (e.g. ``Robins are female.''), and false (e.g. ``Lions lay eggs.'').
+We also aimed to include generics that were both acceptable and unacceptable with low, medium, and high prevalence.
 Approximately 10 true, 10 false, and 10 uncertain truth-value generics were selected (see Appendix \ref{sec:appendix} for full list of items).
+
 As a manipulation check, participants were asked at the end of the trials which button corresponded to ``Agree''.
 
 \subsubsection{Results}
 
-Four participants were excluded for failing to successfully report which button corresponded with ``Agree''. 
-Five additional participants were excluded for listing a language other than English as their native language, resulting in 91 participants.
+Four participants were excluded for failing to successfully report which button corresponded with ``Agree'', resulting in 91 participants.
 
 %\begin{figure}
 %\centering
@@ -229,18 +243,20 @@ However, large deviations from a purely within-category prevalence account remai
 
 
 
-\subsection{Lifted-variable model predictions}
+\subsection{Pragmatics model predictions}
 
-The speaker model specified in Section \ref{sec:model} reasons about the likely prevalence that a listener will infer given  a generic sentence and assuming an informative speaker and a distribution over the prevalence of the property. 
-In this way, the model takes into account the prevalence of the property both within- and across-categories as well as communicative principles.
-We explore the predictions of this model, using the empirical priors elicited in Expt.~1a. 
+The speaker model $S_2$ reasons about the likely prevalence that a listener will infer given a generic sentence and her common sense knowledge of properties (the prior). 
+The model, thus, takes into account the distinctiveness of the property and the expected prevalence within-categories (both reflected in the prior) as well as communicative principles.
+We explore the predictions of this model, using the empirically-elicited priors from Expt.~1a. 
 We compare these predictions to the truth judgment data observed in Expt.~1b.
-\subsubsection{Priors}
 
-The model of generic language has 1 parameter: the speaker optimality parameter $\lambda$. We put an uninformative prior over this parameter, with a range consistent with previous literature using the same model class.
+\subsubsection{Data analysis model priors}
+
+The pragmatics model of generic language understanding has 1 parameter: the speaker optimality parameter $\lambda$. 
+We put an uninformative prior over this parameter, with a range consistent with previous literature using the same model class.
 
 $$
-\lambda \sim \text{Uniform}(0,1)
+\lambda \sim \text{Uniform}(0,20)
 $$
 
 In addition, we include a data-analytic ``contamination'' parameter to account for data that is more consistent with a model of random guessing. 
@@ -255,7 +271,7 @@ $$
 
 \subsubsection{Posterior over model parameters}
 
-The full model has one free parameter, the speaker rationality $\lambda$ in Equation \ref{eq:S1}, and one data analytic parameter, a contamination parameter $\phi$.
+The pragmatics model has one free parameter, the speaker rationality $\lambda$ in Equation \ref{eq:S1}, and one data analytic parameter, a contamination parameter $\phi$.
 To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 3 chains of 100,000 iterations removing the first 50,000 iterations using the Metropolis-Hastings algorithm. 
 The speaker rationality parameter represents the speaker's belief in how rational the hypothetical listener believes he is when choosing to say the generic (over saying nothing). 
 The 95\% Highest Probability Density (HPD) Interval is [3.36, 4.98].
@@ -269,9 +285,11 @@ This suggests that there is not a substantial amount of noise in the data, possi
 
 \subsubsection{Posterior predictive}
 
-We evaluate the model by examining the posterior predictive distribution of responses. The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the lifted-threshold model and the observed data. This is akin to fitting the parameters and is an important step in model validation: It shows what data is actually predicted by the model. 
-Figure \ref{fig:modeldataScatter} shows the Maximum A-Posteriori (MAP) values of the model predictions compared against the observed data. 
-The model predicts graded endorsements for the generic statements used in Expt.~1b. 
+We evaluate the model by examining the posterior predictive distribution of responses. 
+The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the pragmatics model and the observed data. 
+This is akin to fitting the parameters and is an important step in model validation: It shows what data is actually predicted by the model. 
+Figure 2 shows the Maximum A-Posteriori (MAP) values of the model predictions compared against the observed data. 
+The model predicts graded endorsements for the generic statements used in Expt.~1b, accounting for almost all of the variance ($r^2 = 0.982$). 
 
 
 \section{Experiment 2a: \emph{Measuring $P(x)$ for unfamiliar categories}}
