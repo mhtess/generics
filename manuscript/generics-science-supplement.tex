@@ -24,7 +24,7 @@
 \usepackage{amssymb}
 \usepackage{wrapfig}
 \usepackage{lipsum}
-
+\usepackage{csvsimple}
 
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -388,7 +388,7 @@ x & \sim \begin{cases}
 %
 Marginal posterior distributions for $x$ were estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking 50,000 samples using the Metropolis-Hastings algorithm.
 
-\section{Experiment 2b: mismatches between \emph{truth conditions} and \emph{implications}}
+\section{Experiment 2b: \emph{Truth conditions} and \emph{implications} of novel generics}
 
 \citeauthor{Cimpian2010} observed that generic statements of novel kinds with biological properties (e.g. ``Glippets have yellow fur'') show an asymmetry between the conditions by which the generic is true (``\emph{truth conditions}'') and the prevalence implied by the generic (``\emph{implied prevalence}''). 
 Generic sentences were endorsed for a wide-range of prevalence levels (e.g. when ``30\% of glippets have yellow fur.''), resulting in intermediate average truth conditions. 
@@ -419,31 +419,31 @@ Each prevalence level appeared once for each property type (5 prevalence levels 
 
 Participants in the \emph{implied prevalence} task were supplied with the generic (e.g. ``Glippets have yellow fur.'') and asked to judge prevalence: ``What percentage of glippets do you think have yellow fur?''. Participants saw 25 trials: 5 for each of 5 property types.
 The original study by \citeauthor{Cimpian2010} found a difference in the implied prevalence between ``color parts'' (e.g. yellow fur) and accidental properties (e.g. wet fur).
-The prevalence priors inferred from Expt.~2a suggest that generic interpretation should be even more variable.
+The prevalence priors inferred from Expt.~2a suggest that generic interpretation could be even more variable.
 For this reason, we included three types of biological properties: parts (e.g. fur), color--part pairs (e.g. yellow fur) and gradable adjective--part pairs (e.g. curly fur). 
 We also coded the accidental properties from Expt.~2a as either ``common'' or ``rare'' using a by-item median split based on expected within-category prevalence.
 
  
-Most of the materials we used were from \citeauthor{Cimpian2010}. 
-The materials used were 30 novel animal categories (e.g. lorches, morseths, blins) each paired with a unique property. 
-Biological properties were made by pairing a color with a body-part (e.g. purple feathers, orange tails). 
-Accidental properties used the same set of body-parts but modified it with an adjective describing an accidental or disease state (e.g. broken legs, wet fur). 
-Each participant saw a random subset of 10 unique animal-property pairs for each type of property (biological and accidental). 
-Table \ref{tab:sampleTrial} shows an example trial for each of the property types and tasks.
-
+%Most of the materials we used were from \citeauthor{Cimpian2010}. 
+%The materials used were 30 novel animal categories (e.g. lorches, morseths, blins) each paired with a unique property. 
+%Biological properties were made by pairing a color with a body-part (e.g. purple feathers, orange tails). 
+%Accidental properties used the same set of body-parts but modified it with an adjective describing an accidental or disease state (e.g. broken legs, wet fur). 
+%Each participant saw a random subset of 10 unique animal-property pairs for each type of property (biological and accidental). 
+Table \ref{tab:sampleTrial} shows an example trial for two of the five types of property and the two tasks.
+For a full list of the stimuli used (including examples of the other three types of properties), see Table \ref{tab:novelGenericsStimuli}.
 
 \begin{table}[h]
 \begin{tabular}{| l |  l | l | l |}
 \hline
            &             & Truth conditions                                                                                                    & Implied prevalence                                            \\
            \hline \hline
-Biological &             &                                                                                                                     &                                                               \\
+Biological Parts &             &                                                                                                                     &                                                               \\
 \hline
-           & Information & xx\% of lorches have purple feathers.                                                                               & Lorches have purple feathers.                                 \\
+           & Information & xx\% of lorches have green feathers.                                                                               & Lorches have green feathers.                                 \\
 \hline
-           & Question    & \begin{tabular}[c]{@{}l@{}}Is the following sentence true or false?\\ \\ Lorches have purple feathers.\end{tabular} & \begin{tabular}[c]{@{}l@{}}What percentage of lorches \\do you think have purple feathers?\end{tabular} \\
+           & Question    & \begin{tabular}[c]{@{}l@{}}Is the following sentence true or false?\\ \\ Lorches have green feathers.\end{tabular} & \begin{tabular}[c]{@{}l@{}}What percentage of lorches \\do you think have green feathers?\end{tabular} \\
            \hline \hline
-Accidental &             &                                                                                                                     &                                                               \\
+Common Accidental &             &                                                                                                                     &                                                               \\
 \hline
            & Information & xx\% of lorches have muddy feathers.                                                                                & Lorches have muddy feathers.                                  \\
 \hline
@@ -456,6 +456,34 @@ Accidental &             &                                                      
 \end{table}
 
 
+\subsection{Data analysis}
+
+\citeA{Cimpian2010} found that when participants are given statements about prevalence (e.g. ``30\% of lorches have green feathers.'') and asked whether the corresponding generic (e.g. ``Lorches have green feathers'') was true or false, the prevalence on average that participants assented to the generics was reliably less than the prevalence on average that participants inferred upon just reading the generic and being asked about prevalence explicitly. 
+This asymmetry was not present for the quantifier ``most'' (thought to be the most similar quantifier to the generic). 
+For ``most'', participants assented to the generic at an overall average of 75\%, and when told ``Most lorches have green feathers.'', imputed a prevalence of an average 75\%.
+Further, this asymmetry was modulated by the type of property in question. 
+When the property was conceivably biological in nature (e.g. ``green feathers''), the interpretations of generics were much stronger than their average truth conditions.  
+When the property was more accidental in nature (e.g. ``muddy feathers''), this asymmetry disappeared and could presumably reverse.
+This effect was driven by the sensitivity of the implied prevalence metric; the average truth conditions were modulated by the type of property to a much smaller extent (though for a different truth conditions measure that was modulated by the type of property see \citeA{Cimpian2010}, Expt. 4).
+
+To compare the truth judgments data to the implied prevalence data, we computed, for each subject, an \emph{average prevalence level} that led to ``Agree'' responses, following \citeA{Cimpian2010}.
+For example, if a participant agreed with the generic whenever the prevalence was 70\% or 90\% and disagreed at the other prevalence levels, that participant received an \emph{average prevalence score} of 80\%; if a participant disagreed to everything, their \emph{average prevalence score} was 100\%, since they presumably would only agree with the generic if the prevalence was 100\%.
+
+We subjected our model to the same procedure. 
+At each prevalence level, the model returns a posterior probability of saying the generic. 
+We take this probability as the parameter of a Bernoulli trial (i.e. as the weight of a coin), and sampling a Bernoulli trial (i.e. flipping that coin) to predict whether or not the model would agree to the generic for that prevalence level. 
+We then get a sequence of responses corresponding to the responses (\emph{Agree/Disagree}) a participant would give for the 5 different prevalence levels.
+Just as with the human data, we took the \emph{Agree} trials, and took the mean of the prevalence levels corresponding to those \emph{Agree} trials. 
+Thus, we computed the average prevalence at which the model assented to the generic for each property type. 
+We repeated this procedure 40 times to simulate a sample of 40 participants. 
+We repeated this procedure 1000 times to bootstrap 95\% confidence intervals.
+
+
+
+%In our experiment, each participant saw each prevalence level with each of the 5 property types. 
+%From this, 
+%Generics are accepted for a wide range of prevalence levels, and their acceptability increases as a function of prevalence, resulting in an intermediate (but above 50\%) average acceptability condition.
+%\red{explain Cimipian truth conditions data analysis}
 
 \subsection{Pragmatics model predictions}
 
@@ -463,8 +491,7 @@ Accidental &             &                                                      
 Of primary interest here is how the interpretations of novel generic utterances vary as a function of \emph{a priori} beliefs about the prevalence of the type of property in question.
 The model of the pragmatic listener $L_1$ in Eq.~1 is a natural model of this process.
 We use this model to predict the data from the implied prevalence task.
-Further, we use the model of the speaker $S_2$ in Eq.~4 as a model of the \emph{truth conditions} task.
-This is an analogous task to what was explored with generics of familiar categories in Expt.~1, also modeled by $S_2$. 
+Just as with the experiment with common generics, we use the model of the speaker $S_2$ in Eq.~4 as a model of the \emph{truth conditions} task for novel genrerics.
 The dependent measure for the \emph{truth conditions} task is \emph{average prevalence} at which the participants assent to the use of the generic. 
 This was previously shown not to be as sensitive to participants' beliefs about the properties in question (but, cf. \citeA{Cimpian2010}, Expt.~4).
 %In Expt.~1, the acceptability of the generic was modeled as a speaker $S_2$ (Eq.~4) reasoning about whether or not to produce the generic given some known prevalence. 
@@ -475,7 +502,7 @@ This was previously shown not to be as sensitive to participants' beliefs about 
 \subsubsection{Data analysis model priors}
 
 
-Each of these models has a parameter governing the optimality of the hypothetical speaker in Eq.~\ref{eq:S1}. 
+Each of these models has a parameter governing the optimality of the hypothetical speaker in Eq.~2. 
 Since the supports of the distributions produced by the two models are different ($S_2$ returns a distribution over ``agree'' and ``disagree'', whereas $L_1$ generates a distribution over prevalence levels), there is no reason to believe the speaker optimality parameters would be the same for the two models. 
 Hence, we put independent prior distributions over the two parameters: $\lambda_{\text{truth conditions}}, \lambda_{\text{implied prevalence}} \sim \text{Uniform}(0, 20)$.
 
@@ -564,7 +591,17 @@ False or Uncertain & 18. Leopards have wings.       &0.022	[0, 0.055]& 1.0 [0.0,
 \label{sec:materials2}
 
 Many of these materials were originally used in \citeA{Cimpian2010}.
+%\csvautotabular{novelKinds-prevalencePrior-byItem-gammaCIs.csv}
 
+%\begin{table}[h]
+%\begin{tabular}{| l || l | l | l |}
+%   \bfseries Person & \bfseries Matr.~No.% specify table head
+%    \csvreader[head to column names]{novelKinds-prevalencePrior-byItem-gammaCIs.csv}{}% use head of csv as column names
+%    {\\\hline\Parameter	& \distinctiveness}% specify your coloumns here
+%    \end {tabular}
+%    \end{table}
+    
+    
 \begin{table}[h]
 \begin{tabular}{| l || l | l | l |}
 \hline
@@ -613,6 +650,8 @@ Rare accidental part    & 33. Sore legs       &                &                
                                            \hline
 
 \end{tabular}
+\caption{Stimuli used in Experiment 2.}
+\label{tab:novelGenericsStimuli}
 \end{table}
 
 \bibliographystyle{apacite}
