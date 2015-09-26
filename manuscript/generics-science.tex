@@ -145,7 +145,7 @@
 
 \maketitle
 
-\mht{Notes: In this draft, I tried using different terminology for prevalence in the manuscript, which become more specific as you move into the manuscript. I start describing it as ``evidence'', a la the evidence a speaker needs to justify the sentence. I then use the term ``statistics'' to contrast the view with the rule-based / mental repertoire account of Leslie. Finally, I use the term prevalence only when introducing the model.}
+%\mht{Notes: In this draft, I tried using different terminology for prevalence in the manuscript, which become more specific as you move into the manuscript. I start describing it as ``evidence'', a la the evidence a speaker needs to justify the sentence. I then use the term ``statistics'' to contrast the view with the rule-based / mental repertoire account of Leslie. Finally, I use the term prevalence only when introducing the model.}
 
 \begin{abstract}
 
@@ -202,30 +202,33 @@ Most would agree that \emph{Swans are white}, but certainly not all swans are.
 %You might offer the toddler something generic like, ``Apples are red.''. 
 %Few would argue with the truth of this sentence, yet its precise meaning is difficult to specify. 
 This type of utterance conveys a generalization about a category (i.e. \emph{swans}) and is known as a generic utterance \cite{Carlson1977, Leslie2008}.
-It is believed that every language can express generic meaning \cite{Behrens2005, Carlson1995}, and that generics are essential to the growth of conceptual knowledge \cite{Gelman2004} and how kinds are represented in the mind \cite{Leslie2008}.
+It is supposed that every language can express generic meaning \cite{Behrens2005, Carlson1995}, and that generics are essential to the growth of conceptual knowledge \cite{Gelman2004} and how kinds are represented in the mind \cite{Leslie2008}.
 Generic language is ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008}, and children as young as two or three understand that generics refer to categories and support generalization \cite{Cimpian2008}.
 % and though English and many other languages do not possess an unambiguous form devoted to generic meaning \cite{Behrens2000, AlMalki2014}. 
 Additionally, generics are the primary way by which speakers discuss social categories, making them key to propagating stereotypes \cite{GelmanEtAl2004, Rhodes2012, Leslie2015} and important for motivation \cite{Cimpian2010motivation}.
 Despite their apparent simplicity and cognitive centrality, a formal account of generic meaning remains elusive.
 
 One major hurdle to formalizing generic language arises when one tries to describe the conditions by which a generic is true.
-At first glance, generics seem like universally-quantified statements (i.e. \emph{All swans are white}), but unlike universals, generics are resilient to counter-examples (e.g. \emph{black swans}). 
-Interpreting the generic as meaning ``most'' (i.e. \emph{Most swans are white}) captures many cases, but cannot explain others: Only adult female robins lay eggs yet \emph{Robins lay eggs} is true and \emph{Mosquitos carry malaria} in spite of the fact that a very small percentage of mosquitos actually carry the virus.
-Indeed, it appears that any explanation in terms of how common the property is within the category is incompatible with intuitions --- while \emph{Robins lay eggs} is fine, \emph{Robins are female} is not, even though the two properties are present in the same proportion (about 50\%) in the category of robins.
+At first glance, generics seem like universally-quantified statements as in \emph{All swans are white}, but unlike universals, generics are resilient to counter-examples like \emph{black swans}. 
+Interpreting the generic as meaning ``most'' (i.e. \emph{Most swans are white}) captures many cases, but cannot explain why \emph{Robins lay eggs} and \emph{Mosquitos carry malaria} are so intuitively compelling: Only adult female robins lay eggs and a very tiny fraction of mosquitos actually carry the malaria.
+Indeed, it appears that any explanation in terms of how common the property is within the kind violates intuitions --- for the robins, laying eggs is practically synonymous with being female (i.e., the properties are present in the same proportions), yet \emph{Robins are female} is not a reasonable utterance while \emph{Robins lay eggs} is fine.
+
+% as , even though the two properties are present in the same proportion (about 50\%) in the category of robins.
 %\ndg{No precise meaning formalized in the mathematical language of logic seems to be sufficient to capture the meaning of natural language generics.}
 
-A second important puzzle surrounds how generics are interpreted. 
-It seems that if \emph{Mosquitos carry malaria} is true, then the generic must in some way be analogous to ``some'' (i.e. \emph{Some swans are white.}). 
-Yet generics often imply the property is widespread: 
+Generics are additionally puzzling in how they are interpreted. 
+While \emph{Mosquitos carry malaria} suggests the generic must in some way be analogous to ``some'' (i.e. \emph{Some swans are white.}), generics are often interpreted as implying the property is widespread within the kind:
+%Yet generics often imply the property is widespread: 
 Listeners interpret a novel generic as applying to \emph{nearly all} of a category \cite{Gelman2002} (compare \emph{Some swans have hollow bones} to \emph{Swans have hollow bones}).
-Both children and adults believe the property is more widespread after hearing a generic than when asked how common the property would need to be for the generic to apply \cite{Cimpian2010, Brandone2014}, suggesting that communicating with generics can exaggerate evidence.
+When asked how common a property would need to be for the generic to apply, both children and adults report lower prevalence than when told a generic and asked how common the property is \cite{Cimpian2010, Brandone2014}, suggesting that communicating with generics can exaggerate evidence.
+%Both children and adults believe the generic implies the property-in-question is even more widespread than when asked how common the property would need to be for the generic to apply
 
 How can generics have such flexible truth conditions while simultaneously having strong implications?
 %\ndg{switch out lions for birds or something, because of the possibility that lions doesn't include lionesses.}
-In this paper we offer a mathematical model of generic language in terms of pragmatic inference of the statistical strength required to assert a generic.  
+In this paper we offer a mathematical model of generic language in terms of pragmatic inference of the degree of prevalence required to assert a generic.  
 %\ndg{i think 'degree of evidence' is misleading, since belief is sufficient without evidence...}
 We show that this model predicts the puzzlingly heterogeneous patterns, as well as quantitative detail, in human endorsement of generic sentences. 
-It also captures the surprising d\'{e}colage \cite{Cimpian2010} between the strong evidence imputed after hearing a novel generic and the weaker evidence required to endorse the same generic, with quantitative predictions about how the imputed evidence should vary as a function of beliefs about the property.
+It also captures the surprising d\'{e}colage \cite{Cimpian2010} between the strong evidence imputed after hearing a novel generic and the weaker evidence required to endorse the same utterance, with quantitative predictions about how the imputed evidence should vary as a function of beliefs about the property.
 
 %\ndg{switch quotes to italics for example sentences?}
 
@@ -266,10 +269,10 @@ If this is the case, then a relatively simple semantic theory, phrased in terms 
 %What could be the stable meaning of a generic given this extreme flexibility? 
 %We propose these phenomena can be explained as the effects of pragmatic inference filling in a meaning that is underspecified in the language.
 
-For a given kind, $K$ (e.g.~\emph{robins}), and a property, $F$ (e.g.~\emph{lay eggs}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F|K)$, as the \emph{prevalence} of $F$ within $K$\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability, not the actual frequency in the world.}.
-Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F|K)>0$, \emph{all} is $P(F|K)=1$). 
-Extending this, it seems the simplest meaning for generic statements would be a similar threshold on prevalence: $P(F|K)>\theta$ \cite{Cohen1999}. 
-However, no fixed value of the threshold, $\theta$, would allow for the extreme flexibility generics exhibit (e.g. \emph{Robins lay eggs} vs. \emph{Robins are female}). 
+For a given kind, $K$ (e.g.~\emph{robins}), and a property, $F$ (e.g.~\emph{lay eggs}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F\mid K)$, as the \emph{prevalence} of $F$ within $K$\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability, not the actual frequency in the world.}.
+Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F\mid K)>0$, \emph{all} is $P(F\mid K)=1$). 
+Extending this, it seems the simplest meaning for generic statements would be a similar threshold on prevalence: $P(F\mid K)>\theta$ \cite{Cohen1999}. 
+However, no fixed value of the threshold, $\theta$, would allow for the extreme flexibility generics exhibit (e.g. \emph{Robins lay eggs} vs. \emph{Robins are female}; \emph{Mosquitos carry malaria}) simultaneously with the interpretations of generics being so strong. 
 
 We suggest that this threshold is not a fixed property of the language, but is established by pragmatic inference.
 This inference depends on property and category knowledge, but is otherwise a general mechanism of language not specific to interpreting generic statements.
@@ -306,6 +309,10 @@ P_{L_{1}}(x , \theta \mid u) &\propto& P_{S_{1}}(u \mid x, \theta) \cdot P(x) \c
 P_{S_{1}}(u \mid x, \theta) &\propto&  {P_{L_{0}}(x \mid u, \theta)}^{\lambda} \label{eq:S1}\\
 P_{L_{0}}(x \mid u, \theta) &\propto& {\delta_{\denote{u}(x, \theta)} P(x)}. \label{eq:L0}
 \end{eqnarray}
+
+
+
+\mht{I don't like this}
 Eq.~\ref{eq:L1} models a listener ($L_{1}$) who has heard an utterance $u$, which is either a generic statement (e.g. \emph{Robins lay eggs.}) or an uninformative ``null'' utterance\footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that robins lay eggs.'', as well as the generic of the negation, ``Robins do not lay eggs''.}. % These alternatives are analogous to alternatives to ``John is tall'' of ``John is not tall'' and ``John is short'' in the vague adjective case.}
 She has uncertainty about the prevalence of the property $x \in [0, 1]$ (``how many robins lay eggs?'') as well as the meaning of the generic, $\theta$. 
 $P(\theta)$ represents the listener's \emph{a priori} beliefs about the semantic variable $\theta$ and we assume no informative beliefs: $\theta \sim \text{Uniform}(0,1)$.
@@ -317,11 +324,25 @@ This speaker has the goal of informing a hypothetical literal listener ($L_0$), 
 The literal listener simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
 The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)=x>\theta$; while the null utterance is always true, $\denote{null}(x, \theta)=T$.
 
+\mht{A new lvRSA explanation}
+Imagine an idealized listener (``Lionel''; $L_{1}$, Eq. \ref{eq:L1}) who has heard an utterance (``Ks have F.'') from a speaker (``Simone''; $S_{1}$, Eq. \ref{eq:S1}). 
+He is trying to resolve how common F is within K ($x = P(F\mid K) \in [0, 1]$). 
+The utterance Lionel has heard is vague in that he does not know its precise meaning: $\theta \sim \text{Uniform}(0,1)$.
+Lionel considers what he knows about property F in general: how distinctive F is (do many other kinds have F?), and for the kinds he knows with F, how prevalent it is within those kinds.
+This is represented as $P(x)$, a probability distribution over prevalence of F.
+Lionel also considers the fact that Simone is an informed and helpful interlocutor: She had a particular meaning $\theta$ in mind, and was trying to be informative about the prevalence $x$ to an idealized listener she imagined in her own head ($L_{0}$, Eq. \ref{eq:L0}).
+The idealized listener has access to the threshold $\theta$, and simply restricts its prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
+Lionel also believes that Simone didn't have to say ``Ks have F'' if she didn't want to, she could have said nothing: a ``null'' utterance\footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that robins lay eggs.'', as well as the generic of the negation, ``Robins do not lay eggs''.}. 
+The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)=x>\theta$; while the null utterance is always true, $\denote{null}(x, \theta)=T$.
+
+
 
 Example posterior distributions, $P_{L_{1}}(x , \theta \mid u)$, after hearing the generic utterance can be seen in Figure \ref{fig:priors1a}. 
 Also shown are the corresponding prior beliefs, $P(x)$, about the prevalence of the property (which are also the posteriors that $L_1$ would have after hearing the null utterance).
-We see that the interpretation of the generic depends a great deal on the shape of the prior, which can be summarized by the property's distinctiveness (i.e. how rare the property is at the level of categories) and the expected within-category prevalence (i.e. how common the property is expected to be among the individuals \emph{within} a category, assuming the property is present; Figure \ref{fig:priors1a} scatterplot).
-When the prior is very left-skewed (i.e. the property is highly distinct, as in the case of \emph{carries malaria}), then $\theta$ can plausibly be low while still being informative; if the prior is right-skewed (i.e. the property is not very distinct and is expected to be highly prevalent within-categories as in the case of \emph{don't attack swimmers}), even an intermediate threshold would not result in an informative utterance, and so the generic is unlikely to be used by speaker $S_2$ unless the property is nearly-universal. 
+We see that the interpretation of the generic depends a great deal on the shape of the prior, which can be summarized by the property's distinctiveness (i.e. how rare the property is at the level of categories) and the expected within-category prevalence (i.e. how common the property is expected to be among the kinds in which the property is present; Figure \ref{fig:priors1a} scatterplot).
+When the prior is very left-skewed (i.e. the property is highly distinct, as in the case of \emph{carries malaria}), then $\theta$ can plausibly be low while still being informative, since it rules out many possible alternative kinds (and their corresponding level of prevalence).
+If the prior is right-skewed (i.e. the property is not very distinct and is expected to be highly prevalent within-categories as in the case of \emph{don't attack swimmers}), even an intermediate threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_1$ unless the property is nearly-universal. 
+Priors for properties that are not at all distinctive and have low variance around the expected within-kind prevalence  (e.g. \emph{are female} is present in every kind in almost exactly the same proportion) are too obvious and certain to allow for a realistic, informative utterance: the posterior is not very different from the prior. 
 
 %The same general phenomenon can be observed for other nondistinctive properties and highly 
 
@@ -380,18 +401,30 @@ When the prior is very left-skewed (i.e. the property is highly distinct, as in 
 % The lifted-variable pragmatics model seeks a balance between these two pressures. 
 %With a prior distribution over heights that is roughly-normal, the result is a threshold that signifies that ``John is tall'' means he is ``significantly taller than average''.
  
-Eq.~\ref{eq:L1} is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
-Following \citeA{Degen2014}, we model felicity or truth judgements in terms of a speaker who has this sort of listener in mind:
-%To explain the different conditions under which a generic utterance can be true, we extend the lifted-threshold model of \citeA{Lassiter2013} to include a model of a speaker who is deciding whether or not to produce the utterance. 
+Lionel (Eq.~\ref{eq:L1}) is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
+We can now imagine a speaker ``Steph'' ($S_2$, Eq.~\eqref{eq:S2}) who knows some prevalence $x$ and is trying to decide whether or not to produce a generic to (vaguely) describe it.
+
 \begin{equation} 
 P_{S_{2}}(u \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_{1}}(x \mid u)
 \label{eq:S2}
 \end{equation}
+
+She considers the thought-processes of Lionel---the listener in Eq.~\eqref{eq:L1}---and decides if the generic is a good (even if vague) way to describe the prevalence $x$. 
+Her decision is between saying a generic or saying nothing: She will choose to produce the generic when the true prevalence $x$ is more likely under $L_1$'s posterior than under his prior. 
+Steph ($S_{2}$) doesn't actually know what the vague utterance means (i.e. doesn't have access to the threshold $\theta$), but knows that Lionel ($L_{1}$) is thinking about it, and integrates over the likely values he'll consider.
+We use $S_{2}$ to model felicity or truth judgments, following \citeA{Degen2014}.
 %
-Eq.~\eqref{eq:S2} is a model of generic production: For a given prevalence, is the generic a good thing to say?
-The speaker considers the thought-processes of the listener in Eq.~\eqref{eq:L1}, and decides if the generic is a good (even if vague) way to describe the prevalence $x$. 
-This decision is with respect to the alternative speech-act of saying nothing, hence the generic utterance will be acceptable when the true prevalence is more likely under the posterior than the prior. 
-Importantly, $S_{2}$ doesn't actually have access to the threshold $\theta$, but knows that $L_{1}$ is thinking about it, and hence marginalizes over possible inferred values. 
+%This decision is with respect to the alternative speech-act of saying nothing, hence the generic utterance will be acceptable when the true prevalence is more likely under the posterior than the prior. 
+
+%Importantly, $S_{2}$ doesn't actually have access to the threshold $\theta$, but knows that $L_{1}$ is thinking about it, and hence marginalizes over possible inferred values. 
+%Following \citeA{Degen2014}, we model felicity or truth judgements in terms of a speaker who has this sort of listener in mind:
+%To explain the different conditions under which a generic utterance can be true, we extend the lifted-threshold model of \citeA{Lassiter2013} to include a model of a speaker who is deciding whether or not to produce the utterance. 
+
+%
+%Eq.~\eqref{eq:S2} is a model of generic production: For a given prevalence, is the generic a good thing to say?
+%The speaker considers the thought-processes of the listener in Eq.~\eqref{eq:L1}, and decides if the generic is a good (even if vague) way to describe the prevalence $x$. 
+%This decision is with respect to the alternative speech-act of saying nothing, hence the generic utterance will be acceptable when the true prevalence is more likely under the posterior than the prior. 
+%Importantly, $S_{2}$ doesn't actually have access to the threshold $\theta$, but knows that $L_{1}$ is thinking about it, and hence marginalizes over possible inferred values. 
 
 
 
