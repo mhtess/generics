@@ -311,21 +311,21 @@ P_{L_{0}}(x \mid u, \theta) &\propto& {\delta_{\denote{u}(x, \theta)} P(x)}. \la
 \end{eqnarray}
 
 
-
-\mht{I don't like this}
-Eq.~\ref{eq:L1} models a listener ($L_{1}$) who has heard an utterance $u$, which is either a generic statement (e.g. \emph{Robins lay eggs.}) or an uninformative ``null'' utterance\footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that robins lay eggs.'', as well as the generic of the negation, ``Robins do not lay eggs''.}. % These alternatives are analogous to alternatives to ``John is tall'' of ``John is not tall'' and ``John is short'' in the vague adjective case.}
-She has uncertainty about the prevalence of the property $x \in [0, 1]$ (``how many robins lay eggs?'') as well as the meaning of the generic, $\theta$. 
-$P(\theta)$ represents the listener's \emph{a priori} beliefs about the semantic variable $\theta$ and we assume no informative beliefs: $\theta \sim \text{Uniform}(0,1)$.
-The listener resolves her uncertainty, in context, by consulting her prior beliefs about the property prevalence, $P(x)$, and assuming that the utterance was produced by a speaker $S_{1}$, whose goal was to be informative about the prevalence, $x$.
-%The speaker knows the prevalence $x$ (e.g. knows that adult, male lions have manes). 
-The listener ($L_{1}$) believes the speaker ($S_{1}$) to actually know the threshold $\theta$ (i.e. believes the speaker had a particular meaning in mind), and to be a soft-max optimally informative speaker to a degree governed by $\lambda$ \cite{Luce1959}. 
-%This intuitive theory of a speaker is used to resolve this threshold and the prevalence $x$ by assuming 
-This speaker has the goal of informing a hypothetical literal listener ($L_0$), who has access to the threshold $\theta$. 
-The literal listener simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
-The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)=x>\theta$; while the null utterance is always true, $\denote{null}(x, \theta)=T$.
+%
+%\mht{I don't like this}
+%Eq.~\ref{eq:L1} models a listener ($L_{1}$) who has heard an utterance $u$, which is either a generic statement (e.g. \emph{Robins lay eggs.}) or an uninformative ``null'' utterance\footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that robins lay eggs.'', as well as the generic of the negation, ``Robins do not lay eggs''.}. % These alternatives are analogous to alternatives to ``John is tall'' of ``John is not tall'' and ``John is short'' in the vague adjective case.}
+%She has uncertainty about the prevalence of the property $x \in [0, 1]$ (``how many robins lay eggs?'') as well as the meaning of the generic, $\theta$. 
+%$P(\theta)$ represents the listener's \emph{a priori} beliefs about the semantic variable $\theta$ and we assume no informative beliefs: $\theta \sim \text{Uniform}(0,1)$.
+%The listener resolves her uncertainty, in context, by consulting her prior beliefs about the property prevalence, $P(x)$, and assuming that the utterance was produced by a speaker $S_{1}$, whose goal was to be informative about the prevalence, $x$.
+%%The speaker knows the prevalence $x$ (e.g. knows that adult, male lions have manes). 
+%The listener ($L_{1}$) believes the speaker ($S_{1}$) to actually know the threshold $\theta$ (i.e. believes the speaker had a particular meaning in mind), and to be a soft-max optimally informative speaker to a degree governed by $\lambda$ \cite{Luce1959}. 
+%%This intuitive theory of a speaker is used to resolve this threshold and the prevalence $x$ by assuming 
+%This speaker has the goal of informing a hypothetical literal listener ($L_0$), who has access to the threshold $\theta$. 
+%The literal listener simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
+%The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)=x>\theta$; while the null utterance is always true, $\denote{null}(x, \theta)=T$.
 
 \mht{A new lvRSA explanation}
-Imagine an idealized listener (``Lionel''; $L_{1}$, Eq. \ref{eq:L1}) who has heard an utterance (``Ks have F.'') from a speaker (``Simone''; $S_{1}$, Eq. \ref{eq:S1}). 
+Consider a hypothetical listener (``Lionel''; $L_{1}$, Eq. \ref{eq:L1}) who has heard an utterance (``Ks have F.'') from a speaker (``Simone''; $S_{1}$, Eq. \ref{eq:S1}). 
 He is trying to resolve how common F is within K ($x = P(F\mid K) \in [0, 1]$). 
 The utterance Lionel has heard is vague in that he does not know its precise meaning: $\theta \sim \text{Uniform}(0,1)$.
 Lionel considers what he knows about property F in general: how distinctive F is (do many other kinds have F?), and for the kinds he knows with F, how prevalent it is within those kinds.
@@ -337,13 +337,20 @@ The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)
 
 
 
-Example posterior distributions, $P_{L_{1}}(x , \theta \mid u)$, after hearing the generic utterance can be seen in Figure \ref{fig:priors1a}. 
-Also shown are the corresponding prior beliefs, $P(x)$, about the prevalence of the property (which are also the posteriors that $L_1$ would have after hearing the null utterance).
-We see that the interpretation of the generic depends a great deal on the shape of the prior, which can be summarized by the property's distinctiveness (i.e. how rare the property is at the level of categories) and the expected within-category prevalence (i.e. how common the property is expected to be among the kinds in which the property is present; Figure \ref{fig:priors1a} scatterplot).
-When the prior is very left-skewed (i.e. the property is highly distinct, as in the case of \emph{carries malaria}), then $\theta$ can plausibly be low while still being informative, since it rules out many possible alternative kinds (and their corresponding level of prevalence).
-If the prior is right-skewed (i.e. the property is not very distinct and is expected to be highly prevalent within-categories as in the case of \emph{don't attack swimmers}), even an intermediate threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_1$ unless the property is nearly-universal. 
-Priors for properties that are not at all distinctive and have low variance around the expected within-kind prevalence  (e.g. \emph{are female} is present in every kind in almost exactly the same proportion) are too obvious and certain to allow for a realistic, informative utterance: the posterior is not very different from the prior. 
+Example posterior distributions for Lionel---$P_{L_{1}}(x , \theta \mid u)$---after hearing the generic utterance can be seen in Figure \ref{fig:priors1a}. 
+Also shown are his corresponding prior beliefs, $P(x)$, about the prevalence of the property (which are also the posteriors that he would have had he heard the null utterance).
+We see that the interpretation of the generic depends a great deal on the shape of the prior (Figure \ref{fig:priors1a} scatterplot).
+When the prior is very left-skewed as in the case of \emph{carries malaria}, then $\theta$ can plausibly be low while still being informative, since it rules out many possible alternative kinds (and their corresponding level of prevalence).
+If the prior is right-skewed, even an intermediate threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_1$ unless the property is nearly-universal. 
+Priors for properties that are unimodal with low variance (e.g. \emph{are female} is present in every kind in almost exactly the same proportion) are too obvious and certain to allow for a realistic, informative utterance: the posterior is not very different from the prior. 
 
+
+%Example posterior distributions for Lionel---$P_{L_{1}}(x , \theta \mid u)$---after hearing the generic utterance can be seen in Figure \ref{fig:priors1a}. 
+%Also shown are his corresponding prior beliefs, $P(x)$, about the prevalence of the property (which are also the posteriors that he would have had he heard the null utterance).
+%We see that the interpretation of the generic depends a great deal on the shape of the prior, which can be summarized by the property's distinctiveness (i.e. how rare the property is at the level of categories) and the expected within-category prevalence (i.e. how common the property is expected to be among the kinds in which the property is present; Figure \ref{fig:priors1a} scatterplot).
+%When the prior is very left-skewed (i.e. the property is highly distinct and there are not strong expectations about how prevalent the property is when present, as in the case of \emph{carries malaria}), then $\theta$ can plausibly be low while still being informative, since it rules out many possible alternative kinds (and their corresponding level of prevalence).
+%If the prior is right-skewed (i.e. the property is not very distinct and is expected to be highly prevalent within-categories as in the case of \emph{don't attack swimmers}), even an intermediate threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_1$ unless the property is nearly-universal. 
+%Priors for properties that are not at all distinctive and have low variance around the expected within-kind prevalence  (e.g. \emph{are female} is present in every kind in almost exactly the same proportion) are too obvious and certain to allow for a realistic, informative utterance: the posterior is not very different from the prior. 
 %The same general phenomenon can be observed for other nondistinctive properties and highly 
 
 
@@ -401,8 +408,8 @@ Priors for properties that are not at all distinctive and have low variance arou
 % The lifted-variable pragmatics model seeks a balance between these two pressures. 
 %With a prior distribution over heights that is roughly-normal, the result is a threshold that signifies that ``John is tall'' means he is ``significantly taller than average''.
  
-Eq.~\ref{eq:L1} is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
-We can now imagine a speaker (``Steph'' $S_2$, Eq.~\eqref{eq:S2}) who knows some prevalence $x$ and is trying to decide whether or not to produce a generic to (vaguely) describe it.
+Eq.~\ref{eq:L1} (``Lionel'') is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
+We can now imagine a speaker (``Steph''; $S_2$, Eq.~\ref{eq:S2}) who knows some prevalence $x$ and is trying to decide whether or not to produce a generic to (vaguely) describe it.
 
 \begin{equation} 
 P_{S_{2}}(u \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_{1}}(x \mid u)
@@ -455,13 +462,21 @@ The probabilisitic model is fully specified by Eqs.~\eqref{eq:L1} -- \eqref{eq:S
 Because $\lambda$ is not of theoretical interest here, it is marginalized according to Bayesian data analysis principles \cite{LW2014}. 
  $P(x)$ describes the belief distribution on the prevalence of a given property (e.g. \emph{lays eggs}) across relevant categories. 
  This distribution, which is conceivably very different for different properties, is common-sense background knowledge. 
- We measure it empirically by asking participants ($n=55$) about the prevalence of our target properties for many different animal categories\footnote{Our experiments stay within the animal kingdom because we expect there to be considerably less variability in participants beliefs about animals than about other types of categories (e.g. social categories)}. 
+ We measure it empirically by asking participants ($n=57$) about the prevalence of our target properties for many different animal categories\footnote{Our experiments stay within the animal kingdom because we expect there to be considerably less variability in participants beliefs about animals than about other types of categories (e.g. social categories)}. 
  
 We inferred the most likely prevalence prior for each property from the prior elicitation data, using the Bayesian data analysis approach described in the Supplement (Section A3). %Section \ref{sec:bda1}.	
 %\ndg{why are these two components relevant? need better names... i wonder whether we should get rid of these two prior stats, in favor of something like within-category prevalence of target kind vs mean prevalence across kinds (expectation of prior)?}
-The prior distribution over prevalence for a property can be summarized by the property's \emph{distinctiveness} and the mean within-kind prevalence.
-The relative mass at 0\% prevalence vs. greater than 0\% is a measure of \emph{property distinctiveness} (e.g. \emph{are female} is not distinctive because all kinds have female members; \emph{lays eggs} is relatively more distinct because there are more kind was 0\% prevalence).
-The mean density greater than 0\% is a measure of \emph{within-kind prevalence} (e.g. of the categories for which \emph{lays eggs} is present, on average 67\% of the category is believed to \emph{lay eggs}).
+The prior distribution over prevalence for a property can be summarized by the property's \emph{distinctiveness} and the \emph{mean within-kind prevalence}.
+A property that is highly distinct will receive a lot of 0\% responses (e.g. many kinds have 0\% of their members lay eggs, while not many kinds are 0\% female).
+A property's mean within-kind prevalence is the overall expected prevalence for a kind for which the property is present: It is the mean of the distribution conditioned on the prevalence being greater than zero. 
+These two components summarize the diversity of the shapes of the priors elicited and are useful for understanding the behavior of the model.
+The relative mass at 0\% corresponds to the property's distinctiveness and will relax the truth conditions by making a low threshold more informative. 
+The expected within-kind prevalence corresponds to the listener's prior expectations of how common the property within a kind that has it. 
+A listener who believes he is conversation with an informative speaker will be pressured to believe the prevalence of property F in kind K is more than one would expect \emph{a priori}.
+% the kind being discussed (K) has an above-average prevalence.  
+%The relative mass at 0\% prevalence vs. greater than 0\% is a measure of \emph{property distinctiveness} (e.g. \emph{are female} is not distinctive because all kinds have female members; \emph{lays eggs} is relatively more distinct because there are more kind was 0\% prevalence).
+%
+%The mean density greater than 0\% is a measure of \emph{within-kind prevalence} (e.g. of the categories for which \emph{lays eggs} is present, on average 67\% of the category is believed to \emph{lay eggs}).
 Figure \ref{fig:priors1a} shows the property distinctiveness and mean within-kind prevalence for all 21 different properties as well as the full distribution on prevalence for 5 properties of interest. 
 We see significant variety in the shape of priors, which is crucial since this drives variance in model predictions.
 
@@ -530,7 +545,7 @@ Here, following \citeA{Cimpian2010}, we use novel animal categories and properti
 %Instead, we took advantage of the latent structure in the prior elicitation task (Expt.~1a) to ask participants ($n=40$) about the prevalence of a property (e.g. ``has purple feathers'') across-categories (e.g. ``How likely is it that \emph{there is a} lorch that has purple feathers?'') and within-categories (e.g. ``Suppose there is a lorch with purple feathers. What percentage of lorches do you think have purple feathers?''), separately. 
 %We used a hierarchical Bayesian approach to reconstruct the prevalence priors of a similar form to Expt.~1a (see Section \ref{sec:bda2} for details).
 Classic work in generalization suggests that beliefs about prevalence differ by type of properties, including different types of conceivably biological properties \cite{Nisbett1983}. 
-We used 5 different types of properties to explore a range of \emph{a priori} prevalence: body parts (e.g. \emph{has claws}), colored body parts (e.g. \emph{has green feathers}), biological adjectives (e.g. \emph{has small wings}), and common accidental or disease states (e.g. \emph{has wet fur}) and rare accidental or disease states (e.g. \emph{has broken legs})\footnote{The distinction between common and rare accidental properties was determined empirically by analyzing the data first by item, and performing a median split based on the \emph{a priori} believed prevalence of the property.}.
+We used 5 different types of properties to explore a range of \emph{a priori} prevalence: body parts (e.g. \emph{has claws}), colored body parts (e.g. \emph{has green feathers}), biological adjectives (e.g. \emph{has small wings}), and common accidental or disease states (e.g. \emph{has wet fur}) and rare accidental or disease states (e.g. \emph{has broken legs})\footnote{The distinction between common and rare accidental properties was determined empirically by analyzing the data first by item, and performing a median split based on the \emph{a priori} mean within-kind prevalence of the property.}.
 
 
 \begin{figure}
@@ -542,7 +557,7 @@ We used 5 different types of properties to explore a range of \emph{a priori} pr
 \end{figure}
 
 
-Figure \ref{fig:prior2} shows the empirically measured prior distributions for prevalence $x$ for the 5 different types of properties together with the computational model predictions for the resulting posterior distribution, plotted on a two-dimensional between- and within-category prevalence space. 
+Figure \ref{fig:prior2} shows the empirically measured prior distributions for prevalence $x$ for the 5 different types of properties together with the computational model predictions for the resulting posterior distribution, with their corresponding property distinctiveness and mean within-kind prevalence ratings. 
 Biological properties (``biological parts'', ``vague parts'', ``color parts'') are bimodal with peaks at 0\% and near-100\% prevalence. 
 This distribution updates to a concave posterior distribution peaked at 100\% after necessarily ruling out the 0\% possibility upon hearing \emph{K has F} (Figure \ref{fig:prior2}; red, blue and green plots). 
 Accidental properties (``rare'' and ``common'') follow unimodal prior distributions and update to convex posterior distributions, reflecting a higher degree of residual uncertainty after hearing the generic utterance. 
@@ -621,10 +636,10 @@ The model was able to explain two qualitative puzzles of generics, their extreme
 %Rather, the listener is expected to come to the conversation with some beliefs about heights, and knowing that John is a person, be able to infer likely meanings for \emph{tall}.
 
 Previous psychological and philosophical work on generics has looked beyond prevalence and focused on conceptual distinctions and relations \cite{Gelman2005, Prasada2013, Leslie2007, Leslie2008}. 
-For example, \citeauthor{Prasada2013} has argued for a distinction between \emph{characteristic} properties (e.g.~\emph{Diapers are absorbent.}) and \emph{statistical} properties (e.g.~\emph{Diapers are white.}).
+\citeauthor{Prasada2013} has argued for a distinction between \emph{characteristic} properties (e.g.~\emph{Diapers are absorbent.}) and \emph{statistical} properties (e.g.~\emph{Diapers are white.}).
 \citeauthor{Leslie2007} suggests information that is striking (e.g.~\emph{Tigers eat people.}) is useful and thus permitted to be a generic.
 \citeauthor{Gelman2005} outlines how generics express qualities that are relatively timeless, enduring, and essential, and that generic language can increase the psychological coherence of a category.
-\citeA{GelmanEtAl2004} finds that child-parent conversations contains many generics about animal kinds than about artifact kinds, possibly owing to the belief that animal kinds are more richly structured than artifact kinds. 
+\citeA{GelmanEtAl2004} finds that child-parent conversations contain many more generics about animal kinds than about artifact kinds, possibly owing to the belief that animal kinds are more richly structured than artifact kinds. 
 Where in the prevalence-based semantics could such conceptual distinctions come into play?
 Beliefs about prevalence are represented as probability distributions; a framework that is useful for representing rich, structured knowledge of the world \cite{Goodmanconcepts}. 
 It is plausible that the prevalence distributions focused on in this work are derived from richer conceptual knowledge, including higher-order conceptual knowledge about the nature of different properties and categories \cite{Gelman2005, Keil1992}. 
