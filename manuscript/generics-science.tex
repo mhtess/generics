@@ -181,7 +181,7 @@
 %suggests that listeners' expectations in the form of prior beliefs heavily govern generic interpretation. 
 
 %\ndg{a new asbtract:}
-Generalizations about categories are central to human understanding, and generic language (e.g.~\emph{Dogs bark.}) provides a simple and ubiquitous \mht{(comprehensive?)} way to communicate these generalizations. 
+Generalizations about categories are central to human understanding, and generic language (e.g.~\emph{Dogs bark.}) provides a simple and ubiquitous way to communicate these generalizations. 
 Yet the meaning of generic language is philosophically puzzling and has resisted precise formalization.
 We explore the idea that the core meaning of a generic sentence is simple but underspecified, 
 and that general principles of pragmatic reasoning are responsible for establishing the precise meaning in context.
@@ -503,8 +503,8 @@ We see significant variety in the shape of priors, which is crucial since this d
   \label{fig:priors1a}
 \end{figure}
 
-From this prevalence-prior data, we can also estimate participants' beliefs about the prevalence of a property for a given category (e.g. the percentage of birds that lay eggs; see Appendix E for Maximum A-Posteriori (MAP) estimates and 95\% Bayesian Highest Density Intervals (HDI) over the mean prevalence for each property--category pairing of interest). %We first compare the predictions of Eq.~\ref{eq:S2} to 
-As a simple baseline hypothesis, we first explore whether these prevalence values themselves predict generic endorsement (e.g.~does the fraction of \emph{robins} that \emph{lay eggs} predict the felicity of \emph{robins lay eggs}?).
+From this prevalence-prior data, we can also estimate participants' beliefs about the prevalence of a property for a given category (e.g. the percentage of birds that lay eggs; see Supplement (Table 2) for Maximum A-Posteriori (MAP) estimates and 95\% Bayesian Highest Density Intervals (HDI) over the mean prevalence for each property--category pairing of interest). %We first compare the predictions of Eq.~\ref{eq:S2} to 
+As a simple baseline hypothesis, we first explore whether these prevalence values themselves predict generic endorsement (e.g.~does the fraction of \emph{robins} that \emph{lay eggs} predict the felicity of \emph{Robins lay eggs}?).
 A little over half of the variance in truth judgments data is explained by the prevalence of the property within the category alone ($r^2 = 0.601$). 
 This is, of course, expected given the usage of high-prevalence true generics (e.g. ``Leopards have spots.'') and low-prevalence false generics (e.g. ``Leopards have wings.''). 
 However, large deviations from a purely target-category prevalence account remain: Generics in which the target category had intermediate prevalence (prevalence quartiles 2 and 3: $ 20\% < prevalence < 64\%$), were not explained at all by prevalence within those categories ($r_{Q2,3}^2 = 0.030$).
@@ -528,24 +528,24 @@ However, large deviations from a purely target-category prevalence account remai
 
 The probabilisitic pragmatics model, using empirically measured priors, does a much better job of explaining the truth judgments ($r^2=0.984$), as seen in Figure \ref{fig:modeldataBars}. 
 Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (corners of Figure \ref{fig:modeldataBars}), including items for which target-category prevalence is not a good indicator of the acceptability (for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.962$; Figure \ref{fig:modeldataBars} lighter shades in the lower left, darker shades in the upper right). 
-The probabilistic pragmatics model appears to account well for the puzzling flexibility of generic truth-conditions.
+The probabilistic pragmatics model accounts well for the puzzling flexibility of generic truth-conditions.
 
 \subsubsection{Generics have strong implications (2300 words to this point)} 
 
 %Generic language exhibits mysterious behavior not only in when it is truthfull but in how it is understood.
 Generics ``once accepted [...] appear to be commonly taken in a rather strong sense, as if the qualifier \emph{always} had implicitly crept into their interpretation'' (\citeA{Abelson1966}, Cf.~\citeA{Cimpian2010}). %\red{[Note: this is the same quote that Cimpian2010 use... is this okay?}.
+\mht{Another sentence about why the interpretations are important? / discussing Abelson's quote}
 %
 \citeA{Gelman2002} found that adults interpret novel generic statements about familiar kinds (e.g. ``Bears like to eat ants.'') as implying that almost all of the category have the property (e.g. almost all bears like to eat ants).
 %\citeA{Cimpian2010} found similar inferences with generics about unfamiliar kinds (e.g. ``Lorches have purple feathers.''). 
-
-Interpretations of generic language are readily explored in our model of a listener (Eq.~\ref{eq:L1}) who hears a generic and is trying to infer what the world is like. 
-Again, $P(x)$ was measured empirically ($n=40$, see Supplement).
-Here, following \citeA{Cimpian2010}, we use novel animal categories and properties (e.g. \emph{Lorches} and \emph{have purple feathers}) to explore how beliefs are updated by generic language. 
+Interpretations of generic language are readily explored in our model of a listener (Eq.~\ref{eq:L1}) who hears a generic and is trying to infer how widespread is the property. 
+We follow \citeA{Cimpian2010} by using novel animal categories and properties (e.g. \emph{Lorches} and \emph{have green feathers}) to explore how generic language updates beliefs. 
 %It is strange to measure participants' beliefs about these novel category---property pairs directly (e.g. answering ``How many lorches have purple feathers?'', without knowing what a lorch is).
 %Instead, we took advantage of the latent structure in the prior elicitation task (Expt.~1a) to ask participants ($n=40$) about the prevalence of a property (e.g. ``has purple feathers'') across-categories (e.g. ``How likely is it that \emph{there is a} lorch that has purple feathers?'') and within-categories (e.g. ``Suppose there is a lorch with purple feathers. What percentage of lorches do you think have purple feathers?''), separately. 
 %We used a hierarchical Bayesian approach to reconstruct the prevalence priors of a similar form to Expt.~1a (see Section \ref{sec:bda2} for details).
-Classic work in generalization suggests that beliefs about prevalence differ by type of properties, including different types of conceivably biological properties \cite{Nisbett1983}. 
-We used 5 different types of properties to explore a range of \emph{a priori} prevalence: body parts (e.g. \emph{has claws}), colored body parts (e.g. \emph{has green feathers}), biological adjectives (e.g. \emph{has small wings}), and common accidental or disease states (e.g. \emph{has wet fur}) and rare accidental or disease states (e.g. \emph{has broken legs})\footnote{The distinction between common and rare accidental properties was determined empirically by analyzing the data first by item, and performing a median split based on the \emph{a priori} mean within-kind prevalence of the property.}.
+Classic work in generalization suggests that beliefs about the prevalence of properties are different for different types of properties, including differences between properties that are conceivably biological \cite{Nisbett1983}. 
+We used 5 different types of properties to explore a range of prior beliefs about prevalence: biological parts (e.g. \emph{has claws}), color adjectives about parts (e.g. \emph{has green feathers}), vague adjectives about parts (e.g. \emph{has small wings}), and common accidental or disease states (e.g. \emph{has wet fur}) and rare accidental or disease states (e.g. \emph{has broken legs}) \footnote{The distinction between common and rare accidental properties was determined empirically by analyzing the data first by item, and performing a median split based on the \emph{a priori} mean within-kind prevalence of the property.}.
+Again, $P(x)$ was measured empirically ($n=40$, see Supplement).
 
 
 \begin{figure}
