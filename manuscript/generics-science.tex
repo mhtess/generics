@@ -181,7 +181,7 @@
 %suggests that listeners' expectations in the form of prior beliefs heavily govern generic interpretation. 
 
 %\ndg{a new asbtract:}
-Generalizations about categories are central to human understanding, and generic language (e.g.~\emph{Dogs bark.}) provides a simple and ubiquitous way to communicate these generalizations. 
+Generalizations about categories are central to human understanding, and generic language (e.g.~\emph{Dogs bark.}) provides a simple and ubiquitous \mht{(comprehensive?)} way to communicate these generalizations. 
 Yet the meaning of generic language is philosophically puzzling and has resisted precise formalization.
 We explore the idea that the core meaning of a generic sentence is simple but underspecified, 
 and that general principles of pragmatic reasoning are responsible for establishing the precise meaning in context.
@@ -205,12 +205,12 @@ This type of utterance conveys a generalization about a category (i.e. \emph{swa
 It is supposed that every language can express generic meaning \cite{Behrens2005, Carlson1995}, and that generics are essential to the growth of conceptual knowledge \cite{Gelman2004} and how kinds are represented in the mind \cite{Leslie2008}.
 Generic language is ubiquitous in everyday conversation as well as in child-directed speech \cite{Gelman2008}, and children as young as two or three understand that generics refer to categories and support generalization \cite{Cimpian2008}.
 % and though English and many other languages do not possess an unambiguous form devoted to generic meaning \cite{Behrens2000, AlMalki2014}. 
-Additionally, generics are the primary way by which speakers discuss social categories, making them key to propagating stereotypes \cite{GelmanEtAl2004, Rhodes2012, Leslie2015} and important for motivation \cite{Cimpian2010motivation}.
-Despite their apparent simplicity and cognitive centrality, a formal account of generic meaning remains elusive.
+Additionally, generics are the primary way by which speakers discuss social categories, making them key to propagating stereotypes \cite{GelmanEtAl2004, Rhodes2012, Leslie2015} and impacting motivation \cite{Cimpian2010motivation}.
+Despite their cognitive centrality and apparent simplicity, a formal account of generic meaning remains elusive.
 
-One major hurdle to formalizing generic language arises when one tries to describe the conditions by which a generic is true.
-At first glance, generics seem like universally-quantified statements as in \emph{All swans are white}, but unlike universals, generics are resilient to counter-examples like \emph{black swans}. 
-Interpreting the generic as meaning ``most'' (i.e. \emph{Most swans are white}) captures many cases, but cannot explain why \emph{Robins lay eggs} and \emph{Mosquitos carry malaria} are so intuitively compelling: Only adult female robins lay eggs and a very tiny fraction of mosquitos actually carry the malaria.
+One major hurdle to formalizing generic language arises when one tries to describe the conditions by which a generic sentence is true.
+At first glance, generics seem like universally-quantified statements as in \emph{All swans are white}, but unlike universals, generics are resilient to counter-examples (e.g. \emph{black swans}). 
+Interpreting the generic as meaning ``most'' (i.e. \emph{Most swans are white}) captures many cases, but cannot explain why \emph{Robins lay eggs} and \emph{Mosquitos carry malaria} are so intuitively compelling: Only adult female robins lay eggs and a very tiny fraction of mosquitos actually carry malaria.
 Indeed, it appears that any explanation in terms of how common the property is within the kind violates intuitions --- for the robins, laying eggs is practically synonymous with being female (i.e., the properties are present in the same proportions), yet \emph{Robins are female} is not a reasonable utterance while \emph{Robins lay eggs} is fine.
 
 % as , even though the two properties are present in the same proportion (about 50\%) in the category of robins.
@@ -220,7 +220,7 @@ Generics are additionally puzzling in how they are interpreted.
 While \emph{Mosquitos carry malaria} suggests the generic must in some way be analogous to ``some'' (i.e. \emph{Some swans are white.}), generics are often interpreted as implying the property is widespread within the kind:
 %Yet generics often imply the property is widespread: 
 Listeners interpret a novel generic as applying to \emph{nearly all} of a category \cite{Gelman2002} (compare \emph{Some swans have hollow bones} to \emph{Swans have hollow bones}).
-When asked how common a property would need to be for the generic to apply, both children and adults report lower prevalence than when told a generic and asked how common the property is \cite{Cimpian2010, Brandone2014}, suggesting that communicating with generics can exaggerate evidence.
+When asked how common a property would need to be for the generic to apply, both children and adults report lower prevalence than when told a generic sentence and asked how prevalent the property is \cite{Cimpian2010, Brandone2014}, suggesting that communicating with generics can exaggerate evidence.
 %Both children and adults believe the generic implies the property-in-question is even more widespread than when asked how common the property would need to be for the generic to apply
 
 How can generics have such flexible truth conditions while simultaneously having strong implications?
@@ -260,7 +260,7 @@ This latter perspective emphasizes the structure of generic knowledge \cite{Pras
 %For example, even though less than one percent of mosquitos carry malaria, \emph{Mosquitos carry malaria} because malaria has dire consequences---it is a dangerous property---and is thus important to our conceptual representation of mosquitos.
 
 However, generic language is not unique in its flexibility.
-Language understanding in general depends on assumptions interlocutors make about each other, which can lead to complex sensitivity of interpreted meanings to context \cite{Clark1996, Grice1975, Levinson2000}. This has recently been formalized in probabilisitic models of language understanding, the Rational Speech Acts (RSA) theory \cite{Frank2012, Goodman2013, Franke2009}. 
+Language understanding in general depends on assumptions interlocutors make about each other, which can lead to complex sensitivity of interpreted meanings to context \cite{Clark1996, Grice1975, Levinson2000}, recently formalized in probabilisitic models of language understanding---the Rational Speech Acts (RSA) theory \cite{Frank2012, Goodman2013, Franke2009}. 
 Perhaps then, the puzzles of generic language can be partly understood as the effects of pragmatic reasoning.
 If this is the case, then a relatively simple semantic theory, phrased in terms of statistical regularities, could be enough to formalize generic language.
 
@@ -330,7 +330,7 @@ He is trying to resolve how common F is within K ($x = P(F\mid K) \in [0, 1]$).
 The utterance Lionel has heard is vague in that he does not know its precise meaning: $\theta \sim \text{Uniform}(0,1)$.
 Lionel considers what he knows about property F in general: how distinctive F is (do many other kinds have F?), and for the kinds he knows with F, how prevalent it is within those kinds.
 This is represented as $P(x)$, a probability distribution over prevalence of F.
-Lionel also considers the fact that Simone is an informed and helpful interlocutor: She had a particular meaning $\theta$ in mind, and was trying to be informative about the prevalence $x$ to an idealized listener she imagined in her own head ($L_{0}$, Eq. \ref{eq:L0}).
+Lionel also considers the fact that Simone is an informed and helpful interlocutor: She had a particular meaning $\theta$ in mind, and was trying to be informative about the prevalence $x$ to the interlocutor in her head, an idealized literal listener ($L_{0}$, Eq. \ref{eq:L0}).
 The idealized listener has access to the threshold $\theta$, and simply restricts its prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
 Lionel also believes that Simone didn't have to say ``Ks have F'' if she didn't want to, she could have said nothing: a ``null'' utterance\footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that robins lay eggs.'', as well as the generic of the negation, ``Robins do not lay eggs''.}. 
 The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)=x>\theta$; while the null utterance is always true, $\denote{null}(x, \theta)=T$.
@@ -338,10 +338,10 @@ The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)
 
 
 Example posterior distributions for Lionel---$P_{L_{1}}(x , \theta \mid u)$---after hearing the generic utterance can be seen in Figure \ref{fig:priors1a}. 
-Also shown are his corresponding prior beliefs, $P(x)$, about the prevalence of the property (which are also the posteriors that he would have had he heard the null utterance).
-We see that the interpretation of the generic depends a great deal on the shape of the prior (Figure \ref{fig:priors1a} scatterplot).
-When the prior is very left-skewed as in the case of \emph{carries malaria}, then $\theta$ can plausibly be low while still being informative, since it rules out many possible alternative kinds (and their corresponding level of prevalence).
-If the prior is right-skewed, even an intermediate threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_1$ unless the property is nearly-universal. 
+Also shown are his corresponding prior beliefs, $P(x)$, about the prevalence of the property (which are also the posteriors that he would have if had he heard the null utterance).
+We see that the interpretation of the generic depends a great deal on the shape of the prior.
+When the prior is very left-skewed as in the case of \emph{carries malaria}, then $\theta$ can be plausibly quite low while still being informative, since a low threshold still rules out many possible alternative kinds (and their corresponding level of prevalence).
+If the prior is right-skewed, even an intermediate threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_1$ unless the property is nearly-universal within the target category. 
 Priors for properties that are unimodal with low variance (e.g. \emph{are female} is present in every kind in almost exactly the same proportion) are too obvious and certain to allow for a realistic, informative utterance: the posterior is not very different from the prior. 
 
 
@@ -409,15 +409,15 @@ Priors for properties that are unimodal with low variance (e.g. \emph{are female
 %With a prior distribution over heights that is roughly-normal, the result is a threshold that signifies that ``John is tall'' means he is ``significantly taller than average''.
  
 Eq.~\ref{eq:L1} (``Lionel'') is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
-We can now imagine a speaker (``Steph''; $S_2$, Eq.~\ref{eq:S2}) who knows some prevalence $x$ and is trying to decide whether or not to produce a generic to (vaguely) describe it.
+We can now imagine a speaker (``Steph''; $S_2$, Eq.~\ref{eq:S2}) who knows some prevalence $x$ and is trying to decide whether or not to produce a generic to (vaguely) describe it to Lionel, the pragmatic listener.
 
 \begin{equation} 
 P_{S_{2}}(u \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_{1}}(x \mid u)
 \label{eq:S2}
 \end{equation}
 
-She considers the thought-processes of Lionel---the listener in Eq.~\eqref{eq:L1}---and decides if the generic is a good (even if vague) way to describe the prevalence $x$. 
-Her decision is between saying a generic or saying nothing: She will choose to produce the generic when the true prevalence $x$ is more likely under $L_1$'s posterior than under his prior. 
+She considers the thought-processes of Lionel (Eq.~\ref{eq:L1}) and decides if the generic is a good (even if vague) way to describe the prevalence $x$. 
+Her decision is with respect to the alternative of saying nothing: She will choose to produce the generic when the true prevalence $x$ is more likely under $L_1$'s posterior than under the prior. 
 Steph ($S_{2}$) doesn't actually know what the vague utterance means (i.e. doesn't have access to the threshold $\theta$), but knows that Lionel ($L_{1}$) is thinking about it, and integrates over the likely values he'll consider.
 We use $S_{2}$ to model felicity or truth judgments, following \citeA{Degen2014}.
 %
@@ -447,7 +447,7 @@ We use $S_{2}$ to model felicity or truth judgments, following \citeA{Degen2014}
 
 \subsubsection*{Generics have flexible truth conditions (1550 words to this point)} 
 
-We tested the degree to which Eq.~\eqref{eq:S2} predicted that a given category--property pair (e.g. ``Robins'' and ``lay eggs'') would result in a felicitous generic (e.g. ``Robins lay eggs.''). 
+We tested the degree to which Eq.~\ref{eq:S2} predicted that a given category--property pair (e.g. \emph{robins} and \emph{lay eggs}) would result in a felicitous generic (e.g. \emph{Robins lay eggs.}). 
 We collected human judgments ($n=91$) about the acceptability of thirty generic sentences. 
 We chose the sentences to cover a range of conceptual distinctions outlined by \citeA{Prasada2013}, including characteristic (e.g. \emph{Ducks have wings.}), minority (e.g. \emph{Robins lay eggs.}), striking (e.g. \emph{Mosquitos carry malaria.}), false generalization (e.g. \emph{Robins are female.}), and false (e.g. \emph{Lions lay eggs.}).
 The sentences were also chosen to elicit a range of acceptability judgments (``definitely acceptable'', ``definitely unacceptable'', and ``uncertain'') and include generics that were both acceptable and unacceptable with low-prevalence, medium-prevalence, and high-prevalence properties.
@@ -458,7 +458,7 @@ The \emph{a priori} truth-judgment we assigned was a significant predictor of th
 Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
 
 
-The probabilisitic model is fully specified by Eqs.~\eqref{eq:L1} -- \eqref{eq:S2}, with the exception of the speaker rationality parameter $\lambda$ and the prior distribution on prevalences $P(x)$. 
+The probabilisitic model is fully specified by Eqs.~\ref{eq:L1} -- \ref{eq:S2}, with the exception of the speaker rationality parameter $\lambda$ and the prior distribution on prevalences $P(x)$. 
 Because $\lambda$ is not of theoretical interest here, it is marginalized according to Bayesian data analysis principles \cite{LW2014}. 
  $P(x)$ describes the belief distribution on the prevalence of a given property (e.g. \emph{lays eggs}) across relevant categories. 
  This distribution, which is conceivably very different for different properties, is common-sense background knowledge. 
@@ -467,11 +467,11 @@ Because $\lambda$ is not of theoretical interest here, it is marginalized accord
 We inferred the most likely prevalence prior for each property from the prior elicitation data, using the Bayesian data analysis approach described in the Supplement (Section A3). %Section \ref{sec:bda1}.	
 %\ndg{why are these two components relevant? need better names... i wonder whether we should get rid of these two prior stats, in favor of something like within-category prevalence of target kind vs mean prevalence across kinds (expectation of prior)?}
 The prior distribution over prevalence for a property can be summarized by the property's \emph{distinctiveness} and the \emph{mean within-kind prevalence}.
-A property that is highly distinct will receive a lot of 0\% responses (e.g. many kinds have 0\% of their members lay eggs, while not many kinds are 0\% female).
-A property's mean within-kind prevalence is the overall expected prevalence for a kind for which the property is present: It is the mean of the distribution conditioned on the prevalence being greater than zero. 
+A property that is highly distinct will receive many 0\% responses (e.g. many kinds have 0\% of their members lay eggs, while not many kinds are 0\% female).
+A property's mean within-kind prevalence is the overall expected prevalence for a kind assuming the prevalence is greater than 0\% (i.e. the property is present).
 These two components summarize the diversity of the shapes of the priors elicited and are useful for understanding the behavior of the model.
-The relative mass at 0\% corresponds to the property's distinctiveness and will relax the truth conditions by making a low threshold more informative. 
-The expected within-kind prevalence corresponds to the listener's prior expectations of how common the property within a kind that has it. 
+The relative mass at 0\% corresponds to the property's distinctiveness; increasing it will relax the truth conditions by making a lower threshold more informative. 
+The expected within-kind prevalence corresponds to the listener's prior expectations of how common the property is within kind that have it. 
 A listener who believes he is conversation with an informative speaker will be pressured to believe the prevalence of property F in kind K is more than one would expect \emph{a priori}.
 % the kind being discussed (K) has an above-average prevalence.  
 %The relative mass at 0\% prevalence vs. greater than 0\% is a measure of \emph{property distinctiveness} (e.g. \emph{are female} is not distinctive because all kinds have female members; \emph{lays eggs} is relatively more distinct because there are more kind was 0\% prevalence).
