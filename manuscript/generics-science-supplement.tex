@@ -226,12 +226,7 @@ As a manipulation check, participants were asked at the end of the trials which 
 
 Four participants were excluded for failing to successfully report which button corresponded with ``Agree'', resulting in 91 participants.
 
-%\begin{figure}
-%\centering
-%    \includegraphics[width=\columnwidth]{truhtjudge_n100}
-%    \caption{Truth judgments from Expt.~1b for each item. Y-axis denotes deviations from chance in the 2AFC. There is large agreement for both generics which are true and generics which are false. There is considerable disagreement across participants for a number of ``neither true nor false'' generic statements. }
-%  \label{fig:tj1b}
-%\end{figure}
+
 
 The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false. 
 We entered participants' agreement judgments into a mixed-effect logistic regression with random by-participant effects of intercept. 
@@ -244,13 +239,21 @@ However, large deviations from a purely within-category prevalence account remai
 
 \begin{figure}
 \centering
-    \includegraphics[width=\columnwidth]{tj_n100_tjVsprev_95hdi.pdf}
+    \includegraphics[width=\columnwidth]{tj_n100_tjVsPrevalence_95hdi-colorPrev.pdf}
     \caption{Truth judgments from Expt.~1b for each item vs. the prevalence of the property for the target item as measured in Expt.~1a. For example, ``Leopards have spots'' has a very high truth judgment (Expt.~1b; Y-axis), and ``has spots'' is a highly prevalent property for leopards (Expt.~1a; X-axis). Color spectrum corresponds to the rank ordering of the truth judgment data; similarly colored dots received similar truth judgments.}
   \label{fig:scatterprev}
 \end{figure}
 
 
-
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{tj_n100-postPred-byItem.pdf}
+    \caption{Truth judgments of common generics and model predictions. 
+Items are ordered by within-kind prevalence, and large deviations from a purely within-kind prevalence account are observed for items with intermediate prevalence. 
+The pragmatics model, however, is guided both by the distinctiveness of the property and the \emph{a priori} category prevalence and the communicative pressures to be truthful and informative.
+The pragmatics model produces a gradient of responses, matching human endorsements well ($r^2 = 0.98$).}
+  \label{fig:tj1b}
+\end{figure}
 
 \subsection{Pragmatics model predictions}
 
@@ -285,10 +288,25 @@ To learn about the \emph{a posteriori} credible values of our model parameters, 
 The speaker rationality parameter represents the speaker's belief in how rational the hypothetical listener believes he is when choosing to say the generic (over saying nothing). 
 The 95\% Highest Probability Density (HPD) Interval is [3.36, 4.98].
 
+\begin{figure}
+\centering
+    \includegraphics[width=0.8\columnwidth]{naturalGenerics-speakerOptimality.pdf}
+    \caption{Posterior distribution of the speaker optimality parameter $\lambda$ in Eq.~2 of the pragmatics model conditioning on the truth judgments of natural cases experimental data. The 95\% credible interval is [3.36, 4.98].}
+  \label{fig:lambda1}
+\end{figure}
+
 In the data analysis, we also include a contamination parameter $\phi$ to account for noise in the data.  
 This represents the proportion of the data that can be better explained by random guessing than by our model of generic language.
 In this way, $\phi$ provides a crude measure of goodness of fit. 
 The 95\% HPD Interval is [0.026,0.049]. 
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.8\columnwidth]{naturalGenerics-phi.pdf}
+    \caption{Posterior distribution of the contamination (``guessing'') parameter. The 95\% credible interval is [0.026,0.049].}
+  \label{fig:phi1}
+\end{figure}
+
 This suggests that there is not a substantial amount of noise in the data, possibly owing to the simplicity of the task. 
 
 
@@ -515,25 +533,38 @@ We put an uninformative prior over these mixture parameter $\phi_{task} \sim \te
 To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 100,000 samples using the Metropolis-Hastings algorithm. 
 The estimated posterior distributions of the contamination parameters $\phi_{task}$ are shown in Figure \ref{fig:phi2}. 
 This parameter represents the proportion of the data that is better explained by a model of random guessing than by the prevalence-based generics model. 
-The 95\% Credible interval is [0.06, 0.15]. 
+The 95\% Credible interval for the contamination parameter in the implied prevalence task is [0.08, 0.18]. 
+The 95\% Credible interval for the contamination parameter in the truth conditions task is [0.32, 0.49]. 
+
+It should be noted that since this is a task-wide parameter, the guessing parameter cannot account for differences observed in the model between property-types.
+It is possible, however, that the guessing parameter could remove differences that may exist between conditions. 
+This is particularly relevant for the truth conditions task, where we observe no appreciably differences among the average prevalence to assent to the generic (see Figure 4, truth conditions). To rule out this possibility, we ran the models without contamination parameters, and observed the same effects we report in the main paper: a linear increase as a function of mean conditional prevalence for the implied prevalence task, and no linear increase for the truth conditions data. 
+Thus, the insensitivity of the average prevalence at which speakers assent to the generic that we observed in truth conditions task is also a property of our model, and is not a function of the noise process we assume.
+
+The relatively high contamination parameter for the truth conditions task is most likely due to fact that human participants were less willing to assent to the generic \emph{overall} in this task. 
+This has the effect of increasing the average prevalence to assent. 
+To try to account for this quantitatively, the model assumes a relatively high amount of random guessing. 
+We note that a quantitative fit to the average prevalence to assent to the generic is not a main prediction of this work. 
+What is a main prediction is the relative insensitivity of the average prevalence score to the mean conditional prevalence, which is a robust prediction of the model. 
+
 
 \begin{figure}
 \centering
-    \includegraphics[width=0.8\columnwidth]{asym-phi-2opts-phi-100k.pdf}
-    \caption{Posterior distribution of the contamination (``guessing'') parameter. The 95\% credible interval is [0.06, 0.15].}
+    \includegraphics[width=0.8\columnwidth]{asymmetry-phi-3x50k.pdf}
+    \caption{Posterior distribution of the contamination (``guessing'') parameter.}
   \label{fig:phi2}
 \end{figure}
 
 The estimated posterior distribution of the speaker rationality parameters $\lambda_{\text{truth conditions}}$ and $\lambda_{\text{implied prevalence}}$ are shown in Figure \ref{fig:rationality2}. 
-This parameter represents the belief in how rational the hypothetical speaker in Eq.~{ref:eqS1} is believed to be when choosing to say the generic (over saying nothing). 
+This parameter represents the belief in how rational the hypothetical speaker in Eq.~2 is believed to be when choosing to say the generic (over saying nothing). 
 The 95\% credible interval for $\lambda_{\text{truth conditions}}$ is [0.23, 6.9] and $\lambda_{\text{implied prevalence}}$ is [1.30, 16.86]. 
 The fact that these parameters are so different is expected given that the state space in the two tasks is also quite different.
 
 
 \begin{figure}
 \centering
-    \includegraphics[width=0.8\columnwidth]{asym-lambdas-2opts-phi-100k.pdf}
-    \caption{Posterior distribution of the speaker rationality parameters. The 95\% credible interval for $\lambda_{\text{truth conditions}}$ is [0.23, 6.9] and  $\lambda_{\text{implied prevalence}}$ is [1.30, 16.86]. The fact that these parameters are so different is expected given that the state space in the two tasks is also quite different.}
+    \includegraphics[width=0.8\columnwidth]{asymmetry-speakeropts-3x50k.pdf}
+    \caption{Posterior distribution of the speaker rationality parameters.}
   \label{fig:rationality2}
 \end{figure}
 
@@ -541,11 +572,12 @@ The fact that these parameters are so different is expected given that the state
 
 
 
-
-\section{Stimuli used in Experiment 1}
-\label{sec:appendix}	
-
 \begin{table}[h]
+\centering
+
+\caption{Stimuli used in Experiment 1. 
+Estimates are means for truth judgments and Maximum A-Posteriori (MAP) estimates for prevalence. 
+Brackets denote 95\% confidence intervals for truth judgments and 95\% credible intervals for prevalences.}
 \begin{tabular}{| l | l | p{3.5cm} | p{3.5cm} |}
 \hline
 Conceptual type & Item & Truth judgment & Prevalence \\
@@ -583,14 +615,10 @@ False or Uncertain & 18. Leopards have wings.       &0.022	[0, 0.055]& 1.0 [0.0,
 \hline
 
 \end{tabular}
-\caption{Stimuli used in Experiment 1. Estimates are means for truth judgments and Maximum A-Posteriori (MAP) estimates for prevalence.  Brackets denote 95\% confidence intervals for truth judgments and 95\% credible intervals for prevalences.}
+
 \label{tab:expt1}
 \end{table}
 
-\section{Stimuli used in Experiment 2}
-\label{sec:materials2}
-
-Many of these materials were originally used in \citeA{Cimpian2010}.
 %\csvautotabular{novelKinds-prevalencePrior-byItem-gammaCIs.csv}
 
 %\begin{table}[h]
@@ -601,58 +629,113 @@ Many of these materials were originally used in \citeA{Cimpian2010}.
 %    \end {tabular}
 %    \end{table}
     
-    
 \begin{table}[h]
+\centering
+\caption{Stimuli used in Experiment 2 and statistics of the priors measure in the prior elicitation task. 
+Property distinctiveness is a measure of how many different kinds are expected to have the property. Mean conditional prevalence is a measure of how widespread the property is expected to be, assuming that it is present within a kind.
+Maximum A-Posteriori (MAP) estimates and 95\% Highest Probability Density Intervals from the Bayesian data analysis model described in Section \ref{sec:bda2} are shown for each measure.
+Several of these items are taken from Cimpian et al. (2010)}
+\label{tab:novelGenericsStimuli}
 \begin{tabular}{| l || l | l | l |}
 \hline
-Property type               & Item                    & Across-category prevalence estimate  & Within-category prevalence estimate \\
+Property type             & Item          & Property distinctiveness               & Mean conditional prevalence                     \\
 \hline \hline
-Body part       			& 1. Teeth    &  82.7	88.5	76.5 &                     \\
-                                          & 2. Fur                       &78	80.5	68.9 &                     \\
-                                          & 3. Tails                     &74.9	81.6	65&                     \\
-                                          & 4. Claws                       &65.5	74.1	60.8&                     \\
-                                          & 5. Feathers                       &67.6	74.3	61&                     \\
-                                          & 6. Ears                       &85.4	89.1	80.2&                     \\
-                                          & 7. Legs                       &88.3	92.8	81.2&                     \\
-                                          & 8. Skin                       &89.5	93.1	85.1&                     \\
-Colored part      	 & 9. Pink teeth       &                &                     \\
-                                          & 10. Yellow fur                       &                &                     \\
-                                          & 11. Orange tails                         &                &                     \\
-                                          & 12. Blue claws                       &                &                     \\
-                                          & 13. Purple feathers                      &                &                     \\
-                                          & 14. Orange ears                    &                &                     \\
-                                          & 15. Silver legs                       &                &                     \\
-                                          & 16. Violet skin                      &                &                     \\       
-Vague part      	 & 17. Long teeth       &                &                     \\
-                                          & 18. Curly fur                       &                &                     \\
-                                          & 19. Long tails                         &                &                     \\
-                                          & 20. Big claws                       &                &                     \\
-                                          & 21. Smooth feathers                      &                &                     \\
-                                          & 22. Small ears                    &                &                     \\
-                                          & 23. Long legs                       &                &                     \\
-                                          & 24. Rough skin                      &                &                     \\ 
-Common accidental part    & 25. Wet fur       &                &                     \\
-                                          & 26. Dusty skin                       &                &                     \\
-                                          & 27. Worn-out claws                         &                &                     \\
-                                          & 28. Fungus-covered fur                      &                &                     \\
-                                          & 29. Muddy feathers                      &                &                     \\
-                                          & 30. Rotten teeth                   &                &                     \\
-                                          & 31. Torn feathers                       &                &                     \\
-                                          & 32. Itchy tails                      &                &                     \\  
-Rare accidental part    & 33. Sore legs       &                &                     \\
-                                          & 34. Torn tails                       &                &                     \\
-                                          & 35. Cracked claws                         &                &                     \\
-                                          & 36. Sore teeth                       &                &                     \\
-                                          & 37. Swollen ears                      &                &                     \\
-                                          & 38. Infected ears                    &                &                     \\
-                                          & 39. Burned skin                       &                &                     \\
-                                          & 40. Broken legs                     &                &                     \\                                                                                          
-                                           \hline
-
+Body part              & fur                & 0.22 {[}0.195, 0.31{]} & 0.90 {[}0.828, 0.93{]} \\
+                  & skin               & 0.11 {[}0.069, 0.15{]} & 0.89 {[}0.853, 0.93{]} \\
+                  & feathers           & 0.32 {[}0.257, 0.39{]} & 0.90 {[}0.827, 0.91{]} \\
+                  & legs               & 0.12 {[}0.072, 0.19{]} & 0.87 {[}0.819, 0.94{]} \\
+                  & tails              & 0.25 {[}0.184, 0.35{]} & 0.91 {[}0.881, 0.93{]} \\
+                  & ears               & 0.15 {[}0.109, 0.20{]} & 0.88 {[}0.839, 0.91{]} \\
+                  & claws              & 0.27 {[}0.259, 0.39{]} & 0.87 {[}0.749, 0.89{]} \\
+                  & teeth              & 0.17 {[}0.115, 0.23{]} & 0.88 {[}0.810, 0.91{]} \\
+Color            & silver legs        & 0.63 {[}0.535, 0.70{]} & 0.58 {[}0.472, 0.64{]} \\
+                 & yellow fur         & 0.47 {[}0.354, 0.52{]} & 0.69 {[}0.594, 0.76{]} \\
+                 & violet skin        & 0.61 {[}0.487, 0.67{]} & 0.63 {[}0.524, 0.74{]} \\
+                 & orange ears        & 0.54 {[}0.464, 0.65{]} & 0.60 {[}0.488, 0.69{]} \\
+                 & blue claws         & 0.62 {[}0.564, 0.74{]} & 0.66 {[}0.481, 0.69{]} \\
+                 & pink teeth         & 0.78 {[}0.633, 0.79{]} & 0.54 {[}0.421, 0.66{]} \\
+                 & orange tails       & 0.49 {[}0.425, 0.62{]} & 0.65 {[}0.581, 0.75{]} \\
+                 & purple feathers    & 0.52 {[}0.456, 0.64{]} & 0.64 {[}0.509, 0.72{]} \\
+Vague            & big claws          & 0.37 {[}0.302, 0.45{]} & 0.78 {[}0.682, 0.84{]} \\
+                 & long teeth         & 0.40 {[}0.336, 0.50{]} & 0.73 {[}0.694, 0.84{]} \\
+                 & rough skin         & 0.38 {[}0.276, 0.45{]} & 0.74 {[}0.672, 0.80{]} \\
+                 & curly fur          & 0.45 {[}0.357, 0.52{]} & 0.76 {[}0.669, 0.82{]} \\
+                 & long legs          & 0.37 {[}0.317, 0.45{]} & 0.76 {[}0.680, 0.83{]} \\
+                 & smooth feathers    & 0.38 {[}0.317, 0.50{]} & 0.80 {[}0.692, 0.83{]} \\
+                 & long tails         & 0.38 {[}0.309, 0.47{]} & 0.82 {[}0.738, 0.85{]} \\
+                 & small ears         & 0.35 {[}0.304, 0.45{]} & 0.81 {[}0.751, 0.85{]} \\
+Common accidental & torn tails         & 0.53 {[}0.457, 0.68{]} & 0.23 {[}0.202, 0.35{]} \\
+      & wet fur            & 0.43 {[}0.336, 0.53{]} & 0.45 {[}0.376, 0.56{]} \\
+      & dusty skin         & 0.55 {[}0.439, 0.61{]} & 0.44 {[}0.393, 0.58{]} \\
+      & torn feathers      & 0.54 {[}0.419, 0.60{]} & 0.29 {[}0.218, 0.35{]} \\
+      & fungus-covered fur & 0.63 {[}0.491, 0.71{]} & 0.37 {[}0.294, 0.49{]} \\
+      & worn-out claws     & 0.46 {[}0.381, 0.54{]} & 0.41 {[}0.336, 0.54{]} \\
+      & muddy feathers     & 0.59 {[}0.423, 0.64{]} & 0.39 {[}0.291, 0.45{]} \\
+      & sore teeth         & 0.61 {[}0.494, 0.67{]} & 0.25 {[}0.188, 0.33{]} \\
+Rare accidental & broken legs        & 0.70 {[}0.558, 0.77{]} & 0.13 {[}0.098, 0.17{]} \\
+       & swollen ears       & 0.58 {[}0.477, 0.68{]} & 0.24 {[}0.196, 0.34{]} \\
+       & itchy tails        & 0.63 {[}0.518, 0.72{]} & 0.33 {[}0.231, 0.38{]} \\
+       & rotten teeth       & 0.44 {[}0.377, 0.58{]} & 0.31 {[}0.225, 0.39{]} \\
+       & sore legs          & 0.57 {[}0.474, 0.66{]} & 0.24 {[}0.209, 0.34{]} \\
+       & cracked claws      & 0.50 {[}0.403, 0.64{]} & 0.24 {[}0.194, 0.36{]} \\
+       & infected ears      & 0.58 {[}0.459, 0.66{]} & 0.18 {[}0.131, 0.23{]} \\
+       & burned skin        & 0.68 {[}0.604, 0.77{]} & 0.19 {[}0.133, 0.25{]} \\
+       \hline
 \end{tabular}
-\caption{Stimuli used in Experiment 2.}
-\label{tab:novelGenericsStimuli}
-\end{table}
+\end{table}    
+    
+    
+%\begin{table}[h]
+%\begin{tabular}{| l || l | l | l |}
+%\hline
+%Property type               & Item                    & Across-category prevalence estimate  & Within-category prevalence estimate \\
+%\hline \hline
+%Body part       			& 1. Teeth    &  82.7	88.5	76.5 &                     \\
+%                                          & 2. Fur                       &78	80.5	68.9 &                     \\
+%                                          & 3. Tails                     &74.9	81.6	65&                     \\
+%                                          & 4. Claws                       &65.5	74.1	60.8&                     \\
+%                                          & 5. Feathers                       &67.6	74.3	61&                     \\
+%                                          & 6. Ears                       &85.4	89.1	80.2&                     \\
+%                                          & 7. Legs                       &88.3	92.8	81.2&                     \\
+%                                          & 8. Skin                       &89.5	93.1	85.1&                     \\
+%Colored part      	 & 9. Pink teeth       &                &                     \\
+%                                          & 10. Yellow fur                       &                &                     \\
+%                                          & 11. Orange tails                         &                &                     \\
+%                                          & 12. Blue claws                       &                &                     \\
+%                                          & 13. Purple feathers                      &                &                     \\
+%                                          & 14. Orange ears                    &                &                     \\
+%                                          & 15. Silver legs                       &                &                     \\
+%                                          & 16. Violet skin                      &                &                     \\       
+%Vague part      	 & 17. Long teeth       &                &                     \\
+%                                          & 18. Curly fur                       &                &                     \\
+%                                          & 19. Long tails                         &                &                     \\
+%                                          & 20. Big claws                       &                &                     \\
+%                                          & 21. Smooth feathers                      &                &                     \\
+%                                          & 22. Small ears                    &                &                     \\
+%                                          & 23. Long legs                       &                &                     \\
+%                                          & 24. Rough skin                      &                &                     \\ 
+%Common accidental part    & 25. Wet fur       &                &                     \\
+%                                          & 26. Dusty skin                       &                &                     \\
+%                                          & 27. Worn-out claws                         &                &                     \\
+%                                          & 28. Fungus-covered fur                      &                &                     \\
+%                                          & 29. Muddy feathers                      &                &                     \\
+%                                          & 30. Rotten teeth                   &                &                     \\
+%                                          & 31. Torn feathers                       &                &                     \\
+%                                          & 32. Itchy tails                      &                &                     \\  
+%Rare accidental part    & 33. Sore legs       &                &                     \\
+%                                          & 34. Torn tails                       &                &                     \\
+%                                          & 35. Cracked claws                         &                &                     \\
+%                                          & 36. Sore teeth                       &                &                     \\
+%                                          & 37. Swollen ears                      &                &                     \\
+%                                          & 38. Infected ears                    &                &                     \\
+%                                          & 39. Burned skin                       &                &                     \\
+%                                          & 40. Broken legs                     &                &                     \\                                                                                          
+%                                           \hline
+%
+%\end{tabular}
+%\caption{Stimuli used in Experiment 2.}
+%\label{tab:novelGenericsStimuli}
+%\end{table}
 
 \bibliographystyle{apacite}
 
