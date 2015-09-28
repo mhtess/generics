@@ -337,11 +337,11 @@ The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)
 
 
 
-Example posterior distributions for Lionel---$P_{L_{1}}(x , \theta \mid u)$---after hearing the generic utterance can be seen in Figure \ref{fig:priors1a}. 
-Also shown are his corresponding prior beliefs, $P(x)$, about the prevalence of the property (which are also the posteriors that he would have if had he heard the null utterance).
+Example posterior distributions for $P_{L_{1}}(x , \theta \mid u)$ upon hearing a generic utterance can be seen in Figure \ref{fig:priors1a}. 
+Also shown are the corresponding prior beliefs, $P(x)$, about the prevalence of the property (which are also the posteriors that he would have if had he heard the null utterance).
 We see that the interpretation of the generic depends a great deal on the shape of the prior.
 When the prior is very left-skewed as in the case of \emph{carries malaria}, then $\theta$ can be plausibly quite low while still being informative, since a low threshold still rules out many possible alternative kinds (and their corresponding level of prevalence).
-If the prior is right-skewed, even an intermediate threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_1$ unless the property is nearly-universal within the target category. 
+If the prior is right-skewed (e.g. \emph{don't attack swimmers}), even an intermediate threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_1$ unless the property is nearly-universal within the target category. 
 Priors for properties that are unimodal with low variance (e.g. \emph{are female} is present in every kind in almost exactly the same proportion) are too obvious and certain to allow for a realistic, informative utterance: the posterior is not very different from the prior. 
 
 
@@ -418,8 +418,8 @@ P_{S_{2}}(u \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_
 
 She considers the thought-processes of Lionel (Eq.~\ref{eq:L1}) and decides if the generic is a good (even if vague) way to describe the prevalence $x$. 
 Her decision is with respect to the alternative of saying nothing: She will choose to produce the generic when the true prevalence $x$ is more likely under $L_1$'s posterior than under the prior. 
-Steph ($S_{2}$) doesn't actually know what the vague utterance means (i.e. doesn't have access to the threshold $\theta$), but knows that Lionel ($L_{1}$) is thinking about it, and integrates over the likely values he'll consider.
-We use $S_{2}$ to model felicity or truth judgments, following \citeA{Degen2014}.
+Critically, Steph ($S_{2}$) doesn't actually know what the vague utterance means (i.e. doesn't have access to the threshold $\theta$), but knows that Lionel ($L_{1}$) will have to think about it, and integrates over the likely values he'll consider.
+We use Steph ($S_{2}$) to model felicity or truth judgments, following \citeA{Degen2014}.
 %
 %This decision is with respect to the alternative speech-act of saying nothing, hence the generic utterance will be acceptable when the true prevalence is more likely under the posterior than the prior. 
 
@@ -466,18 +466,18 @@ Because $\lambda$ is not of theoretical interest here, it is marginalized accord
  
 We inferred the most likely prevalence prior for each property from the prior elicitation data, using the Bayesian data analysis approach described in the Supplement (Section A3). %Section \ref{sec:bda1}.	
 %\ndg{why are these two components relevant? need better names... i wonder whether we should get rid of these two prior stats, in favor of something like within-category prevalence of target kind vs mean prevalence across kinds (expectation of prior)?}
-The prior distribution over prevalence for a property can be summarized by the property's \emph{distinctiveness} and the \emph{mean within-kind prevalence}.
+The prior distribution over prevalence for a property can be summarized by the property's \emph{distinctiveness} (i.e., how many different animal kinds have the property) and the \emph{conditional mean prevalence} (e.g. average prevalence across the kinds for which the property is present).
 A property that is highly distinct will receive many 0\% responses (e.g. many kinds have 0\% of their members lay eggs, while not many kinds are 0\% female).
-A property's mean within-kind prevalence is the overall expected prevalence for a kind assuming the prevalence is greater than 0\% (i.e. the property is present).
+A property's mean conditional prevalence is the overall expected prevalence for a kind assuming the prevalence is greater than 0\% (i.e. the property is present).
 These two components summarize the diversity of the shapes of the priors elicited and are useful for understanding the behavior of the model.
-The relative mass at 0\% corresponds to the property's distinctiveness; increasing it will relax the truth conditions by making a lower threshold more informative. 
-The expected within-kind prevalence corresponds to the listener's prior expectations of how common the property is within kind that have it. 
-A listener who believes he is conversation with an informative speaker will be pressured to believe the prevalence of property F in kind K is more than one would expect \emph{a priori}.
+Increasing the property's distinctiveness (i.e. the relative mass at 0\%) will relax the truth conditions by making a lower threshold more informative. 
+The mean conditional prevalence corresponds to the listener's prior expectations of how widespread the property is within kinds that have it. 
+Assuming the speaker is informative, there will be a pressure to for the listener to believe prevalence of property F in kind K is greater than one would expect \emph{a priori}.
 % the kind being discussed (K) has an above-average prevalence.  
 %The relative mass at 0\% prevalence vs. greater than 0\% is a measure of \emph{property distinctiveness} (e.g. \emph{are female} is not distinctive because all kinds have female members; \emph{lays eggs} is relatively more distinct because there are more kind was 0\% prevalence).
 %
 %The mean density greater than 0\% is a measure of \emph{within-kind prevalence} (e.g. of the categories for which \emph{lays eggs} is present, on average 67\% of the category is believed to \emph{lay eggs}).
-Figure \ref{fig:priors1a} shows the property distinctiveness and mean within-kind prevalence for all 21 different properties as well as the full distribution on prevalence for 5 properties of interest. 
+Figure \ref{fig:priors1a} shows the property distinctiveness and mean conditional prevalence for all 21 different properties as well as the full distribution on prevalence for 5 properties of interest. 
 We see significant variety in the shape of priors, which is crucial since this drives variance in model predictions.
 
 
@@ -492,13 +492,14 @@ We see significant variety in the shape of priors, which is crucial since this d
 
 \begin{figure}
 \centering
-    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists-black.pdf}
-    \caption{Between- and within-category prevalence empirically elicited for twenty-one animal properties.
-    Properties cover a range of prevalence levels, both within- and between- categories.
+    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists.pdf}
+    \caption{Prevalence prior distributions empirically elicited for twenty-one animal properties.
+    Prior distributions are summarized by the property distinctiveness (relative density at 0\%) and the mean prevalence conditional on the property being present in the kind (mean of density excluding 0\%).
     Pop-out plots display example empirical prior distributions over prevalence together with corresponding model predictions: the posterior after hearing a generic utterance. 
+    Intervals on the top of plots show human beliefs about the prevalence of the property within the target category.
 %    Posterior distributions show what happens to a listener's belief about the prevalence after hearing the associated generic. 
-    Felicitous generic utterances are the result of the observed prevalence being more likely under the posterior than under the prior.
-    \ndg{should mark the observed within-category prevalence for target kinds in pop-outs? or maybe one of the axes of main plot should be that?}
+    Felicitous generic utterances result when the target prevalence is more likely under the posterior than under the prior.
+ %   \ndg{should mark the observed within-category prevalence for target kinds in pop-outs? or maybe one of the axes of main plot should be that?}
     }
   \label{fig:priors1a}
 \end{figure}
@@ -599,7 +600,7 @@ These listener and speaker pair of models predicts human endorsements and interp
 
 \begin{figure}
 \centering
-    \includegraphics[width=1\columnwidth]{asym-lines-data-model-2phi-2so-50kx3.pdf}
+    \includegraphics[width=1\columnwidth]{asym-lines-data-model-2opts-2phi-50kx3.pdf}
     \caption{Human judgments and model predictions of prevalence implied by novel generic utterances (implied prevalence task; solid line) and average prevalence that leads to an acceptable generic utterance (truth conditions task; dotted line) as it relates to the \emph{a priori} average within-category prevalence.
     Upon reading a generic statement about biological properties, participants and the model infer that a high proportion of the category has the property (solid line: red, blue and green). 
     Generics about accidental properties do not result in such a high implied prevalence (solid line: purple and orange).  
