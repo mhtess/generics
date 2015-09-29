@@ -100,7 +100,7 @@ The trial proceeded as follows:
 Participants were first shown a column of 6 pre-specified names of kinds of animals (chosen randomly from a larger set). 
 They were asked to add five of their own animal names to the column. 
 Upon completion, a column appeared with a property as the column header (e.g. ``are female'').
-Participants were asked to fill in each row with the percentage of each of the  species that had the property (e.g. ``50\%'').
+Participants were asked to fill in each row with the percentage of members of each of the species that had the property (e.g. ``50\%'').
 The pre-specified animal categories were those that would be used in generic truth judgment task.
 %These names were randomly sampled from a larger set of categories of interest (see Appendix \ref{sec:appendix} for full list of animals and properties used). 
 %Upon completion, the next column appeared with a property (e.g. `lays eggs'') as the column header and text-boxes where the participants could put their estimated prevalence. 
@@ -108,7 +108,7 @@ The pre-specified animal categories were those that would be used in generic tru
 This procedure was repeated for 8 properties in total. 
 The animal kind column was unable to be modified once completed. 
 The prevalence columns, however, could be modified at a later stage (i.e. the participant could go back and change her estimates after seeing more properties). 
-Participants completed this procedure on each of 2 trials.
+Participants completed this procedure on each of 2 trials for a total of 16 properties per participant.
 
 
 We used a set of properties associated with generics of theoretical interest (21 properties in total), motivated in part by conceptual distinctions pointed out by \citeA{Prasada2013}. 
@@ -117,7 +117,7 @@ In addition, we included false sentences (e..g ``Lions lay eggs''), to cover the
 We aimed to include properties whose generics would be judged false even though the majority of the species has the property. To achieve this, 5 of the properties were negations (e.g. ``don't attack swimmers'') and were not measured separately from the corresponding positive form. 
 Instead, we took the complement of participants judgments of the positive property (e.g. ``have beautiful feathers''') as the estimate for the negation (e.g. ``don't have beautiful feathers'').
 
-For a full list of the generic sentences used in this experiment, see Appendix \ref{sec:appendix}.
+For a full list of the generic sentences used in this experiment, see Table \ref{tab:expt1}.
 
 \subsection{Bayesian data analysis}
 \label{sec:bda1}
@@ -127,9 +127,8 @@ We will describe the model from the perspective of inferring the distribution of
 The same general structure is implemented for each item independently. 
 
 Responses $d$ can be categorized into those that reflect the property is either present or absent in the species: $d_{category}$ is 1 if the prevalence $d$ is greater than 0, and 0 otherwise. 
-If the property is absent, then the response is 0\% (of the species has the property). 
-The number of 0 responses act as an indicator of the prevalence of the property \emph{across categories} $\theta_{across}$ (for example, ``are female'' would have very few 0\% responses, whereas ``lays eggs'' would receive appreciably more, owing to the fact the prevalence of these properties \emph{across categories} is different).
-We term the complement of the \emph{across category} prevalence as the ``property distinctiveness''.  We assume nothing \emph{a priori} about the distinctiveness of the property. 
+The number of 0\% responses act as an indicator of the property's \emph{distinctiveness} $\theta_{distinct}$ (for example, knowing that there are members of the species that ``are female'' is not very distinctive, whereas knowing that there are members that ``lay eggs'' is relatively more distinctive).
+ We assume nothing \emph{a priori} about the distinctiveness of the property. 
 %
 \begin{align*}
 \theta_{distinctive} & \sim \text{Uniform}(0,1) \\
@@ -233,45 +232,38 @@ We entered participants' agreement judgments into a mixed-effect logistic regres
 This \emph{a priori} distinction was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$).
 Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
 
-Truth judgments for these generic sentences were correlated with the prevalence of the property for the target category elicited in Expt.~1a ($r = 0.73$, Figure \ref{fig:scatterprev}). This is, of course, expected given that high-prevalence true generics (e.g. ``Leopards have spots.'') and low-prevalence false generics (e.g. ``Leopards have wings.'') were used. 
-However, large deviations from a purely within-category prevalence account remain: Generics with intermediate prevalences (Prevalence quartiles 2 and 3: $ 22\% < prevalence < 62\%$), exhibited no correlation with truth judgments ($r_{Q2,3} = -0.08$).
+Truth judgments for these generic sentences were correlated with the prevalence of the property for the target category elicited in Expt.~1a ($r = 0.73$, Figure \ref{fig:scatterprev}). 
+This is, of course, expected given that high-prevalence true generics (e.g. ``Leopards have spots.'') and low-prevalence false generics (e.g. ``Leopards have wings.'') were used. 
+However, large deviations from a purely within-category prevalence account remain: 
+Generics with intermediate prevalences (Prevalence quartiles 2 and 3: $ 22\% < prevalence < 62\%$), exhibited no correlation with truth judgments ($r_{Q2,3} = -0.08$).
 
 
 \begin{figure}
 \centering
     \includegraphics[width=\columnwidth]{tj_n100_tjVsPrevalence_95hdi-colorPrev.pdf}
-    \caption{Truth judgments from Expt.~1b for each item vs. the prevalence of the property for the target item as measured in Expt.~1a. For example, ``Leopards have spots'' has a very high truth judgment (Expt.~1b; Y-axis), and ``has spots'' is a highly prevalent property for leopards (Expt.~1a; X-axis). Color spectrum corresponds to the rank ordering of the truth judgment data; similarly colored dots received similar truth judgments.}
+    \caption{Truth judgments from Expt.~1b for each item vs. the prevalence of the property for the target item as measured in Expt.~1a. For example, ``Leopards have spots'' has a very high truth judgment (Expt.~1b; Y-axis), and ``has spots'' is a highly prevalent property for leopards (Expt.~1a; X-axis). Error bars denote 95\% confidence intervals for the human judgments and 95\% Bayesian credible intervals for the prevalence.
+    }
   \label{fig:scatterprev}
 \end{figure}
 
 
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{tj_n100-postPred-byItem.pdf}
-    \caption{Truth judgments of common generics and model predictions. 
-Items are ordered by within-kind prevalence, and large deviations from a purely within-kind prevalence account are observed for items with intermediate prevalence. 
-The pragmatics model, however, is guided both by the distinctiveness of the property and the \emph{a priori} category prevalence and the communicative pressures to be truthful and informative.
-The pragmatics model produces a gradient of responses, matching human endorsements well ($r^2 = 0.98$).}
-  \label{fig:tj1b}
-\end{figure}
+
 
 \subsection{Pragmatics model predictions}
 
-The speaker model $S_2$ reasons about the likely prevalence that a listener will infer given a generic sentence and her common sense knowledge of properties (the prior). 
-The model, thus, takes into account the distinctiveness of the property and the expected prevalence within-categories (both reflected in the prior) as well as communicative principles.
-We explore the predictions of this model, using the empirically-elicited priors from Expt.~1a. 
-We compare these predictions to the truth judgment data observed in Expt.~1b.
+The speaker model $S_2$ decides whether or not to produce the generic utterance by reasoning about the likely prevalence that a listener will infer given each utterance and common sense knowledge of properties (the prior). 
+The model, thus, takes into account the prior knowledge inferred from Expt.~1a.
 
 \subsubsection{Data analysis model priors}
 
-The pragmatics model of generic language understanding has 1 parameter: the speaker optimality parameter $\lambda$. 
+The pragmatics model has 1 parameter: the speaker optimality parameter $\lambda$. 
 We put an uninformative prior over this parameter, with a range consistent with previous literature using the same model class.
 
 $$
 \lambda \sim \text{Uniform}(0,20)
 $$
 
-In addition, we include a data-analytic ``contamination'' parameter to account for data that is more consistent with a model of random guessing. 
+In addition, we include a data-analytic ``contamination'' parameter to account for data that can be reliably be attributed to noise, or random guessing behavior.
 Modeling random guessing explicitly is important for recovering reliable estimates of the parameters of the model, which would otherwise be contaminated by this data \cite{LW2014}.
 The data is modeled as a mixture of behavior derived from the generics model and random guessing behavior. 
 We put an informative prior over the mixture parameter $\phi$.
@@ -283,7 +275,7 @@ $$
 
 \subsubsection{Posterior over model parameters}
 
-The pragmatics model has one free parameter, the speaker rationality $\lambda$ in Equation \ref{eq:S1}, and one data analytic parameter, a contamination parameter $\phi$.
+The pragmatics model has one free parameter, the speaker rationality $\lambda$ in Equation 2, and one data analytic parameter, a contamination parameter $\phi$.
 To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 3 chains of 100,000 iterations removing the first 50,000 iterations using the Metropolis-Hastings algorithm. 
 The speaker rationality parameter represents the speaker's belief in how rational the hypothetical listener believes he is when choosing to say the generic (over saying nothing). 
 The 95\% Highest Probability Density (HPD) Interval is [3.36, 4.98].
@@ -299,6 +291,7 @@ In the data analysis, we also include a contamination parameter $\phi$ to accoun
 This represents the proportion of the data that can be better explained by random guessing than by our model of generic language.
 In this way, $\phi$ provides a crude measure of goodness of fit. 
 The 95\% HPD Interval is [0.026,0.049]. 
+This suggests that there is not a substantial amount of noise in the data, possibly owing to the simplicity of the task. 
 
 \begin{figure}
 \centering
@@ -307,7 +300,6 @@ The 95\% HPD Interval is [0.026,0.049].
   \label{fig:phi1}
 \end{figure}
 
-This suggests that there is not a substantial amount of noise in the data, possibly owing to the simplicity of the task. 
 
 
 \subsubsection{Posterior predictive}
@@ -315,8 +307,19 @@ This suggests that there is not a substantial amount of noise in the data, possi
 We evaluate the model by examining the posterior predictive distribution of responses. 
 The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data should look like given the pragmatics model and the observed data. 
 This is akin to fitting the parameters and is an important step in model validation: It shows what data is actually predicted by the model. 
-Figure 2 shows the Maximum A-Posteriori (MAP) values of the model predictions compared against the observed data. 
+Figure \ref{fig:tj1b} shows the Maximum A-Posteriori (MAP) values of the model predictions compared against the observed data. 
 The model predicts graded endorsements for the generic statements used in Expt.~1b, accounting for almost all of the variance ($r^2 = 0.982$). 
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{tj_n100-postPred-byItem.pdf}
+    \caption{Truth judgments of common generics and model predictions. 
+Items are ordered by within-kind prevalence, and large deviations from a purely within-kind prevalence account are observed for items with intermediate prevalence. 
+The pragmatics model, however, is guided both by the distinctiveness of the property and the \emph{a priori} category prevalence and the communicative pressures to be truthful and informative.
+The pragmatics model produces a gradient of responses, matching human endorsements well ($r^2 = 0.98$).
+Error bars denote 95\% confidence intervals for the human judgments and 95\% Bayesian credible intervals for the model predictions.}
+  \label{fig:tj1b}
+\end{figure}
 
 
 \section{Experiment 2a: \emph{Measuring $P(x)$ for unfamiliar categories}}
@@ -367,7 +370,7 @@ We expanded the stimulus set to include four different types of properties: biol
 Pilot testing revealed a lot of variability for items in the accidental properties relative to the other types of properties. 
 To test the quantitative predictive power of the generic interpretation model, we used twice as many exemplars of accidental properties, with the aim to make a ``common accidental'' and a ``rare accidental'' class of properties. 
 We used 8 exemplars of each of the three non-accidental properties (``parts'', ``colored parts'', ``vague parts'') and 16 exemplars of accidental properties.
-Materials are in Appendix \ref{sec:materials2}.
+Materials are in Table \ref{tab:novelGenericsStimuli}.
 
 \subsection{Bayesian data analysis}
 \label{sec:bda2}
@@ -533,8 +536,8 @@ We put an uninformative prior over these mixture parameter $\phi_{task} \sim \te
 To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 100,000 samples using the Metropolis-Hastings algorithm. 
 The estimated posterior distributions of the contamination parameters $\phi_{task}$ are shown in Figure \ref{fig:phi2}. 
 This parameter represents the proportion of the data that is better explained by a model of random guessing than by the prevalence-based generics model. 
-The 95\% Credible interval for the contamination parameter in the implied prevalence task is [0.08, 0.18]. 
-The 95\% Credible interval for the contamination parameter in the truth conditions task is [0.32, 0.49]. 
+The MAP and 95\% Credible interval for the contamination parameter in the implied prevalence task is 0.14 [0.08, 0.18]. 
+The MAP and 95\% Credible interval for the contamination parameter in the truth conditions task is 0.43 [0.32, 0.49]. 
 
 It should be noted that since this is a task-wide parameter, the guessing parameter cannot account for differences observed in the model between property-types.
 It is possible, however, that the guessing parameter could remove differences that may exist between conditions. 
@@ -557,7 +560,7 @@ What is a main prediction is the relative insensitivity of the average prevalenc
 
 The estimated posterior distribution of the speaker rationality parameters $\lambda_{\text{truth conditions}}$ and $\lambda_{\text{implied prevalence}}$ are shown in Figure \ref{fig:rationality2}. 
 This parameter represents the belief in how rational the hypothetical speaker in Eq.~2 is believed to be when choosing to say the generic (over saying nothing). 
-The 95\% credible interval for $\lambda_{\text{truth conditions}}$ is [0.23, 6.9] and $\lambda_{\text{implied prevalence}}$ is [1.30, 16.86]. 
+The MAP and 95\% credible interval for $\lambda_{\text{truth conditions}}$ is 11.61 [7.63, 14.3] and $\lambda_{\text{implied prevalence}}$ is 1.54 [0.05, 2.52]. 
 The fact that these parameters are so different is expected given that the state space in the two tasks is also quite different.
 
 
