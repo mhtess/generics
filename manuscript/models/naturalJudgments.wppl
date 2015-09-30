@@ -1,6 +1,9 @@
 // time webppl naturalJudgments.wppl --require naturalUtils
 
-var previter = 50000
+// console.log(properties)
+// console.log(df_prior)
+
+var previter = 10000
 console.log('inferring prevalence of property-category pairs...')
 var prevalenceERP = IncrementalMH(prevalenceModel, previter, {"verbose":"true",
 																"burnin": previter/2})
@@ -15,7 +18,7 @@ var prevalenceERPobject = _.object(map(function(p){
 }, properties))
 
 
-var prevprioriter = 50000
+var prevprioriter = 10000
 console.log('inferring prevalence priors...')
 var priorERP = IncrementalMH(priorModel, prevprioriter, {"verbose":"true",
 														"burnin": prevprioriter/2})
@@ -35,6 +38,8 @@ var modelAnalysis = function(){
 	var speakerOptimality = uniform(0,20)
 	var cost = 1
 	var phi = uniform(0,1)
+	// var phi = 0.0001
+	// var softmax = uniform(0,5)
 
 	foreach(properties,
 		function(property){
@@ -53,11 +58,17 @@ var modelAnalysis = function(){
 					var responseData = _.pluck(categoryData, "response")
 
 			     	var predictionERP = truthSpeaker2(prevalence, prior, speakerOptimality, 1)
+
+			     	//note, there must be at least a tiny amount of noise, otherwise for the items with 0 prevalence, the model crashes
 			     	var linkedERP = guessingLink(predictionERP, phi)
+			     	// to use softmax (in conjunction with at least a little noise)
+			     	// var linkedERP = softmaxSpeaker(guessinglinkedERP, softmax)
+					
+
 					var scr = reduce(function(d, memo) {
 								    return memo + linkedERP.score([], responseDictionary[d])
 										}, 0, responseData)
-					// console.log(scr)
+					// console.log(property + k + scr)
 					factor(scr)
 
 					query.add(["generic_linked",property, k, "0"], 
@@ -66,22 +77,35 @@ var modelAnalysis = function(){
 					// query.add(["generic_pred",property, k, "0"], 
 					// 			Math.exp(predictionERP.score([], "generic is true")))
 
+
 					query.add(["prevalence",property, k, "0"], prevalence)
 
 					// })
 				})
+
+			// to get out posterior Thetas / States for Figures 1, 3
+			// var thetaPosterior = genericListener1withTheta(prior, speakerOptimality)
+			// var thetaPosterior = marginalizeERP(listenerPosterior, "theta")
+			// var statePosterior = marginalizeERP(listenerPosterior, "state")
+
+			// foreach(thetaPosterior.support(),
+			// 	function(x){query.add(['statePosterior',property,x,"0"], Math.exp(thetaPosterior.score([], x)))}
+			// 	)
+
 
 			// foreach(_.zip(propertyrior, bins),
 			// 	function(x){query.add(['prevalencePrior',property,x[1],"0"], x[0])}
 			// 	)
 		})
 	query.add(["speakerOptimality","na","na","na"], speakerOptimality)
+	// query.add(["softmax","na","na","na"], softmax)
+
 	query.add(["phi","na","na","na"], phi)
 	return query
 }
 
 
-var mhiter = 100000
+var mhiter = 50000
 var burn = mhiter/2
 console.log('doing the full bayesian dance...')
 var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true,
@@ -90,9 +114,13 @@ var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true,
 console.log('FBT complete')
 
 
-var outfile = '../model-results/generics-truthJudgment-previter'+previter+
-				'_prevprioriter'+prevprioriter+'-priord50Zero_mh'+mhiter+'_burn'+burn+'c.csv'
+var outfile = '../model-results/generics-truthJudgment-phi-previter'+previter+
+				'_prevprioriter'+prevprioriter+'-priord50Zero-n60_mh'+mhiter+'_burn'+burn+'c.csv'
 
 naturalUtils.erpWriter(tfbt, outfile)
 console.log('wrote to... ' + outfile )
+
+// prevalenceERP
+// prevalenceERPobject["lay eggs"]["Sharks"]
+
 	

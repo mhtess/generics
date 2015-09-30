@@ -1,7 +1,7 @@
 // time webppl asymmetry.wppl --require asymUtils
 
 
-var asymData = asymUtils.readCSV(fpath+"data/asymmetry-2-trials-medSplitAccidental.csv").data
+var asymData = asymUtils.readCSV(fpath+"data/novelGenerics-trials-medSplitAccidental.csv").data
 
 var df_asym = dataFrame(asymData.slice(0,asymData.length-1))
 var tasks = _.uniq(_.pluck(df_asym, "trial_type"))
@@ -14,10 +14,10 @@ var prevalenceLevels = _.uniq(_.pluck(df_accepted, "stim_prevalence"))
 var alignAgree = {"1":"generic is true",
 				  "0": "mu"}
 
-var prioriter = 25000
+var prioriter = 20000
 
 // console.log('inferring prevalence priors...')
-var priorERP = IncrementalMH(priorModel, prioriter, {"verbose":"true"})
+var priorERP = IncrementalMH(priorModel, prioriter, {"verbose":"true", "burnin": prioriter/2})
 
 // console.log('prior inferred from prior elicitation data')
 
@@ -25,19 +25,22 @@ var priorERPobject = _.object(map(function(c){
 	return [c, marginalizeERP(priorERP, c)]
 }, conditions))
 
+// var tasks = ["truth_conditions"]
 
 var dataModel = function(){
-
-
+	
+	// var phi = uniform(0,1)
+	var softmax = uniform(0,5)
+	var phi = 0
 	foreach(tasks,
 		function(task){
 			// console.log(task)
 
-			var speakerOptimality = uniform(0,30)
-			var phi = uniform(0,1)
+			var speakerOptimality = uniform(0,20)
 
 
 			foreach(conditions, 
+			// foreach(items, 
 				function(type){
 					// console.log(type)
 
@@ -53,7 +56,7 @@ var dataModel = function(){
 
 								var df_accepted_prev = _.pluck(subset(df_accept_type,"stim_prevalence", prevalence), "response")
 								// console.log(prevalence)
-								var agreeERP = truthSpeaker2(prevalence/100, prior, speakerOptimality, 1)
+								var agreeERP = softmaxSpeaker(truthSpeaker2(prevalence/100, prior, speakerOptimality, 1), softmax)
 								var linkedERP = guessingLink(agreeERP, task, phi)
 
 								var scr = reduce(function(response, memo) {
@@ -70,6 +73,7 @@ var dataModel = function(){
 						// var implied1opt = uniform(0,20)
 
 						var df_implied_type = subset(df_implied, "type", type)
+						// var df_implied_type = subset(df_implied, "stim_property", type)
 						var df_implied_prev = _.pluck(df_implied_type, "response")
 
 						var impliedERP = numberSpeaker2("generic is true", prior, speakerOptimality, 1)
@@ -83,6 +87,11 @@ var dataModel = function(){
 						factor(scr)
 
 
+						// foreach(linkedERP.support(),
+						// 	function(x){query.add(['statePosterior',type,x], Math.exp(linkedERP.score([], x)))}
+						// 	)
+
+
 						query.add([task,type,"NA"], expectation(linkedERP))
 
 					}
@@ -90,14 +99,16 @@ var dataModel = function(){
 				})
 
 			query.add([task, "speakerOptimality", "NA"], speakerOptimality)
-			query.add([task, "phi","NA"], phi)
+			// query.add([task, "phi","NA"], phi)
 
 		})
-
+	query.add(["NA", "phi","NA"], phi)
+	query.add(["NA", "softmax","NA"], softmax)
 
 	return query
 
 }
+
 // var type = "accidental_low"
 // var prior = sample(priorERPobject[type])
 // var df_accept_type = subset(df_accepted, "type", type)
@@ -112,11 +123,13 @@ var dataModel = function(){
 // guessingLink(truthSpeaker2(0.3, prior, 2, 1), "truth_conditions", 0.2)
 
 // // df_accepted_prev
-var mhiter = 100000
-var resultsERP = IncrementalMH(dataModel, mhiter, {"verbose":true})
-var outfile = "../model-results/generics-asymmetry-priord50iter"+prioriter+'_mh'+mhiter+'a.csv'
+var mhiter = 20000
+var resultsERP = IncrementalMH(dataModel, mhiter,  {"verbose":"true", "burnin": mhiter/2})
+var outfile = "../model-results/generics-implied_truth-softmax-priord50iter"+prioriter+'_mh'+mhiter+'a.csv'
 console.log('inference complete')
 asymUtils.erpWriter(resultsERP, outfile)
 console.log("ouput written to " +outfile)
 
+// _.uniq(_.pluck(df_asym, "stim_property"))
+// items
 

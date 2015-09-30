@@ -55,9 +55,13 @@ var priorModel = function(){
 var mhiter = 100000
 var burn = mhiter/2
 var resultsERP = IncrementalMH(priorModel, mhiter, {verbose:"true", burnin: burn})
-var outfile = '../model-results/generics-naturalPriors-incrMH'+mhiter+'_burn'+burn+'c.csv'
+var outfile = '../model-results/generics-naturalPriors-n57-incrMH'+mhiter+'_burn'+burn+'c.csv'
 naturalUtils.erpWriter(resultsERP, outfile)
 console.log('wrote to... ' + outfile)
 
-
-
+// df_prior
+// properties.length
+// var p = properties[2]
+// var propertyData = subset(df_prior, "Property", p)
+// var responseData = _.pluck(propertyData, "prevalence")
+// responseData.length

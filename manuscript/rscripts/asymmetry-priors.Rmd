@@ -57,7 +57,7 @@ d.params<-data.frame(Parameter = rep(d.tidy$Parameter,
 #   geom_histogram()+
 #   facet_grid(Item~Prevalence,scales='free')
 
-
+  
   
 
 
@@ -87,38 +87,48 @@ qplot(data=d.across, x=expectation, fill=splitHalf,geom='histogram')
 
 Write to .csv for latex
 ```{r}
-
-
 d.out <- d.summary %>% filter(Prevalence == 'gamma')
-d.raw <- read.csv(file='~/Documents/research/generics/data/asymmetry/asymmetry-prior-4-trials.csv')
+  d.raw <- read.csv(file='~/Documents/research/generics/manuscript/data/novelGenerics-prior-splitAccidentalFBT-trials.csv')
 
-d.labels <- d.raw %>% rename(Parameter = stim_property) %>% select(Parameter, stim_type)
+d.labels <- d.raw %>% rename(Parameter = stim_property) %>% select(Parameter, type)
 
-d.table<-left_join(d.out %>% filter(Item=='response0') %>% mutate(distinctiveness = 1-MAP,
+d.table<-left_join(d.out %>% filter(Item=='response0') 
+                   %>% mutate(distinctiveness = 1-MAP,
                                                distinctHigh = 1-credLo,
                                                distinctLow = 1-credHi) %>%
             ungroup() %>%
   select(-expectation,-MAP, -credLo, -credHi, -Prevalence, -Item),
-          d.out %>% filter(Item=='response1') %>% mutate(within = 1-MAP,
-                                               withinHigh = 1-credLo,
-                                               withinLow = 1-credHi) %>%
+          d.out %>% filter(Item=='response1') 
+                %>% mutate(within = MAP,
+                          withinLow = credLo,
+                         withinHigh = credHi) %>%
     ungroup() %>%
   select(-expectation,-MAP, -credLo, -credHi, -Prevalence, -Item))
 
 d.table<- left_join(unique(d.labels),d.table) %>%
-  mutate(stim_type = factor(stim_type, levels=c("part", "vague", "color", "accidental", "disease")))
+  mutate(stim_type = factor(type, levels=c("part",  "color", "vague", "accidental_high", "accidental_low")))
 
 
 d.table<-d.table[with(d.table, order(stim_type)),]
 
 d.tableOut <- d.table[,c(2,1,3,4,5,6,7,8)] 
 
+d.tableOut<-format(d.tableOut, digits=2)
 
+d.tableOut<- d.tableOut %>% 
+  unite(distinctCI,distinctLow, distinctHigh, sep=", ") %>% 
+  unite(withinCI,withinLow, withinHigh, sep=", ") %>%
+  unite(distinct,distinctiveness, distinctCI, sep=" [") %>% 
+  unite(mcp,within, withinCI, sep=" [") %>%
+  mutate(distinct = paste(distinct, "]", sep=""),
+         mcp = paste(mcp, "]", sep=""))  
 
-write.csv(d.table, file='~/Documents/research/generics/manuscript/novelKinds-prevalencePrior-byItem-gammaCIs.csv', row.names=F)
-
-
+write.csv(d.tableOut, file='~/Documents/research/generics/manuscript/novelKinds-prevalencePrior-byItem-gammaCIs.csv', row.names=F)
 ```
+
+
+
+
 
 By Type
 

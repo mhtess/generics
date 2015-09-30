@@ -7,6 +7,7 @@ output: html_document
 
 
 ```{r helpers, echo=F}
+library(coda)
 sem.2AFC <- function(p, n){return(sqrt((p*(1-p))/n))}
 estimate_mode <- function(s) {
   d <- density(s)
@@ -38,10 +39,13 @@ d1<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-as
 d2<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asymmetry-2so-2phi-incrmh100000_burn50000-incrmh50kb.csv")
 d3<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asymmetry-2so-2phi-incrmh100000_burn50000-incrmh50kc.csv")
 
+d<- read.csv("~/Documents/research/generics/manuscript/model-results/generics-implied_truth-softmax-priord50iter20000_mh20000a.csv")
+#d1<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asymmetry-0phi-priord50iter25000_mh50000a.csv")
+
 # d<-read.csv("~/Documents/research/generics/models/results/generics-asymmetry-2opts-phi-incrmh10000_asym2-prior4-incrmh10k.csv")
 # 
 # d<-read.csv("~/Documents/research/generics/models/results/generics-asymmetry-2optsActual-2phi-incrmh50000_asym2-prior4d50-incrmh25k.csv")
-samples = 50000
+samples = 10000
 d<-bind_rows(d1,d2,d3)
 #d<-d1
 
@@ -58,14 +62,13 @@ d.params<-data.frame(Parameter = rep(d$Parameter,
 
 
 
-d.phi <- d.params %>% filter(Item=='phi')
+d.phi <- d.params %>% filter(Item%in%c('phi','speakerOptimality', "softmax"))
 d.phi <- d.params %>% filter(Parameter=='phi')
 
 
 ggplot(d.phi, aes(x=Response))+
   geom_histogram()+
-  facet_wrap(~Item)+
-  xlim(0,1)
+  facet_wrap(~Item,scales='free')
 
 
 d.opt <- d.params %>% filter((Parameter%in%c('speakerOptimality','phi')))
@@ -79,15 +82,32 @@ d.opt <- d.params %>% filter((Parameter%in%c('speakerOptimality','phi')))
 #                          labels=c("lambda[truth_conditions]",
 #                                   "lambda[implied_prevalence]"))
 
-ggplot(d.opt, aes(x=Response))+
-  geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]))+
-  facet_grid(Item~Parameter, scales='free')+
-  #xlim(0,20)+
+d.opt <- mutate(d.opt, Item = factor(Item, label=c("Implied prevalence task", "Truth judgments task")))
+
+ggplot(d.opt %>% filter(Parameter =='speakerOptimality'), aes(x=Response))+
+  geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),binwidth=0.4)+
+  facet_wrap(~Item)+
+  #facet_grid(Item~Parameter, scales='free')+
+  xlim(0,20)+
   ylab("Posterior probability")+
-  xlab("Value")#+
+  xlab(expression(lambda))#+
   #theme_black()
 
-ggsave(file='~/Documents/research/generics/manuscript/figures/asymmetry-parameters-3x50k.pdf', height = 6)
+ggsave(file='~/Documents/research/generics/manuscript/figures/asymmetry-speakeropts-3x50k.pdf', height = 4)
+
+
+
+ggplot(d.opt %>% filter(Parameter =='phi'), aes(x=Response))+
+  geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),binwidth=0.02)+
+  facet_wrap(~Item)+
+  #facet_grid(Item~Parameter, scales='free')+
+  xlim(0,1)+
+  ylab("Posterior probability")+
+  xlab(expression(phi))#+
+  #theme_black()
+
+ggsave(file='~/Documents/research/generics/manuscript/figures/asymmetry-phi-3x50k.pdf', height = 4)
+
 
 
 d.opt %>%
@@ -178,6 +198,7 @@ for (i in 1:100){
   
   d.bootstrap<- bind_rows(d.bootstrap, d.groupmean)
   if ((i %% 10)==0) { print(i) }
+  #print(i) 
 }
 ```
 
@@ -248,7 +269,7 @@ ggplot(d.modeldata, aes(x=type, y=avePrev, fill = type, alpha=task))+
         legend.direction='horizontal')
 
 paramsetups<-'2phi-2so'
-ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-data-model-',paramsetups,'-',samples/1000,'kx3.pdf',sep=''), width=11, height = 6)
+#ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-data-model-',paramsetups,'-',samples/1000,'kx3.pdf',sep=''), width=11, height = 6)
 
 #ggsave(file=paste('~/Box Sync/talks/esslli-2015-generics/figures/asym-data-model-',paramsetups,'-',samples/1000,'k.pdf',sep=''), width=11, height = 6)
 
@@ -261,12 +282,137 @@ ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-data-mo
 ```
 
 
+
+Load prior data
+
+```{r}
+d1<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asym-prior-incrmh100000a.csv")
+d2<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asym-prior-incrmh100000b.csv")
+d3<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asym-prior-incrmh100000c.csv")
+
+samples = 50000
+d<-bind_rows(d1,d2,d3)
+
+
+
+
+d.tidy <- d
+
+
+d.params<-data.frame(Parameter = rep(d.tidy$Parameter, 
+                               1+samples*d.tidy$Probability),
+                     Item = rep(d.tidy$Item, 
+                               1+samples*d.tidy$Probability),
+                Prevalence = rep(d.tidy$Prevalence, 
+                               1+samples*d.tidy$Probability),
+                Response = rep(d.tidy$Value, 
+                               1+samples*d.tidy$Probability))
+
+
+
+d.summary<-d.params %>% group_by(Parameter,Item, Prevalence) %>%
+  summarise(MAP = estimate_mode(Response),
+            credHi = HPDhi(Response),
+            credLo = HPDlo(Response))
+
+
+d.sums<- d.summary %>% filter(Prevalence=='gamma')
+
+d.between<-d.sums %>% filter(Item=='response0') %>% 
+    ungroup() %>%
+                     select(-Prevalence, -Item) %>%
+                               rename(MAPbetween = MAP,
+                                      credLoBetween = credLo,
+                                      credHiBetween = credHi)
+d.within<- d.sums %>% filter(Item=='response1') %>% 
+  ungroup() %>%
+                                          select(-Prevalence, -Item) %>%
+                               rename(MAPwithin = MAP,
+                                      credLoWithin = credLo,
+                                      credHiWithin = credHi)
+
+m.join<-left_join(d.between, d.within)
+
+m.join$Property<-factor(m.join$Parameter, 
+                        levels=c("part","vague", "color", "accidental_high", "accidental_low"),
+                         labels = c("body parts", "vague parts",
+                                    "color parts", "common accidental",
+                                    "rare accidental"))
+
+d.modeldatawPrev<-left_join(d.modeldata, m.join %>% select(Property, MAPwithin) %>% rename(type = Property) )
+d.modeldatawPrev <- d.modeldatawPrev %>%
+  rename(Task = task)
+
+ggplot(d.modeldatawPrev, 
+       aes(x=MAPwithin, y = avePrev, color=type,group=Task, linetype=Task))+
+  geom_point(position=position_dodge(.05), size=4)+
+  geom_line(color='black',
+            position=position_dodge(.05), alpha=1)+
+  geom_errorbar(aes(ymin = credLow, ymax=credHigh), width=0.03, size = 1,linetype=1,
+                position=position_dodge(.05))+
+  #scale_alpha_manual(values= c(0.5, 1))+
+  scale_linetype_manual(values=c(4,1))+
+  scale_color_brewer(palette='Set1')+
+  xlim(0.2,1)+
+  ylim(20,100)+
+  xlab("(A priori) Mean conditional prevalence")+
+  ylab("Average prevalence")+
+  coord_fixed(0.01)+
+  facet_wrap(~src)+
+  guides(color=guide_legend(title="Property"))
+
+#ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-lines-data-model-',paramsetups,'-',samples/1000,'kx3.pdf',sep=''), width=11, height = 6)
+
+
+```
+
+
+
+Linear regression: Implied prevalence vs. A priori Within-prevalence
+```{r}
+
+d.reg<-left_join(d.implied, d.within %>% rename(type=Parameter))
+
+rs<-lmer(response ~ MAPwithin + (1 + MAPwithin | workerid), d.reg)
+summary(rs)
+
+
+d.aveAccPrev <- d.accept %>%
+  mutate(response = as.numeric(response==1)) %>%
+  group_by(workerid, type) %>%
+  summarise(prev = avePrevScore(response,stim_prevalence)) %>%
+  mutate(src = "accept") 
+
+d.reg.tc<-left_join(d.aveAccPrev, d.within %>% rename(type=Parameter))
+
+
+
+rs.tc<-lmer(prev ~ MAPwithin+ (1 + MAPwithin | workerid), d.reg.tc)
+
+summary(rs.tc)
+
+
+
+d.reg.tc$workerid<- max(to.n(levels(factor(d.reg$workerid)))) + d.reg.tc$workerid
+
+d.reg <- d.reg %>% select(workerid, type, response, MAPwithin, credHiWithin, credLoWithin) %>%
+  rename(prev = response) %>%
+  mutate(src = 'implied')
+
+d.reg.joint<- bind_rows(d.reg, d.reg.tc)
+
+rs.tc<-lmer(prev ~ MAPwithin*src - src + (1 + MAPwithin | workerid), d.reg.joint)
+
+summary(rs.tc)
+```
+
+
 FBT on prior elicitation and asymmetry data. Posterior over parameters and posterior predictive.
 
 
 ```{r tfbt.2}
 samples = 100000
-paramsetups = "2opts-phi"
+paramsetups = "2opts-2phi"
 
 d<-read.csv(paste("~/Documents/research/generics/manuscript/model-results/generics-asymmetry-prioriter10000_mh10000a.csv",sep=''))
 
@@ -294,7 +440,7 @@ ggplot(d.params %>%filter(Parameter=='phi'), aes(x=Response))+
 
 
 
-ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-lambdas-',paramsetups,'-',samples/1000,'k.pdf',sep=''))
+#ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-lambdas-',paramsetups,'-',samples/1000,'k.pdf',sep=''))
 #ggsave(file=paste('~/Box Sync/talks/esslli-2015-generics/figures/asym-lambdas-',paramsetups,'-',samples/1000,'k.pdf',sep=''))
 
 #ggsave(file=paste('~/Documents/research/generics/manuscript/figures/asym-params-',paramsetups,'-',samples/1000,'k.pdf',sep=''))
@@ -364,3 +510,139 @@ ggplot(d.pp %>% filter(Parameter=='truth_conditions'),
 
 ```
 
+
+
+Exploratory analysis for differences based on across-category prevalence
+
+```{r}
+
+# from asymmetry-priors.Rmd
+
+d.accept<-left_join(d.accept, d.across %>% select(Parameter, splitHalf) %>% rename(stim_property = Parameter))
+
+
+accept.summary <- d.accept %>%
+  group_by(splitHalf, stim_prevalence) %>%
+  summarise(prop = mean(response),
+            n = length(response)) %>%
+  mutate(sterr = sem.2AFC(prop,n))
+
+
+ggplot(accept.summary,aes(x=factor(stim_prevalence), y= prop, 
+                      group=splitHalf, color=splitHalf))+
+  geom_point(position=position_dodge(0.3))+
+  geom_line(position=position_dodge(0.3),size=1.5,linetype=2)+
+  geom_errorbar(aes(ymin=prop-2*sterr,
+                    ymax=prop+2*sterr),
+                width=0.1, size=1.5,
+                position=position_dodge(0.3))
+
+
+
+```
+
+Exploratory analysis for by-item implied prevalence
+```{r byItem}
+d<-read.csv('~/Documents/research/generics/models/data/asymmetry-2-trials-medSplitAccidental.csv')
+
+d.implied<- d %>% filter(trial_type=='implied_prevalence')
+
+d.pp <- d.params %>% filter((Parameter%in%c('truth_conditions',
+                                            'implied_prevalence')) & 
+                (!(Item%in%c('speakerOptimality','phi')))) %>%
+  group_by(Item) %>%
+  summarize(MAP = estimate_mode(Response),
+            credHigh = HPDhi(Response),
+            credLow = HPDlo(Response))
+
+
+
+
+d.impItem <- d.implied %>%
+  group_by(stim_property) %>%
+  summarize(average = mean(response),
+            CIhigh = average + 2*sem(response),
+            CIlow = average - 2*sem(response)) %>%
+  rename(Item = stim_property)
+
+dm.items<- left_join(d.impItem, d.pp)
+
+ggplot(dm.items, aes(x=MAP, y = average))+
+  geom_point()+
+  geom_abline(intercept = 0, slope = 1)+
+  geom_errorbar(aes(ymin = CIlow, ymax=CIhigh))+
+  geom_errorbarh(aes(xmin = credLow, xmax = credHigh))+
+  xlim(0,1)+
+  ylim(0,1)+
+  xlab("L1 model, by item")+
+  coord_fixed()
+
+with(dm.items, cor(MAP, average))^2
+ 
+d.mcp<-d.summary %>% filter(Item=='response1' & Prevalence =='gamma') %>%
+  rename(priorMAP = MAP, 
+         priorHigh = credHi,
+         priorLow = credLo) %>%
+  ungroup() %>%
+  select(-Item, -Prevalence) %>%
+  rename(Item = Parameter)
+
+dmp.items<-left_join(dm.items, d.mcp)
+
+with(dmp.items, cor(priorMAP, average))^2
+
+ggplot(dmp.items, aes(x=priorMAP, y = average))+
+  geom_point()+
+  geom_abline(intercept = 0, slope = 1)+
+  geom_errorbar(aes(ymin = CIlow, ymax=CIhigh))+
+  geom_errorbarh(aes(xmin = priorLow, xmax = priorMAP))+
+  xlim(0,1)+
+  ylim(0,1)+
+  xlab("A priori mean conditional prevalence, by item")+
+  coord_fixed()
+
+
+```
+
+Exploratory analysis of truth judgments vs. prevalence (and S2 model)
+
+```{r truthJudge.byPrev}
+
+# calculate proportion of "accepts" for each type and prevalence
+accept.summary <- d.accept %>%
+  group_by(stim_type, stim_prevalence) %>%
+  summarise(prop = mean(response),
+            n = length(response)) %>%
+  mutate(sterr = sem.2AFC(prop,n))
+
+ggplot(accept.summary,aes(x=factor(stim_prevalence), y= prop, 
+                      group=stim_type, color=stim_type))+
+  geom_point(position=position_dodge(0.3))+
+  geom_line(position=position_dodge(0.3),size=1,linetype=2)+
+  geom_errorbar(aes(ymin=prop-2*sterr,
+                    ymax=prop+2*sterr),
+                width=0.1, size=1,
+                position=position_dodge(0.3))+
+  ylim(0,1)
+
+
+
+d.tj <- d.params %>% filter((Parameter%in%c('truth_conditions')) & 
+                (!(Item%in%c('speakerOptimality','phi')))) %>%
+  group_by(Item, Prevalence) %>%
+  summarize(MAP = estimate_mode(Response),
+            credHigh = HPDhi(Response),
+            credLow = HPDlo(Response))
+
+
+ggplot(d.tj, aes(x=Prevalence, y = MAP, group=Item, color=Item))+
+    geom_point(position=position_dodge(0.3))+
+  geom_line(position=position_dodge(0.3),size=1,linetype=2)+
+  geom_errorbar(aes(ymin=credLow,
+                    ymax=credHigh),
+                width=0.1, size=1,
+                position=position_dodge(0.3))+
+  ylim(0,1)
+
+
+```

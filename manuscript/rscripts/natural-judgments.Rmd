@@ -122,7 +122,9 @@ m2<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter500
 m3<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000c.csv",sep=''))
 
 m<- bind_rows(m1,m2,m3)
-
+m<- read.csv(paste(m.path, 
+                   "generics-truthJudgment-phi-previter10000_prevprioriter10000-priord50Zero-n60_mh50000_burn25000c.csv", 
+                   sep=''))
 #m<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero_mh100000_burn50000a.csv",sep=''))
 
 #m<-bind_rows(m1,m2)
@@ -166,13 +168,16 @@ m.params<- m %>% filter(Parameter
                         %in% c("speakerOptimality", "cost", "softmax","phi")
                         )
 
-ggplot(m.params, aes(x=Value))+
-  geom_histogram(aes(y=..count../sum(..count..)))+
-  #geom_density(adjust=2)+
-  facet_wrap(~Parameter, scales='free')+
+ggplot(m.params %>% filter(Parameter=='speakerOptimality'), aes(x=Value))+
+  geom_histogram(aes(y=..count../sum(..count..)), binwidth = 0.4)+
+  #geom_density()+
+  #facet_wrap(~Parameter, scales='free')+
   #xlim(0,10)+
-  xlab("Speaker Optimality")+
+  xlim(0,20)+
+  xlab(expression(lambda))+
   ylab("Posterior probability")
+
+ggsave(file="~/Documents/research/generics/manuscript/figures/naturalGenerics-speakerOptimality.pdf", width = 8, height =4)
 
 
 m.params %>% 
@@ -181,9 +186,27 @@ m.params %>%
             credHi = HPDhi(Value),
             credLo = HPDlo(Value))
 
+ggplot(m.params, aes(x=Value))+
+  geom_histogram(aes(y=..count../sum(..count..)))+
+  #geom_density()+
+  facet_wrap(~Parameter, scales='free')+
+  #xlim(0,10)+
+  #xlim(0,20)+
+  #xlab(expression(lambda))+
+  ylab("Posterior probability")
+
+
 #ggsave(file='~/Box Sync/talks/esslli-2015-generics/posterior-rationality-truthJudge.pdf')
 
 
+m.prev<-m %>% filter(Parameter=='prevalence')
+
+View(m.prev %>%
+  group_by(Property,Category) %>%
+    summarise(postMode = estimate_mode(Value),
+            credHi = HPDhi(Value),
+            credLo = HPDlo(Value))
+  )
 ```
 
 Scatter plot
@@ -254,7 +277,84 @@ qplot(data=combined.model.data,
                        breaks=c(0,0.5,1))+
   theme(legend.title = element_text(hjust=0))
 
-#ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPostpred_95hdi-colorPrev.pdf', width=12, height=6)
+
+qplot(data=combined.model.data,
+      x=Prevalence,y=response,
+      color=Prevalence)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey39')+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                size =1, position=position_dodge(),
+                subset = .(Prevalence >=0.5))+
+  geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
+                  size = 1,
+                 subset = .(Prevalence >=0.5))+
+  geom_point(size=4, subset = .(Prevalence >=0.5))+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                size =1,  position=position_dodge(),
+                 subset = .(Prevalence <0.5))+
+  geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
+                size = 1,  position=position_dodge(),
+                 subset = .(Prevalence <0.5))+
+  geom_point(size=4,  subset = .(Prevalence <0.5))+
+  xlab("\n Within-kind prevalence")+
+  ylab("Human judgment \n")+
+#  guides()+
+  xlim(-0.05,1.05)+
+  ylim(-0.05,1.05)+
+  coord_fixed()+
+  #scale_color_gradient(low='#386cb0', high = '#f0027f')+
+  scale_color_gradient(low='black', high ='#addd8e', limits=c(0,1),
+                       breaks=c(0,0.5,1))+
+  theme(legend.title = element_text(hjust=0))
+
+
+
+
+ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPrevalence_95hdi-colorPrev.pdf', width=12, height=6)
+
+
+
+qplot(data=combined.model.data,
+      x=posMode,y=response,
+      color=Prevalence)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey69')+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                size =1.5, position=position_dodge(),
+                subset = .(Prevalence >=0.5))+
+  geom_errorbarh(aes(xmin = credLo, xmax=credHi),
+                  size = 1.5,
+                 subset = .(Prevalence >=0.5))+
+  geom_point(size=5, subset = .(Prevalence >=0.5))+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                size =1.5,  position=position_dodge(),
+                 subset = .(Prevalence <0.5))+
+  geom_errorbarh(aes(xmin = credLo, xmax=credHi),
+                size = 1.5,  position=position_dodge(),
+                 subset = .(Prevalence <0.5))+
+  geom_point(size=5,  subset = .(Prevalence <0.5))+
+  xlab("\n Model prediction")+
+  ylab("Human judgment (proportion agree) \n")+
+#  guides()+
+  scale_x_continuous(limits=c(-0.05,1.05), breaks=c(0,0.5,1))+
+  scale_y_continuous(limits=c(-0.05,1.05), breaks=c(0,0.5,1))+
+  coord_fixed()+
+  #scale_color_gradient(low='#386cb0', high = '#f0027f')+
+  scale_color_gradient(low='#b8e186', high ='#d01c8b', limits=c(0,1),
+                       breaks=c(0,0.5,1))+
+  theme_blackDisplay()+
+  theme(legend.title = element_text(hjust=0),
+        axis.text.x=element_text(size=20),
+        axis.text.y=element_text(size=20),
+        axis.title.x = element_text(size=24),
+        axis.title.y = element_text(size=24),
+        strip.text.x = element_text(size=24))
+
+
+
+ggsave(file='~/Box Sync/talks/lightning-2015-generics/tj-scatter.pdf', width=12, height=10)
+
+
+
 
 
 # labeled.points <- c("Sharks dont attack swimmers.",
@@ -346,8 +446,10 @@ cmd.tidy <-
           rename(credHi = YMax,
                  credLo = YMin))
 
+cmd.tidy <- left_join (cmd.tidy, combined.model.data %>% select(sentence, Prevalence))
+
 cmd.tidy$sentence<-with(cmd.tidy %>% filter(src=='posMode'), 
-                        reorder(sentence, value, function(x) x))
+                        reorder(sentence, Prevalence, function(x) x))
 
 cmd.tidy<- cmd.tidy %>% rename(
   Source = src
@@ -373,7 +475,7 @@ ggplot(data=cmd.tidy, aes(x=sentence, y=value-0.5,
    #                                vjust=1))+
  # ylim(-.5,0.5)+
   xlab("")+
-  ylab(" proportion endorsement")+
+  ylab("Endorsement")+
   scale_y_continuous(breaks=c(-0.5,0,0.5),labels=c("0","0.5","1"))+
   coord_flip()
 

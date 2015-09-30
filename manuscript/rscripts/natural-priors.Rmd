@@ -181,12 +181,13 @@ for (i in 1:100){
 ```
 
 
+
 Make scatterplot: Across prevalence vs. Within prevalence
 
 ```{r scatter}
 
 m.stats<- m %>% 
-  filter(Negation != 'delta') %>%
+#  filter(Negation != 'delta') %>%
   group_by(Property, Negation) %>%
   summarise(MAP = estimate_mode(Value),
             credHigh = HPDhi(Value),
@@ -197,29 +198,94 @@ m.spread<- m.stats %>%
   gather(key, val, MAP, credHigh, credLow) %>%
   spread(Negation, val)
 
-m.join<- left_join(left_join(m.spread %>% filter(key=='MAP') %>% select(-key),
-                   m.spread %>% filter(key=='credHigh') %>% select(-key) %>%
+m.join<- left_join(left_join(m.spread %>% 
+                               filter(key=='MAP') %>% 
+                               select(-key),
+                   m.spread %>% 
+                     filter(key=='credHigh') %>% 
+                     select(-key) %>%
                      rename(credHigh_within = gamma,
+                            credHigh_varianceWithin = delta,
                             credHigh_across = prob_hasF)),
                    m.spread %>% filter(key=='credLow') %>% select(-key) %>%
                      rename(credLow_within = gamma,
+                            credLow_varianceWithin = delta,
                             credLow_across = prob_hasF))
 
 
-ggplot(m.join, aes(x = gamma, y = prob_hasF, label=Property))+
-   geom_point(size =3)+
-   geom_errorbar(aes(ymin = credLow_across, ymax = credHigh_across),
-                                 position=position_dodge(), size =1)+
-   geom_errorbarh(aes(xmin = credLow_within, xmax = credHigh_within),                 
-                  position=position_dodge(), size =1)+
-#  geom_text(position=position_jitter(height=0.035, width=0.0))+
+m.median <- m.join %>%
+  mutate(alpha = shape1(gamma,delta),
+         beta = shape2(gamma,delta)) %>%
+
+  
+(m.median %>% filter(Property=='have manes'))$gamma
+  
+median(with(m.median %>% filter(Property=='have manes'), 
+     rbeta(10000, shape1=alpha, shape2=beta)))
+
+
+# m.join <- m.join %>%
+#   rowwise() %>%
+#   mutate(deltaX = if (delta > 2.5) {2.5} else {delta})
+
+ m.join <- left_join(m.join, d.samples %>% filter(Prevalence!=0) %>%
+  group_by(Property) %>%
+  summarise(inverseRegularity = var(Prevalence)))
+
+qplot(x=delta, geom='histogram',data= m.join, binwidth =0.5)
+
+View(m.join %>% select(Property, gamma, deltaX, prob_hasF))
+
+ggplot(m.join, aes(x = gamma, y = 1- prob_hasF, label=Property, color =1- inverseRegularity))+
+   #geom_point(size =3, position = position_jitter(w = 0.02, h = 0.02))+
+  geom_text(position = position_jitter(w = 0.00, h = 0.003))+
+   #geom_errorbar(aes(ymin = 1- credLow_across, ymax = 1- credHigh_across),
+  #                               position = position_jitter(w = 0.1, h = 0.1), size =1)+
+   #geom_errorbarh(aes(xmin = credLow_within, xmax = credHigh_within),                 
+  #                position=position_dodge(), size =1)+
+ #  geom_errorbarh(aes(xmin = credLow_varianceWithin, xmax = credHigh_varianceWithin),                 
+ #                 position=position_dodge(), size =1)+
+  #  geom_text(position=position_jitter(height=0.035, width=0.0))+
   xlim(-0.05,1.2)+
+#ylim(-0.05,1.05)+
+ # coord_fixed()+
+  #coord_flip()+
+    scale_color_gradient(low='#999999', high ='#ef8a62')
+
+, limits=c(0,1),
+                       breaks=c(0,0.5,1))+
+  #xlab("Within-category prevalence")+
+  #ylab("Between-category prevalence")
+
+
+ggplot(m.join, aes(x = gamma, y = 1-prob_hasF, label=Property))+
+   geom_point(size =2.5, color='black')+
+   geom_errorbar(aes(ymin = 1-credLow_across, ymax = 1-credHigh_across),
+                                 position=position_dodge(), size =1,
+                 color='black')+
+   geom_errorbarh(aes(xmin = credLow_within, xmax = credHigh_within),                 
+                  position=position_dodge(), size =1,
+                  color='black')+
+#  geom_text(position=position_jitter(height=0.035, width=0.0))+
+  xlim(-0.05,1.05)+
   ylim(-0.05,1.05)+
   coord_fixed()+
-  xlab("Within-category prevalence")+
-  ylab("Between-category prevalence")
+  xlab("\n Mean conditional prevalence")+
+  ylab("Property distinctiveness \n")
 
-#ggsave(file='~/Documents/research/generics/manuscript/figures/prevalences-scatter.pdf', width=12, height=6)
+ggsave(file='~/Documents/research/generics/manuscript/figures/prevalences-scatter-1.pdf', width=12, height=6)
+
+
+
+
+#+
+#  theme_blackDisplay()
+
+
+#ggsave(file=paste('~/Box Sync/talks/lightning-2015-generics/prevalence-scatter.pdf',sep=''), 
+#       width=8, height=6)
+
+
 
 ```
 
@@ -289,6 +355,13 @@ target<- c("are female", "lay eggs", "carry malaria", "have wings",
 
 d.sty$src<-factor(d.sty$src, levels=c("Prior prevalence", "Posterior prevalence"))
 
+
+m.prevTargets <- m.summary %>%
+  filter(Category%in%c("Robins", "Mosquitos", 
+                       "Ducks", "Sharks") )
+
+m.prevTargets <- m.prevTargets[c(1,5,7, 10,11),]
+
 for (t in target){
 #  ggplot(d.samples %>% filter(Property == t), 
 #          aes(x=Prevalence))+
@@ -296,9 +369,16 @@ for (t in target){
           aes(x=Prevalence, linetype=src, color=src, alpha=src))+
     geom_density(aes(y=..scaled..), size=1, color ='black',
                  fill='black')+
-  #  scale_linetype_manual(values = c(1, 3))+
+       scale_color_manual(values=c("#bdbdbd","#f0f0f0"))+
+  scale_alpha_manual(values=c(0.6,0.1))+
+    #geom_density(size=1, alpha=0.7)+
+     geom_errorbarh(data = m.prevTargets %>% filter(Property==t),
+                    aes(x= map, xmin = credLow, xmax = credHigh,
+                    y = 1.05), color='#2ca25f', size = 1.1,
+                    height = 0.1, inherit.aes=F)+
+     #  scale_linetype_manual(values = c(1, 3))+
   #geom_histogram()+
-#    geom_density(data=t.stats %>% filter(Property == t),
+#    geom_dens  ity(data=t.stats %>% filter(Property == t),
 #                 aes(x=bin, y=MAP), size =1,
 #                 stat='identity')+
 #   geom_density(aes(y = ..scaled..), size=1, linetype =3)+
@@ -307,22 +387,31 @@ for (t in target){
   #             aes(x=as.numeric(bin), y =MAP), stat='identity')+
   #scale_color_brewer(palette='Dark2')+
   scale_linetype_manual(values=c(1,2))+
-  scale_alpha_manual(values=c(0.6,0.1))+
-  #scale_color_manual(values=c("#bdbdbd","#f0f0f0"))+
+ # theme_blackDisplay()+
   xlab("Prevalence")+
-  ylab("Density")+
   #theme(legend.position=c(0.7,0.65))+
   #guides(color =F)+ 
+  guides(fill=F, color=F, alpha=F, linetype=F)+
   facet_wrap(~Property, scales='free')+
   scale_x_continuous(limits=c(0,1), breaks=c(0,0.5,1))+
-  scale_y_continuous(limits=c(0,1), breaks=c(0,0.5,1))+
+  scale_y_continuous(limits=c(0,1.1), breaks=c(0,0.5,1))+
   ylab("Scaled density")+
+ # theme(axis.text.x=element_text(size=20),
+#        axis.title.x = element_text(size=24),
+#        strip.text.x = element_text(size=24))
   theme(#axis.text.y=element_blank(),
-        strip.text.x=element_text(size=16))
+        strip.text.x=element_text(size=16))+
+  coord_fixed()
     
-ggsave(file=paste('~/Documents/research/generics/manuscript/figures/truthjudge-prevalences-priors-posteriors',t,'.pdf',sep=''), 
-       width=7, height=3)
-  
+
+ggsave(file=paste('~/Documents/research/generics/manuscript/figures/truthjudge-prevalences-priors-posteriors-wTarget-',t,'.pdf',sep=''), 
+       width=5, height=3.5)
+
+print(t)
+#ggsave(file=paste('~/Box Sync/talks/lightning-2015-generics/truthjudge-prevalences-priors-posteriors',t,'.pdf',sep=''), 
+#       width=7, height=4)
+
+
 }
 
 
