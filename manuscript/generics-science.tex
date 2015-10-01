@@ -448,14 +448,14 @@ We use Steph ($S_{2}$) to model felicity or truth judgments, following \citeA{De
 \subsubsection*{Generics have flexible truth conditions (1550 words to this point)} 
 
 We tested the degree to which Eq.~\ref{eq:S2} predicted that a given category--property pair (e.g. \textsc{robins} and \textsc{lay eggs}) would result in a felicitous generic (e.g. \emph{Robins lay eggs.}). 
-We collected human judgments ($n=91$) about the acceptability of thirty generic sentences. 
+We collected human judgments ($n=96$) about the acceptability of thirty generic sentences. 
 We chose the sentences to cover a range of conceptual distinctions outlined by \citeA{Prasada2013}, including characteristic (e.g. \emph{Ducks have wings.}), minority (e.g. \emph{Robins lay eggs.}), striking (e.g. \emph{Mosquitos carry malaria.}), false generalization (e.g. \emph{Robins are female.}), and false (e.g. \emph{Lions lay eggs.}).
 The sentences were also chosen to elicit a range of acceptability judgments (``definitely acceptable'', ``definitely unacceptable'', and ``uncertain'') and include generics that were both acceptable and unacceptable with low-prevalence, medium-prevalence, and high-prevalence properties.
 %\ndg{maybe one more sentence about the desired range of variation: from true to false and in between, but also true with low prevalence, etc...?}
 %
 %The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false (Figure \ref{fig:modeldataBars}, light bars). 
-The \emph{a priori} truth-judgment we assigned was a significant predictor of the empirical truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$), as revealed by a mixed-effect logistic regression with random by-participant effects of intercept.
-Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
+The \emph{a priori} truth-judgment we assigned was a significant predictor of the empirical truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = 21.5$), as revealed by a mixed-effect logistic regression with random by-participant effects of intercept.
+Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.09; SE = 0.14; z = 14.5$).
 
 
 The probabilisitic model is fully specified by Eqs.~\ref{eq:L1} -- \ref{eq:S2}, with the exception of the speaker rationality parameter $\lambda$ and the prior distribution on prevalences $P(x)$. 
@@ -505,12 +505,12 @@ We see significant variety in the shape of priors of properties that are commonl
   \label{fig:priors1a}
 \end{figure}
 
-Do subjective beliefs about within-kind prevalence predict the felicity of generic utterances?
+Do subjective beliefs about the prevalence of properties within kinds predict the felicity of generic utterances?
 From the prevalence-prior data, we can also estimate participants' beliefs about the prevalence of a property for a given kind (e.g. the percentage of birds that lay eggs; see Supplement (Table 2) for Maximum A-Posteriori (MAP) estimates and 95\% Bayesian Highest Density Intervals (HDI) over the mean prevalence for each property--category pairing). %We first compare the predictions of Eq.~\ref{eq:S2} to 
 As a simple baseline hypothesis, we first explore whether these prevalence values themselves predict generic endorsement (e.g.~does the fraction of \textsc{robins} that \textsc{lay eggs} predict the felicity of \emph{Robins lay eggs}?).
-A little over half of the variance in truth judgments data is explained by the prevalence of the property within the category alone ($r^2 = 0.601$; Supplement Figure 1). 
+A little over half of the variance in truth judgments data is explained by the prevalence of the property within the category alone ($r^2 = 0.599$; Supplement Figure 1). 
 This is, of course, expected given the usage of high-prevalence true generics (e.g. ``Leopards have spots.'') and low-prevalence false generics (e.g. ``Leopards have wings.''). 
-However, large deviations from a purely target-category prevalence account remain: Generics in which the target category had intermediate prevalence (prevalence quartiles 2 and 3: $ 20\% < prevalence < 64\%$), were not explained at all by prevalence within those categories ($r_{Q2,3}^2 = 0.030$).
+However, large deviations from a purely target-category prevalence account remain: Generics in which the target category had intermediate prevalence (prevalence quartiles 2 and 3: $ 20\% < prevalence < 64\%$), were not explained at all by prevalence within those categories ($r_{Q2,3}^2 = 0.029$).
 
 \begin{figure}
 \centering
@@ -529,8 +529,8 @@ However, large deviations from a purely target-category prevalence account remai
 %  \label{fig:modeldataScatter}
 %\end{figure}
 
-The probabilisitic pragmatics model, using empirically measured priors, does a much better job of explaining the truth judgments ($r^2=0.984$; Figure \ref{fig:modeldataBars}, Supplement Figure 4). 
-Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (corners of Figure \ref{fig:modeldataBars}), including items for which target-category prevalence is not a good indicator of the acceptability (for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.962$; Figure \ref{fig:modeldataBars} lighter shades in the lower left, darker shades in the upper right). 
+The probabilisitic pragmatics model, using empirically measured priors, does a much better job of explaining the truth judgments ($r^2=0.981$; Figure \ref{fig:modeldataBars}, Supplement Figure 4). 
+Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (corners of Figure \ref{fig:modeldataBars}), including items for which target-category prevalence is not a good indicator of the acceptability (for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.955$; Figure \ref{fig:modeldataBars} lighter shades in the lower left, darker shades in the upper right). 
 The probabilistic pragmatics model accounts well for the puzzling flexibility of generic truth-conditions.
 
 \subsubsection*{Generics have strong implications (2300 words to this point)} 
@@ -592,9 +592,11 @@ We used the speaker model (Eq.~\ref{eq:S2}) again to predict this truth judgment
 We submitted our speaker model to the same analysis as the truth judgments data, following \citeA{Cimpian2010} (see Supplement Section D). 
 
 Human prevalence judgments after reading the generic were affected by the type of property in question and its corresponding mean conditional prevalence (Figure \ref{fig:exp2b} Left; solid line): The more prevalent a property is expected to be \emph{a priori}, the stronger the implications of a generic ($\beta = 0.59; SE = 0.08; t(39) = 7.14; p < 0.001$)\footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}. 
-The listener model (Eq.~\ref{eq:L1}) produced this same gradient of interpretations (Figure \ref{fig:exp2b}, Right, solid line), showing the same sensitivity to abstract beliefs about the properties as our human participants. 
-The speaker model did not make appreciably different predictions as to the average prevalence to accept the generic  and the similar absence of a gradient was observed in the human data ($\beta = 2.82; SE = 4.02; t(39) = 0.70; p = 0.49$) the model (Figure \ref{fig:exp2b}, dotted lines). 
-These listener and speaker pair of models predicts human endorsements and interpretations of novel generic utterances well ($r^2(10) = 0.923$). 
+However, the generic does more than merely inform a listener that the property is present: 
+A generic carries the communicative force of a speech act, and thus implies the property is \emph{more prevalent} than a listener would expect (Figure \ref{fig:exp2b} solid line lies above $y=x$ line).
+The listener model (Eq.~\ref{eq:L1}) produced the same strong interpretation along a gradient (Figure \ref{fig:exp2b}, Right, solid line), displaying the sensitivity to abstract beliefs about the properties that human participants show. 
+The speaker model did not make appreciably different predictions as to the average prevalence to accept the generic, consistent with the intuition that generics are acceptable for a wide range of prevalence levels; a similar absence of a gradient was observed in the human data ($\beta = 2.82; SE = 4.02; t(39) = 0.70; p = 0.49$; Figure \ref{fig:exp2b}, dotted lines). 
+The listener and speaker pair of models predicts human endorsements and interpretations of novel generic utterances well ($r^2(10) = 0.921$)\footnote{We performed a by-item analysis for the implied prevalence data and found a similar strong fit to the data ($r^2(40) = XXX$; see Supplement Section D5)}. 
 
 %Interestingly, we observe greater implied prevalence of common accidental properties than rare accidental properties, given our median split based on the prior elicitation task ($\beta=0.061; SE = 0.025; t(39) = 2.47; p = 0.018$) \footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}.
 %Implications of generics of body parts was significantly greater than those of the biological properties used by \citeA{Cimpian2010} (here, ``color parts'') ($\beta=0.118; SE = 0.024; t(39) = 4.74; p < 0.001$).
@@ -602,15 +604,17 @@ These listener and speaker pair of models predicts human endorsements and interp
 
 \begin{figure}
 \centering
-    \includegraphics[width=1\columnwidth]{asym-lines-data-model-2opts-2phi-50kx3.pdf}
+    \includegraphics[width=1\columnwidth]{asym-lines-data-model-2phi-2so-50kx3.pdf}
     \caption{Human judgments and model predictions of prevalence implied by novel generic utterances (implied prevalence task; solid line) and average prevalence that leads to an acceptable generic utterance (truth conditions task; dotted line) as it relates to the \emph{a priori} average within-category prevalence.
-    Upon reading a generic statement about biological properties, participants and the model infer that a high proportion of the category has the property (solid line: red, blue and green). 
+    $y = x$ line denotes the prevalence inferred upon knowing the property is present in the kind. 
+    For each kind of property, the generic utterance implies a higher than expected prevalence.
+    Generic statements about biological properties, imply that high proportion of the category has the property, for both human participants and the model (solid line: red, blue and green). 
     Generics about accidental properties do not result in such a high implied prevalence (solid line: purple and orange).  
-	While the implications of generic utterances are highly variable across the different types of properties, the average prevalence that leads to an acceptable generic does not vary, for  participants or the model.
+	While the implications of generic utterances are highly variable across the different types of properties, the average prevalence that leads to an acceptable generic does not vary, for participants or the model.
         %Generic statements are accepted for a range of prevalences, resulting in a intermediate average prevalence (dotted line) that deoesn't vary by property type for the truth conditions task. 
     Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.
-    \ndg{change x-axis label to "a priori expected prevalence" or something like that -- "within-category prevalence" is ambiguous.}
-    }
+%    \ndg{change x-axis label to "a priori expected prevalence" or something like that -- "within-category prevalence" is ambiguous.}
+}
   \label{fig:exp2b}
 \end{figure}
 
