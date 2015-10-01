@@ -585,27 +585,28 @@ We then used a single speaker optimality parameter ($\lambda$) and a single cont
 The estimated posterior distributions for the two parameters: $\lambda$ and $\phi$ are shown in Figure \ref{fig:byItemParameters}
 The MAP and 95\% credible interval for $\lambda$ is and $\phi$ is .
 
-%\begin{figure}
-%\centering
-%    \includegraphics[width=\columnwidth]{}
-%    \caption{Posterior distribution of the speaker rationality parameter and the contamination parameter for an exploratory, by-item analysis.}
-%  \label{fig:byItemParameters}
-%\end{figure}
+\begin{figure}
+\centering
+    \includegraphics[width=0.8\columnwidth]{asymmetry-byItem-params-2x50k.pdf}
+    \caption{Posterior distribution of the speaker rationality parameter and the contamination parameter for an exploratory, by-item analysis.}
+  \label{fig:byItemParameters}
+\end{figure}
 
 
 
-The posterior predictive distribution compared to human judgments is shown in Figure \ref{fig:byItemScatter} (Left). 
+The posterior predictive distribution compared to human judgments is shown in Figure \ref{fig:byItemScatter} (Right). 
 As shown in Figure 4 (main text), interpretations of generic utterances are heavily guided by the \emph{a priori} mean conditional prevalence. 
 Recall the mean conditional prevalence is the average prevalence among the kinds for which the property is present. 
-We additionally plot the human judgments (after hearing the novel generic) with the mean conditional prevalence (before hearing the generic) in Figure \ref{fig:byItemScatter} (Right). 
-Though both the posterior predictive distribution of the listener model (Eq.~1) given the generic utterance and the \emph{a priori} mean conditional prevalence explain roughly the same amount of variance in generic interpretation ($r^2 = 0.92, 0.93$, respectively), the \emph{a priori} mean conditional prevalence consistently \emph{underestimates} the interpreted prevalence.
+We additionally plot the human judgments (after hearing the novel generic) with the mean conditional prevalence (before hearing the generic) in Figure \ref{fig:byItemScatter} (Left). 
+Though both the posterior predictive distribution of the listener model (Eq.~1) given the generic utterance and the \emph{a priori} mean conditional prevalence explain roughly the same amount of variance in generic interpretation ($r^2 = 0.89, 0.91$, respectively), the \emph{a priori} mean conditional prevalence consistently \emph{underestimates} the interpreted prevalence.
 This means that generic implies more than merely that the property is present within the kind; the generic implies the prevalence is substantially more than a listener would expect \emph{a priori}. 
-%\begin{figure}
-%\centering
-%    \includegraphics[width=\columnwidth]{}
-%    \caption{Posterior distribution of the speaker rationality parameter and the contamination parameter for an exploratory, by-item analysis.}
-%  \label{fig:byItemParameters}
-%\end{figure}
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{implied-byItem-mcp-pp}
+    \caption{Implied prevalence by human participants vs. mean conditional prevalence and the generics model posterior predictive.}
+  \label{fig:byItemScatter}
+\end{figure}
 
 
 

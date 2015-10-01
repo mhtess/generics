@@ -467,8 +467,8 @@ Because $\lambda$ is not of theoretical interest here, it is marginalized accord
 We inferred the most likely prevalence prior for each property from the prior elicitation data, using the Bayesian data analysis approach described in the Supplement (Section A3). %Section \ref{sec:bda1}.	
 %\ndg{why are these two components relevant? need better names... i wonder whether we should get rid of these two prior stats, in favor of something like within-category prevalence of target kind vs mean prevalence across kinds (expectation of prior)?}
 The prior distribution over prevalence for a property can be summarized by the property's \emph{distinctiveness} (i.e., how many different animal kinds have the property) and the \emph{conditional mean prevalence} (e.g. average prevalence across the kinds for which the property is present).
-A property that is highly distinct will receive many 0\% responses (e.g. many kinds have 0\% of their members lay eggs, while not many kinds are 0\% female).
-A property's mean conditional prevalence is the overall expected prevalence for a kind assuming the prevalence is greater than 0\% (i.e. the property is present).
+A property that is highly distinct will receive many 0\% responses (e.g. not many kinds are 0\% female while many have 0\% of their members lay eggs).
+A property's mean conditional prevalence is the overall expected prevalence for a kind assuming property is present (i.e. prevalence is greater than 0\%). 
 These two components summarize the diversity of the shapes of the priors elicited and are useful for understanding the behavior of the model.
 Increasing the property's distinctiveness (i.e. the relative mass at 0\%) will relax the truth conditions by making a lower threshold more informative. 
 The mean conditional prevalence corresponds to the listener's prior expectations of how widespread the property is within kinds that have it. 
@@ -514,7 +514,7 @@ However, large deviations from a purely target-category prevalence account remai
 
 \begin{figure}
 \centering
-    \includegraphics[width=0.6\columnwidth]{truthjudge-scatter-wLabels.pdf}
+    \includegraphics[width=0.7\columnwidth]{truthjudge-scatter-wLabels.pdf}
     \caption{Human acceptability judgments and model predictions for thirty generic utterances about familiar animals and properties. 
     Color denotes target-category prevalence of the property, with darker colors indicating lower prevalence. 
     Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions.
@@ -567,8 +567,8 @@ We used 5 different types of properties to explore a range of prior beliefs abou
 The pragmatic listener in Eq.~\ref{eq:L1} is sensitive to the type of property (and its corresponding distribution on prevalence $P(x)$) when it hears a novel generic.
 Particularly, the \emph{a priori} mean within-kind prevalence will guide interpretation as it describes the distribution assuming the property is present.
 Again, $P(x)$ was measured empirically ($n=40$, see Supplement Section C).
-The five property types fell on a continuum of \emph{a priori} mean within-kind prevalence (Figure \ref{fig:prior2}; x-axis). 
-Biological properties are expected \emph{a piori} to be more prevalent \emph{within-kinds} than accidental properties, and differences exist among types of biological and accidental properties.
+The five property types fell on a continuum of \emph{a priori} mean conditional prevalence (Figure \ref{fig:prior2}; x-axis). 
+Biological properties are expected \emph{a piori} to be more prevalent within a kind than accidental properties, with fine-grained differences even among types of biological and accidental properties.
 For instance, within a given kind, colored body parts (e.g. \textsc{green wings}) are expected \emph{a priori} to be less prevalent than some gradable adjectives (e.g. \textsc{small wings}). 
 Some accidental properties are expected to be relatively more prevalent \emph{a priori} than others (``common accidental'' vs. ``rare accidental''; e.g. \textsc{wet fur} vs. \textsc{broken legs}; Figure \ref{fig:prior2}, orange and purple plots).
 The shapes of the distributions are importantly different as well (Figure \ref{fig:prior2} density plots). 
