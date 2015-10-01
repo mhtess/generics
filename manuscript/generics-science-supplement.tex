@@ -77,9 +77,9 @@ The goal of this experiment was to measure participants' beliefs about the distr
 
 \subsection{Participants}
 
-We recruited 60 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
-2 participants were excluded for self-reporting a native language other than English. 
-3 participants' responses were removed because those participants had already completed the experiment once before.
+We recruited 57 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
+We recruited 3 participants for a second time by mistake and excluded their second responses.
+2 participants self-reporting a native language other than English; removing their data ($n=55$) has no effect on the results reported. 
 The experiment took about 10 minutes and participants were compensated \$1.00.
 
 \subsection{Procedure and materials}
@@ -201,8 +201,10 @@ The goal of this experiment was to measure participants' beliefs about the accep
 
 \subsection{Participants}
 
-We recruited 100 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
-5 participants were excluded for self-reporting a native language other than English. 
+We recruited 96 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk).  
+Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
+4 additional participants were recruited and their data for failing to pass a catch trial.
+5 participants self-reporting a native language other than English; removing their data has no effect on the results reported. 
 The experiment took about 3 minutes and participants were compensated \$0.35.
 
 \subsection{Procedure and materials}
@@ -219,23 +221,25 @@ They covered a range of conceptual categories: Characteristic (e.g. ``Ducks have
 We also aimed to include generics that were both acceptable and unacceptable with low, medium, and high prevalence.
 Approximately 10 true, 10 false, and 10 uncertain truth-value generics were selected (see Appendix \ref{sec:appendix} for full list of items).
 
-As a manipulation check, participants were asked at the end of the trials which button corresponded to ``Agree''.
+As a manipulation check, participants were asked at the end of the trials which button corresponded to ``Agree''. 4 participants were excluded for failing this trial.
 
 \subsubsection{Results}
 
-Four participants were excluded for failing to successfully report which button corresponded with ``Agree'', resulting in 91 participants.
+All main results of interest are reported in the main text.
+ Figure \ref{fig:scatterprev} shows the human truth judgments as compared to the target-category prevalence of the property ($r^2 = 0.599$). 
+ Large deviations from a purely within-kind prevalence account remain: 
+ Generics in which the target category had intermediate prevalence (prevalence quartiles 2 and 3: $ 20\% < prevalence < 64\%$), were not explained at all by prevalence within those categories ($r_{Q2,3}^2 = 0.029$).
 
 
-
-The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false. 
-We entered participants' agreement judgments into a mixed-effect logistic regression with random by-participant effects of intercept. 
-This \emph{a priori} distinction was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$).
-Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
-
-Truth judgments for these generic sentences were correlated with the prevalence of the property for the target category elicited in Expt.~1a ($r = 0.73$, Figure \ref{fig:scatterprev}). 
-This is, of course, expected given that high-prevalence true generics (e.g. ``Leopards have spots.'') and low-prevalence false generics (e.g. ``Leopards have wings.'') were used. 
-However, large deviations from a purely within-category prevalence account remain: 
-Generics with intermediate prevalences (Prevalence quartiles 2 and 3: $ 22\% < prevalence < 62\%$), exhibited no correlation with truth judgments ($r_{Q2,3} = -0.08$).
+%The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false. 
+%We entered participants' agreement judgments into a mixed-effect logistic regression with random by-participant effects of intercept. 
+%This \emph{a priori} distinction was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$).
+%Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.07; SE = 0.15; z = 14.1$).
+%
+%Truth judgments for these generic sentences were correlated with the prevalence of the property for the target category elicited in Expt.~1a ($r = 0.73$, Figure \ref{fig:scatterprev}). 
+%This is, of course, expected given that high-prevalence true generics (e.g. ``Leopards have spots.'') and low-prevalence false generics (e.g. ``Leopards have wings.'') were used. 
+%However, large deviations from a purely within-category prevalence account remain: 
+%Generics with intermediate prevalences (Prevalence quartiles 2 and 3: $ 22\% < prevalence < 62\%$), exhibited no correlation with truth judgments ($r_{Q2,3} = -0.08$).
 
 
 \begin{figure}
@@ -512,7 +516,7 @@ We repeated this procedure 1000 times to bootstrap 95\% confidence intervals.
 Of primary interest here is how the interpretations of novel generic utterances vary as a function of \emph{a priori} beliefs about the prevalence of the type of property in question.
 The model of the pragmatic listener $L_1$ in Eq.~1 is a natural model of this process.
 We use this model to predict the data from the implied prevalence task.
-Just as with the experiment with common generics, we use the model of the speaker $S_2$ in Eq.~4 as a model of the \emph{truth conditions} task for novel genrerics.
+Just as with the experiment with common generics, we use the model of the speaker $S_2$ in Eq.~4 as a model of the \emph{truth conditions} task for novel generics.
 The dependent measure for the \emph{truth conditions} task is \emph{average prevalence} at which the participants assent to the use of the generic. 
 This was previously shown not to be as sensitive to participants' beliefs about the properties in question (but, cf. \citeA{Cimpian2010}, Expt.~4).
 %In Expt.~1, the acceptability of the generic was modeled as a speaker $S_2$ (Eq.~4) reasoning about whether or not to produce the generic given some known prevalence. 
@@ -544,11 +548,11 @@ It is possible, however, that the guessing parameter could remove differences th
 This is particularly relevant for the truth conditions task, where we observe no appreciably differences among the average prevalence to assent to the generic (see Figure 4, truth conditions). To rule out this possibility, we ran the models without contamination parameters, and observed the same effects we report in the main paper: a linear increase as a function of mean conditional prevalence for the implied prevalence task, and no linear increase for the truth conditions data. 
 Thus, the insensitivity of the average prevalence at which speakers assent to the generic that we observed in truth conditions task is also a property of our model, and is not a function of the noise process we assume.
 
-The relatively high contamination parameter for the truth conditions task is most likely due to fact that human participants were less willing to assent to the generic \emph{overall} in this task. 
+The relatively high contamination parameter for the truth conditions task is most likely due to fact that human participants were less willing to assent to the generic \emph{overall} in this task.
 This has the effect of increasing the average prevalence to assent. 
 To try to account for this quantitatively, the model assumes a relatively high amount of random guessing. 
-We note that a quantitative fit to the average prevalence to assent to the generic is not a main prediction of this work. 
-What is a main prediction is the relative insensitivity of the average prevalence score to the mean conditional prevalence, which is a robust prediction of the model. 
+We note that a quantitative fit to the average prevalence to assent to novel generics is not of theoretical interest here. 
+Of more interest is the relative insensitivity of the average prevalence score to the mean conditional prevalence, which is a robust prediction of the model. 
 
 
 \begin{figure}
@@ -574,7 +578,7 @@ The fact that these parameters are so different is expected given that the state
 
 \subsection{Exploratory, by-item analysis}
 
-In addition to the property-type analysis reported in the main text Figures 3 \& 4, we performed the same analysis by-item to further explore the quantitative accuracy of the L1 model (Equation 1) in interpreting novel generic utterances. 
+In addition to the property-type analysis reported in the main text (Figures 3 \& 4), we performed the same analysis by-item to further explore the quantitative accuracy of the L1 model (Equation 1) in interpreting novel generic utterances. 
 We performed the same Bayesian analysis from Section \ref{sec:bda2} on the prior elicitation data for each of the 40 items independently (for a full list of the items see Table \ref{tab:novelGenericsStimuli}). 
 We then used a single speaker optimality parameter ($\lambda$) and a single contamination parameter ($\phi$) with the same priors as in Section \ref{sec:bdapriors4} for use in the generics model.
 
@@ -592,8 +596,10 @@ The MAP and 95\% credible interval for $\lambda$ is and $\phi$ is .
 
 The posterior predictive distribution compared to human judgments is shown in Figure \ref{fig:byItemScatter} (Left). 
 As shown in Figure 4 (main text), interpretations of generic utterances are heavily guided by the \emph{a priori} mean conditional prevalence. 
-To see this relation, we also plot the mean conditional prevalence compared to human judgments after hearing novel generics in Figure \ref{fig:byItemScatter} (Right). 
-
+Recall the mean conditional prevalence is the average prevalence among the kinds for which the property is present. 
+We additionally plot the human judgments (after hearing the novel generic) with the mean conditional prevalence (before hearing the generic) in Figure \ref{fig:byItemScatter} (Right). 
+Though both the posterior predictive distribution of the listener model (Eq.~1) given the generic utterance and the \emph{a priori} mean conditional prevalence explain roughly the same amount of variance in generic interpretation ($r^2 = 0.92, 0.93$, respectively), the \emph{a priori} mean conditional prevalence consistently \emph{underestimates} the interpreted prevalence.
+This means that generic implies more than merely that the property is present within the kind; the generic implies the prevalence is substantially more than a listener would expect \emph{a priori}. 
 %\begin{figure}
 %\centering
 %    \includegraphics[width=\columnwidth]{}
@@ -607,7 +613,7 @@ To see this relation, we also plot the mean conditional prevalence compared to h
 \centering
 
 \caption{Stimuli used in Experiment 1. 
-Estimates are means for truth judgments and Maximum A-Posteriori (MAP) estimates for prevalence. 
+Estimates are proportion agreement for truth judgments and Maximum A-Posteriori (MAP) estimates for prevalence. 
 Brackets denote 95\% confidence intervals for truth judgments and 95\% credible intervals for prevalences.}
 \begin{tabular}{| l | l | p{3.5cm} | p{3.5cm} |}
 \hline
