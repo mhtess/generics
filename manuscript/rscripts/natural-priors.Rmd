@@ -24,6 +24,96 @@ HPDlo<- function(s){
 ```
 
 
+Check posterior predictive of prior (mixture) model
+
+```{r validate}
+m.path<-"~/Documents/research/generics/manuscript/model-results/"
+
+samples = 10000
+prefix<-'generics-naturalPriors-singleFactor-postPred-n57-continuous-incrMH10000_burn5000' 
+m1<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
+#m2<-read.csv(paste(m.path, prefix, 'b.csv', sep=''))
+#m3<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
+
+#m<-bind_rows(m1,m2,m3)
+#m<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
+m<-m1
+str(m)
+
+m <- data.frame(Parameter =  rep(m$Parameter, 
+                                   1+samples*m$Probability),
+                Bin =  rep(m$Category, 
+                                   1+samples*m$Probability),                
+                Property =  rep(m$Property, 
+                                   1+samples*m$Probability),
+                Negation =  rep(m$Negation, 
+                                   1+samples*m$Probability),
+                Value = rep(m$Value, 
+                                   1+samples*m$Probability))
+
+m.params <- m %>% filter(Negation!='posteriorPredictive') %>%
+  group_by(Property,Negation) %>%
+  summarise(MAP = estimate_mode(Value),
+            credHigh = HPDhi(Value),
+            credLow = HPDlo(Value),
+            expectation = mean(Value)) 
+
+m.pp <- m %>% filter(Negation=='posteriorPredictive') %>%
+  group_by(Bin, Property) %>%
+  summarise(MAP = estimate_mode(Value),
+            credHigh = HPDhi(Value),
+            credLow = HPDlo(Value),
+            expectation = mean(Value)) %>%
+  ungroup() %>%
+  mutate(Bin = to.n(Bin))
+
+
+# ggplot(m.pp, aes(x=to.n(Bin), y = MAP))+
+#   geom_bar(stat='identity', position=position_dodge())+
+#   geom_errorbar(aes(ymin=credLow, ymax = credHigh), position=position_dodge())+
+#   facet_wrap(~Property)
+
+
+d<- read.csv("~/Documents/research/generics/manuscript/data/naturalGenerics-prior-trials-n57.csv")
+
+roundToMixture <- function(x){
+  return (if (x==0) {
+    0
+  } else if (x<=5) {
+    0.01
+  } else if (x>=95) {
+    0.99
+  } else {
+    round(x/10)/10
+  } )
+}
+
+d.properties <- d %>%
+  rowwise() %>%
+  mutate(Bin = roundToMixture(prevalence)) %>%
+  ungroup() %>%
+  group_by(Property, Bin) %>%
+  summarize(count = length(trial_type)) %>%
+  ungroup() %>%
+  group_by(Property) %>%
+  mutate(norm_count = count / sum(count))
+
+prior.md<-left_join(m.pp, d.properties)
+prior.md[is.na(prior.md$norm_count),]$norm_count <- 0
+
+
+
+ggplot(prior.md, aes(x=MAP, y = norm_count, color=factor(Bin)))+
+  geom_point()+
+  geom_errorbarh(aes(xmin=credLow, xmax=credHigh), position=position_dodge())
+
+
+with(prior.md, cor(MAP, norm_count))^2
+
+View(prior.md %>% filter(norm_count < .2 & MAP > .18))
+```
+
+
 ```{r}
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 
