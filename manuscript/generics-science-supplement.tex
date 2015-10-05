@@ -268,13 +268,13 @@ All results of interest are reported in the main text.
 
 \subsection{Full model predictions}
 
-The speaker model $S_2$ decides whether or not to produce the generic utterance by reasoning about the likely prevalence that a listener will infer given each utterance and common sense knowledge of properties (the prior). 
-The model, thus, takes into account the prior knowledge inferred from Expt.~1a.
+The speaker model $S_2$ assigns a probability to the generic utterance by reasoning about the likely prevalence that a listener will infer given each utterance and common sense knowledge of properties (the prior). 
+The model, thus, takes into account the prior knowledge of prevalence distributions; we use the priors inferred from Expt.~1a. \ndg{do we use the MAP priors, or maintain the distribution? I guess it's the posterior-predictive of the priors?}
 
-\subsubsection{Data analysis model priors}
+%\subsubsection{Data analysis model priors}
 
-The pragmatics model has 1 parameter: the speaker optimality parameter $\lambda$. 
-We put an uninformative prior over this parameter, with a range consistent with previous literature using the same model class.
+Having fixed the priors empirically, the model has 1 parameter: the speaker optimality parameter $\lambda$. 
+For data analysis, we put an uninformative prior over this parameter, with a range consistent with previous literature using the same model class.
 
 $$
 \lambda \sim \text{Uniform}(0,20)
@@ -282,8 +282,8 @@ $$
 
 In addition, we include a data-analytic ``contamination'' parameter to account for data that can be reliably be attributed to noise, or random guessing behavior.
 Modeling random guessing explicitly is important for recovering reliable estimates of the parameters of the model, which would otherwise be contaminated by this data \cite{LW2014}.
-The data is modeled as a mixture of behavior derived from the generics model and random guessing behavior. 
-We put an informative prior over the mixture parameter $\phi$.
+The data is thus modeled as a mixture of behavior derived from the $S_2$ generics model and random guessing behavior. 
+We put an uninformative prior over the mixture parameter $\phi$.
 
 $$
 \phi \sim \text{Uniform}(0,1)
@@ -292,8 +292,8 @@ $$
 
 \subsubsection{Posterior over model parameters}
 
-The pragmatics model has one free parameter, the speaker rationality $\lambda$ in Equation 2, and one data analytic parameter, a contamination parameter $\phi$.
-To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 3 chains of 100,000 iterations removing the first 50,000 iterations using the Metropolis-Hastings algorithm. 
+The $S_2$ generics model has one free parameter, the speaker rationality $\lambda$ in Equation 2, and one data analytic parameter, a contamination parameter $\phi$.
+To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 3 MCMC chains of 100,000 iterations removing the first 50,000 iterations using the Metropolis-Hastings algorithm. 
 The speaker rationality parameter represents the speaker's belief in how rational the hypothetical listener believes he is when choosing to say the generic (over saying nothing). 
 The 95\% Highest Probability Density (HPD) Interval is [3.36, 4.98].
 
@@ -308,7 +308,7 @@ In the data analysis, we also include a contamination parameter $\phi$ to accoun
 This represents the proportion of the data that can be better explained by random guessing than by our model of generic language.
 In this way, $\phi$ provides a crude measure of goodness of fit. 
 The 95\% HPD Interval is [0.026,0.049]. 
-This suggests that there is not a substantial amount of noise in the data, possibly owing to the simplicity of the task. 
+This suggests that there is not a substantial amount of unexplainable noise in the data. 
 
 \begin{figure}
 \centering
@@ -327,6 +327,8 @@ This is akin to fitting the parameters and is an important step in model validat
 Figure \ref{fig:tj1b} shows the Maximum A-Posteriori (MAP) values of the model predictions compared against the observed data. 
 The model predicts graded endorsements for the generic statements used in Expt.~1b, accounting for almost all of the variance ($r^2 = 0.982$). 
 
+\ndg{should we be reporting also the MSE, data LL? because r2 has its own free params...}
+
 \begin{figure}
 \centering
     \includegraphics[width=\columnwidth]{tj_n100-postPred-byItem.pdf}
@@ -339,9 +341,9 @@ Error bars denote 95\% confidence intervals for the human judgments and 95\% Bay
 \end{figure}
 
 
-\section{Experiment 2a: \emph{Measuring $P(x)$ for unfamiliar categories}}
+\section{Experiment 2a: \emph{Measuring prevalence prior for unfamiliar categories}}
 
-In this experiment, we measured participants' beliefs about the distinctiveness of certain properties and their corresponding expected prevalence within kinds.
+In this experiment, we measured participants' beliefs about distribution of novel properties: their expected distinctiveness and corresponding prevalence within kinds.
 
 We built on the stimulus set from \citeA{Cimpian2010} which consisted of novel animal categories (e.g. glippets) and various properties (e.g. have orange legs; have broken legs).
 
@@ -357,7 +359,7 @@ The experiment took about 5-7 minutes and participants were compensated \$0.75.
 
 In the truth judgments of natural cases experiments (Expt. 1a \& b), participants filled out a table with rows corresponding to different animal kinds and columns corresponding to different properties. 
 Pilot testing suggested this was a pragmatically strange setup when using novel kinds: answering ``What percentage of lorches have green feathers?'', when participants knew nothing about lorches, was difficult.
-Instead, we harnessed the latent structure in the task, described in Section \ref{sec:bda1}, and used a Bayesian statistical model to infer the underlying distribution. 
+Instead, we harnessed the latent structure revealed in prevalence priors by Expt.~1a, described in Section \ref{sec:bda1}, structuring our task into distinctiveness and within-kind questions; we then used a Bayesian analysis model to reconstruct the underlying prior distribution. 
 We then used these distributions in our language model to make predictions about the truth conditions and implications of novel generic sentences.
 
 
@@ -369,14 +371,15 @@ One day, you are roaming through the library when you encounter a data-collectio
 Of course, you're new to this island so you don't really know anything about these animals. The properties, however, will be familiar. Try to provide your best guess given your own experience.
 \end{quote}
 
-Participants were then run through a practice trial where they were familiarized with the questions that would be asked on them. 
+Participants were then run through a practice trial where they were familiarized with the questions that would be asked of them. 
 On each trial, the data-collection robot introduced a new animal (e.g. ``We recently discovered animals called glippets.''). 
 The robot then asked how likely it was that ``there was \emph{a} glippet with [[property]]''. 
+Participants responded using slider bars that ranged from ``unlikely'' to ``likely''.
 This question aimed to get at the property's \emph{distinctiveness}
 % prevalence of the property \emph{across} categories 
 (e.g. it's very likely that there is a glippet that is female, less likely that there is a glippet that has wings, and even less likely that there is a glippet has purple wings). 
 The second question was about the expected prevalence \emph{within} categories. 
-The robot asked, ``Suppose there is a glippet that has wings. What percentage of glippets do you think have wings?'' Participants responded using slider bars that ranged from ``unlikely'' to ``likely'', and ``0\%'' to ``100\%'', respectively.
+The robot asked, ``Suppose there is a glippet that has wings. What percentage of glippets do you think have wings?'' Participants responded using slider bars that ranged from ``0\%'' to ``100\%''.
 
 %Participants were asked about property distinctiveness by asking them the likelihood of there existing a K that has F, where K was a novel animal category and F was a property (e.g. ``how likely is it that there is a lorch that is female?''). 
 %Expected prevalence within categories was measured by asking participants about the percentage of Ks that have Fs, given that at least one does.
@@ -387,16 +390,16 @@ We expanded the stimulus set to include four different types of properties: biol
 Pilot testing revealed a lot of variability for items in the accidental properties relative to the other types of properties. 
 To test the quantitative predictive power of the generic interpretation model, we used twice as many exemplars of accidental properties, with the aim to make a ``common accidental'' and a ``rare accidental'' class of properties. 
 We used 8 exemplars of each of the three non-accidental properties (``parts'', ``colored parts'', ``vague parts'') and 16 exemplars of accidental properties.
-Materials are in Table \ref{tab:novelGenericsStimuli}.
+Materials are shown in Table \ref{tab:novelGenericsStimuli}.
 
 \subsection{Bayesian data analysis}
 \label{sec:bda2}
 
-In order to recover single belief distributions representing both the distinctiveness of properties and their expected prevalence within-categories (analogous to those elicited in Expt.~1a and shown in Figure 1), we built a simple Bayesian statistical model of the task questions and their relation to the prevalence distribution of interest. 
+In order to recover single belief distributions representing both the distinctiveness of properties and their expected prevalence within-categories (analogous to those elicited in Expt.~1a and shown in main text Figure 1), we built a simple Bayesian statistical model of the task questions and their relation to the prevalence distribution of interest. 
 
 This analysis was first completed by item, in order to determine the expected within-category prevalence for each item. 
 We performed a median split on the accidental properties type based on this criterion to construct ``rare accidental'' and ``common accidental'' properties types. 
-This identical analysis was then completed by property type (e.g. ``part'', ``color part'', etc...).
+The same analysis was then completed by property type (e.g. ``part'', ``color part'', etc...).
 
 Participants' responses to each question (slider bar values) were assumed to be samples from Beta distributions with unknown means and concentrations. 
 The responses to the questions ($d_{category}, d_{within}$) were used to estimate the parameters of the distributions of property distinctiveness and prevalence within-categories, separately. 
@@ -427,6 +430,8 @@ x & \sim \begin{cases}
 Marginal posterior distributions for $x$ were estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking 50,000 samples using the Metropolis-Hastings algorithm.
 
 \section{Experiment 2b: \emph{Truth conditions} and \emph{implications} of novel generics}
+
+\ndg{might need to revise, based on how we discuss results in main text...}
 
 \citeauthor{Cimpian2010} observed that generic statements of novel kinds with biological properties (e.g. ``Glippets have yellow fur'') show an asymmetry between the conditions by which the generic is true (``\emph{truth conditions}'') and the prevalence implied by the generic (``\emph{implied prevalence}''). 
 Generic sentences were endorsed for a wide-range of prevalence levels (e.g. when ``30\% of glippets have yellow fur.''), resulting in intermediate average truth conditions. 
@@ -523,7 +528,7 @@ We repeated this procedure 1000 times to bootstrap 95\% confidence intervals.
 %Generics are accepted for a wide range of prevalence levels, and their acceptability increases as a function of prevalence, resulting in an intermediate (but above 50\%) average acceptability condition.
 %\red{explain Cimipian truth conditions data analysis}
 
-\subsection{Pragmatics model predictions}
+\subsection{Full model predictions}
 
 
 Of primary interest here is how the interpretations of novel generic utterances vary as a function of \emph{a priori} beliefs about the prevalence of the type of property in question.
