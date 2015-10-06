@@ -456,7 +456,7 @@ The shape of this distribution affects model predictions, but may vary significa
 While each $P(x)$ is a single distribution on prevalence, it may be highly structured as the result of deeper conceptual knowledge. For instance, if participants believe that some kinds have a causal mechanism that \emph{could} give rise to the property, while others do not, then we would expect $P(x)$ to be structured as a mixture distribution \cite{Griffiths2005}.
 Assuming that \emph{when the property is possible} its prevalence is distributed according to a Beta distribution with mean $\gamma$ and concentration $\phi$: 
 $P(x)=\theta \cdot \delta_{x=0} + (1-\theta) \cdot \beta(\gamma,\phi)(x)$.\footnote{This is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is greater than one would expect from standard models of count data such as the Poisson model \cite<e.g. adverse events to vaccines; >{hurdleModels}.}
-Thus, $\theta$ is the probability of the potential of a property to be in a category and $\gamma$ is the mean prevalence of the property among the categories with the potential to have it. %Intuition suggests that, for a given property (e.g. \textsc{lay eggs}), kinds fall into two distinct categories: those for which the property is possible (e.g. \textsc{ducks}) and those for which the property is impossible (e.g. \textsc{lions}).
+Thus, $\theta$ is the potential of a property to be present in a category and $\gamma$ is the mean prevalence of the property among the categories with the potential to have it. %Intuition suggests that, for a given property (e.g. \textsc{lay eggs}), kinds fall into two distinct categories: those for which the property is possible (e.g. \textsc{ducks}) and those for which the property is impossible (e.g. \textsc{lions}).
 %We hypothesized that participants' responses were structured in such a way as to be generated from a mixture of two distributions---$P_{present}(x)$ and $P_{absent}(x)$--- with mixture parameter $\theta$.
 %$P_{present}(x)$ is comprised of the animal kinds for which the property is present (i.e. prevalence greater than 0\%), and we assume participants' responses are sampled from a Beta distribution with unknown mean $\gamma$ and concentration $\delta$. 
 %$P_{absent}(x)$ corresponds to the animal kinds for which the property is absent (i.e. prevalence equal to 0\%), and the distribution we assume is a delta function at 0\% prevalence\footnote{This is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is greater than one would expect from standard models of count data such as the Poisson model \cite<e.g. adverse events to vaccines; >{hurdleModels}.}.
@@ -478,6 +478,19 @@ For example, increasing $\theta$ (i.e. the relative probability mass at 0\%) wil
 %Assuming the speaker is informative, there will be a pressure for the listener to believe prevalence of property F in kind K is greater than one would expect \emph{a priori} (i.e. greater than $\gamma$).
  
 
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists.pdf}
+    \caption{Prevalence prior distributions empirically elicited for twenty-one animal properties.
+    Prior distributions are summarized by $\theta$----a property's potential to be present in a category----and $\gamma$----the mean prevalence when it is possible for the property to be present in a category.
+    Inset plots display example empirical prior distributions over prevalence together with corresponding $L_1$ model predictions: the posterior after hearing a generic utterance. 
+    Intervals on the top of plots show human beliefs about the prevalence of the property within the target category.
+%    Posterior distributions show what happens to a listener's belief about the prevalence after hearing the associated generic. 
+    Felicitous generic utterances result when the target prevalence is more likely under the posterior than under the prior.
+ %   \ndg{should mark the observed within-category prevalence for target kinds in pop-outs? or maybe one of the axes of main plot should be that?}
+    }
+  \label{fig:priors1a}
+\end{figure}
 
 
 %Figure \ref{fig:priors1a} shows the mixture-parameter $\theta$ and the mean prevalence from the distribution of kinds for which the property is present---$\gamma=\mathbb{E}[P_{present}(x)]$---for all 21 properties of interest.
@@ -553,19 +566,7 @@ The sentences were also chosen to elicit a range of acceptability judgments (``d
 %Finally, ``has malaria'' is an example of a property that is both rare across-categories and within-categories. 
 %The property is absent from most animal species, and even when it is present, it is only present in a small number of cases.
 
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists.pdf}
-    \caption{Prevalence prior distributions empirically elicited for twenty-one animal properties.
-    Prior distributions are summarized by the property distinctiveness (relative density at 0\%) and the mean prevalence conditional on the property being present in the kind (mean of density excluding 0\%).
-    Pop-out plots display example empirical prior distributions over prevalence together with corresponding $L_1$ model predictions: the posterior after hearing a generic utterance. 
-    Intervals on the top of plots show human beliefs about the prevalence of the property within the target category.
-%    Posterior distributions show what happens to a listener's belief about the prevalence after hearing the associated generic. 
-    Felicitous generic utterances result when the target prevalence is more likely under the posterior than under the prior.
- %   \ndg{should mark the observed within-category prevalence for target kinds in pop-outs? or maybe one of the axes of main plot should be that?}
-    }
-  \label{fig:priors1a}
-\end{figure}
+
 
 %Does subjective belief about the prevalence of the property within the target kind predict the felicity of a generic utterance?
 From the prevalence-prior data we can estimate participants' beliefs about the prevalence of a property for a given kind (e.g.~the percentage of \textsc{robins} that \textsc{lay eggs}; see green intervals on Figure \ref{fig:priors1a} and  Supplement Table 2).
