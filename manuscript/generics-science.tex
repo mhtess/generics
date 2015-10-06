@@ -590,16 +590,31 @@ Consistent with these musings,
 %\citeA{Cimpian2010} found similar inferences with generics about unfamiliar kinds (e.g. ``Lorches have purple feathers.''). 
 How is generic language interpreted so strongly if the criterion for endorsement is so flexible? 
 
+A hint lies in the vagueness of generics: With an uncertain meaning and the pressure to be informative, interpretation is going to be heavily driven by \emph{a priori} beliefs about property. 
+Classic work in generalization suggests beliefs about the prevalence of properties differ by type of property, including relatively fine distinctions between properties that are all biological in nature \cite{Nisbett1983}. 
+We used 40 different properties to explore a wide range of \emph{a priori} beliefs about prevalence. 
+These properties make up five categories of properties: biological parts (e.g. \textsc{have claws}), color adjectives about parts (e.g. \textsc{have green feathers}), vague adjectives about parts (e.g. \textsc{have small wings}),  common accidental or disease states (e.g. \textsc{have wet fur}) and rare accidental or disease states (e.g. \textsc{have broken legs})\footnote{The distinction between common and rare accidental properties was determined empirically by analyzing the data by item, and performing a median split based on the \emph{a priori} mean within-kind prevalence of the property.}.
+$P(x)$ was measured empirically ($n=40$, see Supplement Section C), and the most likely priors were inferred using the same structured, statistical approach used for the common generics data.
+Biological properties are expected \emph{a piori} to be more prevalent within a kind than accidental properties, with fine-grained differences even among types of biological and accidental properties (Figure \ref{fig:prior2}; x-dimension).
 
-Interpretations of generic language are readily explored in our model of a listener (Eq.~\ref{eq:L1}) who hears a generic and is trying to infer how widespread the property is. 
-We test experimentally how beliefs are updated by generic language using novel animal categories (e.g. \textsc{lorches}), following 
-\citeA{Cimpian2010}.
+Interpretations of generic language are readily explored in our model of a listener (Eq.~\ref{eq:L1}), who hears a generic and is trying to infer how widespread the property is. 
+The shapes of the prevalence distributions for different properties are importantly diverse (Figure \ref{fig:prior2} insets). 
+Biological properties (``biological parts'', ``vague parts'', ``color parts'') are bimodal with peaks at 0\% and near-100\% prevalence. 
+This distribution updates by the listener to a concave posterior distribution peaked at 100\% 
+%after necessarily ruling out the 0\% possibility upon hearing \emph{Ks have F} 
+(Figure \ref{fig:prior2}; red, blue and green insets). 
+Accidental properties (``rare'' and ``common'') follow unimodal prior distributions and update to convex posterior distributions, reflecting a higher degree of residual uncertainty after hearing the generic utterance as compared to the biological properties. 
+
+%) 
+
+
+%Since we are exploring how beliefs are \emph{updated} by generic language, we use novel animal categories (e.g. \textsc{lorches}) in our experiment, following 
+%\citeA{Cimpian2010}.
+%We test experimentally how beliefs are updated by generic language using novel animal categories 
 %by using novel animal categories and properties (e.g. \emph{Lorches} and \emph{have green feathers}) to explore how generic language updates one's beliefs. 
 %It is strange to measure participants' beliefs about these novel category---property pairs directly (e.g. answering ``How many lorches have purple feathers?'', without knowing what a lorch is).
 %Instead, we took advantage of the latent structure in the prior elicitation task (Expt.~1a) to ask participants ($n=40$) about the prevalence of a property (e.g. ``has purple feathers'') across-categories (e.g. ``How likely is it that \emph{there is a} lorch that has purple feathers?'') and within-categories (e.g. ``Suppose there is a lorch with purple feathers. What percentage of lorches do you think have purple feathers?''), separately. 
 %We used a hierarchical Bayesian approach to reconstruct the prevalence priors of a similar form to Expt.~1a (see Section \ref{sec:bda2} for details).
-Beliefs about the prevalence of properties differ by type of property, including relatively fine distinctions between properties that are all biological in nature \cite{Nisbett1983}. 
-We used 5 different types of properties to explore a range of prior beliefs about prevalence: biological parts (e.g. \textsc{have claws}), color adjectives about parts (e.g. \textsc{have green feathers}), vague adjectives about parts (e.g. \textsc{have small wings}), common accidental or disease states (e.g. \textsc{have wet fur}), and rare accidental or disease states (e.g.  \textsc{have broken legs}) \footnote{The distinction between common and rare accidental properties was determined empirically by analyzing the data first by item, and performing a median split based on the \emph{a priori} mean within-kind prevalence of the property.}.
 
 
 \begin{figure}
@@ -610,20 +625,34 @@ We used 5 different types of properties to explore a range of prior beliefs abou
   \label{fig:prior2}
 \end{figure}
 
-The pragmatic listener in Eq.~\ref{eq:L1} is sensitive to the type of property (and its corresponding prior distribution on prevalence) when interpreting a novel generic.
-Particularly, the \emph{a priori} mean conditional prevalence will guide interpretation as it describes the distribution assuming the property is present. \ndg{why?}
-Again, $P(x)$ was measured empirically ($n=40$, see Supplement Section C).
-The five property types fell on a continuum of \emph{a priori} mean conditional prevalence (Figure \ref{fig:prior2}; x-axis). 
-Biological properties are expected \emph{a piori} to be more prevalent within a kind than accidental properties, with fine-grained differences even among types of biological and accidental properties.
-For instance, within a given kind, colored body parts (e.g. \textsc{green wings}) are expected \emph{a priori} to be less prevalent than some gradable adjectives (e.g. \textsc{small wings}). 
-Some accidental properties are expected to be relatively more prevalent \emph{a priori} than others (``common accidental'' vs. ``rare accidental''; e.g. \textsc{wet fur} vs. \textsc{broken legs}; Figure \ref{fig:prior2}, orange and purple plots).
-The shapes of the distributions are importantly different as well (Figure \ref{fig:prior2} density plots). 
-%Figure \ref{fig:prior2} shows the distinctiveness and mean within-kind prevalence ratings for the empirically measured prior distributions of prevalence $x$ for the 5 different types of properties. 
-%Also shown are the computational model predictions for the resulting posterior distributions.
-Biological properties (``biological parts'', ``vague parts'', ``color parts'') are bimodal with peaks at 0\% and near-100\% prevalence. 
-This distribution updates to a concave posterior distribution peaked at 100\% after necessarily ruling out the 0\% possibility upon hearing \emph{Ks have F} (Figure \ref{fig:prior2}; red, blue and green plots). 
-Accidental properties (``rare'' and ``common'') follow unimodal prior distributions and update to convex posterior distributions, reflecting a higher degree of residual uncertainty after hearing the generic utterance as compared to the biological properties. 
-\ndg{this paragraph has gotten too long.}
+%The pragmatic listener in Eq.~\ref{eq:L1} is sensitive to the property in question and its corresponding distribution on prevalence.
+%type of property (and its corresponding prior distribution on prevalence) when interpreting a novel generic.
+
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.7\columnwidth]{implied-byItem-mh100kX2.pdf}
+    \caption{Implied prevalence by human participants vs. the generics model posterior predictive.}
+  \label{fig:impliedByItem}
+\end{figure}
+
+
+We compared the interpretations of the pragmatic listener in Eq.~\ref{eq:L1} to human judgments ($n=40$) about the likely prevalence of the property after hearing a generic (e.g. \emph{Lorches have green feathers.}), in the same spirit as \citeA{Gelman2002}. 
+Human prevalence judgments after reading the generic were affected by the type of property in question and its corresponding $\gamma=\mathbb{E}[P_{present}(x)]$: The more prevalent a property is expected to be \emph{a priori}, the stronger the implications of a generic (\mht{Update with by-item regression numbers?}$\beta = 0.59; SE = 0.08; t(39) = 7.14; p < 0.001$)\footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}. 
+The pragmatics model has a close alignment with human judgments, displaying the same sensitivity of interpretation to the property information ($r^2(40)=0.89$; Figure \ref{fig:impliedByItem}). 
+
+
+
+
+
+
+
+%Particularly, the \emph{a priori} mean conditional prevalence will guide interpretation as it describes the distribution assuming the property is present. \ndg{why?}
+%Again, $P(x)$ was measured empirically ($n=40$, see Supplement Section C).
+%The five property types fell on a continuum of \emph{a priori} mean conditional prevalence (Figure \ref{fig:prior2}; x-axis). 
+%Biological properties are expected \emph{a piori} to be more prevalent within a kind than accidental properties, with fine-grained differences even among types of biological and accidental properties.
+%For instance, within a given kind, colored body parts (e.g. \textsc{green wings}) are expected \emph{a priori} to be less prevalent than some gradable adjectives (e.g. \textsc{small wings}). 
+%Some accidental properties are expected to be relatively more prevalent \emph{a priori} than others (``common accidental'' vs. ``rare accidental''; e.g. \textsc{wet fur} vs. \textsc{broken legs}; Figure \ref{fig:prior2}, orange and purple plots).
 
 %These distributions are not necessarily peaked at 100\%, and the expected 
 %Figure \ref{fig:prior2} (right) shows the region of interest of these distributions by removing the mass at 0. %
@@ -633,18 +662,20 @@ Accidental properties (``rare'' and ``common'') follow unimodal prior distributi
 
 
 
-We compared the interpretations of the pragmatic listener in Eq.~\ref{eq:L1} to human judgments ($n=40$) about the likely prevalence of the property after hearing a generic (e.g. \emph{Lorches have green feathers.}), in the same spirit as \citeA{Gelman2002}. 
-\ndg{this analysis has gotten a lot less transparent since i looked last. it's not at all clear why we should care about the gradient against "some". }
-Human prevalence judgments after reading the generic were affected by the type of property in question and its corresponding mean conditional prevalence (Figure \ref{fig:exp2b} Left; solid line): The more prevalent a property is expected to be \emph{a priori}, the stronger the implications of a generic ($\beta = 0.59; SE = 0.08; t(39) = 7.14; p < 0.001$)\footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}. 
-However, the generic does more than merely inform a listener that the property is present: 
-A generic carries the communicative force of a speech act, and thus implies the property is \emph{more prevalent} than a listener would expect (Figure \ref{fig:exp2b} solid line lies above $y=x$ line).
-\ndg{i think if we're going to rely on it we need to set this contrast up much more clearly earlier: many properties are never present in most categories. at the least, the generic rules out the absence of the property (ie ``some''). we want to test whether it is stronger than some. -- though really?}
-The listener model (Eq.~\ref{eq:L1}) produced the same strong interpretation along a gradient (Figure \ref{fig:exp2b}, Right, solid line), displaying the sensitivity to abstract beliefs about the properties that human participants show. 
-We performed a by-item analysis comparing the implied prevalence data to model predictions and found a good quantitative fit ($r^2(40) = 0.89$; see Supplement Section D5). 
+
+%\ndg{this analysis has gotten a lot less transparent since i looked last. it's not at all clear why we should care about the gradient against "some". }
+%
+%However, the generic does more than merely inform a listener that the property is present: 
+%A generic carries the communicative force of a speech act, and thus implies the property is \emph{more prevalent} than a listener would expect (Figure \ref{fig:exp2b} solid line lies above $y=x$ line).
+%\ndg{i think if we're going to rely on it we need to set this contrast up much more clearly earlier: many properties are never present in most categories. at the least, the generic rules out the absence of the property (ie ``some''). we want to test whether it is stronger than some. -- though really?}
+%The listener model (Eq.~\ref{eq:L1}) produced the same strong interpretation along a gradient (Figure \ref{fig:exp2b}, Right, solid line), displaying the sensitivity to abstract beliefs about the properties that human participants show. 
+%We performed a by-item analysis comparing the implied prevalence data to model predictions and found a good quantitative fit ($r^2(40) = 0.89$; see Supplement Section D5). 
 
 
-
-We also recruited participants ($n=40$) to help determine the average prevalence at which a speaker would assent to the generic. \ndg{why would we want this?} Following \citeA{Cimpian2010} we \ndg{?? told participants one of 4? frequencies for each property, and then asked for judgements of the corresponding generic sentence}. 
+\citeA{Cimpian2010} reported a surprising d\'{e}colage between the interpretations of novel generics and the average prevalence required to assent to the exact same utterance.
+We also recruited participants ($n=40$) to help determine the average prevalence at which a speaker would assent to the generic. 
+%\ndg{why would we want this?} 
+Following \citeA{Cimpian2010} we told participants one of five frequencies for each property (e.g. \emph{50\% of lorches have green feathers.}, and then asked for judgements of the corresponding generic sentence (e.g. \emph{Lorches have green feathers.}. 
 %which was previously found to be not as sensitive to participants beliefs about the property (but, cf. \citeA{Cimpian2010}, Expt.~4).
 We used the speaker model (Eq.~\ref{eq:S2}) again to predict this truth judgment task (as we did previously for the naturalistic generics).
 We submitted our speaker model to the same analysis as the truth judgments data, following \citeA{Cimpian2010} (see Supplement Section D).\ndg{the last sentence is totally opaque....} 
