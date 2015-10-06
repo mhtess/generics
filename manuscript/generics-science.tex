@@ -468,7 +468,7 @@ This means the reconstruction error between data and prior-model is low, and tha
 %These shapes are the results of structured beliefs about prevalence: 
 
 Using this structure, we can explore the prevalence priors for our 21 properties:
-Figure \ref{fig:priors1a} shows the estimated mixture-parameter, $\theta$, and the mean prevalence when the property is possible, $\gamma$. \ndg{does the figure show estimated theta and gamma, or expectations derived from reconstructed priors? are those different?}
+Figure \ref{fig:priors1a} shows the estimated mixture-parameter, $\theta$, and the mean prevalence when the property is possible, $\gamma$. \ndg{does the figure show estimated theta and gamma, or expectations derived from reconstructed priors? are those different?} \mht{estimated theta and gamma... not sure how you owuld estimate theta from reconstructed prior, other than do the bayesian analysis over again... gamma could potentially be derived from reconstructed if you filtered mass at 0, but may be slightly different because the Beta component may produce 0s as well}
 We see significant diversity among these properties in both parameters. This diversity matters because the model predictions for generic interpretation and felicity depend on the shape of the prior distribution (see pop-outs for example interpretation posteriors).
 For example, increasing $\theta$ (i.e. the relative probability mass at 0\%) will relax the truth conditions by making a lower threshold more informative; increasing $\gamma$ will tend to make truth conditions stricter, by reducing the range of prevalence values that are higher than the prior expectation. \ndg{check that last setence...}
 %Manipulating $\gamma$ will influence the prevalence inferred upon hearing a generic: 
