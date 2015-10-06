@@ -197,7 +197,7 @@ generic language; semantics; pragmatics; categories
 
 %\ndg{maybe switch from apples are red to swans are white?}
 
-Most would agree that \emph{Swans are white}, but certainly not all swans are.
+Most would agree that \emph{Swans are white}, but certainly not every swan is.
 %Imagine talking with a 2-year-old about the color red.
 %Colors are difficult to describe because they take shape in different physical forms and the function of color is abstract.
 %You might offer the toddler something generic like, ``Apples are red.''. 
@@ -260,7 +260,7 @@ This latter perspective emphasizes the structure of generic knowledge \cite{Pras
 %For example, even though less than one percent of mosquitos carry malaria, \emph{Mosquitos carry malaria} because malaria has dire consequences---it is a dangerous property---and is thus important to our conceptual representation of mosquitos.
 
 However, generic language is not unique in its flexibility.
-Language understanding in general depends on assumptions interlocutors make about each other, which can lead to complex sensitivity of interpreted meanings to context \cite{Clark1996, Grice1975, Levinson2000}, recently formalized in probabilisitic models of language understanding---the Rational Speech Acts (RSA) theory \cite{Frank2012, Goodman2013, Franke2009}. 
+Language understanding in general depends on assumptions interlocutors make about each other, which can result in meanings interpreted with a complex sensitivity to context \cite{Clark1996, Grice1975, Levinson2000}, recently formalized in probabilisitic models of language understanding---the Rational Speech Acts (RSA) theory \cite{Frank2012, Goodman2013, Franke2009}. 
 Perhaps then, the puzzles of generic language can be partly understood as the effects of pragmatic reasoning.
 If this is the case, then a relatively simple semantic theory, phrased in terms of statistical regularities, could be enough to formalize generic language.
 
@@ -303,7 +303,7 @@ This inference depends on property and category knowledge, but is otherwise a ge
 %
 \citeA{Lassiter2013,Lassiter2015} have extended RSA to explain vague adjectives (e.g.~\emph{tall}) in terms of an underspecified threshold criterion (Cf.~\citeA{Qing2014}). 
 We follow this treatment, adopting as the underlying scale the property prevalence.
-We imagine a hypothetical, pragmatic listener concerned with learning the prevalence of a certain property in a certain category, $x=P(F|K)$, who reasons about an informative speaker, who in turn reasons about a literal listener:
+We imagine a hypothetical, pragmatic listener ($L_1$) concerned with learning the prevalence of a certain property in a certain category, $x=P(F|K)$, who reasons about an informative speaker ($S_1$), who in turn reasons about a literal listener ($L_0$):
 \begin{eqnarray}
 P_{L_{1}}(x , \theta \mid u) &\propto& P_{S_{1}}(u \mid x, \theta) \cdot P(x) \cdot P(\theta) \label{eq:L1}\\
 P_{S_{1}}(u \mid x, \theta) &\propto&  {P_{L_{0}}(x \mid u, \theta)}^{\lambda} \label{eq:S1}\\
@@ -324,16 +324,17 @@ P_{L_{0}}(x \mid u, \theta) &\propto& {\delta_{\denote{u}(x, \theta)} P(x)}. \la
 %The literal listener simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
 %The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)=x>\theta$; while the null utterance is always true, $\denote{null}(x, \theta)=T$.
 
-\mht{A new lvRSA explanation}
-\ndg{i don't like... the use of these characters makes the whole thing seem kind of flippant.}
-Consider the hypothetical listener (``Lionel''; $L_{1}$, Eq. \ref{eq:L1}) who has heard a generic utterance (\emph{Ks have F.}) from a speaker (``Simone''; $S_{1}$, Eq. \ref{eq:S1}). 
-He is trying to resolve how common F is within K ($x = P(F\mid K) \in [0, 1]$), and assumes the generic conveys that the prevalence is beyond some threshold $\denote{\text{K F}}(x, \theta)=x>\theta$, but does not know the precise threshold: $\theta \sim \text{Uniform}(0,1)$.
+%\mht{A new lvRSA explanation}
+%\ndg{i don't like... the use of these characters makes the whole thing seem kind of flippant.}
+
+Consider the hypothetical listener $L_{1}$ (Eq. \ref{eq:L1}) who has heard a generic utterance (\emph{Ks have F.}) from the speaker $S_{1}$ (Eq. \ref{eq:S1}). 
+$L_1$ is trying to resolve how common F is within K ($x = P(F\mid K) \in [0, 1]$), and assumes the generic conveys that the prevalence is beyond some threshold $\denote{\text{K F}}(x, \theta)=x>\theta$, but does not know the precise threshold: $\theta \sim \text{Uniform}(0,1)$.
 It is in this sense that the utterance is vague.
-Lionel considers what he knows about property F in general: how distinctive F is (do many other kinds have F?), and for the kinds he knows with F, how prevalent it is within those kinds.
+The listener considers what he knows about property F in general: how distinctive F is (do many other kinds have F?), and for the kinds he knows with F, how prevalent it is within those kinds.
 This is represented as $P(x)$, a probability distribution over prevalence of F.
-Lionel also considers the fact that Simone is an informed and helpful interlocutor: She had a particular meaning $\theta$ in mind, and was trying to be informative about the prevalence $x$ to the interlocutor in her head, an idealized version of Lionel, a literal listener ($L_{0}$, Eq. \ref{eq:L0}).
+$L_1$ also considers the fact that the speaker who produced the utterance---$S_1$---is an informed and helpful interlocutor: $S_1$ had a particular meaning $\theta$ in mind, and was trying to be informative about the prevalence $x$ to the interlocutor in her head, an idealized version of a listener---a literal listener ($L_{0}$, Eq. \ref{eq:L0}).
 The idealized listener has access to the threshold $\theta$, and simply restricts its prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
-Lionel also believes that Simone didn't have to say \emph{Ks have F} if she didn't want to, she could have said nothing: a \emph{null} utterance\footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that robins lay eggs.'', as well as the generic of the negation, ``Robins do not lay eggs''.}. 
+$L_1$ also believes that $S_1$ didn't have to say \emph{Ks have F} if she didn't want to, she could have said nothing: a \emph{null} utterance\footnote{All results reported are similar when the alternative is stipulated to be the negation,  ``It is not the case that robins lay eggs.'', as well as the generic of the negation, ``Robins do not lay eggs''.}. 
 The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \theta)=x>\theta$; while the null utterance is always true, $\denote{null}(x, \theta)=T$.
 
 
@@ -344,6 +345,7 @@ We see that the interpretation of the generic depends a great deal on the shape 
 When the prior is very left-skewed as in the case of \textsc{carries malaria}, then $\theta$ can plausibly be quite low while still being informative, since a low threshold still rules out many possible alternative kinds (and their corresponding level of prevalence).
 If the prior is right-skewed (e.g. \textsc{don't attack swimmers}), even an intermediate threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_1$ unless the property is practically-universal within the target category. 
 Priors for properties that are unimodal with low variance (e.g. \textsc{are female}) are present in every kind in almost exactly the same proportion and thus are too obvious and certain to allow for a realistic, informative utterance: the posterior is not very different from the prior. 
+\mht{Last sentence needs to reconsidered in light of \emph{Cows are female.}}
 
 
 %Example posterior distributions for Lionel---$P_{L_{1}}(x , \theta \mid u)$---after hearing the generic utterance can be seen in Figure \ref{fig:priors1a}. 
@@ -409,18 +411,18 @@ Priors for properties that are unimodal with low variance (e.g. \textsc{are fema
 % The lifted-variable pragmatics model seeks a balance between these two pressures. 
 %With a prior distribution over heights that is roughly-normal, the result is a threshold that signifies that ``John is tall'' means he is ``significantly taller than average''.
  
-Eq.~\ref{eq:L1} (``Lionel'') is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
-We can now imagine a speaker (``Steph''; $S_2$, Eq.~\ref{eq:S2}) who knows some prevalence $x$ and is trying to decide whether or not to produce a generic to (vaguely) describe it to Lionel, the pragmatic listener.
+The pragmatic listener $L_1$ (Eq.~\ref{eq:L1}) is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
+We can now imagine a speaker $S_2$ (Eq.~\ref{eq:S2}) who reasons about this type of listener: In theory, $S_2$ knows some prevalence $x$ and is trying to decide whether or not to produce a generic to (vaguely) describe it to $L_1$.
 
 \begin{equation} 
 P_{S_{2}}(u \mid x) \propto  \sum_{\theta} P_{L_{1}}(x , \theta \mid g) =  P_{L_{1}}(x \mid u)
 \label{eq:S2}
 \end{equation}
 
-Speaker Steph considers the thought-processes of Lionel the listener (Eq.~\ref{eq:L1}) and decides if the generic is a good (even if vague) way to describe the prevalence $x$. 
-Her decision is with respect to the alternative of saying nothing: She will choose to produce the generic when the true prevalence $x$ is more likely under $L_1$'s posterior than under the prior. 
-Critically, Steph ($S_{2}$) doesn't actually know what the vague utterance means (i.e. doesn't have access to the threshold $\theta$), but knows that Lionel ($L_{1}$) will have to think about it, and integrates over the likely values he'll consider.
-We use Steph ($S_{2}$) to model felicity or truth judgments, following \citeA{Degen2014}.
+Speaker $S_2$ considers the thought-processes of the listener $L_1$ (Eq.~\ref{eq:L1}) and decides if the generic is a good (even if vague) way to describe the prevalence $x$. 
+$S_2$'s decision is with respect to the alternative of saying nothing: She will choose to produce the generic when the true prevalence $x$ is more likely under $L_1$'s posterior than under his prior. 
+Critically, speaker $S_{2}$ doesn't actually know what the vague utterance means (i.e. doesn't have access to the threshold $\theta$), but knows that $L_{1}$ will have to think about it, and integrates over the likely values he'll consider.
+We use $S_{2}$ (Eq.~\ref{eq:S2}) to model felicity or truth judgments, following \citeA{Degen2014}.
 %
 %This decision is with respect to the alternative speech-act of saying nothing, hence the generic utterance will be acceptable when the true prevalence is more likely under the posterior than the prior. 
 
