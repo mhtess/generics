@@ -24,6 +24,12 @@
 \usepackage{charter} % Use the Charter font for the document text
 \usepackage{url}
 
+\definecolor{Green}{RGB}{10,200,100}
+\definecolor{Blue}{RGB}{10,100,200}
+\newcommand{\ndg}[1]{\textcolor{Green}{[ndg: #1]}}  
+\newcommand{\mht}[1]{\textcolor{Blue}{[mht: #1]}}  
+
+
 \newsavebox{\Luiuc}\sbox{\Luiuc}{\parbox[b]{1.75in}{\vspace{0.5in}
 \includegraphics[width=1.2\linewidth]{logo.pdf}}} % Company/institution logo at the top left of the page
 \makeletterhead{Uiuc}{\Lheader{\usebox{\Luiuc}}}
@@ -153,15 +159,24 @@ Indeed, in presentations around the world we have found this work to excite broa
 %
 
 
-We suggest the following reviewers:
+The following reviewers have expertise in the phenomenology of generic language:
+\begin{itemize}
+\item Greg N. Carlson, Department of Linguistics, University of Rochester \url{carlson@ling.rochester.edu}
+\item Susan A. Gelman, Department of Psychology, University of Michigan \url{gelamn@umich.edu}
+\item Andrei Cimpian, Department of Psychology, University of Illinois at Urbana-Champaign \url{acimpian@illinois.edu}
+\item Sandeep Prasada, Department of Psychology, Hunter College \url{sprasada@hunter.cuny.edu}
+\end{itemize}
+The following reviewers have expertise in the Bayesian modeling techniques we use:
+\begin{itemize}
+\item Mark Steedman
+\item Amy Perfors
+\item Michael Lee
+\item Gerhardt Jaeger
+\end{itemize}
 
-Greg N. Carlson, Department of Linguistics, University of Rochester \url{carlson@ling.rochester.edu}\\
-Susan A. Gelman, Department of Psychology, University of Michigan \url{gelamn@umich.edu}\\
-Sarah-Jane Leslie, Department of Philosophy, Princeton University \url{sjleslie@princeton.edu} \\
-Andrei Cimpian, Department of Psychology, University of Illinois at Urbana-Champaign \url{acimpian@illinois.edu}\\
-Sandeep Prasada, Department of Psychology, Hunter College \url{sprasada@hunter.cuny.edu}
+\ndg{MH, fill in emails etc?}
 
-%[need to sell the general interest, novelty, and impact a lot more. need to suggest reviewers.]
+
 
 %----------------------------------------------------------------------------------------
 
