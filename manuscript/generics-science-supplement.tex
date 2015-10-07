@@ -136,10 +136,10 @@ If participants believe that some kinds have the potential to have the property,
 The mixture is between kinds that can have the property and kinds that cannot, and the weighting assigned to each mixture component is governed by the parameter $\theta$.
 
 We assume that kinds that \emph{cannot} have the property can only have 0\% prevalence. 
- Thus, the number of 0\% responses in the data ($d_observed = 0$)act as an indicator of the property's potential to be present in a category $\theta$ (for example, the property \textsc{are female} has a very high potential to be in a present in a category, whereas the property \textsc{lay eggs} has relatively less potential e.g. \textsc{lions} don't have the potential to lay eggs, while they do have the potential to be female).
+ Thus, the number of 0\% responses in the data ($d_{observed} = 0$) act as an indicator of the property's potential to be present in a category $\theta$ (for example, the property \textsc{are female} has a very high potential to be in a present in a category, whereas the property \textsc{lay eggs} has relatively less potential e.g. \textsc{lions} don't have the potential to lay eggs, while they do have the potential to be female).
   We assume that kinds that can have the property have the property's prevalence distributed according to a Beta distribution with mean $\gamma$ and concentration $\phi$, while kinds that cannot have the property can only have 0\% prevalence. 
 
-For those responses that reflect the property is present ($d_observed > 0$), we assume those responses come from a distribution with unknown mean ($\gamma$) and concentration ($\phi$).
+For those responses that reflect the property is present ($d_{observed} > 0$), we assume those responses come from a distribution with unknown mean ($\gamma$) and concentration ($\phi$).
 Since the responses vary between 1 - 100, the natural generative distribution is a Beta distribution. 
 \footnote{This modeling approach is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is greater than one would expect from standard models of count data such as the Poisson model \cite<e.g. adverse events to vaccines; >{hurdleModels}.}
 %Responses $d$ can be categorized into those that reflect the property is either present or absent in the species: $d_{category}$ is 1 if the prevalence $d$ is greater than 0, and 0 otherwise. 
@@ -152,7 +152,7 @@ d_{observed} & \sim \begin{cases}
 				\end{cases} \\
 	 &  \sim \theta \cdot \delta_{x=0} + (1-\theta) \cdot \beta(\gamma,\phi) \\
 \end{align*}
-We put uninformative priors over the mixture parameter$\theta$, and the mean and concentration of the Beta distribution $\gamma$ and $\phi$. 
+We put uninformative priors over the mixture parameter $\theta$, and the mean and concentration of the Beta distribution $\gamma$ and $\phi$. 
 
 
 \begin{align*}
@@ -182,7 +182,6 @@ We put uninformative priors over the mixture parameter$\theta$, and the mean and
 %
 %In principle, $\phi$ could be vary by participant (some participants produce noisier data than others). For simplicity, we assume some global ``guessing rate'', and thus $\phi$ is an experiment-wide variable.
 %We make no assumptions about the amount of noise in the data and 
-. 
 %
 
 %\ndg{this is a slightly odd way to write the generative model. i think it's easier if you describe how to sample $d$ directly?}
@@ -227,13 +226,20 @@ These distributions reflect both the property's potential to be present----$\the
 
 We compared these posterior predictive distributions to the prior elicitation data by discretizing the posterior predictive distribution and binning (and normalizing) the counts in the prior elicitation data.
 We used 12 discrete bins: $\{[0-0.01), (0.01-0.05), (0.05-0.15), (0.15-0.25),  ..., (0.75-0.85), (0.85-0.95), (0.95-1]\}$.
-The posterior predictive distribution of the prior model corresponded well with the prior elicitation data ($r^2=0.95$), providing good evidence that our assumption of a structured prior is warranted.
+The posterior predictive distribution of the prior model corresponded well with the prior elicitation data ($r^2=0.94$), providing good evidence that our assumption of a structured prior is warranted (Figure \ref{fig:pp-priorModel}).
 
 The only substantial disagreement between the prior model and the data occur for  the properties \textsc{are male, are female} in the bin $(0.45-0.55)$. 
 The normalized empirical counts put about 75\% probability in this bin; the model predicts roughly 50\% probability of this bin. 
 This discrepancy can be attributed to a number of 100\% or 0\% responses present in the data (e.g. some participants self-generated the category \textsc{cow}, and rated that 100\% of cows are female). 
 Since the model assumes a smooth Beta distribution, these responses work to flatten out the distribution.
 
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.8\columnwidth]{postPred-priorModel.pdf}
+    \caption{Posterior predictive distribution of the structured, statistical model thought to give rise to the human data in the prior elicitation task. The close alignment between model and data suggests the assumption of a structured prior is warranted.}
+  \label{fig:pp-priorModel}
+\end{figure}
 
 \section{Experiment 1b: \emph{Truth judgments of common generics}}
 \label{truthjudements:naturalcases}
@@ -443,7 +449,7 @@ The same analysis was then completed by property type (e.g. ``part'', ``color pa
 Participants' responses to each question (slider bar values) were assumed to be samples from Beta distributions with unknown means and concentrations. 
 The responses to the questions ($d_{potential}, d_{expected}$) were used to estimate the parameters of the distributions of property's potential to be present in a kind and expected prevalence when present, separately. 
 \begin{align*}
-d_{potential} \sim \text{Beta}(\gamma_{potential}, \phi{potential}) \\
+d_{potential} \sim \text{Beta}(\gamma_{potential}, \phi_{potential}) \\
 d_{expected} \sim \text{Beta}(\gamma_{expected}, \phi_{expected}) 
 \end{align*}
 The parameters $\gamma$ and $\phi$ correspond to the mean and concentration, respectively, of the distributions over each of these parameters of interest.
@@ -470,7 +476,7 @@ x & \sim \begin{cases}
 %
 Marginal posterior distributions for $x$ were estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking 50,000 samples using the Metropolis-Hastings algorithm.
 
-\section{Experiment 2b: \emph{Implications of novel generics}}
+\section{Experiment 2b: \emph{Interpretations of novel generics}}
 
 \ndg{might need to revise, based on how we discuss results in main text...}
 
@@ -575,12 +581,13 @@ We put an uninformative prior over this mixture parameter $\phi_{\text{implied p
 
 \subsubsection{Posteriors over model parameters}
 
-To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 100,000 samples using the Metropolis-Hastings algorithm. 
+To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 2 MCMC chains of 100,000 samples (removing 50,000 for burn-in) using the Metropolis-Hastings algorithm. 
 The estimated posterior distributions of the speaker rationality parameter $\lambda_\text{truth conditions}$ and the contamination parameter $\phi_{\text{implied prevalence}}$ are shown in Figure \ref{fig:byItemParameters}. 
 The contamination parameter represents the proportion of the data that is better explained by a model of random guessing behavior than by the prevalence-based generics model. 
 
 The estimated posterior distributions for the two parameters: $\lambda$ and $\phi$ are shown in Figure \ref{fig:byItemParameters}.
-The MAP and 95\% credible interval for $\lambda$ is and $\phi$ is .
+The MAP and 95\% credible interval for $\lambda$ is 3.3 [1.2, 4.7] and $\phi$ is 0.25 [0.18, 0.28].
+
 
 \begin{figure}
 \centering
@@ -594,8 +601,9 @@ The MAP and 95\% credible interval for $\lambda$ is and $\phi$ is .
 The posterior predictive distribution compared to human judgments is shown in Figure \ref{fig:byItemScatter} (Right). 
 As shown in Figure 5 (main text), interpretations of generic utterances are heavily guided by the \emph{a priori} mean prevalence when present. 
 We additionally plot the human judgments (after hearing the novel generic) with the mean prevalence when present (before hearing the generic) in Figure \ref{fig:byItemScatter} (Left). 
-Though both the posterior predictive distribution of the listener model (Eq.~1) given the generic utterance and the \emph{a priori} mean prevalence when present explain roughly the same amount of variance in generic interpretation ($r^2 = 0.89, 0.91$, respectively), the \emph{a priori} mean prevalence when present consistently \emph{underestimates} the interpreted prevalence.
+Though both the posterior predictive distribution of the listener model (Eq.~1) given the generic utterance and the \emph{a priori} mean prevalence when present explain roughly the same amount of variance in generic interpretation ($r^2 = 0.89, 0.92$; MSE = 0.006, 0.042;   respectively), the \emph{a priori} mean prevalence when present consistently \emph{underestimates} the interpreted prevalence.
 This is because the generic implies more than merely that the property is present within the kind; the generic implies the prevalence is substantially more than a listener would expect \emph{a priori}. 
+This is manifested in the pragmatics model by the pressure for the speaker to be informative. 
 
 \begin{figure}
 \centering
