@@ -117,43 +117,61 @@ Participants completed this procedure on each of 2 trials for a total of 16 prop
 
 
 We used a set of properties associated with generics of theoretical interest (21 properties in total), motivated in part by conceptual distinctions pointed out by \citeA{Prasada2013}. 
-The conceptual categories used to generate the generics were: majority characteristic (e.g. ``Leopards have spots''), minority characteristic (e.g. ``Lions have manes''), striking (e.g. ``Sharks attack swimmers.''), and majority false generalizations (e.g. ``Robins are female.'') \cite{Prasada2013}. 
-In addition, we included false sentences (e..g ``Lions lay eggs''), to cover the full range of possible truth values.
-We aimed to include properties whose generics would be judged false even though the majority of the species has the property. To achieve this, 5 of the properties were negations (e.g. ``don't attack swimmers'') and were not measured separately from the corresponding positive form. 
-Instead, we took the complement of participants judgments of the positive property (e.g. ``have beautiful feathers''') as the estimate for the negation (e.g. ``don't have beautiful feathers'').
+The conceptual categories used to generate the generics were: majority characteristic (e.g. \emph{Leopards have spots}), minority characteristic (e.g. \emph{Lions have manes}), striking (e.g. \emph{Sharks attack swimmers.}), and majority false generalizations (e.g. \emph{Robins are female.}) \cite{Prasada2013}. 
+In addition, we included false sentences (e.g. \emph{Lions lay eggs.}), to cover the full range of possible truth values.
+We aimed to include properties whose generics would be judged false even though the majority of the species has the property. To achieve this, 5 of the properties were negations (e.g. \textsc{don't attack swimmers}) and were not measured separately from the corresponding positive form. 
+Instead, we took the complement of participants judgments of the positive property (e.g. \textsc{have beautiful feathers}) as the estimate for the negation (e.g. \textsc{don't have beautiful feathers}).
 
 For a full list of the properties, and generic sentences used in the next experiment, see Table \ref{tab:expt1}.
 
 \subsection{Bayesian data analysis}
 \label{sec:bda1}
 
-We will describe the analysis model from the perspective of inferring the distribution of a particular property (e.g. ``lays eggs''). 
+We will describe the analysis model from the perspective of inferring the distribution of a particular property (e.g. \textsc{lay eggs}). 
 The same general structure is implemented for each item independently. 
 
-The prior elicitation task has an important latent structure. 
-Responses $d$ can be categorized into those that reflect the property is either present or absent in the species: $d_{category}$ is 1 if the prevalence $d$ is greater than 0, and 0 otherwise. 
-The number of 0\% responses act as an indicator of the property's \emph{distinctiveness} $\theta_{distinct}$ (for example, knowing that there are members of the species that ``are female'' is not very distinctive, whereas knowing that there are members that ``lay eggs'' is relatively more distinctive).
- We assume nothing \emph{a priori} about the distinctiveness of the property. 
+We hypothesized that the prior elicitation task has an important latent structure. 
+Participants are asked to report the prevalence of the property that they believe lies within different kinds.
+If participants believe that some kinds have the potential to have the property, while others do not, then we would expect $P(x)$ to be structured as a mixture distribution \cite{Griffiths2005}.
+The mixture is between kinds that can have the property and kinds that cannot, and the weighting assigned to each mixture component is governed by the parameter $\theta$.
+
+We assume that kinds that \emph{cannot} have the property can only have 0\% prevalence. 
+ Thus, the number of 0\% responses in the data ($d_observed = 0$)act as an indicator of the property's potential to be present in a category $\theta$ (for example, the property \textsc{are female} has a very high potential to be in a present in a category, whereas the property \textsc{lay eggs} has relatively less potential e.g. \textsc{lions} don't have the potential to lay eggs, while they do have the potential to be female).
+  We assume that kinds that can have the property have the property's prevalence distributed according to a Beta distribution with mean $\gamma$ and concentration $\phi$, while kinds that cannot have the property can only have 0\% prevalence. 
+
+For those responses that reflect the property is present ($d_observed > 0$), we assume those responses come from a distribution with unknown mean ($\gamma$) and concentration ($\phi$).
+Since the responses vary between 1 - 100, the natural generative distribution is a Beta distribution. 
+\footnote{This modeling approach is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is greater than one would expect from standard models of count data such as the Poisson model \cite<e.g. adverse events to vaccines; >{hurdleModels}.}
+%Responses $d$ can be categorized into those that reflect the property is either present or absent in the species: $d_{category}$ is 1 if the prevalence $d$ is greater than 0, and 0 otherwise. 
+% We assume nothing \emph{a priori} about the distinctiveness of the property. 
 %
 \begin{align*}
-\theta_{distinctive} & \sim \text{Uniform}(0,1) \\
-d_{category} & \sim \text{Bernoulli}(1 - \theta_{distinctive}) \\
-d_{category} & = \begin{cases}
-				1 & \mbox{if } d_{observed} > 0 \\
-				0 & \mbox{if } d_{observed} = 0 \\
-				\end{cases}
+d_{observed} & \sim \begin{cases}
+				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{false} \\
+				 \text{Beta}(\gamma, \phi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{true}  \\
+				\end{cases} \\
+	 &  \sim \theta \cdot \delta_{x=0} + (1-\theta) \cdot \beta(\gamma,\phi) \\
 \end{align*}
-%
-For those responses that reflect the property is present ($d > 0$), we assume those responses come from a distribution with unknown mean ($\gamma_{within}$) and variance ($\delta_{within}$). 
-Since the responses vary between 1 - 100, the natural generative distribution is a Beta distribution. We put uninformative priors over the means and concentrations of the prevalence distributions
-%We model the observed data as being generated by a mixture of this model and a model of random guessing behavior. 
-%Modeling random guessing explicitly is important for recovering reliable estimates of the parameters of the model, which would otherwise be contaminated by this data \cite{LW2014}. 
-%
+We put uninformative priors over the mixture parameter$\theta$, and the mean and concentration of the Beta distribution $\gamma$ and $\phi$. 
+
+
 \begin{align*}
-\gamma_{within} & \sim \text{Uniform}(0, 1) \\
-\delta_{within} & \sim \text{Uniform}(0, 50) \\
-d_{within} & \sim \text{Beta}(\gamma_{within}, \delta_{within})  \mbox{ if } d > 0
+\theta & \sim \text{Uniform}(0,1) \\
+\gamma & \sim \text{Uniform}(0,1) \\
+\phi & \sim \text{Uniform}(0, 50)
 \end{align*}
+
+%
+%For those responses that reflect the property is present ($d > 0$), we assume those responses come from a distribution with unknown mean ($\gamma_{within}$) and variance ($\delta_{within}$). 
+%Since the responses vary between 1 - 100, the natural generative distribution is a Beta distribution. We put uninformative priors over the means and concentrations of the prevalence distributions
+%%We model the observed data as being generated by a mixture of this model and a model of random guessing behavior. 
+%%Modeling random guessing explicitly is important for recovering reliable estimates of the parameters of the model, which would otherwise be contaminated by this data \cite{LW2014}. 
+%%
+%\begin{align*}
+%\gamma_{within} & \sim \text{Uniform}(0, 1) \\
+%\delta_{within} & \sim \text{Uniform}(0, 50) \\
+%d_{within} & \sim \text{Beta}(\gamma_{within}, \delta_{within})  \mbox{ if } d > 0
+%\end{align*}
 %
 %\begin{align*}
 %d_{within} \sim \begin{cases}
@@ -167,25 +185,14 @@ d_{within} & \sim \text{Beta}(\gamma_{within}, \delta_{within})  \mbox{ if } d >
 . 
 %
 
-\ndg{this is a slightly odd way to write the generative model. i think it's easier if you describe how to sample $d$ directly?}
+%\ndg{this is a slightly odd way to write the generative model. i think it's easier if you describe how to sample $d$ directly?}
 
 
 We implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. 
-We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta_{distinctive}, \gamma_{within}$, and $\delta_{within}$ with 3 chains of 100,000 iterations removing the first 50,000 iterations.
+We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta, \gamma$, and $\phi$ with 3 MCMC chains of 100,000 iterations removing the first 50,000 iterations.
 
-To reconstruct the likely distribution of  prevalence reflecting both the property distinctiveness and the expected within-category prevalence, we took samples from the posterior predictive distribution of $d$ by running the forward model: 
-%
-\begin{align*}
-h & \sim \text{Bernoulli}(1 - \theta_{distinctive}) \\
-x & \sim \begin{cases} 
-		\text{Beta}(\gamma_{within}, \delta_{within}) &\mbox{if } h = 1 \\ 
-				0 & \mbox{if } h=0
-				\end{cases} 
-\end{align*}
-%
-where, $h$ is a variable indicating whether or not the property is present within a particular species. 
 
-We also estimated the likely prevalence of each animal category and property pair of interest (e.g. the prevalence of ``lays eggs'' among ``Robins''). %, to be used as the measure of prevalence in the generic truth judgment task (Expt.~1b). 
+We also estimated the likely prevalence of each animal category and property pair of interest (e.g. the prevalence of \textsc{lay eggs} among \textsc{robins}). %, to be used as the measure of prevalence in the generic truth judgment task (Expt.~1b). 
 For this, we assume the data was generated from a Beta distribution with unknown mean and concentration. 
 %We also assume some global amount of noise in the data.
 
@@ -197,10 +204,35 @@ For this, we assume the data was generated from a Beta distribution with unknown
 %\end{align*}
 \begin{align*}
 \gamma_{kind::property} & \sim \text{Uniform}(0, 1) \\
-\delta_{kind::property} & \sim \text{Uniform}(0, 50) \\
-d_{kind::property} & \sim \text{Beta}(\gamma_{kind::property}, \delta_{kind::property}) 
+\phi_{kind::property} & \sim \text{Uniform}(0, 50) \\
+d_{kind::property} & \sim \text{Beta}(\gamma_{kind::property}, \phi_{kind::property}) 
 \end{align*}
 
+
+
+
+
+\subsubsection{Prior model validation}
+
+To see if our structured, statistical model of the prior elicitation task matched the observed data  (and thus, validate our assumptions about the structure of the prevalence prior), we reconstructed likely distributions of prevalence by taking samples from the posterior predictive distribution of $d$ by running the forward model: 
+%
+\begin{align*}
+x & \sim \begin{cases} 
+		\text{Beta}(\gamma, \phi) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{true} \\
+				0 &\mbox{if } \text{Bernoulli}(\theta) = \textsc{false}
+				\end{cases} 
+\end{align*}
+%
+These distributions reflect both the property's potential to be present----$\theta$---as well as the distribution of prevalence when the property is present----\text{Beta}($\gamma$, $\phi$).
+
+We compared these posterior predictive distributions to the prior elicitation data by discretizing the posterior predictive distribution and binning (and normalizing) the counts in the prior elicitation data.
+We used 12 discrete bins: $\{[0-0.01), (0.01-0.05), (0.05-0.15), (0.15-0.25),  ..., (0.75-0.85), (0.85-0.95), (0.95-1]\}$.
+The posterior predictive distribution of the prior model corresponded well with the prior elicitation data ($r^2=0.95$), providing good evidence that our assumption of a structured prior is warranted.
+
+The only substantial disagreement between the prior model and the data occur for  the properties \textsc{are male, are female} in the bin $(0.45-0.55)$. 
+The normalized empirical counts put about 75\% probability in this bin; the model predicts roughly 50\% probability of this bin. 
+This discrepancy can be attributed to a number of 100\% or 0\% responses present in the data (e.g. some participants self-generated the category \textsc{cow}, and rated that 100\% of cows are female). 
+Since the model assumes a smooth Beta distribution, these responses work to flatten out the distribution.
 
 
 \section{Experiment 1b: \emph{Truth judgments of natural cases}}
@@ -219,14 +251,14 @@ The experiment took about 3 minutes and participants were compensated \$0.35.
 \subsection{Procedure and materials}
 
 We used a two-alternative forced-choice (2AFC) paradigm to measure participants' beliefs about the acceptability of 30 generic sentences. 
-Data reported in \citeA{Prasada2013} revealed that participants assign midpoint Likert scale ratings to anomalous generics like ``Birds are female''. 
+Data reported in \citeA{Prasada2013} revealed that participants assign midpoint Likert scale ratings to anomalous generics like \emph{Birds are female}. 
 We hypothesized that these ``neither true nor false'' ratings would be translated into more graded responses across the population using the 2AFC (i.e. subjects would be closer to chance).
 
-Participants were asked to report whether they agreed or disagreed with generic sentences presented in bare plural form (e.g. ``Birds lay eggs.''). 
-Items were presented sequentially, and participants reported whether or not they agreed with the sentence by pressing either ``P'' or ``Q'' (randomized between-subjects). 
+Participants were asked to report whether they agreed or disagreed with generic sentences presented in bare plural form (e.g. \emph{Birds lay eggs.}). 
+Items were presented sequentially, and participants reported whether or not they agreed with the sentence by pressing either \textsc{p} or \textsc{q} (randomized between-subjects). 
 
 Generic sentences were selected to correspond with the properties used in Expt.~1a. 
-They covered a range of conceptual categories: Characteristic (e.g. ``Ducks have wings.''), Minority (e.g. ``Robins lay eggs.''), Striking (e.g. ``Mosquitos carry malaria.''), False generalization (e.g. ``Robins are female.''), and False (e.g. ``Lions lay eggs.'').
+They covered a range of conceptual categories: Characteristic (e.g. \emph{Ducks have wings.}), Minority (e.g. \emph{Robins lay eggs.}), Striking (e.g. \emph{Mosquitos carry malaria.}), False generalization (e.g. \emph{Robins are female.}), and False (e.g. \emph{Lions lay eggs.}).
 We also aimed to include generics that were both acceptable and unacceptable with low, medium, and high prevalence.
 Approximately 10 true, 10 false, and 10 uncertain truth-value generics were selected (see Table \ref{tab:expt1} for full list of items).
 
@@ -268,12 +300,15 @@ All results of interest are reported in the main text.
 
 \subsection{Full model predictions}
 
-The speaker model $S_2$ assigns a probability to the generic utterance by reasoning about the likely prevalence that a listener will infer given each utterance and common sense knowledge of properties (the prior). 
-The model, thus, takes into account the prior knowledge of prevalence distributions; we use the priors inferred from Expt.~1a. \ndg{do we use the MAP priors, or maintain the distribution? I guess it's the posterior-predictive of the priors?}
+The speaker model $S_2$ (Eq. 4, main text) assigns a probability to the generic utterance by reasoning about the likely prevalence that a listener (Eq. 1, main text) will infer given each utterance and common sense knowledge of properties (the prior). 
+The model, thus, takes into account the prior knowledge of prevalence distributions; we use the priors inferred from Expt.~1a, maintaining the uncertainty the remains after conditioning on the prior elicitation data. 
+
+\ndg{do we use the MAP priors, or maintain the distribution? I guess it's the posterior-predictive of the priors?} 
+\mht{Maintain distributions}
 
 %\subsubsection{Data analysis model priors}
 
-Having fixed the priors empirically, the model has 1 parameter: the speaker optimality parameter $\lambda$. 
+Having inferred likely priors empirically, the model has 1 parameter: the speaker optimality parameter $\lambda$ (in Eq. 2, main text). 
 For data analysis, we put an uninformative prior over this parameter, with a range consistent with previous literature using the same model class.
 
 $$
@@ -288,6 +323,8 @@ We put an uninformative prior over the mixture parameter $\phi$.
 $$
 \phi \sim \text{Uniform}(0,1)
 $$
+
+\mht{Should we use a different letter since we already have $\phi$ as the Beta concentration? Would be easiest to change beta concentration variable (wouldnt' have to remake plots).... $\xi$?}
 
 
 \subsubsection{Posterior over model parameters}
