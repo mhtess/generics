@@ -481,7 +481,7 @@ For example, increasing $\theta$ (i.e. the relative probability mass at 0\%) wil
 
 \begin{figure}
 \centering
-    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists.pdf}
+    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists2.pdf}
     \caption{Prevalence prior distributions empirically elicited for twenty-one animal properties.
     Prior distributions are summarized by $\theta$----a property's potential to be present in a category----and $\gamma$----the mean prevalence when it is possible for the property to be present in a category.
     Inset plots display example empirical prior distributions over prevalence together with corresponding $L_1$ model predictions: the posterior after hearing a generic utterance. 
@@ -489,6 +489,7 @@ For example, increasing $\theta$ (i.e. the relative probability mass at 0\%) wil
 %    Posterior distributions show what happens to a listener's belief about the prevalence after hearing the associated generic. 
     Felicitous generic utterances result when the target prevalence is more likely under the posterior than under the prior.
  %   \ndg{should mark the observed within-category prevalence for target kinds in pop-outs? or maybe one of the axes of main plot should be that?}
+     Error bars denote 95\% Bayesian credible intervals.
     }
   \label{fig:priors1a}
 \end{figure}
@@ -629,9 +630,13 @@ Accidental properties (``rare'' and ``common'') follow unimodal prior distributi
 
 \begin{figure}
 \centering
-    \includegraphics[width=1\columnwidth]{prevalence-asymmetry-scatterwDists.pdf}
-    \caption{\mht{Make scatter by item, with the same 5 insets?}Prevalence priors for five types of animal properties, plotted on a two-dimensional between- and within-category prevalence space. 
-    Pop-out plots show full prior distributions over prevalence and posterior distributions after hearing a generic that corresponds to that type of property. }
+    \includegraphics[width=1\columnwidth]{prevalence-asymmetry-scatterwDists-byItem.pdf}
+    \caption{Prevalence prior distributions empirically elicited for 40 animal properties.
+    Parameters of the structured statistical model---$\theta$ and $\gamma$---reveal quantitative differences in beliefs about the prevalence of conceptually different types of properties (scatterplot). 
+    Inset plots show differences in shapes between biological properties (red, green, blue; bimodal) and accidental properties (orange, purple; unimodal).   
+  These differences give rise to the variability of interpretations of generic utterances. 
+      Error bars denote Bayesian 95\% credible intervals.
+  }
   \label{fig:prior2}
 \end{figure}
 
@@ -639,18 +644,21 @@ Accidental properties (``rare'' and ``common'') follow unimodal prior distributi
 %type of property (and its corresponding prior distribution on prevalence) when interpreting a novel generic.
 
 
-\begin{figure}
-\centering
-    \includegraphics[width=0.6\columnwidth]{implied-byItem-mh100kX2.pdf}
-    \caption{Implied prevalence by human participants vs. the generics model posterior predictive.}
-  \label{fig:impliedByItem}
-\end{figure}
-
-
 We compared the interpretations of the pragmatic listener in Eq.~\ref{eq:L1} to human judgments ($n=40$) about the likely prevalence of the property after hearing a generic (e.g. \emph{Lorches have green feathers.}). %, in the same spirit as \citeA{Gelman2002}. 
-Human prevalence judgments after reading the generic were affected by the type of property in question and its corresponding $\gamma$: The more prevalent a property is expected to be \emph{a priori}, the stronger the implications of a generic statement (\mht{Update with by-item regression numbers?}$\beta = 0.59; SE = 0.08; t(39) = 7.14; p < 0.001$)\footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}. 
+Human prevalence judgments after reading the generic were affected by the type of property in question and its corresponding $\gamma$: The more prevalent a property is expected to be \emph{a priori}, the stronger the implications of a generic statement ($\beta = 0.57; SE = 0.08; t(39) = 7.12; p < 0.001$)\footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}. 
 The pragmatic listener model closely aligns with human judgments, displaying the same sensitivity of interpretation to the property information ($r^2(40)=0.89$, MSE=0.006; Figure \ref{fig:impliedByItem}). 
 
+
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.9\columnwidth]{implied-byItem-mh100kX2.pdf}
+    \caption{Human interpretation of prevalence upon hearing a generic compared with the $L_1$ model posterior predictive. 
+    Participants display graded endorsements of generics in terms of prevalence based on type of property (which is also associated with \emph{mean prevalence when present} $\gamma$, see Figure 3).
+    The model displays the same variability of interpretation, producing strong interpretations for generics of biological properties (red, blue, green) and weaker interpretations of generics of accidental properties (purple, orange).
+        Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
+  \label{fig:impliedByItem}
+\end{figure}
 
 
 
