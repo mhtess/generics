@@ -64,9 +64,9 @@
 
 
 
-\title{Generic supplement}
+\title{Supplementary materials: \emph{A pragmatic theory of generic language}}
 
-
+\author{{\large \bf Michael Henry Tessler} (mtessler@stanford.edu)\\ {\large \bf Noah D. Goodman} (ngoodman@stanford.edu)}
 \begin{document}
 
 \maketitle
@@ -119,46 +119,45 @@ Participants completed this procedure on each of 2 trials for a total of 16 prop
 We used a set of properties associated with generics of theoretical interest (21 properties in total), motivated in part by conceptual distinctions pointed out by \citeA{Prasada2013}. 
 The conceptual categories used to generate the generics were: majority characteristic (e.g. \emph{Leopards have spots}), minority characteristic (e.g. \emph{Lions have manes}), striking (e.g. \emph{Sharks attack swimmers.}), and majority false generalizations (e.g. \emph{Robins are female.}) \cite{Prasada2013}. 
 In addition, we included false sentences (e.g. \emph{Lions lay eggs.}), to cover the full range of possible truth values.
-We aimed to include properties whose generics would be judged false even though the majority of the species has the property. To achieve this, 5 of the properties were negations (e.g. \textsc{don't attack swimmers}) and were not measured separately from the corresponding positive form. 
-Instead, we took the complement of participants judgments of the positive property (e.g. \textsc{have beautiful feathers}) as the estimate for the negation (e.g. \textsc{don't have beautiful feathers}).
+We aimed to include properties whose generics would be judged false even though the majority of the species has the property. To achieve this, 5 of the properties were negations (e.g. \textsc{doesn't attack swimmers}) and were not measured separately from the corresponding positive form. 
+Instead, we took the complement of participants judgments of the positive property (e.g. \textsc{has beautiful feathers}) as the estimate for the negation (e.g. \textsc{doesn't have beautiful feathers}).
 
 For a full list of the properties, and generic sentences used in the next experiment, see Table \ref{tab:expt1}.
 
 \subsection{Bayesian data analysis}
 \label{sec:bda1}
 
-We will describe the analysis model from the perspective of inferring the distribution of a particular property (e.g. \textsc{lay eggs}). 
+We will describe the analysis model from the perspective of inferring the distribution of a particular property (e.g. \textsc{lays eggs}). 
 The same general structure is implemented for each item independently. 
 
 We hypothesized that the prior elicitation task has an important latent structure. 
-Participants are asked to report the prevalence of the property that they believe lies within different kinds.
+Participants are asked to report the prevalence of the property that they believe lies within different kinds of animals.
 If participants believe that some kinds have the potential to have the property, while others do not, then we would expect $P(x)$ to be structured as a mixture distribution \cite{Griffiths2005}.
 The mixture is between kinds that can have the property and kinds that cannot, and the weighting assigned to each mixture component is governed by the parameter $\theta$.
 
 We assume that kinds that \emph{cannot} have the property can only have 0\% prevalence. 
- Thus, the number of 0\% responses in the data ($d_{observed} = 0$) act as an indicator of the property's potential to be present in a category $\theta$ (for example, the property \textsc{are female} has a very high potential to be in a present in a category, whereas the property \textsc{lay eggs} has relatively less potential e.g. \textsc{lions} don't have the potential to lay eggs, while they do have the potential to be female).
-  We assume that kinds that can have the property have the property's prevalence distributed according to a Beta distribution with mean $\gamma$ and concentration $\phi$, while kinds that cannot have the property can only have 0\% prevalence. 
-
-For those responses that reflect the property is present ($d_{observed} > 0$), we assume those responses come from a distribution with unknown mean ($\gamma$) and concentration ($\phi$).
-Since the responses vary between 1 - 100, the natural generative distribution is a Beta distribution. 
-\footnote{This modeling approach is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is greater than one would expect from standard models of count data such as the Poisson model \cite<e.g. adverse events to vaccines; >{hurdleModels}.}
+ Thus, the number of 0\% responses in the data ($d_{observed} = 0$) act as an (inverse) indicator of the property's potential to be present in a category $\theta$ (for example, the property \textsc{is female} has a very high potential to be in a present in a category, whereas the property \textsc{lays eggs} has relatively less potential e.g. \textsc{lions} don't have the potential to lay eggs, while they do have the potential to be female).
+  We assume that kinds that can have the property have the property's prevalence distributed according to a Beta distribution with mean $\gamma$ and concentration $\tau$, while kinds that cannot have the property can only have 0\% prevalence
+%For those responses that reflect the property is present ($d_{observed} > 0$), we assume those responses come from a distribution with unknown mean ($\gamma$) and concentration ($\tau$).
+%Since the responses vary between 1 - 100, the natural generative distribution is a Beta distribution. 
+\footnote{This modeling approach is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is greater than one would expect from standard models of count data such as the Poisson model \cite<e.g. adverse events to vaccines; >{hurdleModels}.}.
 %Responses $d$ can be categorized into those that reflect the property is either present or absent in the species: $d_{category}$ is 1 if the prevalence $d$ is greater than 0, and 0 otherwise. 
 % We assume nothing \emph{a priori} about the distinctiveness of the property. 
 %
 \begin{align*}
 d_{observed} & \sim \begin{cases}
-				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{false} \\
-				 \text{Beta}(\gamma, \phi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{true}  \\
+				 \text{Beta}(\gamma, \tau) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
+				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
 				\end{cases} \\
-	 &  \sim \theta \cdot \delta_{x=0} + (1-\theta) \cdot \beta(\gamma,\phi) \\
+	 &  \sim \theta \cdot \beta(\gamma,\tau)+ (1 - \theta) \cdot \delta_{x=0}  \\
 \end{align*}
-We put uninformative priors over the mixture parameter $\theta$, and the mean and concentration of the Beta distribution $\gamma$ and $\phi$. 
+We put uninformative priors over the mixture parameter $\theta$, and the mean and concentration of the Beta distribution $\gamma$ and $\tau$. 
 
 
 \begin{align*}
 \theta & \sim \text{Uniform}(0,1) \\
 \gamma & \sim \text{Uniform}(0,1) \\
-\phi & \sim \text{Uniform}(0, 50)
+\tau & \sim \text{Uniform}(0, 50)
 \end{align*}
 
 %
@@ -191,7 +190,7 @@ We implemented this Bayesian statistical model using the probabilisitic programm
 We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta, \gamma$, and $\phi$ with 3 MCMC chains of 100,000 iterations removing the first 50,000 iterations.
 
 
-We also estimated the likely prevalence of each animal category and property pair of interest (e.g. the prevalence of \textsc{lay eggs} among \textsc{robins}). %, to be used as the measure of prevalence in the generic truth judgment task (Expt.~1b). 
+We also estimated the likely prevalence of each animal category and property pair of interest (e.g. the prevalence of \textsc{lays eggs} among \textsc{robins}). %, to be used as the measure of prevalence in the generic truth judgment task (Expt.~1b). 
 For this, we assume the data was generated from a Beta distribution with unknown mean and concentration. 
 %We also assume some global amount of noise in the data.
 
@@ -203,8 +202,8 @@ For this, we assume the data was generated from a Beta distribution with unknown
 %\end{align*}
 \begin{align*}
 \gamma_{kind::property} & \sim \text{Uniform}(0, 1) \\
-\phi_{kind::property} & \sim \text{Uniform}(0, 50) \\
-d_{kind::property} & \sim \text{Beta}(\gamma_{kind::property}, \phi_{kind::property}) 
+\tau_{kind::property} & \sim \text{Uniform}(0, 50) \\
+d_{kind::property} & \sim \text{Beta}(\gamma_{kind::property}, \tau_{kind::property}) 
 \end{align*}
 
 
@@ -217,18 +216,18 @@ To see if our structured, statistical model of the prior elicitation task matche
 %
 \begin{align*}
 x & \sim \begin{cases} 
-		\text{Beta}(\gamma, \phi) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{true} \\
-				0 &\mbox{if } \text{Bernoulli}(\theta) = \textsc{false}
+		\text{Beta}(\gamma, \tau) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
+				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
 				\end{cases} 
 \end{align*}
 %
-These distributions reflect both the property's potential to be present----$\theta$---as well as the distribution of prevalence when the property is present----\text{Beta}($\gamma$, $\phi$).
+These distributions reflect both the property's potential to be present---$\theta$---as well as the distribution of prevalence when the property is present----\text{Beta}($\gamma$, $\tau$).
 
 We compared these posterior predictive distributions to the prior elicitation data by discretizing the posterior predictive distribution and binning (and normalizing) the counts in the prior elicitation data.
 We used 12 discrete bins: $\{[0-0.01), (0.01-0.05), (0.05-0.15), (0.15-0.25),  ..., (0.75-0.85), (0.85-0.95), (0.95-1]\}$.
 The posterior predictive distribution of the prior model corresponded well with the prior elicitation data ($r^2=0.94$), providing good evidence that our assumption of a structured prior is warranted (Figure \ref{fig:pp-priorModel}).
 
-The only substantial disagreement between the prior model and the data occur for  the properties \textsc{are male, are female} in the bin $(0.45-0.55)$. 
+The only substantial disagreement between the prior model and the data occur for  the properties \textsc{is male, is female} in the bin $(0.45-0.55)$. 
 The normalized empirical counts put about 75\% probability in this bin; the model predicts roughly 50\% probability of this bin. 
 This discrepancy can be attributed to a number of 100\% or 0\% responses present in the data (e.g. some participants self-generated the category \textsc{cow}, and rated that 100\% of cows are female). 
 Since the model assumes a smooth Beta distribution, these responses work to flatten out the distribution.
@@ -257,7 +256,7 @@ The experiment took about 3 minutes and participants were compensated \$0.35.
 \subsection{Procedure and materials}
 \label{sec:prior2materials}
 
-We used a two-alternative forced-choice (2AFC) paradigm to measure participants' beliefs about the acceptability of 30 generic sentences. 
+We used a two-alternative forced-choice (2AFC) paradigm to measure participants' acceptability judgments of 30 generic sentences. 
 Data reported in \citeA{Prasada2013} revealed that participants assign midpoint Likert scale ratings to anomalous generics like \emph{Birds are female}. 
 We hypothesized that these ``neither true nor false'' ratings would be translated into more graded responses across the population using the 2AFC (i.e. subjects would be closer to chance).
 
@@ -273,7 +272,8 @@ As a manipulation check, participants were asked at the end of the trials which 
 
 \subsubsection{Results}
 
-As a manipulation check, the first author assigned an \emph{a priori} truth-judgment (true/false/indederminate) to each class of stimuli. This was a significant predictor of the empirical truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = 21.5$), as revealed by a mixed-effect logistic regression with random by-participant effects of intercept.
+As a manipulation check, the first author assigned an \emph{a priori} truth-judgment (true/false/indeterminate) to each stimulus item.
+This was a significant predictor of the empirical truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = 21.5$), as revealed by a mixed-effect logistic regression with random by-participant effects of intercept.
 Indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$) but significantly more than false generics ($\beta = 2.09; SE = 0.14; z = 14.5$).
 
 
@@ -328,7 +328,6 @@ $$
 \phi \sim \text{Uniform}(0,1)
 $$
 
-\mht{Should we use a different letter since we already have $\phi$ as the Beta concentration? Would be easiest to change beta concentration variable (wouldnt' have to remake plots).... $\xi$?}
 
 
 \subsubsection{Posterior over model parameters}
@@ -396,7 +395,7 @@ The experiment took about 5-7 minutes and participants were compensated \$0.75.
 
 \subsection{Procedure and materials}
 
-To measure the prevalence prior of properties of common generics (Expt. 1a), participants filled out a table with rows corresponding to different animal kinds and columns corresponding to different properties. 
+To measure the prevalence prior of properties corresponding to \emph{familiar} generics (Expt. 1a), participants filled out a table with rows corresponding to different animal kinds and columns corresponding to different properties. 
 Pilot testing suggested this was a pragmatically strange setup when using novel kinds: answering ``What percentage of lorches have green feathers?'', when participants knew nothing about lorches, was difficult.
 Instead, we harnessed the latent structure revealed in prevalence priors by Expt.~1a, described in Section \ref{sec:bda1}, structuring our task into questions about the property's potential to be present in a kind and the expected prevalence when present; we then used a Bayesian statistical model to reconstruct the underlying prior distribution. 
 We used these distributions in our language model to make predictions about the implications and truth conditions of novel generic sentences.
@@ -444,32 +443,32 @@ The same analysis was then completed by property type (e.g. ``part'', ``color pa
 Participants' responses to each question (slider bar values) were assumed to be samples from Beta distributions with unknown means and concentrations. 
 The responses to the questions ($d_{potential}, d_{expected}$) were used to estimate the parameters of the distributions of property's potential to be present in a kind and expected prevalence when present, separately. 
 \begin{align*}
-d_{potential} \sim \text{Beta}(\gamma_{potential}, \phi_{potential}) \\
-d_{expected} \sim \text{Beta}(\gamma_{expected}, \phi_{expected}) 
+d_{potential} \sim \text{Beta}(\gamma_{potential}, \tau_{potential}) \\
+d_{expected} \sim \text{Beta}(\gamma_{expected}, \tau_{expected}) 
 \end{align*}
-The parameters $\gamma$ and $\phi$ correspond to the mean and concentration, respectively, of the distributions over each of these parameters of interest.
+The parameters $\gamma$ and $\tau$ correspond to the mean and concentration, respectively, of the distributions over each of these parameters of interest.
 %As in our other models, we assume some global proportion of noise in the experimental data $\phi$. 
 We put identical, uninformative priors on these parameters:
 \begin{align*}
 %\phi & \sim \text{Uniform}(0,1) \\
 \gamma & \sim \text{Uniform}(0,1) \\
-\phi & \sim \text{Uniform}(0,50) 
+\tau & \sim \text{Uniform}(0,50) 
 \end{align*}
-To construct single prevalence distributions reflecting both the property's potential to be present in a kind and the expected prevalence when present (as we have for Expt.~1a), we assume that the distribution is a mixture of categories that have the property and categories that don't have the property.
+To construct single prevalence distributions reflecting both the property's potential to be present in a kind and the expected prevalence when present (as we have for Expt.~1a), we assume that the distribution is a mixture of categories for which the property is present and categories for which the property is absent.
 Whether or not a category has a property is driven by the property's potential to be present ($\theta$).
 %
 
 \begin{align*}
-\theta & \sim \text{Beta}(\gamma_{potential}, \phi_{potential}) \\ 
+\theta & \sim \text{Beta}(\gamma_{potential}, \tau_{potential}) \\ 
 x & \sim \begin{cases} 
-		\text{Beta}(\gamma_{expected}, \phi_{expected}) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{true} \\
-				\delta_{x=0} &\mbox{if } \text{Bernoulli}(\theta) = \textsc{false} \\
+		\text{Beta}(\gamma_{expected}, \tau_{expected}) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
+				\delta_{x=0} &\mbox{if } \text{Bernoulli}(\theta) = \textsc{f} \\
 		\end{cases} \\
-	 &  \sim \beta(\gamma_{potential},\phi_{potential})  \cdot \delta_{x=0} + (1-\beta(\gamma_{potential},\phi_{potential}) ) \cdot \beta(\gamma_{expected},\phi_{expected})
+	 &  \sim \theta \cdot \beta(\gamma_{expected},\tau_{expected}) + (1-\theta)  \cdot \delta_{x=0}
 \end{align*}
 
 %
-Marginal posterior distributions for $x$ were estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking 50,000 samples using the Metropolis-Hastings algorithm.
+Marginal posterior distributions for $x$ were estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking 3 MCMC chains of 100,000 samples (removing the first 50,000 samples for burn-in).
 
 \section{Experiment 2b: \emph{Interpretations of novel generics}}
 
@@ -480,7 +479,7 @@ As such, it is crucial to look beyond what makes them true and to see how generi
 
 The pragmatic listener model $L_1$ (Eq. 1, main text) predicts that the interpretations of generics should vary as a function of the prevalence prior.
 Here, we explore whether the predictions based on the empirically elicited prevalence priors for 40 items match human judgments of how the widespread the property is upon hearing a generic.
-We show how the prevalence-based model predicts the variability in both the implications of 40 generic utterances with strong quantitative accuracy.
+We show how the prevalence-based model predicts the variability in the interpretations of 40 generic utterances with strong quantitative accuracy.
 
 \subsection{Participants}
 
@@ -492,15 +491,15 @@ The experiment took about 5 minutes and participants were compensated \$0.60.
 \subsection{Procedure and materials}
 \label{sec:interpretationsMaterials}
 
-In order to get participants motivated to reason about novel animals, they were told they were the resident zoologist of a team of scientists that recently discovered an island with many new animals; their task was to provide their expert opinion on questions about these animals\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/asymmetry/asymmetry-2.html}}. 
-We recruited 40 participants for the \emph{truth conditions} task and 40 participants for the \emph{implied prevalence task}. 
+In order to get participants motivated to reason about novel animals, they were told they were the resident zoologist of a team of scientists on a recently discovered island with many unknown animals; their task was to provide their expert opinion on questions about these animals\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/asymmetry/asymmetry-2.html}}. 
+We recruited 40 participants for this \emph{implied prevalence task}. 
 
 Participants were supplied with the generic (e.g. \emph{Glippets have yellow fur.}) and asked to judge prevalence: ``What percentage of glippets do you think have yellow fur?''. 
 Participants saw 25 trials: 5 for each of 5 property types (see Section \ref{sec:prior2materials}).
 The original study by \citeauthor{Cimpian2010} found a difference in the implied prevalence between ``color parts'' (e.g. \textsc{yellow fur}) and accidental properties (e.g. \textsc{wet fur}).
 The prevalence priors inferred from Expt.~2a suggest that generic interpretation could be even more variable.
 For this reason, we included three types of biological properties: parts (e.g. \textsc{fur}), color--part pairs (e.g. \textsc{yellow fur}) and gradable adjective--part pairs (e.g. \textsc{curly fur}). 
-We also coded the accidental properties from Expt.~2a as either ``common'' or ``rare'' using a by-item median split based on expected prevalence when present.
+We also coded the accidental properties from Expt.~2a as either ``common'' or ``rare'' using a by-item median split based on \emph{a priori} expected prevalence when present.
 
 
 
@@ -550,7 +549,7 @@ Common Accidental &             &                                               
 
 The listener model $L_1$ (Eq. 1, main text) assigns a probability to different levels of prevalence by reasoning about the likely meaning (threshold) of the generic given that the speaker $S_1$ (Eq. 2, main text) was trying to be informative about the prevalence. 
 The concept of informativity is always with respect to some prior beliefs about the world.
-Thus, the model takes into account the knowledge of the prevalence distribution when interpreting the generic utterance. 
+As such, the model takes into account the knowledge of the prevalence distribution when interpreting the generic utterance. 
 
 
 
@@ -575,7 +574,7 @@ We put an uninformative prior over this mixture parameter $\phi_{\text{implied p
 \subsubsection{Posteriors over model parameters}
 
 To learn about the \emph{a posteriori} credible values of our model parameters, we used the probabilistic programming language WebPPL \cite{dippl} to collect 2 MCMC chains of 100,000 samples (removing 50,000 for burn-in) using the Metropolis-Hastings algorithm. 
-The estimated posterior distributions of the speaker rationality parameter $\lambda_\text{truth conditions}$ and the contamination parameter $\phi_{\text{implied prevalence}}$ are shown in Figure \ref{fig:byItemParameters}. 
+The estimated posterior distributions of the speaker rationality parameter $\lambda_\text{implied prevalence}$ and the contamination parameter $\phi_{\text{implied prevalence}}$ are shown in Figure \ref{fig:byItemParameters}. 
 The contamination parameter represents the proportion of the data that is better explained by a model of random guessing behavior than by the prevalence-based generics model. 
 
 The estimated posterior distributions for the two parameters: $\lambda$ and $\phi$ are shown in Figure \ref{fig:byItemParameters}.
@@ -592,16 +591,16 @@ The MAP and 95\% credible interval for $\lambda$ is 3.3 [1.2, 4.7] and $\phi$ is
 \subsubsection{Posterior predictive}
 
 The posterior predictive distribution compared to human judgments is shown in Figure \ref{fig:byItemScatter} (Right). 
-As shown in Figure 5 (main text), interpretations of generic utterances are heavily guided by the \emph{a priori} mean prevalence when present. 
+As shown in Figure 4 (main text), interpretations of generic utterances are heavily guided by the \emph{a priori} mean prevalence when present. 
 We additionally plot the human judgments (after hearing the novel generic) with the mean prevalence when present (before hearing the generic) in Figure \ref{fig:byItemScatter} (Left). 
-Though both the posterior predictive distribution of the listener model (Eq.~1) given the generic utterance and the \emph{a priori} mean prevalence when present explain roughly the same amount of variance in generic interpretation ($r^2 = 0.89, 0.92$; MSE = 0.006, 0.042;   respectively), the \emph{a priori} mean prevalence when present consistently \emph{underestimates} the interpreted prevalence.
+Though both the posterior predictive distribution of the listener model (Eq.~1) given the generic utterance (\ref{fig:byItemScatter}  Right) and the \emph{a priori} mean prevalence when present (\ref{fig:byItemScatter} Left) explain roughly the same amount of variance in generic interpretation ($r^2 = 0.89, 0.92$; MSE = 0.006, 0.042;   respectively), the \emph{a priori} mean prevalence when present consistently \emph{underestimates} the interpreted prevalence.
 This is because the generic implies more than merely that the property is present within the kind; the generic implies the prevalence is substantially more than a listener would expect \emph{a priori}. 
 This is manifested in the pragmatics model by the pressure for the speaker to be informative. 
 
 \begin{figure}
 \centering
     \includegraphics[width=\columnwidth]{implied-byItem-mcp-pp}
-    \caption{Implied prevalence by human participants vs. mean conditional prevalence and the generics model posterior predictive.}
+    \caption{Implied prevalence by human participants vs. \emph{a priori} Mean prevalence when present and the generics model posterior predictive.}
   \label{fig:byItemScatter}
 \end{figure}
 
@@ -613,7 +612,7 @@ Generic sentences were endorsed for a wide-range of prevalence levels (e.g. when
 As noted above, upon reading a generic, participants inferred that the property was widespread (e.g. almost all glippets have yellow fur).
 This mismatch between \emph{truth conditions} and \emph{implied prevalence} was significantly reduced for generics of properties plausibly construed as accidental (e.g. \emph{Glippets have wet fur.}).
 It was also found to not be present for the quantifier ``most'', arguably the quantifier most similar to a generic.
-This effect was driven by the sensitivity of the implied prevalence metric; the average truth conditions were modulated by the type of property to a much smaller extent (though for a different truth conditions measure that was modulated by the type of property see \citeA{Cimpian2010}, Expt. 4).
+This effect was driven by the sensitivity of the implied prevalence metric; the average truth conditions were modulated by the type of property to a much smaller extent.
 
 Below we replicate the asymmetry findings of \citeA{Cimpian2010} and reveal even more variability in the mismatch between \emph{truth conditions} and \emph{implied prevalence} using the types of properties from Expt.~2a.
 Because of the nature of the truth conditions task, our analysis is by property type (as opposed to individual properties as in Expt.~2b).
@@ -636,7 +635,7 @@ Participants were asked if they agreed or disagreed with the associated generic 
 Prevalence varied between 10, 30, 50, 70, and 90\%.
 The experiment consisted of 25 trials: 5 trials for each of 5 types of properties measured in Expt.~2a (part, color part, vague part, common accidental, rare accidental). 
 Each prevalence level appeared once for each property type (5 prevalence levels x 5 property types). 
-
+See Table \ref{tab:sampleTrial} for an example trial.
 \subsection{Data analysis}
 
 %\citeA{Cimpian2010} found that when participants are given statements about prevalence (e.g. ``30\% of lorches have green feathers.'') and asked whether the corresponding generic (e.g. ``Lorches have green feathers'') was true or false, the prevalence on average that participants assented to the generics was reliably less than the prevalence on average that participants inferred upon just reading the generic and being asked about prevalence explicitly. 
@@ -653,7 +652,7 @@ For example, if a participant agreed with the generic whenever the prevalence wa
 We subjected our model to the same procedure. 
 Just as with the experiment with common generics, we use the model of the speaker $S_2$ in Eq.~4 as a model of the \emph{truth conditions} task for novel generics.
 At each prevalence level, the model returns a posterior probability of saying the generic. 
-We take this probability as the parameter of a Bernoulli trial (i.e. as the weight of a coin), and sample a Bernoulli trial (i.e. flipping that coin) to predict whether or not the model would agree to the generic for that prevalence level. 
+We take this probability as the parameter of a Bernoulli trial (i.e. as the weight of a coin), and sample a Bernoulli trial (i.e. flip that coin) to predict whether or not the model would agree to the generic for that prevalence level. 
 We then get a sequence of responses corresponding to the responses (\emph{Agree/Disagree}) a participant would give for the 5 different prevalence levels.
 Just as with the human data, we took the \emph{Agree} trials, and took the mean of the prevalence levels corresponding to those \emph{Agree} trials. 
 Thus, we computed the average prevalence at which the model assented to the generic for each property type. 
@@ -664,7 +663,7 @@ We repeated this procedure 1000 times to bootstrap 95\% confidence intervals.
 \subsection{Full model predictions}
 
 
-We use the implied prevalence data from Expt.~2b, collapsed across property type, and we use the $L_1$ model to model this task. 
+We use the implied prevalence data from Expt.~2b, collapsed across property type using the $L_1$ model to model the \emph{implied prevalence} task. 
 The prior elicitation data (Section \ref{sec:prior2}) was analyzed again by property type.
 
 
@@ -688,7 +687,7 @@ We put uninformative priors over these parameters.
 The MAP and 95\% Credible interval for the contamination parameter in the implied prevalence task is 0.14 [0.08, 0.18]. 
 The MAP and 95\% Credible interval for the contamination parameter in the truth conditions task is 0.43 [0.32, 0.49]. 
 
-It should be noted that since this is a task-wide parameter, the guessing parameter cannot account for differences observed in the model between property-types.
+It should be noted that since the contamination parameter $\phi$ is task-wide parameter, it cannot account for differences observed in the model between property-types.
 It is possible, however, that the guessing parameter could remove differences that may exist between conditions. 
 This is particularly relevant for the truth conditions task, where we observe no appreciable differences among the average prevalence to assent to the generic (see Figure 5, truth conditions). 
 To rule out this possibility, we ran the models without contamination parameters, and observed the same effects we report in the main paper: a linear increase as a function of mean prevalence when present for the implied prevalence task, and no linear increase for the truth conditions data. 
@@ -698,7 +697,7 @@ The relatively high contamination parameter for the truth conditions task is mos
 This has the effect of increasing the average prevalence to assent. 
 To try to account for this quantitatively, the model assumes a relatively high amount of random guessing. 
 We note that a quantitative fit to the average prevalence to assent to novel generics is not of theoretical interest here. 
-Of more interest is the relative insensitivity of the average prevalence score to the mean conditional prevalence, which is a robust prediction of the model. 
+Of interest is the relative insensitivity of the average prevalence score to the \emph{a priori} mean prevalence when present, which is a robust prediction of the model. 
 
 
 \begin{figure}
@@ -711,7 +710,7 @@ Of more interest is the relative insensitivity of the average prevalence score t
 The estimated posterior distribution of the speaker rationality parameters $\lambda_{\text{truth conditions}}$ and $\lambda_{\text{implied prevalence}}$ are shown in Figure \ref{fig:rationality2}. 
 This parameter represents the belief in how rational the hypothetical speaker in Eq.~2 is believed to be when choosing to say the generic (over saying nothing). 
 The MAP and 95\% credible interval for $\lambda_{\text{truth conditions}}$ is 11.61 [7.63, 14.3] and $\lambda_{\text{implied prevalence}}$ is 1.54 [0.05, 2.52]. 
-The fact that these parameters are so different is expected given that the state space in the two tasks is also quite different.
+The fact that these parameters are so different is expected given that the response space in the two tasks is also quite different.
 
 
 \begin{figure}
@@ -724,6 +723,9 @@ The fact that these parameters are so different is expected given that the state
  
 
 
+\subsubsection{Posterior predictives}
+
+All model predictions of interest are shown in the main text.
 
 
 
