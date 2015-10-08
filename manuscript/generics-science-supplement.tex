@@ -63,7 +63,6 @@
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 
-
 \title{Supplementary materials: \emph{A pragmatic theory of generic language}}
 
 \author{{\large \bf Michael Henry Tessler} (mtessler@stanford.edu)\\ {\large \bf Noah D. Goodman} (ngoodman@stanford.edu)}
@@ -137,8 +136,8 @@ The mixture is between kinds that can have the property and kinds that cannot, a
 
 We assume that kinds that \emph{cannot} have the property can only have 0\% prevalence. 
  Thus, the number of 0\% responses in the data ($d_{observed} = 0$) act as an (inverse) indicator of the property's potential to be present in a category $\theta$ (for example, the property \textsc{is female} has a very high potential to be in a present in a category, whereas the property \textsc{lays eggs} has relatively less potential e.g. \textsc{lions} don't have the potential to lay eggs, while they do have the potential to be female).
-  We assume that kinds that can have the property have the property's prevalence distributed according to a Beta distribution with mean $\gamma$ and concentration $\tau$, while kinds that cannot have the property can only have 0\% prevalence
-%For those responses that reflect the property is present ($d_{observed} > 0$), we assume those responses come from a distribution with unknown mean ($\gamma$) and concentration ($\tau$).
+  We assume that kinds that can have the property have the property's prevalence distributed according to a Beta distribution with mean $\gamma$ and concentration $\xi$, while kinds that cannot have the property can only have 0\% prevalence
+%For those responses that reflect the property is present ($d_{observed} > 0$), we assume those responses come from a distribution with unknown mean ($\gamma$) and concentration ($\xi$).
 %Since the responses vary between 1 - 100, the natural generative distribution is a Beta distribution. 
 \footnote{This modeling approach is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is greater than one would expect from standard models of count data such as the Poisson model \cite<e.g. adverse events to vaccines; >{hurdleModels}.}.
 %Responses $d$ can be categorized into those that reflect the property is either present or absent in the species: $d_{category}$ is 1 if the prevalence $d$ is greater than 0, and 0 otherwise. 
@@ -146,18 +145,18 @@ We assume that kinds that \emph{cannot} have the property can only have 0\% prev
 %
 \begin{align*}
 d_{observed} & \sim \begin{cases}
-				 \text{Beta}(\gamma, \tau) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
+				 \text{Beta}(\gamma, \xi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
 				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
 				\end{cases} \\
-	 &  \sim \theta \cdot \beta(\gamma,\tau)+ (1 - \theta) \cdot \delta_{x=0}  \\
+	 &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{x=0}  \\
 \end{align*}
-We put uninformative priors over the mixture parameter $\theta$, and the mean and concentration of the Beta distribution $\gamma$ and $\tau$. 
+We put uninformative priors over the mixture parameter $\theta$, and the mean and concentration of the Beta distribution $\gamma$ and $\xi$. 
 
 
 \begin{align*}
 \theta & \sim \text{Uniform}(0,1) \\
 \gamma & \sim \text{Uniform}(0,1) \\
-\tau & \sim \text{Uniform}(0, 50)
+\xi & \sim \text{Uniform}(0, 50)
 \end{align*}
 
 %
@@ -202,8 +201,8 @@ For this, we assume the data was generated from a Beta distribution with unknown
 %\end{align*}
 \begin{align*}
 \gamma_{kind::property} & \sim \text{Uniform}(0, 1) \\
-\tau_{kind::property} & \sim \text{Uniform}(0, 50) \\
-d_{kind::property} & \sim \text{Beta}(\gamma_{kind::property}, \tau_{kind::property}) 
+\xi_{kind::property} & \sim \text{Uniform}(0, 50) \\
+d_{kind::property} & \sim \text{Beta}(\gamma_{kind::property}, \xi_{kind::property}) 
 \end{align*}
 
 
@@ -216,12 +215,12 @@ To see if our structured, statistical model of the prior elicitation task matche
 %
 \begin{align*}
 x & \sim \begin{cases} 
-		\text{Beta}(\gamma, \tau) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
+		\text{Beta}(\gamma, \xi) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
 				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
 				\end{cases} 
 \end{align*}
 %
-These distributions reflect both the property's potential to be present---$\theta$---as well as the distribution of prevalence when the property is present----\text{Beta}($\gamma$, $\tau$).
+These distributions reflect both the property's potential to be present---$\theta$---as well as the distribution of prevalence when the property is present----\text{Beta}($\gamma$, $\xi$).
 
 We compared these posterior predictive distributions to the prior elicitation data by discretizing the posterior predictive distribution and binning (and normalizing) the counts in the prior elicitation data.
 We used 12 discrete bins: $\{[0-0.01), (0.01-0.05), (0.05-0.15), (0.15-0.25),  ..., (0.75-0.85), (0.85-0.95), (0.95-1]\}$.
@@ -443,28 +442,28 @@ The same analysis was then completed by property type (e.g. ``part'', ``color pa
 Participants' responses to each question (slider bar values) were assumed to be samples from Beta distributions with unknown means and concentrations. 
 The responses to the questions ($d_{potential}, d_{expected}$) were used to estimate the parameters of the distributions of property's potential to be present in a kind and expected prevalence when present, separately. 
 \begin{align*}
-d_{potential} \sim \text{Beta}(\gamma_{potential}, \tau_{potential}) \\
-d_{expected} \sim \text{Beta}(\gamma_{expected}, \tau_{expected}) 
+d_{potential} \sim \text{Beta}(\gamma_{potential}, \xi_{potential}) \\
+d_{expected} \sim \text{Beta}(\gamma_{expected}, \xi_{expected}) 
 \end{align*}
-The parameters $\gamma$ and $\tau$ correspond to the mean and concentration, respectively, of the distributions over each of these parameters of interest.
+The parameters $\gamma$ and $\xi$ correspond to the mean and concentration, respectively, of the distributions over each of these parameters of interest.
 %As in our other models, we assume some global proportion of noise in the experimental data $\phi$. 
 We put identical, uninformative priors on these parameters:
 \begin{align*}
 %\phi & \sim \text{Uniform}(0,1) \\
 \gamma & \sim \text{Uniform}(0,1) \\
-\tau & \sim \text{Uniform}(0,50) 
+\xi & \sim \text{Uniform}(0,50) 
 \end{align*}
 To construct single prevalence distributions reflecting both the property's potential to be present in a kind and the expected prevalence when present (as we have for Expt.~1a), we assume that the distribution is a mixture of categories for which the property is present and categories for which the property is absent.
 Whether or not a category has a property is driven by the property's potential to be present ($\theta$).
 %
 
 \begin{align*}
-\theta & \sim \text{Beta}(\gamma_{potential}, \tau_{potential}) \\ 
+\theta & \sim \text{Beta}(\gamma_{potential}, \xi_{potential}) \\ 
 x & \sim \begin{cases} 
-		\text{Beta}(\gamma_{expected}, \tau_{expected}) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
+		\text{Beta}(\gamma_{expected}, \xi_{expected}) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
 				\delta_{x=0} &\mbox{if } \text{Bernoulli}(\theta) = \textsc{f} \\
 		\end{cases} \\
-	 &  \sim \theta \cdot \beta(\gamma_{expected},\tau_{expected}) + (1-\theta)  \cdot \delta_{x=0}
+	 &  \sim \theta \cdot \beta(\gamma_{expected},\xi_{expected}) + (1-\theta)  \cdot \delta_{x=0}
 \end{align*}
 
 %
