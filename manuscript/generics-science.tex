@@ -451,7 +451,7 @@ The shape of this distribution affects model predictions, but may vary significa
 While each $P(x)$ is a single distribution on prevalence, it may be highly structured as the result of deeper conceptual knowledge. 
 For instance, if participants believe that some kinds have a causal mechanism that \emph{could} give rise to the property, while others do not, then we would expect $P(x)$ to be structured as a mixture distribution \cite<Cf.>{Griffiths2005}.
 Assuming that \emph{when the property is possible}, its prevalence is distributed according to a Beta distribution with mean $\gamma$ and concentration $\tau$: 
-$P(x)=\theta \cdot \delta_{x=0} + (1-\theta) \cdot \beta(\gamma,\tau)(x)$.\footnote{This is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is greater than one would expect from standard models of count data such as the Poisson model \cite<e.g. adverse events to vaccines; >{hurdleModels}.}
+$P(x)=\theta \cdot \beta(\gamma,\tau)(x) + (1-\theta) \cdot \delta_{x=0}$.\footnote{This is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is greater than one would expect from standard models of count data such as the Poisson model \cite<e.g. adverse events to vaccines; >{hurdleModels}.}
 Thus, $\theta$ is the potential of a property to be present in a kind and $\gamma$ is the mean prevalence of the property among the kinds with the potential to have it. %Intuition suggests that, for a given property (e.g. \textsc{lay eggs}), kinds fall into two distinct categories: those for which the property is possible (e.g. \textsc{ducks}) and those for which the property is impossible (e.g. \textsc{lions}).
 %We hypothesized that participants' responses were structured in such a way as to be generated from a mixture of two distributions---$P_{present}(x)$ and $P_{absent}(x)$--- with mixture parameter $\theta$.
 %$P_{present}(x)$ is comprised of the animal kinds for which the property is present (i.e. prevalence greater than 0\%), and we assume participants' responses are sampled from a Beta distribution with unknown mean $\gamma$ and concentration $\delta$. 
@@ -471,7 +471,7 @@ Using this structure, we can explore the prevalence priors for our 21 properties
 Figure \ref{fig:priors1a} shows the estimated mixture-parameter $\theta$ (the property potential to be present in a kind) and the mean prevalence when the property is present, $\gamma$. 
 We see significant diversity among these properties in both dimensions. 
 This diversity matters because the model predictions for generic interpretation and felicity depend on the shape of the prior distribution (see insets for example interpretation posteriors).
-For example, increasing $\theta$ increases the relative probability mass at 0\% and works to relax the truth conditions by making a lower threshold more informative; increasing $\gamma$ will tend to make truth conditions stricter, by reducing the range of prevalence values that are higher than the prior expectation. 
+For example, lowering $\theta$ increases the relative probability mass at 0\% and works to relax the truth conditions by making a lower threshold more informative; increasing $\gamma$ will tend to make truth conditions stricter, by reducing the range of prevalence values that are higher than the prior expectation. 
 %Manipulating $\gamma$ will influence the prevalence inferred upon hearing a generic: 
 %%The mean conditional prevalence corresponds to the listener's prior expectations of how widespread the property is within kinds that have it. 
 %Assuming the speaker is informative, there will be a pressure for the listener to believe prevalence of property F in kind K is greater than one would expect \emph{a priori} (i.e. greater than $\gamma$).
@@ -581,6 +581,7 @@ However, large deviations from a purely target-category prevalence account remai
     \includegraphics[width=0.7\columnwidth]{truthjudge-scatter-wLabels.pdf}
     \caption{Human acceptability judgments and model predictions for thirty generic utterances about familiar animals and properties. 
     Color denotes target-category prevalence of the property, with darker colors indicating lower prevalence. 
+    Intermediate prevalences (quartiles 2 \& 3) are in intermediate shades (marked on color bar).
     Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions.
     }
   \label{fig:modeldataBars}
