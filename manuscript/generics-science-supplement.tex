@@ -308,10 +308,7 @@ All results of interest are reported in the main text.
 \subsection{Full model predictions}
 \label{sec:posteriorbda1}
 The speaker model $S_2$ (Eq. 4, main text) assigns a probability to the generic utterance by reasoning about the likely prevalence that a listener (Eq. 1, main text) will infer given each utterance and common sense knowledge of properties (the prior). 
-The model, thus, takes into account the prior knowledge of prevalence distributions; we use the priors inferred from Expt.~1a, maintaining the uncertainty the remains after conditioning on the prior elicitation data. 
-
-\ndg{do we use the MAP priors, or maintain the distribution? I guess it's the posterior-predictive of the priors?} 
-\mht{Maintain distributions}
+The model, thus, takes into account the prior knowledge of prevalence distributions; we use the priors inferred from Expt.~1a, maintaining the uncertainty that remains after conditioning on the prior elicitation data. 
 
 %\subsubsection{Data analysis model priors}
 
@@ -370,8 +367,6 @@ The posterior predictive distribution marginalizes over the inferred parameter v
 This is akin to fitting the parameters and is an important step in model validation: It shows what data is actually predicted by the model. 
 Figure \ref{fig:tj1b} shows the Maximum A-Posteriori (MAP) values of the model predictions compared against the observed data. 
 The model predicts graded endorsements for the generic statements used in Expt.~1b, accounting for almost all of the variance ($r^2 = 0.982; MSE=0.0035 $). 
-
-\ndg{should we be reporting also the MSE, data LL? because r2 has its own free params...}
 
 \begin{figure}
 \centering
@@ -477,8 +472,6 @@ x & \sim \begin{cases}
 Marginal posterior distributions for $x$ were estimated using the Metropolis-Hastings algorithm in the probabilistic programming language WebPPL \cite{dippl}. Inference was completed by taking 50,000 samples using the Metropolis-Hastings algorithm.
 
 \section{Experiment 2b: \emph{Interpretations of novel generics}}
-
-\ndg{might need to revise, based on how we discuss results in main text...}
 
 Generics are important for providing information about new or poorly understood categories.
 As such, it is crucial to look beyond what makes them true and to see how generics are interpreted.
