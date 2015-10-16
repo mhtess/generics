@@ -1,9 +1,11 @@
 ---
-title: "natural-prevalence.Rmd"
-author: "mht"
+title: "Prevalence of common features for familiar categories"
+author: "Michael Henry Tessler"
 date: "August 11, 2015"
 output: html_document
 ---
+
+
 ```{r helpers}
 library(coda)
 estimate_mode <- function(s) {
@@ -21,6 +23,9 @@ HPDlo<- function(s){
 
 ```
 
+
+# Load BDA results
+
 ```{r}
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 
@@ -34,6 +39,8 @@ m<-bind_rows(m1,m2,m3)
 
 str(m)
 
+# Reconstruct samples from webppl histogram
+
 m <- data.frame(Parameter =  rep(m$Parameter, 
                                    1+samples*m$Probability),
                 Property =  rep(m$Property, 
@@ -46,17 +53,11 @@ m <- data.frame(Parameter =  rep(m$Parameter,
                                    1+samples*m$Probability))
 
 
-# m.phi <- m %>% filter(Negation=='phi')
-# 
-# phi.summary<-m.phi %>% 
-#   summarise(map = estimate_mode(Value),
-#             credHi = HPDhi(Value),
-#             credLo = HPDlo(Value))
-# write.csv(phi.summary, 
-#           file='~/Documents/research/generics/manuscript/model-results/natural-prevalence-phi.csv')
+# Get credible intervals for prevalence, for each property and category
+# e.g. (% of birds, lions that lay eggs, have manes)
 
-
-m.summary<- m %>% filter(Negation == 'gamma') %>%
+m.summary<- m %>% 
+  filter(Negation == 'gamma') %>%
   group_by(Property, Category) %>%
   summarise(#expectation = mean(Value),
             #med = median(Value),
@@ -64,10 +65,15 @@ m.summary<- m %>% filter(Negation == 'gamma') %>%
             credLow =HPDlo(Value),
             credHigh= HPDhi(Value))
 
- write.csv(m.summary, 
-           file='~/Documents/research/generics/manuscript/model-results/natural-prevalence-intervals-n57.csv')
+# write.csv(m.summary, 
+#            file='~/Documents/research/generics/manuscript/model-results/natural-prevalence-intervals-n57.csv')
+```
 
 
+Check correspondence with BDA results using n = 60 (3 subjects did the experiment twice)
+
+```{r}
+# check correspondence with n=60 measures
 m.sum<- read.csv('~/Documents/research/generics/manuscript/model-results/natural-prevalence-intervals.csv')
 
 
@@ -76,11 +82,23 @@ m.sum <- m.sum %>%
   rename(map2 = map)
 
 m.sum2<- left_join(m.summary, m.sum)
+
+with(m.sum2, cor(map2, map))
 ```
 
-Distributions on (e.g.) gamma
 
-```{r}
+## Posteriors on parameters
+
+
+The BDA model assumes participants judgments for the % of K that have F are sampled from a Beta distribution, with unknown mean and concentration.
+
+We take the posterior over the mean (gamma) to be the distribution of participants beliefs about the prevalence of F within K. 
+
+### Gamma, mean of Beta distribution
+
+This is the mean of participants' beliefs about the prevalence of F within K (e.g. % of birds that lay eggs)
+
+```{r posterior.params.gamma}
 # ggplot(m.phi, aes(x=Value))+
 #   geom_histogram()+
 #   xlim(0,1)
@@ -88,19 +106,26 @@ Distributions on (e.g.) gamma
 m.prev <- filter(m, Negation=='gamma') %>%
   unite(Pairing, Property, Category) 
 
-plt1<-ggplot(m.prev, aes(x=Value))+
+ggplot(m.prev, aes(x=Value))+
   #geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
   geom_histogram(aes(y=..count../sum(..count..)))+
   facet_wrap(~Pairing, scales='free')+
   xlim(0,1)+
   xlab("Prevalence")+
-  ylab("Posterior probability")
+  ylab("Posterior probability")+
+  ggtitle("Distribution on gamma")
 
-ggsave(plt1,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPrevalence-gammas-allChains.pdf', width = 15, height=15)
+#ggsave(plt1,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPrevalence-gammas-allChains.pdf', width = 15, height=15)
+
+```
+
+### Delta, concentration of Beta distribution
+
+This is corresponds to the concentration (or roughly precision, inverse variance) of participants' beliefs about the prevalence of F within K (e.g. % of birds that lay eggs)
 
 
 
-
+```{r posterior.params.delta}
 delta.summary<- m %>% filter(Negation == 'delta') %>%
   group_by(Property, Category) %>%
   summarise(#expectation = mean(Value),
@@ -114,13 +139,14 @@ m.prev <- filter(m, Negation=='delta') %>%
 
 
 
-plt2<-ggplot(m.prev, aes(x=Value))+
+ggplot(m.prev, aes(x=Value))+
   #geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
   geom_histogram(aes(y=..count../sum(..count..)), binwidth = 0.3)+
   facet_wrap(~Property, scales='free')+
   xlim(0,50)+
   xlab("Delta")+
-  ylab("Posterior probability")
+  ylab("Posterior probability")+
+  ggitlte("Distributions on delta"_)
 
 # delta.summary<-m.prev %>% 
 #   group_by(Property) %>%
@@ -128,11 +154,12 @@ plt2<-ggplot(m.prev, aes(x=Value))+
 #             credHi = HPDhi(Value),
 #             credLo = HPDlo(Value))
 
-ggsave(plt2,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPrevalence-deltas-chain1.pdf', width = 15, height=15)
-
+#ggsave(plt2,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPrevalence-deltas-chain1.pdf', width = 15, height=15)
 
 ```
 
+
+## Posterior predictive (the cheap way)
 
 Reconstruct prevalence prior by forward sampling
 
@@ -174,8 +201,5 @@ ggplot(d.samples, aes(x=Prevalence))+
   geom_histogram()+
   facet_wrap(~Pairing, scales='free')+
   xlim(0,1)
-
-
-
 
 ```
