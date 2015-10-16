@@ -1,6 +1,6 @@
 ---
-title: "natural-priors"
-author: "mht"
+title: "Prevalence priors for common features"
+author: "Michael Henry Tessler"
 date: "August 12, 2015"
 output: html_document
 ---
@@ -21,23 +21,45 @@ HPDlo<- function(s){
   return(m["var1","lower"])
 }
 
+
+roundToMixture <- function(x){
+  return (if (x==0) {
+    0
+  } else if (x<=5) {
+    0.01
+  } else if (x>=95) {
+    0.99
+  } else {
+    round(x/10)/10
+  } )
+}
+
 ```
 
+# Check posterior predictive of prior (mixture) model
 
-Check posterior predictive of prior (mixture) model
+There are different ways of formualting the prior BDA model that correspond to:
 
-```{r validate}
+1. 2 factors (first: Is present? second: What %?) vs. 1 factor (just mixture)
+2. Treating the data as continuous (from a Beta) or discretized (discretized Beta)
+
+
+All three produce the same results (R2 = 0.95)
+
+```{r posteriorPredictiveCheck}
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 
-samples = 10000
-prefix<-'generics-naturalPriors-singleFactor-postPred-n57-continuous-incrMH10000_burn5000' 
-m1<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
-#m2<-read.csv(paste(m.path, prefix, 'b.csv', sep=''))
-#m3<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
+samples = 50000
 
-#m<-bind_rows(m1,m2,m3)
-#m<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
-m<-m1
+# single factor, continuous factor
+prefix<-'generics-naturalPriors-singleFactor-postPred-n57-continuous-incrMH100000_burn50000a.csv' 
+# two factors, discretized factor
+prefix<-"generics-naturalPriors-postPred-n57-incrMH50000_burn25000c.csv"
+# single factor, discretized factor
+prefix<-"generics-naturalPriors-singleFactor-postPred-n57-incrMH50000_burn25000c.csv"
+
+m<-read.csv(paste(m.path, prefix, sep=''))
+
 str(m)
 
 m <- data.frame(Parameter =  rep(m$Parameter, 
@@ -68,25 +90,9 @@ m.pp <- m %>% filter(Negation=='posteriorPredictive') %>%
   mutate(Bin = to.n(Bin))
 
 
-# ggplot(m.pp, aes(x=to.n(Bin), y = MAP))+
-#   geom_bar(stat='identity', position=position_dodge())+
-#   geom_errorbar(aes(ymin=credLow, ymax = credHigh), position=position_dodge())+
-#   facet_wrap(~Property)
-
-
+# read human data
 d<- read.csv("~/Documents/research/generics/manuscript/data/naturalGenerics-prior-trials-n57.csv")
 
-roundToMixture <- function(x){
-  return (if (x==0) {
-    0
-  } else if (x<=5) {
-    0.01
-  } else if (x>=95) {
-    0.99
-  } else {
-    round(x/10)/10
-  } )
-}
 
 d.properties <- d %>%
   rowwise() %>%
@@ -101,20 +107,34 @@ d.properties <- d %>%
 prior.md<-left_join(m.pp, d.properties)
 prior.md[is.na(prior.md$norm_count),]$norm_count <- 0
 
+prior.md <- prior.md %>%
+  mutate(Bin = factor(Bin))
 
 
-ggplot(prior.md, aes(x=MAP, y = norm_count, color=factor(Bin)))+
+ggplot(prior.md, aes(x=MAP, y = norm_count, color=Bin))+
   geom_point()+
-  geom_errorbarh(aes(xmin=credLow, xmax=credHigh), position=position_dodge())
+  geom_abline(intercept =0, slope=1,linetype=2)+
+  geom_errorbarh(aes(xmin=credLow, xmax=credHigh), position=position_dodge())+
+  xlab("Posterior predictive of prior model")+
+  ylab("Normalized counts of human responses")+
+  coord_fixed()
 
+#ggsave(file='~/Documents/research/generics/manuscript/figures/postPred-priorModel.pdf')
 
 with(prior.md, cor(MAP, norm_count))^2
 
+# Check outliers
 View(prior.md %>% filter(norm_count < .2 & MAP > .18))
 ```
 
 
-```{r}
+
+
+# Load BDA results
+
+These use 2 factors, discretized (see above)
+
+```{r load.model}
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 
 samples = 50000
@@ -128,6 +148,8 @@ m<-bind_rows(m1,m2,m3)
 
 str(m)
 
+# Reconstruct samples from webppl histogram
+
 m <- data.frame(Parameter =  rep(m$Parameter, 
                                    1+samples*m$Probability),
                 Property =  rep(m$Property, 
@@ -137,21 +159,16 @@ m <- data.frame(Parameter =  rep(m$Parameter,
                 Value = rep(m$Value, 
                                    1+samples*m$Probability))
 
-
-# m.phi <- m %>% filter(Negation=='phi')
-# 
-# phi.summary<-m.phi %>% 
-#   summarise(map = estimate_mode(Value),
-#             credHi = HPDhi(Value),
-#             credLo = HPDlo(Value))
-# 
-# write.csv(phi.summary, 
-#           file='~/Documents/research/generics/manuscript/model-results/natural-priors-phi.csv')
-
-
 ```
 
-```{r}
+
+## Posteriors on parameters
+
+The BDA model assumes participants' responses are sampled from a mixture of categories that don't have the property (prevalence = 0%) and categories that do. The mean of the distribution governing those that do have the property is gamma. The concentration of that distribution is delta.
+
+The parameter prob_hasF is the mixture parameter governing the property's potential to be present in a kind.
+
+```{r posterior.parameters}
 m.prev <- filter(m, Negation=='gamma')
 
 plt1<-ggplot(m.prev, aes(x=Value))+
@@ -199,9 +216,12 @@ plt3<-ggplot(m.prev, aes(x=Value))+
 
 ```
 
+
+## Posterior predictive (the cheap way)
+
 Reconstruct prevalence prior by forward sampling
 
-```{r}
+```{r posterior.predictive.forwardSample}
 
 
 shape1 = function(gamma,delta){return (gamma * delta)}
@@ -245,36 +265,13 @@ for (i in 1:100){
   if ((i %% 10)==0) { print(i) }
 }
 
-#target<- c("are female", "lay eggs", "carry malaria", "have wings")
-# target<- c("are male", "lay eggs", "carry malaria", "have wings")
-# #ggplot(d.samples %>% filter(Prevalence!=0), 
-# #ggplot(d.samples %>% filter(Property %in% target), 
-# ggplot(d.samples, 
-#        aes(x=Prevalence))+
-#   #geom_histogram()+
-#   geom_density(aes(y = ..scaled..),adjust=1, size=1, fill='grey')+
-# #   geom_density(data = d.samples %>% filter((Prevalence!=0) & 
-# #                                            (Property %in% target)&
-# #                                              (Property!="have wings")), 
-# #                aes(x=Prevalence), color='blue', linetype =2)+
-#   #scale_color_brewer(palette='Dark2')+
-#   xlab("Prevalence")+
-#   ylab("Posterior density")+
-#   theme(legend.position=c(0.7,0.65))+
-#   guides(color =F)+ 
-#   facet_wrap(~Property, scales='free')+
-#   xlim(0,1)
-
-#ggsave(file='~/Documents/research/generics/manuscript/figures/prevalence_priors_inferred-betas.pdf')
-
-
 ```
 
 
 
-Make scatterplot: Across prevalence vs. Within prevalence
+# Figure 1: Scatterplot -- Theta vs. Gamma
 
-```{r scatter}
+```{r fig1.scatter}
 
 m.stats<- m %>% 
 #  filter(Negation != 'delta') %>%
@@ -303,87 +300,39 @@ m.join<- left_join(left_join(m.spread %>%
                             credLow_across = prob_hasF))
 
 
-m.median <- m.join %>%
-  mutate(alpha = shape1(gamma,delta),
-         beta = shape2(gamma,delta)) %>%
-
-  
-(m.median %>% filter(Property=='have manes'))$gamma
-  
-median(with(m.median %>% filter(Property=='have manes'), 
-     rbeta(10000, shape1=alpha, shape2=beta)))
-
-
-# m.join <- m.join %>%
-#   rowwise() %>%
-#   mutate(deltaX = if (delta > 2.5) {2.5} else {delta})
-
- m.join <- left_join(m.join, d.samples %>% filter(Prevalence!=0) %>%
-  group_by(Property) %>%
-  summarise(inverseRegularity = var(Prevalence)))
-
+# Distribution over concentration parameters
 qplot(x=delta, geom='histogram',data= m.join, binwidth =0.5)
 
-View(m.join %>% select(Property, gamma, deltaX, prob_hasF))
-
-ggplot(m.join, aes(x = gamma, y = 1- prob_hasF, label=Property, color =1- inverseRegularity))+
-   #geom_point(size =3, position = position_jitter(w = 0.02, h = 0.02))+
-  geom_text(position = position_jitter(w = 0.00, h = 0.003))+
-   #geom_errorbar(aes(ymin = 1- credLow_across, ymax = 1- credHigh_across),
-  #                               position = position_jitter(w = 0.1, h = 0.1), size =1)+
-   #geom_errorbarh(aes(xmin = credLow_within, xmax = credHigh_within),                 
-  #                position=position_dodge(), size =1)+
- #  geom_errorbarh(aes(xmin = credLow_varianceWithin, xmax = credHigh_varianceWithin),                 
- #                 position=position_dodge(), size =1)+
-  #  geom_text(position=position_jitter(height=0.035, width=0.0))+
-  xlim(-0.05,1.2)+
-#ylim(-0.05,1.05)+
- # coord_fixed()+
-  #coord_flip()+
-    scale_color_gradient(low='#999999', high ='#ef8a62')
-
-, limits=c(0,1),
-                       breaks=c(0,0.5,1))+
-  #xlab("Within-category prevalence")+
-  #ylab("Between-category prevalence")
 
 
-ggplot(m.join, aes(x = gamma, y = 1-prob_hasF, label=Property))+
+# Scatterplot
+ggplot(m.join, aes(x = gamma, y = prob_hasF, label=Property))+
    geom_point(size =2.5, color='black')+
-   geom_errorbar(aes(ymin = 1-credLow_across, ymax = 1-credHigh_across),
+   geom_errorbar(aes(ymin = credLow_across, ymax = credHigh_across),
                                  position=position_dodge(), size =1,
                  color='black')+
    geom_errorbarh(aes(xmin = credLow_within, xmax = credHigh_within),                 
                   position=position_dodge(), size =1,
                   color='black')+
-#  geom_text(position=position_jitter(height=0.035, width=0.0))+
   xlim(-0.05,1.05)+
   ylim(-0.05,1.05)+
   coord_fixed()+
-  xlab("\n Mean conditional prevalence")+
-  ylab("Property distinctiveness \n")
-
-ggsave(file='~/Documents/research/generics/manuscript/figures/prevalences-scatter-1.pdf', width=12, height=6)
-
-
+  xlab(expression(gamma))+
+  ylab(expression(theta))
+#  xlab("Mean prevalence when present")+
+#  ylab("Property's potential to be present in a kind")
 
 
-#+
-#  theme_blackDisplay()
-
-
-#ggsave(file=paste('~/Box Sync/talks/lightning-2015-generics/prevalence-scatter.pdf',sep=''), 
-#       width=8, height=6)
-
-
-
+#ggsave(file='~/Documents/research/generics/manuscript/figures/prevalences-scatter-2.pdf', width=12, height=6)
 ```
 
 
+## Figure 1: Insets
 
-Add posterior thresholds to prevalence prior plots
 
-```{r}
+### Add L_1 posteriors to prevalene prior plots
+
+```{r fig1.insets}
 
 prefix<-'generics-truthJudgment-wState-previter10000_prevprioriter10000-priord50Zero-n57_mh50000_burn25000'
 
@@ -391,7 +340,6 @@ t<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
 
 
 t.tidy <- t %>%
-  #filter(Parameter=='thetaPosterior' & Property %in% target) %>%
   filter(Parameter=='statePosterior') %>%
   select(-Negation, -Parameter) %>%
   rename(bin = Category)
@@ -438,12 +386,14 @@ t.dy$src= "Posterior prevalence"
 d.samples$src<- "Prior prevalence"
 
 d.sty <- bind_rows(t.dy, d.samples)
-# t.stats %>% filter(Property=='are male')
-# 
-target<- c("are female", "lay eggs", "carry malaria", "have wings",
+
+target<- c("are female", "lay eggs", 
+           "carry malaria", "have wings",
            "dont attack swimmers")
 
-d.sty$src<-factor(d.sty$src, levels=c("Prior prevalence", "Posterior prevalence"))
+d.sty$src<-factor(d.sty$src, 
+                  levels=c("Prior prevalence", 
+                           "Posterior prevalence"))
 
 
 m.prevTargets <- m.summary %>%
@@ -466,66 +416,21 @@ for (t in target){
                     aes(x= map, xmin = credLow, xmax = credHigh,
                     y = 1.05), color='#2ca25f', size = 1.1,
                     height = 0.1, inherit.aes=F)+
-     #  scale_linetype_manual(values = c(1, 3))+
-  #geom_histogram()+
-#    geom_dens  ity(data=t.stats %>% filter(Property == t),
-#                 aes(x=bin, y=MAP), size =1,
-#                 stat='identity')+
-#   geom_density(aes(y = ..scaled..), size=1, linetype =3)+
-  #  geom_density(size=1, linetype =3)+
-  #geom_bar(data = t.stats, 
-  #             aes(x=as.numeric(bin), y =MAP), stat='identity')+
-  #scale_color_brewer(palette='Dark2')+
   scale_linetype_manual(values=c(1,2))+
- # theme_blackDisplay()+
   xlab("Prevalence")+
-  #theme(legend.position=c(0.7,0.65))+
-  #guides(color =F)+ 
   guides(fill=F, color=F, alpha=F, linetype=F)+
   facet_wrap(~Property, scales='free')+
   scale_x_continuous(limits=c(0,1), breaks=c(0,0.5,1))+
   scale_y_continuous(limits=c(0,1.1), breaks=c(0,0.5,1))+
   ylab("Scaled density")+
- # theme(axis.text.x=element_text(size=20),
-#        axis.title.x = element_text(size=24),
-#        strip.text.x = element_text(size=24))
-  theme(#axis.text.y=element_blank(),
-        strip.text.x=element_text(size=16))+
+  theme(strip.text.x=element_text(size=16))+
   coord_fixed()
     
 
-ggsave(file=paste('~/Documents/research/generics/manuscript/figures/truthjudge-prevalences-priors-posteriors-wTarget-',t,'.pdf',sep=''), 
-       width=5, height=3.5)
+#ggsave(file=paste('~/Documents/research/generics/manuscript/figures/truthjudge-prevalences-priors-posteriors-wTarget-',t,'.pdf',sep=''), 
+#       width=5, height=3.5)
 
 print(t)
-#ggsave(file=paste('~/Box Sync/talks/lightning-2015-generics/truthjudge-prevalences-priors-posteriors',t,'.pdf',sep=''), 
-#       width=7, height=4)
-
 
 }
-
-
-# 
-# 
-# ggplot(t.stats, aes(x=bin, y= MAP))+
-#   #geom_line() + 
-#    geom_density(stat='identity')+
-#   #geom_smooth(aes(ymin=credLow, ymax=credHigh), stat='identity')+
-#   facet_wrap(~Property, scales='free')+
-#   ylim(-0.05,1.05)
-# 
-# 
-# 
-# 
-# ggplot(t.stats, aes(x=bin, y= cdf))+
-#   #geom_line() + 
-#   geom_density(stat='identity')+
-# #  geom_smooth(aes(ymin=cdfLow, ymax=cdfHigh), stat='identity')+
-#   facet_wrap(~Property, scales='free')+
-#   ylim(-0.05,1.05)
-
-
-
 ```
-
-
