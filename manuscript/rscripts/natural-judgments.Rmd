@@ -1,11 +1,14 @@
 ---
-title: "natural-judgments"
-author: "mht"
+title: "Truth judgments of common generics"
+author: "Michael Henry Tessler"
 date: "August 16, 2015"
 output: html_document
 ---
+
 ```{r helpers}
 library(coda)
+library(hydroGOF)
+
 estimate_mode <- function(s) {
   d <- density(s)
   return(d$x[which.max(d$y)])
@@ -19,12 +22,96 @@ HPDlo<- function(s){
   return(m["var1","lower"])
 }
 
+
+
+bootstrap.ci <- function(x){
+  agr = aggregate(response ~ sentence, data=x, FUN=mean)
+  agr$CILow = aggregate(response ~ sentence, data=x, FUN=ci.low)$response
+  agr$CIHigh = aggregate(response ~ sentence, data=x, FUN=ci.high)$response
+  agr$YMin = agr$response - agr$CILow
+  agr$YMax = agr$response + agr$CIHigh
+  return(agr)
+}
+
+```
+
+# Human judgments
+
+```{r human.data}
+d.path <- "~/Documents/research/generics/data/real-kinds/"
+tj <-read.csv(file = paste(d.path,'real-kinds-truth-1-trials.csv',sep=''))
+# catch trials
+c <- read.csv(file = paste(d.path,'real-kinds-truth-1-catch_trials.csv', sep=''))
+# to find native language
+s<- read.csv(file = 
+               paste(d.path,'real-kinds-truth-1-subject_information.csv', sep=''))
+
+# excluding the nonenglish native speakers has no effect on results
+#nonenglish<-c(1,4,19,38,39)
+catch<-c[c$pass==0,]$workerid
+
+#tj <- tj %>% filter(!(workerid %in% c(nonenglish, catch)))
+tj <- tj %>% filter(!(workerid %in% catch))
+
+#tj<- read.csv("~/Documents/research/generics/manuscript/data/naturalGenerics-trials-minusCatch-n96-formatted.csv")
+
+### bootstrap CI
+
+tj.bs<-bootstrap.ci(tj %>% 
+                      mutate(response = as.numeric(response=='agree-key')))
+
+
+# adjust naming of sentence to correspond to that used in the prior data
+tj.bs$sentence <- gsub('&quotechar','', tj.bs$sentence)
+tj.bs$sentence <- gsub('lyme','Lyme', tj.bs$sentence)
+tj.bs$sentence<-with(tj.bs, reorder(sentence, response, function(x) x))
+
+
+ggplot(data=tj.bs, aes(x=sentence, y=response-0.5))+
+  geom_bar(stat='identity',position=position_dodge(), alpha=0.8,
+           fill='grey19')+
+  geom_errorbar(aes(ymin=YMin-0.5,ymax=YMax-0.5), width=0.5, size = 1.5,
+                color='black')+
+  xlab("")+
+  ylab("\n proportion of participants who agree")+
+  scale_y_continuous(breaks=c(-0.5,0,0.5),labels=c("0","0.5","1"))+
+  coord_flip()
+
 ```
 
 
-Load prevalence estimates
+## Manipulation check
 
-```{r}
+Do true generics get endorsed more?
+```{r manipulation.check}
+
+# MHT's truth judgments of sentences
+sentence.class<- data.frame(sentence = levels(tj$sentence),
+                            class = c("t","t","t","f","i",'t',
+                                      'f','i','t','f','i','t',
+                                      'f','f','t','i','f','t',
+                                      'i','t','f','f','i','i',
+                                      't','t','f','f','t','f'))
+
+tj.s<-left_join(tj, sentence.class, by='sentence')
+tj.s$class<-factor(tj.s$class,levels=c('i','t','f'))
+
+rs0<-glmer(data=tj.s, response~ -1 + class + (1  | workerid), family='binomial')
+summary(rs0)
+```
+
+
+The 30 generic sentences fell into 3 categories as predicted: definitely true, definitely false, and neither true nor false (Figure \red{fig:tj1b}). We entered participants' agreement judgments into a mixed-effect logistic regression with random by-participant effects of intercept. This \emph{a priori} distinction was a significant predictor of the eventual truth judgments: true generics were significantly more likely to be agreed with than the indeterminate generics ($\beta = 3.14; SE = 0.15; z = -20.9$) and false generics were significantly less likely to be agreed with than the indeterminate generics ($\beta = -2.07; SE = 0.15; z = -14.1$). Rather interesting, indeterminate generics were agreed with \emph{less} likely than chance ($\beta = -0.49; SE = 0.09; z = -5.3$).
+
+
+
+## Within-kind prevalence predict truth judgment?
+
+
+
+```{r truthJudge.vs.prevalence}
+
+# Load prevalence data
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 
 samples = 50000
@@ -60,38 +147,6 @@ m.summary<- m %>% filter(Negation == 'gamma') %>%
   mutate(sentence = paste(sentence, '.', sep=''))
 
 
-```
-
-
-
-```{r tj1}
-
-d.path <- "~/Documents/research/generics/data/real-kinds/"
-tj <-read.csv(file = paste(d.path,'real-kinds-truth-1-trials.csv',sep=''))
-c <- read.csv(file = paste(d.path,'real-kinds-truth-1-catch_trials.csv', sep=''))
-s<- read.csv(file = paste(d.path,'real-kinds-truth-1-subject_information.csv', sep=''))
-nonenglish<-c(1,4,19,38,39)
-catch<-c[c$pass==0,]$workerid
-
-tj <- tj %>% filter(!(workerid %in% c(nonenglish, catch)))
-
-### bootstrap CI
-bootstrap.ci <- function(x){
-  agr = aggregate(response ~ sentence, data=x, FUN=mean)
-  agr$CILow = aggregate(response ~ sentence, data=x, FUN=ci.low)$response
-  agr$CIHigh = aggregate(response ~ sentence, data=x, FUN=ci.high)$response
-  agr$YMin = agr$response - agr$CILow
-  agr$YMax = agr$response + agr$CIHigh
-  return(agr)
-}
-
-
-tj.bs<-bootstrap.ci(tj %>% mutate(response = as.numeric(response=='agree-key')))
-
-
-
-tj.bs$sentence <- gsub('&quotechar','', tj.bs$sentence)
-tj.bs$sentence <- gsub('lyme','Lyme', tj.bs$sentence)
 
 
 tj.wPrev<-left_join(tj.bs %>% select(-CILow, -CIHigh), 
@@ -100,15 +155,74 @@ tj.wPrev<-left_join(tj.bs %>% select(-CILow, -CIHigh),
                                          prevLow = credLow), by = "sentence")
 
 with(tj.wPrev, cor(response,prev))^2
+with(tj.wPrev, mse(response,prev))
 
-#write.csv(tj.wPrev, 
+
+qplot(data=tj.wPrev,
+      x=prev,y=response,
+      color=prev)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey39')+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                size =1, position=position_dodge(),
+                subset = .(prev >=0.5))+
+  geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
+                  size = 1,
+                 subset = .(prev >=0.5))+
+  geom_point(size=4, subset = .(prev >=0.5))+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                size =1,  position=position_dodge(),
+                 subset = .(prev <0.5))+
+  geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
+                size = 1,  position=position_dodge(),
+                 subset = .(prev <0.5))+
+  geom_point(size=4,  subset = .(prev <0.5))+
+  xlab("\n Within-kind prevalence")+
+  ylab("Human judgment \n")+
+#  guides()+
+  xlim(-0.05,1.05)+
+  ylim(-0.05,1.05)+
+  coord_fixed()+
+  #scale_color_gradient(low='#386cb0', high = '#f0027f')+
+  scale_color_gradient(low='black', high ='#addd8e', limits=c(0,1),
+                       breaks=c(0,0.5,1))+
+  theme(legend.title = element_text(hjust=0))
+
+
+
+#ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPrevalence_95hdi-colorPrev.pdf', width=12, height=6)
+
+
+#write.csv(tj.wPrev,
 #          file='~/Documents/research/generics/manuscript/model-results/natural-judgments-means.csv')
+
+
+with(tj.wPrev, cor(prev, response))^2
+with(tj.wPrev, mse(prev, response))
+
+with(filter(tj.wPrev,
+            (prev > quantile(tj.wPrev$prev)["25%"] & 
+            prev < quantile(tj.wPrev$prev)["75%"])), 
+     cor(prev,response))^2
+
+
+with(filter(tj.wPrev,
+            (prev > quantile(tj.wPrev$prev)["25%"] & 
+            prev < quantile(tj.wPrev$prev)["75%"])), 
+     mse(prev,response))
+
+with(tj.wPrev, cor(prev, response, method='spearman'))
+
 
 ```
 
-Bayesian model evaluation results
 
-```{r fullBayesian.postparams}
+
+
+# Pragmatics model predictions
+
+## Posterior over parameters
+
+```{r posterior.parameters}
 
 
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
@@ -122,12 +236,6 @@ m2<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter500
 m3<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000c.csv",sep=''))
 
 m<- bind_rows(m1,m2,m3)
-m<- read.csv(paste(m.path, 
-                   "generics-truthJudgment-phi-previter10000_prevprioriter10000-priord50Zero-n60_mh50000_burn25000c.csv", 
-                   sep=''))
-#m<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero_mh100000_burn50000a.csv",sep=''))
-
-#m<-bind_rows(m1,m2)
 
 m <- data.frame(Parameter =  rep(m$Parameter, 
                                    1+samples*m$Probability),
@@ -139,29 +247,6 @@ m <- data.frame(Parameter =  rep(m$Parameter,
                                    1+samples*m$Probability),
                 Value = rep(m$Value, 
                                    1+samples*m$Probability))
-
-
-
-
-
-# 
-# m.prev <- m %>% 
-#   filter(Parameter == 'prevalence') %>%
-#   mutate(Negation = gsub(1," dont ", Negation),
-#          Negation = gsub(0," ", Negation)) %>%
-#   unite(Property1, Category, Negation, Property,sep='') %>%
-#   rename(Item = Property1)
-# 
-# ggplot(m.prev, aes(x=Value))+
-#   geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
-#   facet_wrap(~Item, scales='free')+
-#   xlim(0,1)+
-#   xlab("Prevalence")+
-#   ylab("Posterior probability")
-#   
-
-
-
 
 
 m.params<- m %>% filter(Parameter 
@@ -177,7 +262,7 @@ ggplot(m.params %>% filter(Parameter=='speakerOptimality'), aes(x=Value))+
   xlab(expression(lambda))+
   ylab("Posterior probability")
 
-ggsave(file="~/Documents/research/generics/manuscript/figures/naturalGenerics-speakerOptimality.pdf", width = 8, height =4)
+#ggsave(file="~/Documents/research/generics/manuscript/figures/naturalGenerics-speakerOptimality.pdf", width = 8, height =4)
 
 
 m.params %>% 
@@ -195,23 +280,13 @@ ggplot(m.params, aes(x=Value))+
   #xlab(expression(lambda))+
   ylab("Posterior probability")
 
-
 #ggsave(file='~/Box Sync/talks/esslli-2015-generics/posterior-rationality-truthJudge.pdf')
 
-
-m.prev<-m %>% filter(Parameter=='prevalence')
-
-View(m.prev %>%
-  group_by(Property,Category) %>%
-    summarise(postMode = estimate_mode(Value),
-            credHi = HPDhi(Value),
-            credLo = HPDlo(Value))
-  )
 ```
 
-Scatter plot
+## Posterior predictives
 
-```{r fullBayesian.pp}
+```{r posterior.predictive.scatter}
   
 m.pp<- m %>% filter(!((Parameter %in% 
                          c("speakerOptimality", "cost", "softmax", 'gamma',
@@ -242,30 +317,24 @@ combined.model.data$sentence<-with(combined.model.data,
 combined.model.data <- combined.model.data %>%
   rename(Prevalence = prev)
 
-labeled.points <- c("Sharks dont attack swimmers.",
-                    "Mosquitos carry malaria.",
-                    "Robins lay eggs.",
-                    "Robins are female.",
-                    "Ducks have wings.")
-
 qplot(data=combined.model.data,
       x=posMode,y=response,
-      color=Prevalence)+
+      fill=Prevalence)+
   geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey39')+
   geom_errorbar(aes(ymin=YMin, ymax=YMax),
-                size =1, position=position_dodge(),
+                size =1, width=.01,  position=position_dodge(),
                 subset = .(Prevalence >=0.5))+
   geom_errorbarh(aes(xmin = credLo, xmax=credHi),
-                  size = 1,
+                  size = 1, height=.01, 
                  subset = .(Prevalence >=0.5))+
-  geom_point(size=4, subset = .(Prevalence >=0.5))+
+  geom_point(shape=21,size=4, subset = .(Prevalence >=0.5))+
   geom_errorbar(aes(ymin=YMin, ymax=YMax),
-                size =1,  position=position_dodge(),
+                size =1,  width=.01,  position=position_dodge(),
                  subset = .(Prevalence <0.5))+
   geom_errorbarh(aes(xmin = credLo, xmax=credHi),
-                size = 1,  position=position_dodge(),
+                size = 1, height=.01, position=position_dodge(),
                  subset = .(Prevalence <0.5))+
-  geom_point(size=4,  subset = .(Prevalence <0.5))+
+  geom_point(shape=21,size=4,  subset = .(Prevalence <0.5))+
   xlab("\n Model posterior predictive")+
   ylab("Human endorsement \n")+
 #  guides()+
@@ -273,168 +342,46 @@ qplot(data=combined.model.data,
   ylim(-0.05,1.05)+
   coord_fixed()+
   #scale_color_gradient(low='#386cb0', high = '#f0027f')+
-  scale_color_gradient(low='black', high ='#e78ac3', limits=c(0,1),
-                       breaks=c(0,0.5,1))+
+  scale_fill_gradient(
+                       #high='#92c5de', 
+                       high = "#fed976",
+                       low = "#023858",
+                       #low = "#4d9221",
+                       #high = "#f1b6da",
+                       #high = "black",
+                       #low = "white",
+                       #high ='#e78ac3',
+                       limits=c(0,1),
+                       breaks=c(0,0.5,1)
+                       )+
   theme(legend.title = element_text(hjust=0))
 
-
-qplot(data=combined.model.data,
-      x=Prevalence,y=response,
-      color=Prevalence)+
-  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey39')+
-  geom_errorbar(aes(ymin=YMin, ymax=YMax),
-                size =1, position=position_dodge(),
-                subset = .(Prevalence >=0.5))+
-  geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
-                  size = 1,
-                 subset = .(Prevalence >=0.5))+
-  geom_point(size=4, subset = .(Prevalence >=0.5))+
-  geom_errorbar(aes(ymin=YMin, ymax=YMax),
-                size =1,  position=position_dodge(),
-                 subset = .(Prevalence <0.5))+
-  geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
-                size = 1,  position=position_dodge(),
-                 subset = .(Prevalence <0.5))+
-  geom_point(size=4,  subset = .(Prevalence <0.5))+
-  xlab("\n Within-kind prevalence")+
-  ylab("Human judgment \n")+
-#  guides()+
-  xlim(-0.05,1.05)+
-  ylim(-0.05,1.05)+
-  coord_fixed()+
-  #scale_color_gradient(low='#386cb0', high = '#f0027f')+
-  scale_color_gradient(low='black', high ='#addd8e', limits=c(0,1),
-                       breaks=c(0,0.5,1))+
-  theme(legend.title = element_text(hjust=0))
-
-
-
-
-ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPrevalence_95hdi-colorPrev.pdf', width=12, height=6)
-
-
-
-qplot(data=combined.model.data,
-      x=posMode,y=response,
-      color=Prevalence)+
-  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey69')+
-  geom_errorbar(aes(ymin=YMin, ymax=YMax),
-                size =1.5, position=position_dodge(),
-                subset = .(Prevalence >=0.5))+
-  geom_errorbarh(aes(xmin = credLo, xmax=credHi),
-                  size = 1.5,
-                 subset = .(Prevalence >=0.5))+
-  geom_point(size=5, subset = .(Prevalence >=0.5))+
-  geom_errorbar(aes(ymin=YMin, ymax=YMax),
-                size =1.5,  position=position_dodge(),
-                 subset = .(Prevalence <0.5))+
-  geom_errorbarh(aes(xmin = credLo, xmax=credHi),
-                size = 1.5,  position=position_dodge(),
-                 subset = .(Prevalence <0.5))+
-  geom_point(size=5,  subset = .(Prevalence <0.5))+
-  xlab("\n Model prediction")+
-  ylab("Human judgment (proportion agree) \n")+
-#  guides()+
-  scale_x_continuous(limits=c(-0.05,1.05), breaks=c(0,0.5,1))+
-  scale_y_continuous(limits=c(-0.05,1.05), breaks=c(0,0.5,1))+
-  coord_fixed()+
-  #scale_color_gradient(low='#386cb0', high = '#f0027f')+
-  scale_color_gradient(low='#b8e186', high ='#d01c8b', limits=c(0,1),
-                       breaks=c(0,0.5,1))+
-  theme_blackDisplay()+
-  theme(legend.title = element_text(hjust=0),
-        axis.text.x=element_text(size=20),
-        axis.text.y=element_text(size=20),
-        axis.title.x = element_text(size=24),
-        axis.title.y = element_text(size=24),
-        strip.text.x = element_text(size=24))
-
-
-
-ggsave(file='~/Box Sync/talks/lightning-2015-generics/tj-scatter.pdf', width=12, height=10)
-
-
-
-
-
-# labeled.points <- c("Sharks dont attack swimmers.",
-#                     #"Mosquitos carry malaria.",
-#                     #"Robins lay eggs.",
-#                     #"Robins are female."
-#                     "Ducks have wings."
-#                   )
-# 
-# 
-# qplot(data=combined.model.data %>% filter(sentence %in% labeled.points),
-#       x=posMode,y=response,
-#       label=sentence,
-#       color=Prevalence)+
-#   geom_text(vjust=2,hjust=0,size=16)+
-#   xlab("\n Model posterior predictive")+
-#   ylab("Human endorsement \n")+
-# #  guides()+
-#   xlim(-0.05,1.05)+
-#   ylim(-0.05,1.05)+
-#   coord_fixed()+
-#   #scale_color_gradient(low='#386cb0', high = '#f0027f')+
-#   scale_color_gradient(low='black', high ='#e78ac3', limits=c(0,1),
-#                        breaks=c(0,0.5,1))+
-#   theme(legend.title = element_text(hjust=0))
-# 
-# ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPostpred_forLabels.pdf', width=42, height=16)
-# 
-
-
+#ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n96-postpred-colorPrev7.pdf', width=12, height=6)
 
 with(combined.model.data, cor(posMode, response))^2
+
+with(combined.model.data, mse(posMode, response))
 
 with(filter(combined.model.data,
             (Prevalence > quantile(combined.model.data$Prevalence)["25%"] & 
             Prevalence < quantile(combined.model.data$Prevalence)["75%"])), 
      cor(posMode,response))^2
 
+with(filter(combined.model.data,
+            (Prevalence > quantile(combined.model.data$Prevalence)["25%"] & 
+            Prevalence < quantile(combined.model.data$Prevalence)["75%"])), 
+     mse(posMode,response))
 
 with(combined.model.data, cor(posMode, response, method='spearman'))
 
 
-# 
-# qplot(data=combined.model.data,
-#       x=prev,y=response,
-#       color=sentence)+
-#   geom_point(size=4)+
-#   geom_errorbar(aes(ymin=YMin, ymax=YMax),
-#                 position=position_dodge(), size =1)+
-#   geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
-#                  position=position_dodge(), size = 1)+
-#   geom_abline(intercept=0,slope=1,linetype=2, size=1,color='black')+
-#   xlab("\n prevalence")+
-#   ylab("proportion of agree's \n")+
-#   guides(color=F)+
-#   xlim(-0.05,1.05)+
-#   ylim(-0.05,1.05)+
-#   coord_fixed()
-# 
-# ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsprev_95hdi.pdf', width=10, height=5)
-
-with(combined.model.data, cor(Prevalence, response))^2
-with(filter(combined.model.data,
-            (Prevalence > quantile(combined.model.data$Prevalence)["25%"] & 
-            Prevalence < quantile(combined.model.data$Prevalence)["75%"])), 
-     cor(Prevalence,response))^2
-
-with(combined.model.data, cor(Prevalence, response, method='spearman'))
-
-
-combined.model.data<- combined.model.data %>%
-  mutate(dev = abs(expectation-response))
-
 
 ```
 
+
 Bar plots
 
-
-```{r}
+```{r posterior.predictive.barplot}
 cmd.tidy <- 
   bind_rows(
     combined.model.data %>% gather(src, value, posMode, response) %>%
@@ -470,18 +417,12 @@ ggplot(data=cmd.tidy, aes(x=sentence, y=value-0.5,
                 color='black',
                 position=position_dodge(1))+
   scale_fill_brewer(palette=3, type='qual')+
-  #theme_blackDisplay()+
-  #theme(axis.text.x = element_text(angle = 45, hjust = 1,
-   #                                vjust=1))+
- # ylim(-.5,0.5)+
   xlab("")+
   ylab("Endorsement")+
   scale_y_continuous(breaks=c(-0.5,0,0.5),labels=c("0","0.5","1"))+
   coord_flip()
 
-ggsave(file="~/Documents/research/generics/manuscript/figures/tj_n100-postPred-byItem.pdf", width = 11, height = 7)
+#ggsave(file="~/Documents/research/generics/manuscript/figures/tj_n100-postPred-byItem.pdf", width = 11, height = 7)
 
 
-  ```
-
-
+```
