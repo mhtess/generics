@@ -1,10 +1,11 @@
 ---
-title: "asymmetry-priors"
-author: "mht"
+title: "Prevalence priors for unfamiliar kinds"
+author: "Michael Henry Tessler"
 date: "August 12, 2015"
 output: html_document
 ---
-Priors
+
+
 ```{r helpers}
 library(coda)
 estimate_mode <- function(s) {
@@ -23,26 +24,16 @@ HPDlo<- function(s){
 ```
 
 
+# By item analysos
 
-By Item
-
-```{r priors2.byItem}
+```{r itemWise.load}
 d1<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asym-priorByItem-incrmh100000_burn50000a.csv")
 d2<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asym-priorByItem-incrmh100000_burn50000b.csv")
 d3<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asym-priorByItem-incrmh100000_burn50000c.csv")
 
 samples = 50000
-d<-bind_rows(d1,d2,d3)
+d.tidy<-bind_rows(d1,d2,d3)
 
-
-
-
-d.tidy <- d
-
-# d.tidy <- d.tidy %>%
-#   unite(a, Item, Prevalence) %>%
-#   rename(Item = Parameter,
-#          Prevalence = a)
 
 d.params<-data.frame(Parameter = rep(d.tidy$Parameter, 
                                1+samples*d.tidy$Probability),
@@ -53,49 +44,26 @@ d.params<-data.frame(Parameter = rep(d.tidy$Parameter,
                 Response = rep(d.tidy$Value, 
                                1+samples*d.tidy$Probability))
 
-# ggplot(d.params, aes(x=Response))+
-#   geom_histogram()+
-#   facet_grid(Item~Prevalence,scales='free')
-
-  
-  
-
 
 d.summary<-d.params %>% group_by(Parameter,Item, Prevalence) %>%
   summarise(expectation = mean(Response),
               MAP = estimate_mode(Response),
             credHi = HPDhi(Response),
             credLo = HPDlo(Response))
-
-
-ggplot(data=d.summary, aes(x=Parameter, y = MAP))+
-  geom_bar(stat='identity', position=position_dodge())+
-  geom_errorbar(aes(ymin=credLo, ymax=credHi))+
-  facet_grid(Prevalence~Item, scales='free')
-
-
-d.across <- d.summary %>%
-  filter(Prevalence=='gamma' & Item=='response0') %>%
-  ungroup() %>%
-  mutate(splitHalf= expectation > median(expectation)) %>%
-  mutate(splitHalf = factor(splitHalf, labels=c("distinct", "common")))
-
-qplot(data=d.across, x=expectation, fill=splitHalf,geom='histogram')
-
-
 ```
 
-Write to .csv for latex
-```{r}
+
+Write out summary stats to .csv for latex-table
+```{r table.out}
 d.out <- d.summary %>% filter(Prevalence == 'gamma')
   d.raw <- read.csv(file='~/Documents/research/generics/manuscript/data/novelGenerics-prior-splitAccidentalFBT-trials.csv')
 
 d.labels <- d.raw %>% rename(Parameter = stim_property) %>% select(Parameter, type)
 
 d.table<-left_join(d.out %>% filter(Item=='response0') 
-                   %>% mutate(distinctiveness = 1-MAP,
-                                               distinctHigh = 1-credLo,
-                                               distinctLow = 1-credHi) %>%
+                   %>% mutate(distinctiveness = MAP,
+                                               distinctHigh = credLo,
+                                               distinctLow = credHi) %>%
             ungroup() %>%
   select(-expectation,-MAP, -credLo, -credHi, -Prevalence, -Item),
           d.out %>% filter(Item=='response1') 
@@ -129,26 +97,103 @@ write.csv(d.tableOut, file='~/Documents/research/generics/manuscript/novelKinds-
 
 
 
+Plots of:
 
-By Type
++ response0 = category-level question: "How likely is it that there is a K that has F"?
++ resposne1 = individual-level question: "Suppose there is a K that has F. What % of Ks do you think have F?"
 
-```{r priors.byType}
+
+response0 gets at the property's potential to be present in a category. response1 gets at the expected prevalence when the property is present.
+
+```{r posterior.parameters.byItem}
+ggplot(data=d.summary, aes(x=Parameter, y = MAP))+
+  geom_bar(stat='identity', position=position_dodge())+
+  geom_errorbar(aes(ymin=credLo, ymax=credHi))+
+  facet_grid(Item~Prevalence, scales='free')+
+  coord_flip()
+```
+
+### Distribution on Theta:
+Potential for the property to be present in a kind
+
+```{r posterior.thetas.histogram}
+d.across <- d.summary %>%
+  filter(Prevalence=='gamma' & Item=='response0') %>%
+  ungroup() %>%
+  mutate(splitHalf= expectation > median(expectation)) %>%
+  mutate(splitHalf = factor(splitHalf, labels=c("distinct", "common")))
+
+qplot(data=d.across, x=expectation, fill=splitHalf,geom='histogram')
+```
+
+Scatterplot by item
+
+```{r posterior.scatterplot.byItem}
+
+d.gamma.item<-left_join(
+  d.summary %>% filter(Prevalence=="gamma" & Item=='response0') %>%
+    rename(potentialMAP = MAP,
+           potentialHigh = credHi,
+           potentialLow = credLo) %>%
+    ungroup() %>%
+    select(-Item, -Prevalence, -expectation),
+    d.summary %>% filter(Prevalence=="gamma" & Item=='response1') %>%
+    ungroup() %>%
+    select(-Item, -Prevalence, -expectation)
+  )
+
+# to get property-type labels
+d.raw <- read.csv(file='~/Documents/research/generics/manuscript/data/novelGenerics-prior-splitAccidentalFBT-trials.csv')
+
+d.gam<-left_join(d.gamma.item, 
+                 unique(d.raw %>% select(stim_property, type) %>%
+                          rename(Parameter=stim_property) %>%
+                          mutate(type = factor(type, 
+                                               levels=c("part",  
+                                                        "vague",                               
+                                                        "color", 
+                                                        "accidental_high",
+                                                        "accidental_low"),
+                                               labels=c("body parts",
+                                "vague parts",
+                                "color parts",
+                                "common accidental",
+                                "rare accidental")))))
+
+
+ggplot(d.gam, aes(x = MAP, y = potentialMAP, color=type))+
+   geom_point(size =3)+
+   geom_errorbar(aes(ymin = potentialLow, ymax = potentialHigh),
+                                 position=position_dodge(), 
+                 size =0.8, width=0.01)+
+   geom_errorbarh(aes(xmin = credLo, xmax = credHi),                 
+                  position=position_dodge(), size =0.8, height=0.01)+
+#  geom_text(position=position_jitter(height=0.035, width=0.0))+
+  xlim(-0.05,1.05)+
+  ylim(-0.05,1.05)+
+  coord_fixed()+
+  xlab("Mean prevalence when present  ")+
+  ylab("Property's potential to be present in a kind  ")+
+  scale_color_brewer(palette='Set1')+
+  guides(color=guide_legend(title="Property type"))
+
+#ggsave(file="~/Documents/research/generics/manuscript/figures/asymmetry-prevScatter-byItem.pdf", width=8, height = 7.5)
+```
+
+
+
+
+# Same analysis, by property type for Expt 2c
+
+```{r posterior.parameters.byType}
 d1<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asym-prior-incrmh100000a.csv")
 d2<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asym-prior-incrmh100000b.csv")
 d3<-read.csv("~/Documents/research/generics/manuscript/model-results/generics-asym-prior-incrmh100000c.csv")
 
 samples = 50000
-d<-bind_rows(d1,d2,d3)
+d.tidy<-bind_rows(d1,d2,d3)
 
 
-
-
-d.tidy <- d
-
-# d.tidy <- d.tidy %>%
-#   unite(a, Item, Prevalence) %>%
-#   rename(Item = Parameter,
-#          Prevalence = a)
 
 d.params<-data.frame(Parameter = rep(d.tidy$Parameter, 
                                1+samples*d.tidy$Probability),
@@ -158,12 +203,6 @@ d.params<-data.frame(Parameter = rep(d.tidy$Parameter,
                                1+samples*d.tidy$Probability),
                 Response = rep(d.tidy$Value, 
                                1+samples*d.tidy$Probability))
-
-# ggplot(d.params, aes(x=Response))+
-#   geom_histogram()+
-#   facet_grid(Item~Prevalence,scales='free')
-
-
   
 
 
@@ -215,10 +254,9 @@ ggplot(m.join, aes(x = MAPwithin, y = MAPbetween, color=Property))+
 
 ```
 
-Reconstruct prevalence priors
+### Posterior predictive (the cheap way, forward sampling)
 
-
-```{r}
+```{r posterior.predictive.forwardSampling}
 shape1 = function(gamma,delta){return (gamma * delta)}
 shape2= function(gamma,delta){return ((1-gamma) * delta)}
 
@@ -249,10 +287,7 @@ for (i in 1:1000){
 
 
 
-
-
-
-
+# add on L1 posteriors
 asym.posterior<-read.csv(file="~/Documents/research/generics/manuscript/model-results/generics-asymmetry-posteriorState-priord50iter25000_mh50000a.csv")
 
 
@@ -295,8 +330,6 @@ d.sampWPost$Parameter<-factor(d.sampWPost$Parameter,
                                 "common accidental",
                                 "rare accidental"))
 
-
-
 color.mapping<-c(
   "#e41a1c",
 "#377eb8",
@@ -326,42 +359,7 @@ for (p in levels(d.sampWPost$Parameter)){
    coord_fixed()
 
  
- ggsave(file=paste("~/Documents/research/generics/manuscript/figures/popout-prior-asymmetry", p, ".pdf", sep=''), width = 6, height = 3.5) 
+ #ggsave(file=paste("~/Documents/research/generics/manuscript/figures/popout-prior-asymmetry", p, ".pdf", sep=''), width = 6, height = 3.5) 
  print(p)
 }
-
-
-
-a<-ggplot(d.samples, 
-          aes(x=prevalence, color=Parameter, linetype=Parameter))+
-  geom_density(size=1.3)+
-  scale_color_brewer(palette='Set1')+
-  xlab("Prevalence")+
-  ylab("Posterior density")+
- # theme_black()+
- # facet_grid(Parameter~., scales='free')+
-  theme(legend.position=c(0.7,0.65),
-        strip.text.y=element_text(angle=0))+
-  guides(fill=F)
-
-b<-ggplot(d.samples %>% filter(!(prevalence==0)), 
-          aes(x=prevalence, color=Parameter, linetype=Parameter))+
-  geom_density(size=1.3)+
-  scale_color_brewer(palette='Set1')+
-  scale_x_continuous(limits=c(0,1),breaks=c(0.25,0.5,0.75,1))+
-  xlab("Prevalence")+
-  ylab("Posterior density")+
- # theme_black()+
-  guides(color=F, linetype=F)+
-  #facet_grid(Parameter~., scales='free')+
-  theme(strip.text.y=element_text(angle=0))#+
- # theme(legend.position=c(0.7,0.65))
-
-c<-arrangeGrob(a,b,nrow=1)
-
-ggsave(c,file='~/Documents/research/generics/manuscript/figures/prior2_prevalenceprior-50kx3.pdf',width=12, height= 4)
-# ggsave(a,file='~/Box Sync/talks/esslli-2015-generics/figures/prior2_prevalenceprior-50ka.pdf',width=7, height= 11)
-# ggsave(b,file='~/Box Sync/talks/esslli-2015-generics/figures/prior2_prevalenceprior-50kb.pdf',width=7, height= 11)
-# ggsave(b,file='~/Box Sync/talks/esslli-2015-generics/figures/prior2_prevalenceprior-50kblegend.pdf',width=5, height= 5)
-
 ```
