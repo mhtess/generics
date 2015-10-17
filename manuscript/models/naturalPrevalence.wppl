@@ -1,7 +1,7 @@
 // time webppl naturalPrevalence.wppl --require naturalUtils
 var fpath = "/Users/mht/Documents/research/generics/manuscript/data/"
-var Priordata = naturalUtils.readCSV(fpath+"real-kinds-prior-2-trials-n57-formatted.csv").data
-var Truthdata = naturalUtils.readCSV(fpath+"real-kinds-truth-1-trials-formatted.csv").data
+var Priordata = naturalUtils.readCSV(fpath+"naturalGenerics-prior-trials-n57.csv").data
+var Truthdata = naturalUtils.readCSV(fpath+"naturalGenerics-trials-minusCatch-n96-formatted.csv").data
 
 // babyparse adds an extra line at the end.
 var df_prior = dataFrame(Priordata.slice(0,Priordata.length-1))
@@ -61,10 +61,10 @@ var prevalenceModel = function(){
 var mhiter = 100000
 var burn = mhiter/2
 var resultsERP = IncrementalMH(prevalenceModel, mhiter, {verbose:"true",
-														burnin: burn})
-var outfile = '../model-results/generics-naturalPrevalence-n57-incrMH'+mhiter+'_burn'+burn+'c.csv'
+														burn: burn,
+														verboseLag: 100})
+var outfile = '../model-results/generics-naturalPrevalence-test-n57-incrMH'+mhiter+'_burn'+burn+'c.csv'
 naturalUtils.erpWriter(resultsERP, outfile)
 console.log('wrote to... ' + outfile)
-// console.log(df_truth)
 
 
