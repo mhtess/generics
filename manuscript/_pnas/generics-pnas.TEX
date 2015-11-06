@@ -53,7 +53,7 @@ of the United States of America}
 
 %%%Newly updated.
 %%% If significance statement need, then can use the below command otherwise just delete it.
-\significancetext{RJSM and ACAC developed the concept of the study. RJSM conducted the analysis, data interpretation and drafted the manuscript. AGB contributed to the development of the statistical methods, data interpretation and drafting of the manuscript.}
+\significancetext{M.H.T. and N.D.G developed theory and designed research; M.H.T. performed research and analyzed data. M.H.T. and N.D.G. wrote the paper.}
 
 \maketitle
 
@@ -167,6 +167,22 @@ We use $S_{2}$ (Eq.~\ref{eq:S2}) to model felicity or truth judgments \cite{Dege
 
 \section{The structure of prevalence priors}
 
+\begin{figure*}
+\centering
+    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists2.pdf}
+    \caption{Prevalence prior distributions empirically elicited for twenty-one animal properties.
+    Prior distributions are summarized by $\theta$----a property's potential to be present in a category----and $\gamma$----the mean prevalence when it is possible for the property to be present in a category.
+    Inset plots display example empirical prior distributions over prevalence together with corresponding $L_1$ model predictions: the posterior after hearing a generic utterance. 
+    Intervals on the top of plots show human beliefs about the prevalence of the property within a target category.
+%    Posterior distributions show what happens to a listener's belief about the prevalence after hearing the associated generic. 
+    Felicitous generic utterances result when the target prevalence is more likely under the posterior than under the prior.
+ %   \ndg{should mark the observed within-category prevalence for target kinds in pop-outs? or maybe one of the axes of main plot should be that?}
+     Error bars denote 95\% Bayesian credible intervals.
+    }
+  \label{fig:priors1a}
+\end{figure*}
+
+
  The prior $P(x)$ (in Eqs.~\ref{eq:L1}, \ref{eq:L0}) describes the belief distribution on the prevalence of a given property (e.g. \textsc{lays eggs}) across relevant categories. 
 The shape of this distribution affects model predictions, but may vary significantly among different properties.
  We measured it empirically for a set of properties (e.g. \textsc{lays eggs, carries malaria}; 21 in total) that give rise to interesting generics (described below). 
@@ -199,6 +215,8 @@ For example, lowering $\theta$ increases the relative probability mass at 0\% an
 
 
 \section{Generics have flexible truth conditions}
+
+
 
 We tested the degree to which the $S_2$ model, Eq.~\ref{eq:S2}, coupled with the empirically-elicited $P(x)$ predicted that a given category--property pair (e.g. \textsc{robins} and \textsc{lays eggs}) would result in a felicitous generic (e.g. \emph{Robins lay eggs.}).\footnote{The model, once $P(x)$ is fixed, has one free parameter: the speaker rationality parameter $\lambda$ in Eq.~\ref{eq:S1}. Because $\lambda$ is not of theoretical interest here, it is marginalized in accord with Bayesian data analysis principles \cite{LW2014}. } 
 We collected human judgments ($n=100$) about the acceptability of thirty generic sentences. 
@@ -254,7 +272,31 @@ The probabilisitic pragmatics model, using empirically measured priors, does a m
 Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (corners of Figure \ref{fig:modeldataBars}), including items for which target-category prevalence is not a good indicator of the acceptability (for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.955$; MSE=0.005; Figure \ref{fig:modeldataBars}, intermediate shades).
 The probabilistic pragmatics model explains the puzzling flexibility of generic truth-conditions as the result of communicative pressures operating over diverse prior beliefs about the properties. 
 
+\begin{figure}
+\centering
+    \includegraphics[width=0.7\columnwidth]{truthjudge-scatter-wLabels.pdf}
+    \caption{Human acceptability judgments and model predictions for thirty generic utterances about familiar animals and properties. 
+    Color denotes target-category prevalence of the property, with darker colors indicating lower prevalence. 
+    Intermediate prevalences (quartiles 2 \& 3) are in intermediate shades (marked on color bar).
+    Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions.
+    }
+  \label{fig:modeldataBars}
+\end{figure}
+
 \section{Interpreting novel generics}
+
+\begin{figure*}
+\centering
+    \includegraphics[width=\columnwidth]{prevalence-asymmetry-scatterwDists-byItem.pdf}
+    \caption{Prevalence prior distributions empirically elicited for 40 animal properties.
+    Parameters of the structured statistical model---$\theta$ and $\gamma$---reveal quantitative differences in beliefs about the prevalence of conceptually different types of properties (scatterplot). 
+    Inset plots show differences in shapes between biological properties (red, green, blue; bimodal) and accidental properties (orange, purple; unimodal).   
+  These differences give rise to the variability of interpretations of generic utterances. 
+      Error bars denote Bayesian 95\% credible intervals.
+  }
+  \label{fig:prior2}
+\end{figure*}
+
 
 Perhaps the most important role for generic language is to provide information about new or poorly understood categories. 
 To study this we must look to \emph{interpretation} of novel generics (e.g. \cite{Cimpian2010,Gelman2002}).
@@ -284,6 +326,19 @@ Accidental properties (``rare'' and ``common'') follow unimodal prior distributi
 %It is strange to measure participants' beliefs about these novel category---property pairs directly (e.g. answering ``How many lorches have purple feathers?'', without knowing what a lorch is).
 %Instead, we took advantage of the latent structure in the prior elicitation task (Expt.~1a) to ask participants ($n=40$) about the prevalence of a property (e.g. ``has purple feathers'') across-categories (e.g. ``How likely is it that \emph{there is a} lorch that has purple feathers?'') and within-categories (e.g. ``Suppose there is a lorch with purple feathers. What percentage of lorches do you think have purple feathers?''), separately. 
 %We used a hierarchical Bayesian approach to reconstruct the prevalence priors of a similar form to Expt.~1a (see Section \ref{sec:bda2} for details).
+
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.7\columnwidth]{implied-byItem-mh100kX2.pdf}
+    \caption{Human interpretation of prevalence upon hearing a generic compared with the $L_1$ model posterior predictive. 
+    Participants display graded endorsements of generics in terms of prevalence based on type of property (which is also associated with \emph{mean prevalence when present} $\gamma$, see Figure 3).
+    The model displays the same variability of interpretation, producing strong interpretations for generics of biological properties (red, blue, green) and weaker interpretations of generics of accidental properties (purple, orange).
+        Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
+  \label{fig:impliedByItem}
+\end{figure}
+
+
 
 
 
@@ -356,7 +411,22 @@ The listener and speaker pair of models predicts human endorsements and interpre
 %Interestingly, we observe greater implied prevalence of common accidental properties than rare accidental properties, given our median split based on the prior elicitation task ($\beta=0.061; SE = 0.025; t(39) = 2.47; p = 0.018$) \footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}.
 %Implications of generics of body parts was significantly greater than those of the biological properties used by \cite{Cimpian2010} (here, ``color parts'') ($\beta=0.118; SE = 0.024; t(39) = 4.74; p < 0.001$).
 %There was also a trending effect for the implications of vague body parts (e.g. curly fur) to be greater than those of color parts (e.g. yellow fur) ($\beta=0.032; SE = 0.016, t(54.8) = 1.95; p = 0.056$), possibly due to the belief that the same kind of animal can come in many different colors (e.g. dogs).
-
+\begin{figure*}
+\centering
+    \includegraphics[width=1\columnwidth]{asym-lines-data-model-2phi-2so-50kx3.pdf}
+    \caption{Human judgments and model predictions of prevalence implied by novel generic utterances (implied prevalence task; solid line) and average prevalence that leads to an acceptable generic utterance (truth conditions task; dotted line) as it relates to the \emph{a priori} mean prevalence when present $\gamma$.
+    Expectations of prevalence are higher after hearing a generic than before hearing it (solid line compared to $y=x$ line; both for human data and model).
+    %$y = x$ line denotes the prevalence inferred upon knowing the property is present in the kind. 
+    %For each kind of property, the generic utterance implies a higher than expected prevalence.
+    Generic statements about biological properties, imply that a high proportion of the category has the property, for both human participants and the model (solid line: red, blue and green). 
+    Generics about accidental properties do not result in such a high implied prevalence (solid line: purple and orange).  
+	While the implications of generic utterances are highly variable across the different types of properties, the average prevalence that leads to an acceptable generic does not vary, for participants or the model.
+        %Generic statements are accepted for a range of prevalences, resulting in a intermediate average prevalence (dotted line) that deoesn't vary by property type for the truth conditions task. 
+    Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.
+%    \ndg{change x-axis label to "a priori expected prevalence" or something like that -- "within-category prevalence" is ambiguous.}
+}
+  \label{fig:exp2b}
+\end{figure*}
 
 
 %Consistent with the effects reported by \cite{Cimpian2010}, biological properties (body, vague, and color parts) have stronger interpretations than their truth conditions would suggest (Figure \ref{fig:exp2b}; solid vs. dotted lines; green, blue and red points), whereas accidental properties receive more modest interpretations (orange and purple points).
@@ -465,166 +535,205 @@ and 14. This appendix is included here for completeness.
 This is an example of an appendix without a title.
 
 \begin{acknowledgments}
-This work was partially supported by
-some grants.
+This work was supported in part by National Science Foundation Graduate Research Fellowship DGE-114747 (to M.H.T.) and
+
 \end{acknowledgments}
 
-
-%
 \begin{thebibliography}{10}
+
+\bibitem{Carlson1977}
+Carlson GN (1977) Reference to kinds in english, Ph.D. thesis (University of Massachusetts, Amherst).
+
+\bibitem{Leslie2008}
+Leslie SJ (2008) {Generics: Cognition and acquisition}.
+\newblock {\em Philosophical Review} 117(1).
+
 \bibitem{Behrens2005}
-L.~Behrens, {\em Genericity from a cross-linguistic perspective}, Linguistics, 43(2) (2005), pp.~275-344.
+Behrens L (2005) {Genericity from a cross-linguistic perspective}.
+\newblock {\em Linguistics} 43(2):275--344.
 
+\bibitem{Carlson1995}
+Carlson GN, Pelletier FJ (1995) {\em The generic book.}
+\newblock (Chicago University Press, Chicago, IL).
 
+\bibitem{Gelman2004}
+Gelman SA (2004) {\em Learning words for kinds: Generic noun phrases in
+  acquisition}.
+\newblock (MIT Press), pp. 445--484.
 
-\bibitem{CLAcha1}
-R.R.~Coifman and S.~Lafon, {\em Diffusion maps}, Appl. Comp. Harm. Anal.,
-  21 (2006), pp.~5--30.
+\bibitem{Gelman2008}
+Gelman SA, Goetz PJ, Sarnecka BW, Flukes J (2008) {Generic Language in
+  Parent-Child Conversations}.
+\newblock {\em Language Learning and Development} 4(1):1--31.
 
-\bibitem{BBG:EmbeddingRiemannianManifoldHeatKernel}
-P.~B\'erard, G.~Besson, and S.~Gallot, {\em Embedding {R}iemannian
-  manifolds by their heat kernel}, Geom. and Fun. Anal., 4 (1994),
-  pp.~374--398.
+\bibitem{Cimpian2008}
+Cimpian A, Markman EM (2008) {Preschool children's use of cues to generic
+  meaning}.
+\newblock {\em Cognition} 107:19--53.
 
-\bibitem{DiffusionPNAS}
-R.R.~Coifman, S.~Lafon, A.~Lee, M.~Maggioni, B.~Nadler, F.~Warner, and
-  S.~Zucker, {\em Geometric diffusions as a tool for harmonic analysis and
-  structure definition of data. {P}art {I}: Diffusion maps}, Proc. of Nat.
-  Acad. Sci.,  (2005), pp.~7426--7431.
+\bibitem{GelmanEtAl2004}
+Gelman SA, Taylor MG, Nguyen SP, Leaper C, Bigler RS (2004) {Mother-child
+  conversations about gender: Understanding the acquisition of essentialist
+  beliefs}.
+\newblock {\em Monographs of the Society for Research in Child Development}
+  69(1):vii, 116--127.
 
-\bibitem{Clementi:LowDimensionaFreeEnergyLandscapesProteinFolding}
-P.~Das, M.~Moll, H.~Stamati, L.~Kavraki, and C.~Clementi, {\em
-  Low-dimensional, free-energy landscapes of protein-folding reactions by
-  nonlinear dimensionality reduction}, P.N.A.S., 103 (2006), pp.~9885--9890.
+\bibitem{Rhodes2012}
+Rhodes M, Leslie SJ, Tworek CM (2012) {Cultural transmission of social
+  essentialism}.
+\newblock {\em Proceedings of the National Academy of Sciences}
+  109(34):13526--13531.
 
-\bibitem{DoGri}
-D.~Donoho and C.~Grimes, {\em Hessian eigenmaps: new locally linear
-  embedding techniques for high-dimensional data}, Proceedings of the National
-  Academy of Sciences, 100 (2003), pp.~5591--5596.
+\bibitem{Leslie2015}
+Leslie SJ, Cimpian A, Meyer M, Freeland E (2015) {Expectations of brilliance
+  underlie gender distributions across academic disciplines}.
+\newblock {\em Science} 347(6219):262--265.
 
-\bibitem{DoGri:WhenDoesIsoMap}
-D.~L. Donoho and C.~Grimes, {\em When does isomap recover natural
-  parameterization of families of articulated images?}, Tech. Report Tech. Rep.
-  2002-27, Department of Statistics, Stanford University, August 2002.
+\bibitem{Cimpian2010motivation}
+Cimpian A (2010) {The impact of generic language about ability on children's
+  achievement motivation.}
+\newblock {\em Developmental psychology} 46(5):1333--1340.
 
-\bibitem{GruterWidman:GreenFunction}
-M.~Gr\"uter and K.-O. Widman, {\em The {G}reen function for uniformly
-  elliptic equations}, Man. Math., 37 (1982), pp.~303--342.
+\bibitem{Gelman2002}
+Gelman SA, Star JR, Flukes JE (2002) {Children's Use of Generics in Inductive
+  Inferences}.
+\newblock {\em Journal of Cognition and Development} 3(2):179--199.
 
-\bibitem{Simon:NeumannEssentialSpectrum}
-R.~Hempel, L.~Seco, and B.~Simon, {\em The essential spectrum of neumann
-  laplacians on some bounded singular domains}, 1991.
+\bibitem{Cimpian2010}
+Cimpian A, Brandone AC, Gelman SA (2010) {Generic statements require little
+  evidence for acceptance but have powerful implications.}
+\newblock {\em Cognitive science} 34(8):1452--1482.
 
-\bibitem{1}
-Kadison, R.\ V.\ and Singer, I.\ M.\ (1959)
-Extensions of pure states, {\it Amer.\ J.\ Math.\ \bf
-81}, 383-400.
+\bibitem{Brandone2014}
+Brandone AC, Gelman SA, Hedglen J (2014) {Children's Developing Intuitions
+  About the Truth Conditions and Implications of Novel Generics Versus
+  Quantified Statements.}
+\newblock {\em Cognitive science} pp. 1--28.
 
-\bibitem{2}
-Anderson, J.\ (1981) A conjecture concerning the pure states of
-$B(H)$ and a related theorem. in {\it Topics in Modern Operator
-Theory}, Birkha\"user, pp.\ 27-43.
+\bibitem{Carlson1995essay}
+Carlson GN (1995) Truth conditions of generic sentences: Two contrasting views
+  in {\em The Generic Book}, eds.{} Carlson GN, Pelletier FJ.
+\newblock (University of Chicago Press, Chicago), pp. 224--38.
 
-\bibitem{3}
-Anderson, J.\ (1979) Extreme points in sets of
-positive linear maps on $B(H)$. {\it J.\ Funct.\
-Anal.\
-\bf 31}, 195-217.
+\bibitem{Prasada2000}
+Prasada S (2000) {Acquiring generic knowledge}.
+\newblock {\em Trends in Cognitive Sciences} 4(2):66--72.
 
-\bibitem{4}
-Anderson, J.\ (1979) Pathology in the Calkin algebra. {\it J.\
-Operator Theory \bf 2}, 159-167.
+\bibitem{Prasada2012}
+Prasada S, Hennefield L, Otap D (2012) {Conceptual and Linguistic
+  Representations of Kinds and Classes}.
+\newblock {\em Cognitive Science} 36(7):1224--1250.
 
-\bibitem{5}
-Johnson, B.\ E.\ and Parrott, S.\ K.\ (1972) Operators commuting
-with a von Neumann algebra modulo the set of compact operators.
-{\it J.\ Funct.\ Anal.\ \bf 11}, 39-61.
+\bibitem{Clark1996}
+Clark HH (1996) {\em Using language}.
+\newblock (Cambridge University Press).
 
-\bibitem{6}
-Akemann, C.\ and Weaver, N.\ (2004) Consistency of a
-counterexample to Naimark's problem. {\it Proc.\ Nat.\ Acad.\
-Sci.\ USA \bf 101}, 7522-7525.
+\bibitem{Grice1975}
+Grice HP (1975) {\em Logic and conversation.}
+\newblock (Blackwell).
 
-\bibitem{TSL}
-J.~Tenenbaum, V.~de~Silva, and J.~Langford, {\em A global geometric
-  framework for nonlinear dimensionality reduction}, Science, 290 (2000),
-  pp.~2319--2323.
+\bibitem{Levinson2000}
+Levinson S (2000) {\em Presumptive meanings: The theory of generalized
+  conversational implicature}.
+\newblock (The MIT Press).
 
-\bibitem{ZhaZha}
-Z.~Zhang and H.~Zha, {\em Principal manifolds and nonlinear dimension
-  reduction via local tangent space alignement}, Tech. Report CSE-02-019,
-  Department of computer science and engineering, Pennsylvania State
-  University, 2002.
+\bibitem{Frank2012}
+Frank MC, Goodman ND (2012) Predicting pragmatic reasoning in language games.
+\newblock {\em Science} 336(6084).
+
+\bibitem{Goodman2013}
+Goodman ND, Stuhlm{\"u}ller A (2013) Knowledge and implicature: Modeling
+  language understanding as social cognition.
+\newblock {\em Topics in Cognitive Science}.
+
+\bibitem{Cohen1999}
+Cohen A (1999) {Generics, Frequency Adverbs, and Probability}.
+\newblock {\em Linguistics and Philosophy} 22.
+
+\bibitem{Lassiter2013}
+Lassiter D, Goodman ND (2013) {\em Context, scale structure, and statistics in
+  the interpretation of positive-form adjectives}.
+
+\bibitem{Lassiter2015}
+Lassiter D, Goodman ND (2015) Adjectival vagueness in a bayesian model of
+  interpretation.
+\newblock {\em Synthese}.
+
+\bibitem{Degen2014}
+Degen J, Goodman ND (2014) {\em Lost your marbles? The puzzle of dependent
+  measures in experimental pragmatics}.
+
+\bibitem{Griffiths2005}
+Griffiths TL, Tenenbaum JB (2005) {Structure and strength in causal induction.}
+\newblock {\em Cognitive psychology} 51(4):334--84.
+
+\bibitem{hurdleModels}
+Rose CE, Martin SW, Wannemuehler KA, Plikaytis BD (2006) On the use of
+  zero-inflated and hurdle models for modeling vaccine adverse event count
+  data.
+\newblock {\em Journal of biopharmaceutical statistics} 16(4):463--481.
+
+\bibitem{LW2014}
+Lee MD, Wagenmakers E (2014) {\em Bayesian Cognitive Modeling: A Practical
+  Course}.
+\newblock (Cambridge University Press, Cambridge).
+
+\bibitem{Prasada2013}
+Prasada S, Khemlani S, Leslie SJ, Glucksberg S (2013) {Conceptual distinctions
+  amongst generics.}
+\newblock {\em Cognition} 126(3):405--22.
+
+\bibitem{Nisbett1983}
+Nisbett RE, Krantz DH, Jepson C, Kunda Z (1983) {The use of statistical
+  heuristics in everyday inductive reasoning.}
+\newblock {\em Psychological Review} 90(4):339--363.
+
+\bibitem{Gelman2005}
+Gelman SA (2005) {\em Essential Child: Origins of Essentialism in Everyday
+  Thought.}
+\newblock (Oxford University Press).
+
+\bibitem{Leslie2007}
+Leslie SJ (2007) {Generics and the Structure of the Mind}.
+\newblock {\em Philosophical Perspectives} 21(1):375--403.
+
+\bibitem{Goodmanconcepts}
+Goodman ND, Tenenbaum JB, Gerstenberg T (2015) {\em Concepts in a probabilistic
+  language of thought}.
+\newblock (MIT Press).
+
+\bibitem{Keil1992}
+Keil FC (1992) {\em Concepts, kind, and cognitive development.}
+\newblock (MIT Press).
+
+\bibitem{Piantadosi2012}
+Piantadosi ST, Tily H, Gibson E (2012) {The communicative function of ambiguity
+  in language}.
+\newblock {\em Cognition} 122(3):280--291.
+
+\bibitem{Cimpian2011a}
+Cimpian A, Markman EM (2011) {The Generic/Nongeneric Distinction Influences How
+  Children Interpret New Information About Social Others}.
+\newblock {\em Child Development} 82(2):471--492.
+
+\bibitem{Cimpian2012b}
+Cimpian A, Mu Y, Erickson LC (2012) {Who Is Good at This Game? Linking an
+  Activity to a Social Category Undermines Children's Achievement}.
+\newblock {\em Psychological Science} 23(5):533--541.
+
+\bibitem{dippl}
+Goodman ND, Stuhlm\"{u}ller A (2014) {The Design and Implementation of
+  Probabilistic Programming Languages} (\url{http://dippl.org}).
+\newblock Accessed: 2015-7-17.
+
 \end{thebibliography}
+
 
 
 \end{article}
 
-\begin{figure*}
-\centering
-    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists2.pdf}
-    \caption{Prevalence prior distributions empirically elicited for twenty-one animal properties.
-    Prior distributions are summarized by $\theta$----a property's potential to be present in a category----and $\gamma$----the mean prevalence when it is possible for the property to be present in a category.
-    Inset plots display example empirical prior distributions over prevalence together with corresponding $L_1$ model predictions: the posterior after hearing a generic utterance. 
-    Intervals on the top of plots show human beliefs about the prevalence of the property within a target category.
-%    Posterior distributions show what happens to a listener's belief about the prevalence after hearing the associated generic. 
-    Felicitous generic utterances result when the target prevalence is more likely under the posterior than under the prior.
- %   \ndg{should mark the observed within-category prevalence for target kinds in pop-outs? or maybe one of the axes of main plot should be that?}
-     Error bars denote 95\% Bayesian credible intervals.
-    }
-  \label{fig:priors1a}
-\end{figure*}
-
-\begin{figure}
-\centering
-    \includegraphics[width=0.7\columnwidth]{truthjudge-scatter-wLabels.pdf}
-    \caption{Human acceptability judgments and model predictions for thirty generic utterances about familiar animals and properties. 
-    Color denotes target-category prevalence of the property, with darker colors indicating lower prevalence. 
-    Intermediate prevalences (quartiles 2 \& 3) are in intermediate shades (marked on color bar).
-    Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions.
-    }
-  \label{fig:modeldataBars}
-\end{figure}
-
-\begin{figure*}
-\centering
-    \includegraphics[width=\columnwidth]{prevalence-asymmetry-scatterwDists-byItem.pdf}
-    \caption{Prevalence prior distributions empirically elicited for 40 animal properties.
-    Parameters of the structured statistical model---$\theta$ and $\gamma$---reveal quantitative differences in beliefs about the prevalence of conceptually different types of properties (scatterplot). 
-    Inset plots show differences in shapes between biological properties (red, green, blue; bimodal) and accidental properties (orange, purple; unimodal).   
-  These differences give rise to the variability of interpretations of generic utterances. 
-      Error bars denote Bayesian 95\% credible intervals.
-  }
-  \label{fig:prior2}
-\end{figure*}
-
-\begin{figure}
-\centering
-    \includegraphics[width=0.7\columnwidth]{implied-byItem-mh100kX2.pdf}
-    \caption{Human interpretation of prevalence upon hearing a generic compared with the $L_1$ model posterior predictive. 
-    Participants display graded endorsements of generics in terms of prevalence based on type of property (which is also associated with \emph{mean prevalence when present} $\gamma$, see Figure 3).
-    The model displays the same variability of interpretation, producing strong interpretations for generics of biological properties (red, blue, green) and weaker interpretations of generics of accidental properties (purple, orange).
-        Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
-  \label{fig:impliedByItem}
-\end{figure}
 
 
-\begin{figure*}
-\centering
-    \includegraphics[width=1\columnwidth]{asym-lines-data-model-2phi-2so-50kx3.pdf}
-    \caption{Human judgments and model predictions of prevalence implied by novel generic utterances (implied prevalence task; solid line) and average prevalence that leads to an acceptable generic utterance (truth conditions task; dotted line) as it relates to the \emph{a priori} mean prevalence when present $\gamma$.
-    Expectations of prevalence are higher after hearing a generic than before hearing it (solid line compared to $y=x$ line; both for human data and model).
-    %$y = x$ line denotes the prevalence inferred upon knowing the property is present in the kind. 
-    %For each kind of property, the generic utterance implies a higher than expected prevalence.
-    Generic statements about biological properties, imply that a high proportion of the category has the property, for both human participants and the model (solid line: red, blue and green). 
-    Generics about accidental properties do not result in such a high implied prevalence (solid line: purple and orange).  
-	While the implications of generic utterances are highly variable across the different types of properties, the average prevalence that leads to an acceptable generic does not vary, for participants or the model.
-        %Generic statements are accepted for a range of prevalences, resulting in a intermediate average prevalence (dotted line) that deoesn't vary by property type for the truth conditions task. 
-    Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.
-%    \ndg{change x-axis label to "a priori expected prevalence" or something like that -- "within-category prevalence" is ambiguous.}
-}
-  \label{fig:exp2b}
-\end{figure*}
 
 
 \end{document}
