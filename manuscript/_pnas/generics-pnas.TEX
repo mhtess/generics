@@ -541,7 +541,7 @@ Details are given in the {\it SI Materials and Methods}.
 The generics model was implemented using the probabilisitic programming language WebPPL \cite{dippl}. 
 The model, once $P(x)$ is fixed, has one free parameter: the speaker rationality parameter $\lambda$ in Eq.~\ref{eq:S1}. 
 Because $\lambda$ is not of theoretical interest here, it is marginalized in accord with Bayesian data analysis principles \cite{LW2014}.
-Both the prevalence scale x$\in$[0, 1]  and the threshold scale $\theta \in$[0, 1] were discretized to permit exact enumeration of the posterior.
+Both the prevalence  x$\in$[0, 1]  and the threshold  $\theta \in$[0, 1] were discretized to permit exact enumeration of the posterior.
 The prevalence scale was discretized into 11 bins --- \{0, 0.01, 0.1, 0.2, ... , 0.8, 0.9, 0.99\} --- and the threshold scale into 10 bins ---  \{0, 0.1, 0.2, ... , 0.8, 0.9\}. 
 The results are the same when a 21, 20 bin discretization is used. 
 A fully specified version of the generics, as well as the structured prior model (described below), can be found at http://forestdb.org/models/generics.html. 
@@ -664,22 +664,28 @@ As well, we describe the models for the familiar kinds (Expt.~1a) and unfamiliar
 %We hypothesized that the prior elicitation task has an important latent structure. 
 For the prior elicitation using familiar kinds, participants are asked to report the prevalence of the property that they believe lies within different kinds of animals.
 We assume that kinds that can have the property have the property's prevalence distributed according to a Beta distribution with mean $\gamma$ and concentration $\xi$, while kinds that cannot have the property can only have 0\% prevalence.
-We infer the mixture parameter $\theta$ from the data.
+We infer the mixture parameter $\theta$ from the data.\\
+\begin{minipage}{0.5 \textwidth} \small
 \begin{align*}
 d_{observed} & \sim \begin{cases}
 				 \text{Beta}(\gamma, \xi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
 				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
 				\end{cases} \\
-	 &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{x=0}  \\
+	 &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{x=0} 
 \end{align*}
+\end{minipage}
 
 For the prior elicitation using unfamiliar kinds, participants are asked to report the property's potential to be present in a kind and the mean prevalence when present. 
+We assume these two measurements are each distributed as a Beta diistribution:\\
+\begin{minipage}{0.5 \textwidth} \small
 \begin{align*}
-d_{potential} \sim \text{Beta}(\gamma_{potential}, \xi_{potential}) \\
-d_{expected} \sim \text{Beta}(\gamma_{expected}, \xi_{expected}) 
+d_{potential} &\sim \text{Beta}(\gamma_{potential}, \xi_{potential}) \\
+d_{expected} &\sim \text{Beta}(\gamma_{expected}, \xi_{expected}) 
 \end{align*}
+\end{minipage}
 To construct single prevalence distributions reflecting both the property's potential to be present in a kind and the expected prevalence when present (as we have for Expt.~1a), we assume that the distribution is a mixture of categories for which the property is present and categories for which the property is absent.
 Whether or not a category has a property is driven by the property's potential to be present ($\theta$).
+\begin{minipage}{0.5 \textwidth} \small
 \begin{align*}
 \theta & \sim \text{Beta}(\gamma_{potential}, \xi_{potential}) \\ 
 x & \sim \begin{cases} 
@@ -688,14 +694,10 @@ x & \sim \begin{cases}
 		\end{cases} \\
 	 &  \sim \theta \cdot \beta(\gamma_{expected},\xi_{expected}) + (1-\theta)  \cdot \delta_{x=0}
 \end{align*}
+\end{minipage}
 
-We put uninformative priors over the parameters.
-\begin{align*}
-\theta & \sim \text{Uniform}(0,1) \\
-\gamma & \sim \text{Uniform}(0,1) \\
-\xi & \sim \text{Uniform}(0, 50)
-\end{align*}
-We implemented these Bayesian statistical models using the probabilisitic programming language WebPPL \cite{dippl}. 
+We put uninformative priors over all the parameters, {\small $\theta \sim \text{Uniform}(0,1)$, 
+$\gamma \sim \text{Uniform}(0,1)$, $\xi \sim \text{Uniform}(0, 50)$}, and implemented these Bayesian statistical models using the probabilisitic programming language WebPPL \cite{dippl}. 
 %We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta, \gamma$, and $\phi$ with 3 MCMC chains of 100,000 iterations removing the first 50,000 iterations.
 \end{materials}
 
