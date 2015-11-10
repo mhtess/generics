@@ -702,16 +702,19 @@ For Expt.~1a, participants are asked to report the percentage of a kind with the
 Kinds can be divided into those that can have property and those that cannot.
 If a kind can have the property, the prevalence follows a Beta distribution with mean $\gamma$ and concentration $\xi$. 
 If a kind cannot, the prevalence can only be 0\%.
-The relative contribution of these two components is governed by mixture parameter $\theta$ and is inferred from the data.\\
-\begin{minipage}{0.5 \textwidth} \small
-\begin{align*}
-d_{observed} & \sim \begin{cases}
-				 \text{Beta}(\gamma, \xi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
-				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
-				\end{cases} \\
-	 &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{x=0} 
-\end{align*}
-\end{minipage}
+The relative contribution of these two components is governed by mixture parameter $\theta$ and is inferred from the data.
+Overall: 
+$ d_{observed}   \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{x=0} $.
+
+%\begin{minipage}{0.5 \textwidth} \small
+%\begin{align*}
+%%d_{observed} & \sim \begin{cases}
+%%				 \text{Beta}(\gamma, \xi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
+%%				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
+%%				\end{cases} \\
+%	 d_{observed} &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{x=0} 
+%\end{align*}
+%\end{minipage}
 %
 For Expt.~2a, participants are asked questions directly targeting $\theta$ and $\gamma$ in the above model (see {\it Expt. 2a}).
 We assume these two measurements follow a Beta distribution:\\
@@ -723,15 +726,15 @@ d_{expected} &\sim \text{Beta}(\gamma_{expected}, \xi_{expected})
 \end{align*}
 \end{minipage}
 %
-To construct single prevalence distributions, we generate $\theta$ from the posterior predictive distribution of $d_{potential}$ and use the same structure as in Expt.~1a.
+To construct single prevalence distributions, $P(x)$, we generate $\theta$ from the posterior predictive distribution of $d_{potential}$ and use the same structure as in Expt.~1a.
 \begin{minipage}{0.5 \textwidth} \small
 \begin{align*}
 \theta & \sim \text{Beta}(\gamma_{potential}, \xi_{potential}) \\ 
-x & \sim \begin{cases} 
-		\text{Beta}(\gamma_{expected}, \xi_{expected}) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
-				\delta_{x=0} &\mbox{if } \text{Bernoulli}(\theta) = \textsc{f} \\
-		\end{cases} \\
-	 &  \sim \theta \cdot \beta(\gamma_{expected},\xi_{expected}) + (1-\theta)  \cdot \delta_{x=0}
+%x & \sim \begin{cases} 
+%		\text{Beta}(\gamma_{expected}, \xi_{expected}) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
+%				\delta_{x=0} &\mbox{if } \text{Bernoulli}(\theta) = \textsc{f} \\
+%		\end{cases} \\
+x	 &  \sim \theta \cdot \beta(\gamma_{expected},\xi_{expected}) + (1-\theta)  \cdot \delta_{x=0}
 \end{align*}
 \end{minipage}
 
