@@ -46,12 +46,13 @@ of the United States of America}
 %%%Newly updated.
 %%% If significance statement need, then can use the below command otherwise just delete it.
 \significancetext{
-Understanding the world requires making generalizations about categories; we use generic language to convey these generalizations: `dogs bark', `rats carry disease', and `liberals drink lattes'.
+Understanding the world requires making generalizations about categories; we use generic language to convey such generalizations: `dogs bark', `rats carry disease', and `liberals drink lattes'.
 These simple sentences are common in ordinary conversation, child-directed speech, and political discourse.
 They are how we teach, how we motivate, and how we persuade (or mislead) others.
 Yet the precise meaning of generics is a puzzle that has resisted formalization.
 We introduce a mathematical model of generic language by combining principles of language understanding with a basic meaning in terms of property statistics.
-This theory provides the connective tissue between generic language and conceptual knowledge and gives insight into how everyday language use is tied to the beliefs of the parties involved.
+This theory provides the connective tissue between generic language and conceptual knowledge and gives insight into how everyday language use is tied to beliefs. 
+%of the parties involved.
 %
 %Understanding the world requires making generalizations about categories.
 %Generic language (e.g. \emph{Dogs bark.}) provides an efficient and ubiquitous way to transmit this kind of information.
@@ -83,7 +84,7 @@ and that general principles of pragmatic reasoning are responsible for establish
 Building on recent probabilistic models of language understanding, we provide a formal model for the evaluation and comprehension of generic sentences. 
 This model explains the puzzling flexibility in usage of generics in terms of diverse prior beliefs about properties.
 We elicit these priors experimentally and show that the resulting model predictions explain almost all of the variance in human judgments for both common and novel generics.
-This theory provides a mathematical bridge between the words we say and the concepts we grow.
+This theory provides a mathematical bridge between the words we use and the concepts they describe.
 }
 \end{abstract}
 
@@ -223,7 +224,7 @@ The shape of this distribution affects model predictions, but may vary significa
 While each $P(x)$ is a single distribution on prevalence, it may be structured as the result of deeper conceptual knowledge. 
 For instance, if participants believe that some kinds have a causal mechanism that \emph{could} give rise to the property, while others do not, then we would expect $P(x)$ to be structured as a mixture distribution (cf. \cite{Griffiths2005}).
 Assuming that \emph{when the property is possible}, its prevalence is distributed according to a Beta distribution with mean $\gamma$ and concentration $\xi$: 
-$P(x)=\theta \cdot \beta(\gamma,\xi)(x) + (1-\theta) \cdot \delta_{x=0}$.\footnote{This is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is substantially greater than one would expect from standard models of count data such as the Poisson model (e.g. adverse events to vaccines)\cite{hurdleModels}.}
+$P(x)=\theta \cdot \beta(\gamma,\xi)(x) + (1-\theta) \cdot \delta_{x=0}$.\footnote{This is similar in spirit to Hurdle Models of epidemiological data, where the observed counts of zeros is substantially greater than one would expect from standard models, such as the Poisson (e.g. adverse events to vaccines)\cite{hurdleModels}.}
 Thus, $\theta$ is the potential of a property to be present in a kind and $\gamma$ is the mean prevalence of the property among the kinds with the potential to have it. %Intuition suggests that, for a given property (e.g. \textsc{lay eggs}), kinds fall into two distinct categories: those for which the property is possible (e.g. \textsc{ducks}) and those for which the property is impossible (e.g. \textsc{lions}).
 %We hypothesized that participants' responses were structured in such a way as to be generated from a mixture of two distributions---$P_{present}(x)$ and $P_{absent}(x)$--- with mixture parameter $\theta$.
 %$P_{present}(x)$ is comprised of the animal kinds for which the property is present (i.e. prevalence greater than 0\%), and we assume participants' responses are sampled from a Beta distribution with unknown mean $\gamma$ and concentration $\delta$. 
