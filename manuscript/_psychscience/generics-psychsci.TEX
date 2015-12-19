@@ -247,6 +247,8 @@ Critically, speaker $S_{2}$ doesn't actually know what the generic means (i.e. d
 
 %\subsection*{The structure of prevalence priors}
 
+\section*{Empirical puzzle 1: Generics have flexible truth conditions}
+
 \section*{Experiment 1a: The structure of prevalence priors}
 
 
@@ -355,8 +357,8 @@ $\gamma \sim \text{Uniform}(0,1)$, $\xi \sim \text{Uniform}(0, 50)$, and impleme
 
 Using this structure, we can explore our 21 properties:
 Figure \ref{fig:priors1a} shows the estimated mixture-parameter $\theta$ (the potential of the property to be present in a kind) and the mean prevalence when the property is present, $\gamma$. 
-We see significant diversity among these properties in both dimensions. 
-This diversity matters because the model predictions for generic interpretation and felicity depend on the shape of the prior distribution (see insets for example interpretation posteriors).
+We see significant diversity among these properties in both dimensions, resulting in priors over prevalence with dramatically different shapes ( insets). 
+This diversity matters because the model predictions for generic interpretation and felicity depend on the shape of the prior distribution (insets show example interpretation posteriors).
 Lowering $\theta$ effectively makes the property more distinctive by increasing the relative probability mass at 0\%; this relaxes the truth conditions by making a lower threshold more informative.
 Increasing $\gamma$ means the property is expected to be present in more members of the category; this tends to make truth conditions stricter, by reducing the range of prevalence values higher than the prior expectation. 
 %Manipulating $\gamma$ will influence the prevalence inferred upon hearing a generic: 
@@ -393,18 +395,65 @@ Increasing $\gamma$ means the property is expected to be present in more members
 
 
 
+\section*{Experiment 1b: Truth judgments of familiar generics}
 
 
-\section*{Results}
+We tested the degree to which the $S_2$ model, Eq.~\ref{eq:S2}, coupled with the empirically-elicited $P(x)$ from Expt.~1a predicted that a given category--property pair (e.g. \textsc{robins} and \textsc{lays eggs}) would result in a felicitous generic (e.g. \emph{Robins lay eggs.}). 
 
 
-\subsection*{Generics have flexible truth conditions}
+\subsection*{Method}
+
+\subsubsection*{Participants}
+
+We recruited 100 participants over MTurk. 
+
+\subsubsection*{Procedure and materials}
+
+Participants were shown thirty generic sentences in bare plural form one after another. 
+They were asked to press one of two buttons to signify whether they agreed or disagreed with the sentence (see {\it SI Table 2} for complete list and {\it SI Section B} for more details). 
+
+The thirty sentences cover a range of conceptual distinctions described in Expt.~1a and were constructed to elicit the full range of acceptability judgments (``acceptable'', ``unacceptable'', and ``uncertain'') with low-, medium-, and high-prevalence properties (as measured in Expt.~1a).
 
 
-We tested the degree to which the $S_2$ model, Eq.~\ref{eq:S2}, coupled with the empirically-elicited $P(x)$ predicted that a given category--property pair (e.g. \textsc{robins} and \textsc{lays eggs}) would result in a felicitous generic (e.g. \emph{Robins lay eggs.}). 
-We collected human judgments ($n=100$) about the acceptability of thirty generic sentences ({\it Experiment 1b}). 
-These sentences cover a range of conceptual distinctions  \cite{Prasada2013}: characteristic (e.g. \emph{Ducks have wings.}), minority (e.g. \emph{Robins lay eggs.}), striking (e.g. \emph{Mosquitos carry malaria.}), false generalization (e.g. \emph{Robins are female.}), and false (e.g. \emph{Lions lay eggs.}).
-The sentences were also chosen to elicit a range of acceptability judgments (``acceptable'', ``unacceptable'', and ``uncertain'') with low-, medium-, and high-prevalence properties.
+\subsubsection*{Data--Model analysis and results}
+ 
+ %Does subjective belief about the prevalence of the property within the target kind predict the felicity of a generic utterance?
+From the prevalence-prior data (Expt.~1a) we can estimate participants' beliefs about the prevalence of a property for a given kind (e.g.~the percentage of \textsc{robins} that \textsc{lay eggs}; see green intervals on Figure \ref{fig:priors1a} and \emph{SI Table 2}).
+% for Maximum A-Posteriori (MAP) estimates and 95\% Bayesian Highest Density Intervals (HDI) over the mean prevalence for each property--category pairing). %We first compare the predictions of Eq.~\ref{eq:S2} to 
+As a simple baseline hypothesis, we first explore whether these prevalence values themselves predict generic endorsement (e.g.~does the fraction of \textsc{robins} that \textsc{lay eggs} predict the felicity of \emph{Robins lay eggs}?).
+A little over half of the variance in truth judgments data is explained by the prevalence of the property within the kind alone ($r^2 = 0.599$; MSE=0.065; \emph{SI Figure 2}). 
+This is not surprising given the existence and our inclusion of high-prevalence true generics (e.g. \emph{Leopards have spots.}) and low-prevalence false generics (e.g. \emph{Leopards have wings.}) in our stimuli. 
+However, large deviations from a purely target-category prevalence account remain: Generics in which the target category has intermediate prevalence (prevalence quartiles 2 and 3: $ 20\% < prevalence < 64\%$), are not at all explained by prevalence within those categories ($r_{Q2,3}^2 = 0.029$; MSE = 0.110).
+
+We instead use the measured within--kind prevalence as the subjective probability that speaker $S_2$ in Eq.~\ref{eq:S2} is trying to communicate.
+Having inferred likely priors empirically, the model has 1 parameter: the speaker optimality parameter $\lambda$ (in Eq.~\ref{eq:S1}).
+We integrate out the likely values of this parameter using Bayesian data analytic techniques \cite{LW2014} (see SI Section B for full details).
+The pragmatic speaker model $S_2$, using empirically measured priors, does a much better job of explaining the truth judgments ($r^2=0.981$; MSE=0.003; Figure \ref{fig:modeldataBars}, {\it SI Figure 4}). 
+Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (corners of Figure \ref{fig:modeldataBars}), including items for which target-category prevalence is not a good indicator of the acceptability (for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.955$; MSE=0.005; Figure \ref{fig:modeldataBars}, intermediate shades).
+The probabilistic pragmatics model explains the puzzling flexibility of generic truth-conditions as the result of communicative pressures (\emph{be truthful}, \emph{be informative}) operating over diverse prior beliefs about the properties. 
+ 
+
+
+%\begin{figure}
+%\centering
+%    \includegraphics[width=\columnwidth]{tj_n100_tjVsPostpred_95hdi.pdf}
+%    \caption{Truth judgments from Expt.~1b for each item vs. the posterior predictive MAP estimates for the target item using the lifted-threshold model with the empirical priors elicited in Expt.~1a. Color spectrum corresponds to the rank ordering of the truth judgment data; similarly colored dots received similar truth judgments. Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions.}
+%  \label{fig:modeldataScatter}
+%\end{figure}
+
+
+%Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
+%4 participants were excluded for failing to pass a catch trial.
+%5 participants self-reported a native language other than English; removing their data has no effect on the results reported. 
+%The experiment took about 3 minutes and participants were compensated \$0.35.
+%Participants were asked to report whether they agreed or disagreed with generic sentences presented in bare plural form. 
+%Items were presented sequentially, and participants reported whether or not they agreed with the sentence by pressing either \textsc{p} or \textsc{q} (randomized between-subjects). 
+%Generic sentences were selected to correspond with the properties used in Expt.~1a. 
+%Approximately 10 true, 10 false, and 10 uncertain truth-value generics were selected (see {\it SI Table 2} for full list of items).
+%As a manipulation check, participants were asked at the end of the trials which button corresponded to ``Agree''. 
+%4 participants were excluded for failing this trial.
+%
+
 %\ndg{maybe one more sentence about the desired range of variation: from true to false and in between, but also true with low prevalence, etc...?}
 %
 %The 30 generic sentences fell into 3 \emph{a priori} categories: definitely true, definitely false, and neither true nor false (Figure \ref{fig:modeldataBars}, light bars). 
@@ -434,26 +483,7 @@ The sentences were also chosen to elicit a range of acceptability judgments (``a
 
 
 
-%Does subjective belief about the prevalence of the property within the target kind predict the felicity of a generic utterance?
-From the prevalence-prior data we can estimate participants' beliefs about the prevalence of a property for a given kind (e.g.~the percentage of \textsc{robins} that \textsc{lay eggs}; see green intervals on Figure \ref{fig:priors1a} and \emph{SI Table 2}).
-% for Maximum A-Posteriori (MAP) estimates and 95\% Bayesian Highest Density Intervals (HDI) over the mean prevalence for each property--category pairing). %We first compare the predictions of Eq.~\ref{eq:S2} to 
-As a simple baseline hypothesis, we first explore whether these prevalence values themselves predict generic endorsement (e.g.~does the fraction of \textsc{robins} that \textsc{lay eggs} predict the felicity of \emph{Robins lay eggs}?).
-A little over half of the variance in truth judgments data is explained by the prevalence of the property within the kind alone ($r^2 = 0.599$; MSE=0.065; \emph{SI Figure 2}). 
-This is not surprising given the inclusion of high-prevalence true generics (e.g. \emph{Leopards have spots.}) and low-prevalence false generics (e.g. \emph{Leopards have wings.}) in our stimuli. 
-However, large deviations from a purely target-category prevalence account remain: Generics in which the target category has intermediate prevalence (prevalence quartiles 2 and 3: $ 20\% < prevalence < 64\%$), are not at all explained by prevalence within those categories ($r_{Q2,3}^2 = 0.029$; MSE = 0.110).
 
-
-
-%\begin{figure}
-%\centering
-%    \includegraphics[width=\columnwidth]{tj_n100_tjVsPostpred_95hdi.pdf}
-%    \caption{Truth judgments from Expt.~1b for each item vs. the posterior predictive MAP estimates for the target item using the lifted-threshold model with the empirical priors elicited in Expt.~1a. Color spectrum corresponds to the rank ordering of the truth judgment data; similarly colored dots received similar truth judgments. Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions.}
-%  \label{fig:modeldataScatter}
-%\end{figure}
-
-The probabilistic pragmatics model, using empirically measured priors, does a much better job of explaining the truth judgments ($r^2=0.981$; MSE=0.003; Figure \ref{fig:modeldataBars}, {\it SI Figure 4}). 
-Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (corners of Figure \ref{fig:modeldataBars}), including items for which target-category prevalence is not a good indicator of the acceptability (for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.955$; MSE=0.005; Figure \ref{fig:modeldataBars}, intermediate shades).
-The probabilistic pragmatics model explains the puzzling flexibility of generic truth-conditions as the result of communicative pressures operating over diverse prior beliefs about the properties. 
 
 %\begin{figure*}
 %\centering
@@ -499,13 +529,16 @@ The probabilistic pragmatics model explains the puzzling flexibility of generic 
 \end{figure}
 
 
-\subsection{Interpreting novel generics}
+\section*{Empirical puzzle 2: Generics have strong interpretations}
 Perhaps the most important role for generic language is to provide information about new or poorly understood categories. 
 To study this we must look to \emph{interpretation} of novel generics (e.g. \cite{Gelman2002, Cimpian2010}).
 The pragmatic listener model (Eq.~\ref{eq:L1}) describes interpretation of a generic utterance, without previous knowledge of how common the property is within the target-kind. 
 With an uncertain meaning and the pressure to be informative, interpretation is heavily driven by \emph{a priori} beliefs about properties. 
 Classic work in generalization suggests beliefs about the prevalence of properties differ by type of property, including relatively fine distinctions between properties that are all biological in nature \cite{Nisbett1983}. 
-We used 40 different properties to explore a wide range of \emph{a priori} beliefs about prevalence. 
+
+
+
+We used forty different properties to explore a wide range of \emph{a priori} beliefs about prevalence. 
 These items make up five categories of properties: biological parts (e.g. \textsc{has claws}), color adjectives about parts (e.g. \textsc{has green feathers}), vague adjectives about parts (e.g. \textsc{has small wings}),  common accidental or disease states (e.g. \textsc{has wet fur}) and rare accidental or disease states (e.g. \textsc{has swollen ears})\footnote{The distinction between common and rare accidental properties was determined empirically by analyzing the data by item, and performing a median split based on the \emph{a priori} mean prevalence when present, $\gamma$, of the property.}.
 $P(x)$ was measured empirically ($n=40$, {\it Experiment 2a}), and the most likely priors were inferred using the same structured, statistical approach used for the familiar generics experiment.
 
@@ -731,20 +764,7 @@ A fully specified version of the generics model, as well as the structured prior
 
 
 
-\subsection{Experiment 1b: Truth judgments of familiar generics}
-We recruited 100 participants over MTurk.  
-%Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
-%4 participants were excluded for failing to pass a catch trial.
-%5 participants self-reported a native language other than English; removing their data has no effect on the results reported. 
-%The experiment took about 3 minutes and participants were compensated \$0.35.
-We used a two-alternative forced-choice paradigm to measure whether participants agreed or disagreed with 30 generic sentences presented in bare plural form (see {\it SI Table 2} for complete list and {\it SI Section B} for more details). 
-%Participants were asked to report whether they agreed or disagreed with generic sentences presented in bare plural form. 
-%Items were presented sequentially, and participants reported whether or not they agreed with the sentence by pressing either \textsc{p} or \textsc{q} (randomized between-subjects). 
-%Generic sentences were selected to correspond with the properties used in Expt.~1a. 
-%Approximately 10 true, 10 false, and 10 uncertain truth-value generics were selected (see {\it SI Table 2} for full list of items).
-%As a manipulation check, participants were asked at the end of the trials which button corresponded to ``Agree''. 
-%4 participants were excluded for failing this trial.
-%
+
 
 
 
