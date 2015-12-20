@@ -4,7 +4,7 @@
 
 \usepackage{setspace}
 %\doublespacing
-\linespread{1.25}
+%\linespread{1.25}
 \usepackage{geometry}
 
 \geometry{letterpaper, margin=1.3in}
@@ -693,14 +693,13 @@ The pragmatic listener model predictions closely align with the human judgments 
 
 %\mht{I'm a little unsure what the order of this should be right. Right now: linear effect of a priori prevalence; implied prevalence > a priori prevalence; pragmatics model predictions}
 
-To understand more fully how the model makes these predictions, we performed two exploratory analyses to test the hypotheses that:
+To understand more fully how the model makes these predictions, we performed two exploratory analyses to test whether or not:
 (1) implied prevalence judgments varied linearly with the \emph{a proiri} expected prevalence;
 and (2) the prevalence implied by a generic is above the beyond the \emph{a proiri} expected prevalence (i.e. the generic is even stronger than ``just generalize'').
-
-Both exploratory analysis have confirmatory evidence. 
+Both exploratory analysis returned confirmatory evidence. 
 A mixed-effects linear model with random by-participant effects of intercept and slope reveals the more widespread a property is expected to be \emph{a priori}, the stronger the implications of a generic statement ($\beta = 0.57; SE = 0.08; t(39) = 7.12; p < 0.001$, providing evidence for (1).
-\mht{Another trustworthy analysis shows Implied prevalence after hearing a generic is significantly greater than the \emph{a priori} prevalence}.
-The generic does more than simply signal to generalize; it carries the communicative force of a speech-act.
+A mixed-effects linear model with random by-participant effects of intercept and random by-item effects of intercept and condition (prior prevalence vs. implied prevalence) reveals implied prevalence after hearing a generic is significantly greater than the \emph{a priori} prevalence ($\beta = 0.17; SE = 0.018; t(39) = 9.7; d = 0.64; p < 0.001$), providing evidence for (2).
+The generic does more than simply signal to generalize; it carries with it the communicative weight of a speech-act.
 
 
 % We subjected the human prevalence judgments to a mixed-effects 
@@ -748,8 +747,8 @@ The generic does more than simply signal to generalize; it carries the communica
 
 
 It is often remarked that there is a surprising d\'{e}colage between the truth conditions and interpretations of generic language: Interpretations are characteristically strong while truth conditions are flexible. 
-Experimentally, \cite{Cimpian2010} has shown novel generics are interpreted as implying a higher prevalence than that required to assert the exact same generic.
-We test both speaker $S_2$ and listener $L_1$ models in the same experiment following by adapting an analysis procedure from \cite{Cimpian2010}.
+Experimentally, \citeA{Cimpian2010} have shown that novel generics are interpreted as implying a higher prevalence than that required to assert the exact same generic.
+We use a procedure adapted from these authors to test both speaker $S_2$ and listener $L_1$ models in the same experiment.
 
 %Expt.~2b revealed how generics imply the property is more widespread than what would be expected \emph{a priori}. 
 %Comparing to the average prevalence required to assent is another way to explore how generics exaggerate the evidence. 
@@ -761,30 +760,30 @@ We recruited 40 participants over MTurk.
 
 \subsubsection*{Procedure and materials}
 
-Our model predicts that this effect should hold, but only for properties with most extreme prior beliefs (particularly mean prevalence when present, $\gamma$; see Figure \ref{fig:exp2b}, right).
 
 The cover story and materials were the same as in Expt.~2b.
 We told participants one of five frequencies for each property type (e.g. \emph{50\% of feps have yellow fur.}), and then asked for truth judgments of the corresponding generic sentence (e.g. \emph{Feps have yellow fur.}). Prevalence varied between 10, 30, 50, 70, and 90\%.
 The experiment consisted of twenty-five trials: 5 trials for each of 5 types of properties measured in Expt.~2a. 
 
-\subsection{Data--Model analysis and results}
+\subsection*{Data--Model analysis and results}
 
-For both behavioral data and model predictions (Eq.~\ref{eq:S2}) we computed the average prevalence that led to an assenting judgment (the \emph{average truth conditions}), for each property type and participant, following the procedure used by \cite{Cimpian2010}.
+For both behavioral data and model predictions (Eq.~\ref{eq:S2}) we computed the average prevalence that led to an assenting judgment (the \emph{average prevalence score}), for each property type and participant, following the procedure used by \cite{Cimpian2010}.
 For example, if a participant agreed with the generic whenever the prevalence was 70\% or 90\% and disagreed at the other prevalence levels, that participant received an \emph{average prevalence score} of 80\%.
 
 After integrating out the one parameter of the speaker $S_2$ model, we subjected our model to the same procedure. 
-The speaker model $S_2$ returns a posterior probability of saying the generic, for each level of prevalence\footnote{We assume here that the prevalence told to the participant is the subjective probability that that speaker $S_2$ is trying to communicate. This assumption is mostly likely wrong due to theory-driven considers. For example, if the participant believes the prevalence being reported in the experiment is describing a temporary or accidental state and not one that is likely to be true in the future, the speaker may derive a subjective probability substantially less than that stated verbally as fact in the experiment. Addressing this issue is beyond the scope of this article, and is not necessarily for the relatively coarse-grained metric of \emph{average truth conditions}}. 
+The speaker model $S_2$ returns a posterior probability of producing the generic, for each level of prevalence\footnote{We assume here that the prevalence told to the participant is the subjective probability that that speaker $S_2$ is trying to communicate. This assumption is mostly likely incorrect due to theory-driven considerations on behalf of the speaker. For example, if the participant believes the prevalence being reported in the experiment is describing a temporary or accidental state and not one that is likely to be predictive of the future prevalence, the speaker may derive a subjective probability substantially less than that stated verbally in the experiment. Addressing this issue is beyond the scope of this article, and is not necessary for the relatively coarse-grained comparison of \emph{average truth conditions} to \emph{implied prevalence}}. 
 We sample a response from this posterior distribution for each prevalence level, simulating a single subject's data.
 Just as with the human data, we took the trials where the model agreed with the generic, and took the mean of the prevalence levels corresponding to those trials, giving us the average prevalence at which the model assented to the generic.
 We repeated this for each type of property 40 times to simulate a sample of 40 participants. 
 We repeated this procedure 1000 times to bootstrap 95\% confidence intervals.
 
-The speaker $S_2$ model did not make appreciably different predictions as to the average prevalence to accept the generic:
+The speaker $S_2$ model predicted \emph{average truth conditions} that did not vary appreciably across the different types of properties:
 Generics are acceptable for a wide range of prevalence levels for all property types.
 %There are no sharp boundaries between acceptable and unacceptable generics. 
 A similar absence of a gradient was observed in the human data ($\beta = 2.82; SE = 4.02; t(39) = 0.70; p = 0.49$; Figure \ref{fig:exp2b}, dotted lines). 
-Interpretations of generic utterances are stronger than their average truth conditions for biological properties but not for accidental properties (Figure \ref{fig:exp2b}); the extent of the difference is governed by prior property knowledge ($\gamma$, inferred from prior elicitation data).
+Interpretations of generic utterances are stronger than their average truth conditions for the biological properties but not for the accidental properties (Figure \ref{fig:exp2b}), replicating \citeA{Cimpian2010} with both human data and the model; the extent of the difference is governed by prior property knowledge (mean prevalence when present $\gamma$, from Expt.~2a).
 The listener and speaker pair of models predicts human endorsements and interpretations of novel generic utterances well ($r^2(10) = 0.921$, MSE = 0.004).
+Thus, our model predicts that the asymmetry between truth conditions and implied prevalence should hold, but only for properties with the most extreme prior beliefs.
 
 \begin{figure}
 \centering
