@@ -235,7 +235,7 @@ P_{S_{2}}(u \mid x) \propto  \int_{\theta} P_{L_{1}}(x , \tau \mid u) % =  P_{L_
 Speaker $S_2$ is a model of felicity or truth judgments \cite{Degen2014}.
 The speaker considers the thought-processes of listener $L_1$ (Eq.~\ref{eq:L1}) and decides if the generic is a good (albeit, vague) way to describe the prevalence $x$. 
 $S_2$'s decision is with respect to the alternative of saying nothing: He will choose to produce the generic when the true prevalence $x$ is more likely under $L_1$'s posterior than under her prior. 
-Critically, speaker $S_{2}$ doesn't actually know what the generic means (i.e. doesn't have access to the threshold $\tau$), but knows that $L_{1}$ will have to consider it, and integrates over the likely values she'll consider.
+Critically, speaker $S_{2}$ doesn't actually know what the generic means (i.e. doesn't have access to the threshold $\tau$), but knows that $L_{1}$ will have to consider it, and integrates over the likely values she'll consider\footnote{A fully specified version of the generics model, as well as the structured prior model (described below), can be found at \url{http://forestdb.org/models/generics.html.}}.
 %We use $S_{2}$ (Eq.~\ref{eq:S2}) to model
 
 
@@ -863,16 +863,17 @@ Where in the prevalence-based semantics could such conceptual distinctions come 
 Beliefs about prevalence in our approach are represented as probability distributions; a framework that is useful for representing rich, structured knowledge of the world \cite{Goodmanconcepts}. 
 Indeed, we found that empirical prevalence distributions are structured, perhaps reflecting intuitions about causal mechanisms underlying different properties.
 It is plausible that richer conceptual knowledge also influences these distributions, including higher-order conceptual knowledge about the nature of properties and categories \cite{Gelman2005,Keil1992}. 
-However, our approach makes the strong claim that beliefs about prevalence are the connective tissue between conceptual knowledge and generic language.
+For example, communicating subjective probability should be useful for future prediction and so if speakers hold the higher-order belief that some observations or states are transient and not predictive of future events (e.g. all U.S. Supreme Court Justices having at this moment social security numbers that are all prime numbers), their estimates of the subjective probability to communicate will be less influenced by this state; this will cause speakers to hesitate to assert the corresponding generic (\emph{Supreme Court Justices have prime numbered social security numbers}).
+Thus, our approach makes the strong claim that beliefs about prevalence are the connective tissue between conceptual knowledge and generic language.
 %may be sufficient to capture truth judgments and interpretations.
 %How interlocutors arrive at estimates of the prevalence, and what other inferences are licensed in a context, may be the result of a deeper conceptual model of the world.
 That is, the effect of conceptually meaningful differences on generic language is predicted to be mediated by differences in corresponding prevalence distributions.
 This suggests a number of further tests of our theory.
 
-To highlight one example, individuals may believe some observations are the result of accidents and are not predictive of future instances (e.g. all of the Supreme Court Justices having even-numbered social security numbers). 
-The corresponding generic (i.e. \emph{Supreme Court Justices have even-numbered social security numbers.}) may lack support because the corresponding conceptual models do not have any strong causal mechanism that could have given rise to the observation, and thus the prevalence of the property in the future (i.e. the predictive prevalence) will not be similar to the present prevalence. 
-In our experiments, we have focused on properties that are plausibly construed of as essential (e.g. \emph{lays eggs}, \emph{has feathers}) and thus predictive of future instances. 
-We found that a set of plausibly temporary properties (e.g. \emph{has muddy feathers}) are interpreted as implying a much lower percentage of the kind with the property than the biological properties, suggestive that the accidental nature of the property influences interpretations of prevalence.
+%To highlight one example, individuals may believe some observations are the result of accidents and are not predictive of future instances (e.g. all of the Supreme Court Justices having even-numbered social security numbers). 
+%The corresponding generic (i.e. \emph{Supreme Court Justices have even-numbered social security numbers.}) may lack support because the corresponding conceptual models do not have any strong causal mechanism that could have given rise to the observation, and thus the prevalence of the property in the future (i.e. the predictive prevalence) will not be similar to the present prevalence. 
+%In our experiments, we have focused on properties that are plausibly construed of as essential (e.g. \emph{lays eggs}, \emph{has feathers}) and thus predictive of future instances. 
+%We found that a set of plausibly temporary properties (e.g. \emph{has muddy feathers}) are interpreted as implying a much lower percentage of the kind with the property than the biological properties, suggestive that the accidental nature of the property influences interpretations of prevalence.
 
 
 %The results of these studies, as well  future research and model development.
@@ -901,17 +902,17 @@ The theory presented here gives one explanation of how we do so, providing a com
 
 
 
-\section*{Materials}
-%\begin{materials}
-%Details are given in the {\it SI Materials and Methods}.
-\subsection{Generics model}
-The generics model was implemented using the probabilisitic programming language WebPPL \cite{dippl}. 
-The model, once $P(x)$ is fixed, has one free parameter: the speaker rationality parameter $\lambda$ in Eq.~\ref{eq:S1}. 
-Because $\lambda$ is not of theoretical interest here, it is marginalized in accord with Bayesian data analysis principles \cite{LW2014}.
-Both the prevalence  x$\in$[0, 1]  and the threshold  $\theta \in$[0, 1] were discretized to permit exact enumeration of the posterior.
-The prevalence scale was discretized into 11 bins --- \{0, 0.01, 0.1, 0.2, ... , 0.8, 0.9, 0.99\} --- and the threshold scale into 10 bins ---  \{0, 0.1, 0.2, ... , 0.8, 0.9\}. 
-The results are the same when a 21, 20 bin discretization is used. 
-A fully specified version of the generics model, as well as the structured prior model (described below), can be found at http://forestdb.org/models/generics.html. 
+%\section*{Materials}
+%%\begin{materials}
+%%Details are given in the {\it SI Materials and Methods}.
+%\subsection{Generics model}
+%The generics model was implemented using the probabilisitic programming language WebPPL \cite{dippl}. 
+%The model, once $P(x)$ is fixed, has one free parameter: the speaker rationality parameter $\lambda$ in Eq.~\ref{eq:S1}. 
+%Because $\lambda$ is not of theoretical interest here, it is marginalized in accord with Bayesian data analysis principles \cite{LW2014}.
+%Both the prevalence  x$\in$[0, 1]  and the threshold  $\theta \in$[0, 1] were discretized to permit exact enumeration of the posterior.
+%The prevalence scale was discretized into 11 bins --- \{0, 0.01, 0.1, 0.2, ... , 0.8, 0.9, 0.99\} --- and the threshold scale into 10 bins ---  \{0, 0.1, 0.2, ... , 0.8, 0.9\}. 
+%The results are the same when a 21, 20 bin discretization is used. 
+%A fully specified version of the generics model, as well as the structured prior model (described below), can be found at http://forestdb.org/models/generics.html. 
 
 
 
