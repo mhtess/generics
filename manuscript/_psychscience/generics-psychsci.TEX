@@ -170,7 +170,7 @@ However, generic language is not unique in its flexibility.
 Language understanding in general depends on assumptions interlocutors make about each other, which can result in meanings interpreted with a complex sensitivity to context \cite{Clark1996,Grice1975,Levinson2000}, recently formalized in probabilisitic models of language understanding---the Rational Speech Acts (RSA) theory \cite{Frank2012,Goodman2013}. 
 Perhaps then, the puzzles of generic language can be partly understood as effects of pragmatic reasoning.
 If this is the case, then a relatively simple semantic theory, phrased in terms of statistical regularities in the world, could be enough to formalize generic language.
-Abstract, mental representations may still operate; yet we suggest generic language requires the common currency of probability to get off the ground. 
+Abstract, mental representations may still operate; yet we suggest generic language operates through the common currency of probability. 
 
 For a given kind $K$ (e.g.~\textsc{robins}) and property $F$ (e.g.~\textsc{lays eggs}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F\mid K)$, as the \emph{prevalence} of $F$ within $K$.\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability, not the actual frequency in the world.}
 Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F\mid K)>0$, \emph{all} is $P(F\mid K)=1$). 
@@ -204,15 +204,24 @@ She believes the speaker $S_1$ knows what $\tau$ is, and is trying to be informa
 The literal listener too has access to the threshold $\tau$, and simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
 
 Pragmatic interpretation of language assumes the production of an utterance was a deliberate decision on behalf of the speaker, who could have said other things but didn't. 
-We model generic language interpretation by $L_{1}$ (Eq. \ref{eq:L1}) as a pragmatic process resulting from the generic utterance (e.g.~\emph{Robins lay eggs.}) being produced by a speaker $S_{1}$ (Eq. \ref{eq:S1}), who had the alternative of not saying anything. 
-This \emph{null utterance} alternative carries no information and produces a posterior distribution in the listener identical with the prior. 
-The contrast of the \emph{null} utterance alternative gives the generic it's communicative force; it makes it a \emph{speech-act}\footnote{
-This alternative can be realized in at least two other ways: the speaker could have said the negation of the utterance (i.e. \emph{It is not the case that robins lay eggs.}) or the negative generic (i.e. \emph{Robins do not lay eggs.}).
-All results reported are similar for these two alternatives, and we use the alternative of the \emph{null} utterance for simplicity of demonstration.}.
+In our case, we assume the speaker had the options of uttering the generic utterance or staying quiet---the \emph{null utterance} alternative carries no information (i.e.~$\denote{null}(x, \tau)=T$) and produces a posterior distribution in the listener identical with the prior.\footnote{
+This alternative can be realized in at least two other ways: the speaker could have said the negation of the utterance (i.e. \emph{It is not the case that robins lay eggs.}) or the negative generic (i.e. \emph{Robins do not lay eggs.}). All results reported are similar for these two alternatives, and we use the alternative of the \emph{null} utterance for simplicity of demonstration.}
+The contrast with the \emph{null} utterance alternative gives the generic it's communicative force, making it a \emph{speech-act}.
+%
+Throughout this paper we will treat the bare plural construction as generic utterances, hence they have a threshold semantics: $\denote{\text{K F}}(x, \tau)=x>\tau$.
+The bare plural construction may additionally be ambiguous between a generic interpretation and a specific plural predication (consider \emph{dogs are on my lawn} compared to \emph{dogs have fur}); disambiguation itself may be a pragmatic process \cite{Cimpian2008}. 
+In this paper we are concerned with the interpretation of a truly generic utterance, once dissambiguated.
+
 %The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \tau)=x>\tau$; while the null utterance is always true, $\denote{null}(x, \tau)=T$.
-We further assume that the listener construes the utterance she has heard as a generic utterance (i.e. \emph{Birds, as a kind, lay eggs.}) as opposed to a specific (i.e. \emph{There are some birds right now laying eggs.}).
-This \emph{identification} process is itself likely a result of pragmatic inference \cite{Cimpian2008}, which we do not attempt to model here. 
-The fundamental question we address is: What is denotation of a generic utterance?
+%%
+%%We model the interpretation of a generic utterance by $L_{1}$ (Eq. \ref{eq:L1}) as a pragmatic process 
+%%resulting from the generic utterance (e.g.~\emph{Robins lay eggs.}) being produced by a speaker $S_{1}$ (Eq. \ref{eq:S1}), who had the alternative of not saying anything. 
+%%This \emph{null utterance} alternative carries no information and produces a posterior distribution in the listener identical with the prior. 
+%%
+%We further assume that the listener construes the utterance she has heard as a generic utterance (i.e. \emph{Birds, as a kind, lay eggs.}) as opposed to a specific (i.e. \emph{There are some birds right now laying eggs.}).
+%This \emph{identification} process is itself likely a result of pragmatic inference \cite{Cimpian2008}, which we do not attempt to model here. 
+%The fundamental question we address is: What is denotation of a generic utterance?
+%%The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \tau)=x>\tau$; while the null utterance is always true, $\denote{null}(x, \tau)=T$.
 
 
 
