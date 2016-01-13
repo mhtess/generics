@@ -635,7 +635,8 @@ Accidental properties (both ``rare'' and ``common'') follow unimodal prior distr
 
 \section*{Experiment 2b: Interpretations of novel generics}
 
-We tested the degree to which the $L_1$ listener model, Eq.~\ref{eq:L1}, coupled with the empirically-elicited $P(x)$ from Expt.~2a predicted the degree to which the generic implied the property was widespread in the kind. 
+We tested the degree to which the $L_1$ listener model, Eq.~\ref{eq:L1}, coupled with the empirically-elicited priors, $P(x)$, from Expt.~2a predicted the interpretation of a generic sentence consisting of a novel category with one of the forty properties described above.
+%degree to which the generic implied the property was widespread in the kind. 
 
 %The full cover story is described in {\it SI Section C} and is the same for Expt.~2c.
 %The original study by \citeauthor{Cimpian2010} found a difference in the implied prevalence between ``color parts'' (e.g. \textsc{yellow fur}) and accidental properties (e.g. \textsc{wet fur}).
@@ -655,7 +656,7 @@ We tested the degree to which the $L_1$ listener model, Eq.~\ref{eq:L1}, coupled
 
 We recruited 40 participants over MTurk to determine how widespread different properties are believed to be upon hearing a novel generic.  
 The experimental design is very similar to \citeA{Cimpian2010}, and we chose to have a sample size at least twice as large as the original study (original n=15). 
-This is a quantitative experiment with no planned comparisons.
+This is a quantitative experiment with only quantitative comparisons planned.
 
 %Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
 %All participants were native English speakers. 
@@ -671,11 +672,12 @@ Participants completed in randomized order 25 trials: 5 for each of the biologic
 
 The pragmatic listener $L_1$ model predicts the prevalence implied by a  generic utterance based on the prior distribution of prevalence (measured in Expt.~2a) and the fact a speaker chose to say a generic sentence.
 %The model predicts 
-We integrate out the model's 1 parameter the using the same Bayesian model analysis as before (details in SI Section D).
-The pragmatic listener model predictions closely align with the human judgments of prevalence ($r^2(40)=0.89$, MSE=0.006), displaying the same sensitivity of interpretation to the property information (Figure \ref{fig:impliedByItem}). 
+We integrate out the single free parameter the using the same Bayesian model analysis as before (details in SI Section D).
+The pragmatic listener model predictions closely align with the human judgments of prevalence for novel generics ($r^2(40)=0.89$, MSE=0.006), displaying sensitivity of interpretation to details of the property (Figure \ref{fig:impliedByItem}). 
 
 %\mht{I'm a little unsure what the order of this should be right. Right now: linear effect of a priori prevalence; implied prevalence > a priori prevalence; pragmatics model predictions}
 
+\ndg{i don't really understand this paragraph...}
 To understand more fully how the model makes these predictions, we performed two exploratory analyses to test whether or not:
 (1) implied prevalence judgments varied linearly with the \emph{a proiri} expected prevalence;
 and (2) the prevalence implied by a generic is above the beyond the \emph{a proiri} expected prevalence (i.e. the generic is even stronger than ``just generalize'').
@@ -751,7 +753,7 @@ The experiment consisted of twenty-five trials: 5 trials for each of 5 types of 
 
 \subsection*{Analysis and results}
 
-For both behavioral data and model predictions (Eq.~\ref{eq:S2}) we computed the average prevalence that led to an assenting judgment (the \emph{average prevalence score}), for each property type and participant, following the procedure used by \cite{Cimpian2010}.
+For both behavioral data and model predictions (Eq.~\ref{eq:S2}) we computed the average prevalence that led to an assenting judgment (the \emph{average prevalence score}), for each property type and participant, following the procedure used by \citeA{Cimpian2010}.
 For example, if a participant agreed with the generic whenever the prevalence was 70\% or 90\% and disagreed at the other prevalence levels, that participant received an \emph{average prevalence score} of 80\%.
 
 After integrating out the one parameter of the speaker $S_2$ model, we subjected our model to the same procedure. 
@@ -773,7 +775,7 @@ Thus, our model predicts that the asymmetry between truth conditions and implied
 \centering
     \includegraphics[width=0.5\columnwidth]{implied-byItem-mh100kX2b.pdf}
     \caption{Human interpretation of prevalence upon hearing a generic compared with the $L_1$ model posterior predictive. 
-    Participants and the model interpret generics as implying the property is widespread to a degree based on type of property: Generics of biological properties (red, blue, green) have  strong interpretations while generics of accidental properties (purple, orange) are weak.}
+    Participants and the model interpret generics differently for different property types: Generics of biological properties (red, blue, green) have  strong interpretations while generics of accidental properties (purple, orange) are weak.}
     %    Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
   \label{fig:impliedByItem}
 \end{figure}
