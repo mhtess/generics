@@ -137,8 +137,9 @@ Generic language is ubiquitous in everyday conversation as well as in child-dire
 Additionally, generics are the primary way by which speakers discuss social categories, making them key to propagating stereotypes \cite{GelmanEtAl2004,Rhodes2012,Leslie2015} and impacting motivation \cite{Cimpian2010motivation}.
 Despite their cognitive centrality and apparent simplicity, a formal account of generic meaning remains elusive.
 
-One major hurdle to formalizing generic language arises in the conditions by which a generic sentence is true.
-At first glance, generics seem like universally-quantified statements as in \emph{All swans are white}, but unlike universals, generics are resilient to counter-examples (e.g. black swans). 
+The major issue in formalizing generic language is determining what makes a generic sentence true or false.
+%One major hurdle to formalizing generic language arises in the conditions by which a generic sentence is true.
+At first glance, generics seem like universally-quantified statements as in \emph{All swans are white}, but unlike universals, generics are resilient to counter-examples (e.g. \emph{Swans are white} even though there are black swans). 
 Interpreting the generic as meaning ``most'' (i.e. \emph{Most swans are white}) captures many cases, but cannot explain why \emph{Robins lay eggs} and \emph{Mosquitos carry malaria} are so intuitively compelling: Only adult female robins lay eggs and a very tiny fraction of mosquitos actually carry malaria.
 Indeed, it appears that any explanation in terms of how common the property is within the kind violates intuitions --- for the robins, laying eggs is practically synonymous with being female (i.e., the properties are present in the same proportion), yet \emph{Robins are female} is not a reasonable utterance while \emph{Robins lay eggs} is fine.
 
@@ -146,18 +147,20 @@ Indeed, it appears that any explanation in terms of how common the property is w
 %\ndg{No precise meaning formalized in the mathematical language of logic seems to be sufficient to capture the meaning of natural language generics.}
 
 %Generics are additionally puzzling in how they are interpreted. 
-The mystery deepens with how novel generics are interpreted.
+%The mystery deepens with how generic language is interpreted.
+How generic language is interpreted is also a mystery.
 %The strong interpretation of novel generics deepens the mystery.
-While \emph{Mosquitos carry malaria} suggests the generic must in some way be analogous to ``some'' (i.e. \emph{Some swans are white.}), generics are often interpreted as implying the property is widespread within the kind:
+\emph{Mosquitos carry malaria} suggests the generic must in some way be analogous to ``some'' (i.e. \emph{Some swans are white.}). 
+Yet generics are often interpreted as implying the property is widespread within the kind:
 %Yet generics often imply the property is widespread: 
 %Listeners often interpret a novel generic as applying to \emph{nearly all} of a category 
-Consider the difference between \emph{Some swans have hollow bones} to \emph{Swans have hollow bones} \cite{Gelman2002}.
-When asked how common a property would need to be for the generic utterance to be true, both children and adults require the property to be less widespread than they infer when just told the generic \cite{Cimpian2010,Brandone2014}, suggesting that communicating with generics can exaggerate evidence.
+Consider the difference between \emph{Some swans have hollow bones} and \emph{Swans have hollow bones} \cite{Gelman2002}.
+When asked how common a property would need to be for the generic utterance to be true, both children and adults require the property to be less widespread than they infer when told the generic \cite{Cimpian2010,Brandone2014}, suggesting that communicating with generics can exaggerate evidence.
 %Both children and adults believe the generic implies the property-in-question is even more widespread than when asked how common the property would need to be for the generic to apply
 
 How can generics have such flexible truth conditions while simultaneously having strong implications?
-In this paper we offer a mathematical model of generic language in terms of pragmatic inference of the degree of prevalence required to assert a generic.  
-We show that this model predicts the patterns in human endorsement of familiar generic sentences and interpretation of novel generics. 
+In this paper we resolve these philosophical and empirical puzzles using a mathematical model that understands generic language by pragmatic inference about the degree of prevalence required to assert the generic.  
+We show that this model predicts the patterns in both human endorsement of familiar generic sentences and interpretation of novel generics. 
 
 \section*{Computational method: The semantics and pragmatics of generic language}
 
@@ -206,10 +209,10 @@ The literal listener too has access to the threshold $\tau$, and simply restrict
 Pragmatic interpretation of language assumes the production of an utterance was a deliberate decision on behalf of the speaker, who could have said other things but didn't. 
 In our case, we assume the speaker had the options of uttering the generic utterance or staying quiet---the \emph{null utterance} alternative carries no information (i.e.~$\denote{null}(x, \tau)=T$) and produces a posterior distribution in the listener identical with the prior.\footnote{
 This alternative can be realized in at least two other ways: the speaker could have said the negation of the utterance (i.e. \emph{It is not the case that robins lay eggs.}) or the negative generic (i.e. \emph{Robins do not lay eggs.}). All results reported are similar for these two alternatives, and we use the alternative of the \emph{null} utterance for simplicity of demonstration.}
-The contrast with the \emph{null} utterance alternative gives the generic it's communicative force, making it a \emph{speech-act}.
+The contrast with the \emph{null} utterance alternative gives the generic its communicative force, making it a \emph{speech-act}.
 %
 Throughout this paper we will treat the bare plural construction as generic utterances, hence they have a threshold semantics: $\denote{\text{K F}}(x, \tau)=x>\tau$.
-The bare plural construction may additionally be ambiguous between a generic interpretation and a specific plural predication (consider \emph{dogs are on my lawn} compared to \emph{dogs have fur}); disambiguation itself may be a pragmatic process \cite{Cimpian2008}. 
+The bare plural construction may additionally be ambiguous between a generic interpretation and a specific plural predication (consider \emph{dogs are on my lawn} compared to \emph{dogs have fur}), and disambiguation itself may be a pragmatic process \cite{Cimpian2008}. 
 In this paper we are concerned with the interpretation of a truly generic utterance, once dissambiguated.
 
 %The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \tau)=x>\tau$; while the null utterance is always true, $\denote{null}(x, \tau)=T$.
@@ -300,11 +303,11 @@ The relative contribution of these two components is governed by mixture paramet
 Thus, $\theta$ is the potential of a property to be present in a kind and $\gamma$ is the mean prevalence of the property among the kinds with the potential to have it. The prevalences given by participants would then be distributed as:
 \ndg{i think we need only the second equation, but write as probability. and x should be d}
 \begin{align*}
-	d_{observed} & \sim \begin{cases}
-				 \text{Beta}(\gamma, \xi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
-				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
-				\end{cases} \\
-	 d_{observed} &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{x=0} 
+%	d_{observed} & \sim \begin{cases}
+%				 \text{Beta}(\gamma, \xi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
+%				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
+%				\end{cases} \\
+	 d_{observed} &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
 \end{align*}
 We put uninformative priors over all the parameters, $\theta \sim \text{Uniform}(0,1)$, 
 $\gamma \sim \text{Uniform}(0,1)$, $\xi \sim \text{Uniform}(0, 50)$, and implemented this Bayesian statistical models using the probabilisitic programming language WebPPL \cite{dippl}. This statistical model reproduces the prior elicitation data with a low reconstruction error ($r^2 = 0.94$; see {\it SI Fig. 1}), strongly supporting the assumption of a structured prior. 
@@ -395,8 +398,8 @@ We chose this number of participants based on intuition from similar experiments
 
 Participants were shown thirty generic sentences in bare plural form one after another. 
 They were asked to press one of two buttons to signify whether they agreed or disagreed with the sentence (see {\it SI Table 2} for complete list and {\it SI Section B} for more details). 
-\ndg{the order was randomized between particiapants?}
-The thirty sentences cover a range of conceptual distinctions and acceptability levels, as described above.
+%\ndg{the order was randomized between particiapants?}
+The thirty sentences were presented in a random order between participants and cover a range of conceptual distinctions and acceptability levels, as described above.
 % and were constructed to elicit the full range of acceptability judgments (``acceptable'', ``unacceptable'', and ``uncertain'') with low-, medium-, and high-prevalence properties (as measured in Expt.~1a).
 
 
@@ -574,8 +577,8 @@ All materials are shown in Table S3.
 
 Participants were introduced to a data-collection robot that was tasked with learning about properties of animals. 
 Participants were told the robot randomly sampled an animal to ask the participant about (e.g. The robots says: ``We recently discovered animals called feps.''). 
-The robot then asks the participant two questions, aimed to measure to two components of the structured prior model: the potential of the property to be present in a kind and the expected prevalence when present.
-The robot asked how likely it was that ``there was \emph{a} fep with \textsc{property}'' (potential to be present), to which participants on a scale from ``unlikely'' to ``likely''.
+The robot then asks the participant two questions, aimed to measure the two components of the structured prior model: the potential of the property to be present in a kind and the expected prevalence when present.
+The robot asked how likely it was that ``there was \emph{a} fep with \textsc{property}'' (potential to be present), to which participants reported on a scale from ``unlikely'' to ``likely''.
 For example, it is very likely that there is a fep that is female, less likely that there is a fep that has wings, and even less likely that there is a fep that has purple wings. 
 The robot then asked, ``Suppose there is a fep that has wings. What percentage of feps do you think have wings?'' (expected prevalence when present). 
 Participants completed a practice trial to make sure they understood the meaning of these two questions.
