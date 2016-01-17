@@ -166,14 +166,17 @@ We show that this model predicts the patterns in both human endorsement of famil
 
 
 Generics express a relation between a kind (e.g. \textsc{robins}) and a property (e.g. \textsc{lays eggs}). 
-Semantic accounts of generics are usually given by appealing to either the statistics of the world (e.g. \emph{Barns are red} because most barns are) or to structured, conceptual representations (e.g. \emph{Bishops move diagonally} not because most bishops do but because the laws of chess dictate that they do) \cite{Carlson1995essay}. 
+Semantic accounts of generics are usually given by appealing to either the statistics of the world (e.g. \emph{Barns are red} because most barns are) or to structured, conceptual representations (e.g. \emph{Bishops move diagonally} not because most bishops do but because the laws of chess mandate that they do) \cite{Carlson1995essay}. 
 This latter perspective emphasizes the structure of generic knowledge \cite{Prasada2000}, and views generic utterances as the way of expressing special mental relationships between kinds and properties \cite{Leslie2008, Prasada2012}. The puzzles of generic language then reduce to puzzles about mental representation of kind-property relations.
 
 However, generic language is not unique in its flexibility.
-Language understanding in general depends on assumptions interlocutors make about each other, which can result in meanings interpreted with a complex sensitivity to context \cite{Clark1996,Grice1975,Levinson2000}, recently formalized in probabilisitic models of language understanding---the Rational Speech Acts (RSA) theory \cite{Frank2012,Goodman2013}. 
-Perhaps then, the puzzles of generic language can be partly understood as effects of pragmatic reasoning.
-If this is the case, then a relatively simple semantic theory, phrased in terms of statistical regularities in the world, could be enough to formalize generic language.
-Abstract, mental representations may still operate; yet we suggest generic language operates through the common currency of probability. 
+Language understanding in general depends on assumptions interlocutors make about each other and can result in interpreting meanings with a complex sensitivity to context \cite{Clark1996,Grice1975,Levinson2000}. 
+Can the puzzles of generic language be understood as effects of pragmatic reasoning?
+If so, it may be unnecessary to encode abstract mental representations into the semantics of generics.
+We thus begin with a relatively simple semantic theory, phrased in terms of statistical regularities, measured with probability. 
+
+%If this is the case, then a relatively simple semantic theory, phrased in terms of statistical regularities in the world, could be enough to formalize generic language.
+%Abstract, mental representations may still operate; yet we suggest generic language operates through the common currency of probability. 
 
 For a given kind $K$ (e.g.~\textsc{robins}) and property $F$ (e.g.~\textsc{lays eggs}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F\mid K)$, as the \emph{prevalence} of $F$ within $K$.\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability, not the actual frequency in the world.}
 Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F\mid K)>0$, \emph{all} is $P(F\mid K)=1$). 
@@ -181,9 +184,9 @@ Extending this, it seems the simplest meaning for generic statements would be a 
 However, no fixed value of the threshold, $\tau$, would allow for the extreme flexibility generics exhibit (e.g. \emph{Robins lay eggs} vs. \emph{Robins are female}; \emph{Mosquitos carry malaria}).% simultaneously with the interpretations of some novel generics being strong. 
 
 
-
 We suggest that this threshold is not a fixed property of the language, but is established by pragmatic inference.
 This inference depends on property and category knowledge, but is otherwise a general mechanism of language not specific to interpreting generic statements.
+Pragmatic reasoning is formalized in the Rational Speech Acts (RSA) theory --- a probabilisitic model of language understanding --- as recursive Bayesian inference between speaker and hearer \cite{Frank2012,Goodman2013}
 We follow the treatment of RSA applied to vague adjectives (e.g.~\emph{tall}), using an underspecified threshold criterion \cite{Lassiter2013,Lassiter2015}. % who have extended RSA to explain vague adjectives (e.g.~\emph{tall}) in terms of an underspecified threshold criterion. %(Cf.~\citeA{Qing2014}). 
 %We follow this treatment, adopting as the underlying scale the property prevalence.
 We imagine a hypothetical, pragmatic listener ($L_1$) concerned with learning the prevalence of a certain property in a certain category, $x=P(F \mid K)$, who reasons about an informative speaker ($S_1$), who in turn reasons about a literal listener ($L_0$):
@@ -204,14 +207,14 @@ The pragmatic listener $L_1$ (Eq.~\ref{eq:L1}) is trying to resolve how widespre
 she does so by considering both what she knows about property F in general---her prior distribution $P(x)$ over prevalence of F---and her intuitive theory of the speaker $S_{1}$ as an informed and helpful interlocutor (Eq. \ref{eq:S1}).
 $L_1$ assumes the meaning of the generic utterance expresses something about how common the property is (she knows it is a threshold on prevalence), but doesn't know exactly what it conveys (she has uncertainty about the threshold: $\tau \sim \text{Uniform([0,1])}$).
 She believes the speaker $S_1$ knows what $\tau$ is, and is trying to be informative about the prevalence $x$ to the listener he is thinking about---an idealized literal listener ($L_{0}$, Eq. \ref{eq:L0}).
-The literal listener too has access to the threshold $\tau$, and simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
+The literal listener has access to the threshold $\tau$, and simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
 
-Pragmatic interpretation of language assumes the production of an utterance was a deliberate decision on behalf of the speaker, who could have said other things but didn't. 
+Pragmatic interpretation of language assumes the production of an utterance was a deliberate decision on behalf of the speaker who could have said other things but didn't. 
 In our case, we assume the speaker had the options of uttering the generic utterance or staying quiet---the \emph{null utterance} alternative carries no information (i.e.~$\denote{null}(x, \tau)=T$) and produces a posterior distribution in the listener identical with the prior.\footnote{
 This alternative can be realized in at least two other ways: the speaker could have said the negation of the utterance (i.e. \emph{It is not the case that robins lay eggs.}) or the negative generic (i.e. \emph{Robins do not lay eggs.}). All results reported are similar for these two alternatives, and we use the alternative of the \emph{null} utterance for simplicity of demonstration.}
 The contrast with the \emph{null} utterance alternative gives the generic its communicative force, making it a \emph{speech-act}.
 %
-Throughout this paper we will treat the bare plural construction as generic utterances, hence they have a threshold semantics: $\denote{\text{K F}}(x, \tau)=x>\tau$.
+Throughout this paper we will treat the bare plural construction as generic utterances with a threshold semantics: $\denote{\text{K F}}(x, \tau)=x>\tau$.
 The bare plural construction may additionally be ambiguous between a generic interpretation and a specific plural predication (consider \emph{dogs are on my lawn} compared to \emph{dogs have fur}), and disambiguation itself may be a pragmatic process \cite{Cimpian2008}. 
 In this paper we are concerned with the interpretation of a truly generic utterance, once dissambiguated.
 
@@ -256,8 +259,8 @@ Critically, speaker $S_{2}$ doesn't actually know what the generic means (i.e. d
 \section*{Flexible truth conditions}
 
 Any theory of generic language must explain their puzzling flexibility of usage with respect to prevalence.
-For instance, \emph{Mosquitos carry malaria} and \emph{Birds lay eggs}, but not \emph{Birds are female}.
-To test the ability of the pragmatic $S_2$ model, Eq.~\ref{eq:S2}, to capture this flexibility we constructed thirty generic sentences 
+For instance, \emph{Mosquitos carry malaria} and \emph{Birds lay eggs}, but \emph{Birds are female} is not a good thing to say.
+To test the ability of the pragmatic $S_2$ model, Eq.~\ref{eq:S2}, we constructed thirty generic sentences 
 that cover a range of conceptual distinctions  \cite{Prasada2013}: characteristic (e.g. \emph{Ducks have wings.}), minority (e.g. \emph{Robins lay eggs.}), striking (e.g. \emph{Mosquitos carry malaria.}), false generalization (e.g. \emph{Robins are female.}), and false (e.g. \emph{Lions lay eggs.}).
 The sentences were also chosen to elicit a range of acceptability judgments (``acceptable'', ``unacceptable'', and ``uncertain'') with low-, medium-, and high-prevalence properties.
 In Expt.~1b we collect human judgements about the acceptability of these sentences. 
