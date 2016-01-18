@@ -186,7 +186,7 @@ However, no fixed value of the threshold, $\tau$, would allow for the extreme fl
 
 We suggest that this threshold is not a fixed property of the language, but is established by pragmatic inference.
 This inference depends on property and category knowledge, but is otherwise a general mechanism of language not specific to interpreting generic statements.
-Pragmatic reasoning is formalized in the Rational Speech Acts (RSA) theory --- a probabilisitic model of language understanding --- as recursive Bayesian inference between speaker and hearer \cite{Frank2012,Goodman2013}
+Pragmatic reasoning is formalized in the Rational Speech Acts (RSA) theory --- a probabilisitic model of language understanding --- as recursive Bayesian inference between speaker and listener \cite{Frank2012,Goodman2013}
 We follow the treatment of RSA applied to vague adjectives (e.g.~\emph{tall}), using an underspecified threshold criterion \cite{Lassiter2013,Lassiter2015}. % who have extended RSA to explain vague adjectives (e.g.~\emph{tall}) in terms of an underspecified threshold criterion. %(Cf.~\citeA{Qing2014}). 
 %We follow this treatment, adopting as the underlying scale the property prevalence.
 We imagine a hypothetical, pragmatic listener ($L_1$) concerned with learning the prevalence of a certain property in a certain category, $x=P(F \mid K)$, who reasons about an informative speaker ($S_1$), who in turn reasons about a literal listener ($L_0$):
@@ -312,7 +312,7 @@ Thus, $\theta$ is the potential of a property to be present in a kind and $\gamm
 %				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
 %				\end{cases} \\
 %	 d_{observed} &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
-	 P(d_{observed} ) = \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
+	 P(d) = \theta \cdot \text{Beta}(d \mid \gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
 \end{align*}
 We put uninformative priors over all the parameters, $\theta \sim \text{Uniform}(0,1)$, 
 $\gamma \sim \text{Uniform}(0,1)$, $\xi \sim \text{Uniform}(0, 50)$, and implemented this Bayesian statistical models using the probabilisitic programming language WebPPL \cite{dippl}. This statistical model reproduces the prior elicitation data with a low reconstruction error ($r^2 = 0.94$; see {\it SI Fig. 1}), strongly supporting the assumption of a structured prior. 
@@ -609,7 +609,7 @@ We used the same priors as in Expt.~1a.
 %To %\begin{minipage}{0.5 \textwidth} \small
 %%        \begin{align*}
 %\theta & \sim \text{Beta}(\gamma_{potential}, \xi_{potential}) \\ 
-P(x) = \beta(\gamma_{1}, \xi_{1}) \cdot \beta(\gamma_{2}, \xi_{2}) + (1 -  \beta(\gamma_{1}, \xi_{1})) \cdot \delta_{x=0} 
+P(x) = [ \theta\cdot \text{Beta} (x \mid \gamma_{2}, \xi_{2}) + (1 -  \theta) \cdot \delta_{x=0} ] \cdot \text{Beta}(\theta \mid \gamma_{1}, \xi_{1})
 %
 %\begin{cases} 
 %		\text{Beta}(\gamma_{expected}, \xi_{expected}) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
