@@ -303,17 +303,17 @@ For instance, if participants believe that some kinds have a causal mechanism th
 If a kind can have the property, we assume the prevalence follows a Beta distribution with mean $\gamma$ and concentration $\xi$. 
 If a kind cannot, the prevalence can only be 0\%.
 The relative contribution of these two components is governed by mixture parameter $\theta$, inferred from the data.\footnote{This is similar in spirit to Hurdle Models of epidemiological data, where the observed count of zeros is often substantially greater than one would expect from standard models, such as the Poisson (e.g. adverse events to vaccines)\cite{hurdleModels}}
-Thus, $\theta$ is the potential of a property to be present in a kind and $\gamma$ is the mean prevalence of the property among the kinds with the potential to have it. The prevalences given by participants would then be distributed as:
-\ndg{i think we need only the second equation, but write as probability. and x should be d}
-\mht{is this a "written as a probability"?}
-\begin{align*}
-%	d_{observed} & \sim \begin{cases}
-%				 \text{Beta}(\gamma, \xi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
-%				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
-%				\end{cases} \\
-%	 d_{observed} &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
-	 P(d) = \theta \cdot \text{Beta}(d \mid \gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
-\end{align*}
+Thus, $\theta$ is the potential of a property to be present in a kind and $\gamma$ is the mean prevalence of the property among the kinds with the potential to have it. The prevalences given by participants would then be distributed as: $P(d) = \theta \cdot \text{Beta}(d \mid \gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} $. 
+%\ndg{i think we need only the second equation, but write as probability. and x should be d}
+%\mht{is this a "written as a probability"?}
+%\begin{align*}
+%%	d_{observed} & \sim \begin{cases}
+%%				 \text{Beta}(\gamma, \xi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
+%%				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
+%%				\end{cases} \\
+%%	 d_{observed} &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
+%	 P(d) = \theta \cdot \text{Beta}(d \mid \gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
+%\end{align*}
 We put uninformative priors over all the parameters, $\theta \sim \text{Uniform}(0,1)$, 
 $\gamma \sim \text{Uniform}(0,1)$, $\xi \sim \text{Uniform}(0, 50)$, and implemented this Bayesian statistical models using the probabilisitic programming language WebPPL \cite{dippl}. This statistical model reproduces the prior elicitation data with a low reconstruction error ($r^2 = 0.94$; see {\it SI Fig. 1}), strongly supporting the assumption of a structured prior. 
 
@@ -598,27 +598,27 @@ We used the same structured, statistical model from Expt.~1a.
 The only difference from Expt.~1a. is that our experimental data comes from inquiring about the parameters of the priors directly, as opposed to asking about particular samples (i.e. particular kinds) as was done in Expt.~1a. 
 %For Expt.~2a, participants are asked questions directly targeting $\theta$ and $\gamma$ in the above model (see {\it Expt. 2a}).
 We assume these two measurements follow Beta distributions ($d_{potential} \sim \text{Beta}(\gamma_{1}, \xi_{1})$; $
-d_{expected} \sim \text{Beta}(\gamma_{2}, \xi_{2})$), and construct single prevalence distributions, $P(x)$, by sampling from the posterior predictive distribution of prevalence as we did before.
-We used the same priors as in Expt.~1a.
+d_{expected} \sim \text{Beta}(\gamma_{2}, \xi_{2})$), and construct single prevalence distributions, $P(x)$, by sampling from the posterior predictive distribution of prevalence as we did before: $P(x) = \int [ \theta\cdot \text{Beta} (x \mid \gamma_{2}, \xi_{2}) + (1 -  \theta) \cdot \delta_{x=0} ] \cdot \text{Beta}(\theta \mid \gamma_{1}, \xi_{1}) d\theta$.
+We used the same parameter priors as in Expt.~1a.
 %
 %\begin{minipage}{0.5 \textwidth} \small
-\begin{align*}
-%\end{align*}
-%%\end{minipage}
+%\begin{align*}
+%%\end{align*}
+%%%\end{minipage}
+%%%
+%%To %\begin{minipage}{0.5 \textwidth} \small
+%%%        \begin{align*}
+%%\theta & \sim \text{Beta}(\gamma_{potential}, \xi_{potential}) \\ 
+%P(x) = [ \theta\cdot \text{Beta} (x \mid \gamma_{2}, \xi_{2}) + (1 -  \theta) \cdot \delta_{x=0} ] \cdot \text{Beta}(\theta \mid \gamma_{1}, \xi_{1})
 %%
-%To %\begin{minipage}{0.5 \textwidth} \small
-%%        \begin{align*}
-%\theta & \sim \text{Beta}(\gamma_{potential}, \xi_{potential}) \\ 
-P(x) = [ \theta\cdot \text{Beta} (x \mid \gamma_{2}, \xi_{2}) + (1 -  \theta) \cdot \delta_{x=0} ] \cdot \text{Beta}(\theta \mid \gamma_{1}, \xi_{1})
+%%\begin{cases} 
+%%		\text{Beta}(\gamma_{expected}, \xi_{expected}) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
+%%				\delta_{x=0} &\mbox{if } \text{Bernoulli}(\theta) = \textsc{f} \\
+%%		\end{cases} \\
+%\end{align*}
+%%\ndg{this eqn is kind of ugly. simplify in coordination with the earlier one?}
 %
-%\begin{cases} 
-%		\text{Beta}(\gamma_{expected}, \xi_{expected}) &\mbox{if } \text{Bernoulli}(\theta) = \textsc{t} \\
-%				\delta_{x=0} &\mbox{if } \text{Bernoulli}(\theta) = \textsc{f} \\
-%		\end{cases} \\
-\end{align*}
-%\ndg{this eqn is kind of ugly. simplify in coordination with the earlier one?}
-
-%	 P(d_{observed} ) = \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
+%%	 P(d_{observed} ) = \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
 
 
 Figure \ref{fig:prior2} shows a summary of the elicited priors, in terms of the diversity of $d_{potential}$ and $d_{expected}$.
@@ -685,18 +685,24 @@ Participants completed in randomized order 25 trials: 5 for each of the biologic
 The pragmatic listener $L_1$ model predicts the prevalence implied by a  generic utterance based on the prior distribution of prevalence (measured in Expt.~2a) and the fact a speaker chose to say a generic sentence.
 %The model predicts 
 We integrate out the single free parameter the using the same Bayesian model analysis as before (details in SI Section D).
-The pragmatic listener model predictions closely align with the human judgments of prevalence for novel generics ($r^2(40)=0.89$, MSE=0.006), displaying sensitivity of interpretation to details of the property (Figure \ref{fig:impliedByItem}). 
+We first explore two important trends predicted by the pragmatic listener model.
+In Figure \ref{fig:exp2b}, solid lines, we see the implied prevalence judgments are predicted (at the property class level) to vary linearly with the \emph{a proiri} expected prevalence. 
+A mixed-effects linear model with random by-participant effects of intercept and slope indeed reveals the more widespread a property is expected to be \emph{a priori}, the stronger the implications of a generic statement ($\beta = 0.57; SE = 0.08; t(39) = 7.12; p < 0.001$).
+The prevalence implied by a generic is also predicted to be greater than the \emph{a proiri} expected prevalence.
+A mixed-effects linear model with random by-participant effects of intercept and random by-item effects of intercept and condition reveals implied prevalence after hearing a generic is significantly greater than the \emph{a priori} prevalence ($\beta = 0.17; SE = 0.018; t(39) = 9.7; d = 0.64; p < 0.001$).
+%The generic thus does more than simply signal the category has the property; it carries with it the communicative weight of a speech-act, and implies a prevalence even higher than one would infer just by generalizing based on instances.
+Over all, the pragmatic listener model predictions closely align with the human judgments of prevalence for novel generics ($r^2(40)=0.89$, MSE=0.006), displaying sensitivity of interpretation to details of the property (Figure \ref{fig:impliedByItem}). 
 
 %\mht{I'm a little unsure what the order of this should be right. Right now: linear effect of a priori prevalence; implied prevalence > a priori prevalence; pragmatics model predictions}
 
-\ndg{i don't really understand this paragraph...}
-To understand more fully how the model makes these predictions, we performed two exploratory analyses to test whether or not:
-(1) implied prevalence judgments varied linearly with the \emph{a proiri} expected prevalence;
-and (2) the prevalence implied by a generic is greater than the \emph{a proiri} expected prevalence.
-Both exploratory analysis returned confirmatory evidence. 
-A mixed-effects linear model with random by-participant effects of intercept and slope reveals the more widespread a property is expected to be \emph{a priori}, the stronger the implications of a generic statement ($\beta = 0.57; SE = 0.08; t(39) = 7.12; p < 0.001$, providing evidence for (1).
-A mixed-effects linear model with random by-participant effects of intercept and random by-item effects of intercept and condition reveals implied prevalence after hearing a generic is significantly greater than the \emph{a priori} prevalence ($\beta = 0.17; SE = 0.018; t(39) = 9.7; d = 0.64; p < 0.001$), providing evidence for (2).
-The generic does more than simply signal the category has the property; it carries with it the communicative weight of a speech-act, and implies a prevalence even higher than one would infer just by generalizing based on instances.
+%\ndg{i don't really understand this paragraph...}
+%To understand more fully how the model makes these predictions, we performed two exploratory analyses to test whether or not:
+%(1) implied prevalence judgments varied linearly with the \emph{a proiri} expected prevalence;
+%and (2) the prevalence implied by a generic is greater than the \emph{a proiri} expected prevalence.
+%Both exploratory analysis returned confirmatory evidence. 
+%A mixed-effects linear model with random by-participant effects of intercept and slope reveals the more widespread a property is expected to be \emph{a priori}, the stronger the implications of a generic statement ($\beta = 0.57; SE = 0.08; t(39) = 7.12; p < 0.001$, providing evidence for (1).
+%A mixed-effects linear model with random by-participant effects of intercept and random by-item effects of intercept and condition reveals implied prevalence after hearing a generic is significantly greater than the \emph{a priori} prevalence ($\beta = 0.17; SE = 0.018; t(39) = 9.7; d = 0.64; p < 0.001$), providing evidence for (2).
+%The generic does more than simply signal the category has the property; it carries with it the communicative weight of a speech-act, and implies a prevalence even higher than one would infer just by generalizing based on instances.
 
 
 % We subjected the human prevalence judgments to a mixed-effects 
