@@ -4,7 +4,7 @@
 
 \usepackage{setspace}
 %\doublespacing
-%\linespread{1.25}
+\linespread{1.25}
 \usepackage{geometry}
 
 \geometry{letterpaper, margin=1.3in}
@@ -65,11 +65,20 @@
   Department of Psychology, Stanford University}
   
  \date{}
-
 \begin{document}
 
 \maketitle
+\textsc{running head: pragmatic theory of generic language}
 
+\vspace{40 mm}
+\textsc{corresponding author \\
+Michael Henry Tessler \\
+Stanford University, Department of Psychology \\
+450 Serra Mall, Bldg. 420, Rm. 316 \\
+Stanford, CA 94305 \\
+mtessler@stanford.edu \\
+757 - 561- 7071}
+\newpage
 %\contributor{Submitted to Proceedings of the National Academy of Sciences
 %of the United States of America}
 
@@ -121,6 +130,7 @@ This theory provides the mathematical bridge between the words we use and the co
 }
 \end{abstract}
 
+\newpage
 %\keywords{generic language | semantics | pragmatics | categories}
 
 %\abbreviations{SAM, self-assembled monolayer; OTS, octadecyltrichlorosilane}
@@ -315,7 +325,7 @@ Thus, $\theta$ is the potential of a property to be present in a kind and $\gamm
 %	 P(d) = \theta \cdot \text{Beta}(d \mid \gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
 %\end{align*}
 We put uninformative priors over all the parameters, $\theta \sim \text{Uniform}(0,1)$, 
-$\gamma \sim \text{Uniform}(0,1)$, $\xi \sim \text{Uniform}(0, 50)$, and implemented this Bayesian statistical models using the probabilisitic programming language WebPPL \cite{dippl}. This statistical model reproduces the prior elicitation data with a low reconstruction error ($r^2 = 0.94$; see {\it SI Fig. 1}), strongly supporting the assumption of a structured prior. 
+$\gamma \sim \text{Uniform}(0,1)$, $\xi \sim \text{Uniform}(0, 50)$, and implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. This statistical model reproduces the prior elicitation data with a low reconstruction error ($r^2 = 0.94$; see {\it SI Fig. 1}), strongly supporting the assumption of a structured prior. 
 
 %
 %We assume that \emph{when the property is possible}, its prevalence is distributed according to a Beta distribution with mean $\gamma$ and concentration $\xi$: 
@@ -942,6 +952,12 @@ The theory presented here gives one explanation of how we do so, providing a com
 %\end{materials}
 %
 %\begin{acknowledgments}
+
+\subsubsection*{Author contributions}
+M. H. Tessler and N. D. Goodman developed theory and the study concept and design.
+M. H. Tessler performed research and analyzed data.
+M. H. Tessler and N. D. Goodman wrote the paper.
+
 \subsubsection*{Acknowledgements}
 
 This work was supported in part by National Science Foundation Graduate Research Fellowship DGE-114747 (to M.H.T.),

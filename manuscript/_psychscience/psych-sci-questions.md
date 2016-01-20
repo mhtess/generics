@@ -7,7 +7,7 @@ Usage of generic language can be explained by the pragmatics of communication. O
 
 2. Why is that knowledge important for psychology?
 
-Understanding the world requires making generalizations about categories. Generic language is used to convey these generalizations: "Dogs bark", "Rats carry diseases", and "Politicians make promises". These simple sentences are understood by 2 year-olds, yet we provide the first quantitative formal explanation for what makes these sentences true and how these sentences are interpreted. (53 words)
+Understanding the world requires making generalizations about categories. Generic language is used to convey these generalizations: "Dogs bark", "Rats carry diseases", and "Politicians make promises". These simple sentences are understood by 2-year-olds, yet we provide the first quantitative formal explanation for what makes these sentences true and how these sentences are interpreted. (53 words)
 
 3. How are the claims made in the article justified by the methods used?
 
