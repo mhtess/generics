@@ -1,13 +1,14 @@
 
 
-\documentclass[10pt,letterpaper]{article}
+\documentclass[12pt,letterpaper]{article}
 
 \usepackage{setspace}
 %\doublespacing
-\linespread{1.25}
+%\linespread{1.25}
+\linespread{2}
 \usepackage{geometry}
 
-\geometry{letterpaper, margin=1.3in}
+\geometry{letterpaper, margin=1in}
 %\usepackage{times}
 \usepackage{pslatex}
 \usepackage{apacite}
@@ -23,6 +24,12 @@
 \usepackage{wrapfig}
 \usepackage{lipsum}
 
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\lhead{\textsc{pragmatic theory of generic language}}
 
 \graphicspath{{../figures/}}
 
@@ -68,10 +75,13 @@
 \begin{document}
 
 \maketitle
-\textsc{running head: pragmatic theory of generic language}
 
-\vspace{40 mm}
-\textsc{corresponding author \\
+%A Pragmatic Theory of Generic Language 
+
+Running head: \textsc{pragmatic theory of generic language}
+
+\vspace{50 mm}
+\textsc{\\corresponding author \\
 Michael Henry Tessler \\
 Stanford University, Department of Psychology \\
 450 Serra Mall, Bldg. 420, Rm. 316 \\
@@ -172,7 +182,7 @@ How can generics have such flexible truth conditions while simultaneously carryi
 In this paper we resolve these philosophical and empirical puzzles using a mathematical model that understands generic language by pragmatic inference about the degree of prevalence required to assert the generic.  
 We show that this model predicts the patterns in both human endorsement of familiar generic sentences and interpretation of novel generic sentences. 
 
-\section*{Computational method: The semantics and pragmatics of generic language}
+\subsection*{Computational method: The semantics and pragmatics of generic language}
 
 
 Generics express a relation between a kind (e.g. \textsc{robins}) and a property (e.g. \textsc{lays eggs}). 
@@ -253,7 +263,7 @@ We can now imagine a speaker $S_2$ who reasons about this type of listener:
 %$S_2$ knows some prevalence $x$ and is trying to decide whether or not to produce a generic to describe it to $L_1$.
 
 \begin{equation} 
-P_{S_{2}}(u \mid x) \propto  \int_{\theta} P_{L_{1}}(x , \tau \mid u) % =  P_{L_{1}}(x \mid u)
+P_{S_{2}}(u \mid x) \propto  \int_{\tau} P_{L_{1}}(x , \tau \mid u) % =  P_{L_{1}}(x \mid u)
 \label{eq:S2}
 \end{equation}
 
@@ -1224,7 +1234,7 @@ Office of Naval Research Grant N00014-13-1-0788 (to N.D.G.)
 %}
 %  \label{fig:exp2b}
 %\end{figure*}
-
+\newpage
 \bibliographystyle{apacite}
 
 \setlength{\bibleftmargin}{.125in}
