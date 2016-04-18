@@ -206,11 +206,41 @@ However, no fixed value of the threshold, $\tau$, would allow for the extreme fl
 
 
 We suggest that this threshold is not a fixed property of the language, but is established in context through communicative principles.
-This inference depends on background knowledge in the forms of what listeners know about properties and categories, but is otherwise a general mechanism of language not specific to interpreting generic statements.
-We formalize this inference in the Rational Speech Acts (RSA) theory---a probabilistic model of language understanding---as recursive Bayesian inference between speaker and listener \cite{Frank2012,Goodman2013}.
+This inference depends on background knowledge about properties and categories, but is otherwise a general mechanism of language not specific to interpreting generic statements.
+We formalize this inference in the Rational Speech-Acts (RSA) theory---a probabilistic model of language understanding---as recursive Bayesian inference between speaker and listener \cite{Frank2012,Goodman2013}.
 We will describe the basic RSA framework before articulating the full pragmatic theory of generic meaning.
 
 \subsubsection*{The Rational Speech-Acts framework}
+
+Language understanding can be viewed as a special case of social cognition instantiated in a Bayesian model \cite{Goodman2013}. 
+In this view, an utterance is \emph{interpreted} by a listener consulting her intuitive theory of speech \emph{production}. This intuitive theory of a speaker has the assumption that speakers choose utterances approximately optimally on the basis of certain goals, specifically conveying information to the listener. 
+A listener then ``inverts'' her model of a speaker and, combined with other relevant world knowledge, arrives at a pragmatic interpretation of an utterance. 
+This model is posed at the computational or rational level \cite{Marr1980, Anderson1991}. 
+It is not intended as an explicit model of the \emph{process} of language comprehension; rather, it is a computational model of pragmatic competence under the cooperative principle \cite{Grice1975}. 
+
+In simplest form, a pragmatic listener ($L$) is interested in learning about the world $x$ upon hearing an utterance $u$. 
+$$
+P_{L}(x  \mid u) \propto P_{S}(u \mid x) \cdot P(x) \label{eq:RSA_L}
+$$
+She does this by integrating her prior beliefs about the world $P(x)$ with the likelihood that a speaker ($S_1$) would have produced the utterance $u$ given a world $x$: $P_{S}(u \mid x)$.
+This production model $P_{S}$ is defined recursively with the listener model: The speaker produces the utterance proportionally to the probability that the listener would infer the world $x$ given the utterance $u$: $P_{L}(x  \mid u)$, jointly with the prior probability of the utterance $P(u)$.
+$$
+P_{S}(u \mid x) \propto P_{L}(x  \mid u) \cdot P(u) \label{eq:RSA_S}
+$$
+This recursive model needs a base case in order to actually make predictions. RSA relies upon the notion of a literal semantics or a context-invariant mapping from utterances and worlds to truth values:  $\denote{u}: X \rightarrow \text{Boolean}$. From this, we can construct a base case of a \emph{literal listener}, who interprets utterances with respect to their literal meaning.
+%
+$$
+P_{L_{literal}}(x \mid u ) \propto {\delta_{\denote{u}(x)} P(x)} \label{eq:RSA_L0}
+$$
+%
+Here, $\delta_{\denote{u}(x)}$ is the Kronecker delta function returning $1$ for states $x$ compatible with utterance $u$, and $0$ otherwise.
+In principle, the speaker--listener recursion could grow for ever. In practice, stable pragmatic phenomena can be observed with just one level of recursion \red{(CITE something?)}. 
+
+
+
+
+
+
 
 \begin{itemize}
 \item Scalar implicature example
