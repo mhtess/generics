@@ -212,6 +212,8 @@ We will describe the basic RSA framework before articulating the full pragmatic 
 
 \subsubsection*{The Rational Speech-Acts framework}
 
+The goal of this section is introduce the reader to the Rational Speech-Acts framework and highlight relevant applications when appropriately.
+
 Language understanding can be viewed as a special case of social cognition instantiated in a Bayesian model \cite{Goodman2013}. 
 In this view, an utterance is \emph{interpreted} by a listener consulting her intuitive theory of speech \emph{production}. This intuitive theory of a speaker has the assumption that speakers choose utterances approximately optimally on the basis of certain goals, specifically conveying information to the listener. 
 A listener then ``inverts'' her model of a speaker and, combined with other relevant world knowledge, arrives at a pragmatic interpretation of an utterance. 
@@ -222,18 +224,26 @@ In simplest form, a pragmatic listener ($L$) is interested in learning about the
 $$
 P_{L}(x  \mid u) \propto P_{S}(u \mid x) \cdot P(x) \label{eq:RSA_L}
 $$
-She does this by integrating her prior beliefs about the world $P(x)$ with the likelihood that a speaker ($S_1$) would have produced the utterance $u$ given a world $x$: $P_{S}(u \mid x)$.
-This production model $P_{S}$ is defined recursively with the listener model: The speaker produces the utterance proportionally to the probability that the listener would infer the world $x$ given the utterance $u$: $P_{L}(x  \mid u)$, jointly with the prior probability of the utterance $P(u)$.
+She does this by integrating her prior beliefs about the world $P(x)$ with the likelihood that a speaker ($S$) would have produced the utterance $u$ given a world $x$: $P_{S}(u \mid x)$.
+Prior beliefs about the world $P(x)$ capture relevant world-knowledge, which is important for deriving context-specific interpretations \red{(cite Degen, Tessler, Goodman cogsci?)}.
+The production model $P_{S}$ is defined recursively with the listener model: The speaker produces the utterance proportionally to the probability that the listener would infer the world $x$ given the utterance $u$: $P_{L}(x  \mid u)$, jointly with the prior probability of the utterance $P(u)$.
 $$
 P_{S}(u \mid x) \propto P_{L}(x  \mid u) \cdot P(u) \label{eq:RSA_S}
 $$
-This recursive model needs a base case in order to actually make predictions. RSA relies upon the notion of a literal semantics or a context-invariant mapping from utterances and worlds to truth values:  $\denote{u}: X \rightarrow \text{Boolean}$. From this, we can construct a base case of a \emph{literal listener}, who interprets utterances with respect to their literal meaning.
+The prior probability of an utterance $P(u)$ can include information about an utterance's cost or complexity as well as the alternative utterances available to a speaker. 
+Manipulating an utterance's cost can be used to derive Manner implicatures \red{(cite Bergen?)}, though in many applications utterance cost is kept constant. 
+The specification of alternatives is an area of ongoing research \red{(cite something?, Franke cogsci 2015?, Peloquin and Frank cogsci 2016?)} and is currently determined by the modeler for the problem at hand.
+
+This recursive model needs a base case in order to make predictions. RSA relies upon the notion of a literal semantics or a context-invariant mapping from utterances and worlds to truth values:  $\denote{u}: X \rightarrow \text{Boolean}$. From this, we can construct a base case of a \emph{literal listener}, who interprets utterances with respect to their literal meaning.
 %
 $$
 P_{L_{literal}}(x \mid u ) \propto {\delta_{\denote{u}(x)} P(x)} \label{eq:RSA_L0}
 $$
+Note that this model is the same as $P_L$ except for the likelihood function. 
 %
 Here, $\delta_{\denote{u}(x)}$ is the Kronecker delta function returning $1$ for states $x$ compatible with utterance $u$, and $0$ otherwise.
+This recursion formalizes the Gricean maxim to be information: The speaker produces utterances not with respect to their literal meaning, but with respect to how a naive listener would interpret them, given her prior beliefs and the literal meaning.
+This base case also captures the Gricean maxim to be truthful: the speaker who reasons about the literal listener has the goal of communicating the state $x$ given an utterance $u$ and its literal meaning $\denote{u}$. 
 In principle, the speaker--listener recursion could grow for ever. In practice, stable pragmatic phenomena can be observed with just one level of recursion \red{(CITE something?)}. 
 
 
