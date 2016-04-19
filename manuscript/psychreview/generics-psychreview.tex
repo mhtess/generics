@@ -212,10 +212,10 @@ We will describe the basic RSA framework before articulating the full pragmatic 
 
 \subsubsection*{The Rational Speech-Acts framework}
 
-The goal of this section is introduce the reader to the Rational Speech-Acts framework and highlight relevant applications when appropriately.
+The goal of this section is introduce the reader to the Rational Speech-Acts framework and highlight relevant applications when appropriate.
 
 Language understanding can be viewed as a special case of social cognition instantiated in a Bayesian model \cite{Goodman2013}. 
-In this view, an utterance is \emph{interpreted} by a listener consulting her intuitive theory of speech \emph{production}. This intuitive theory of a speaker has the assumption that speakers choose utterances approximately optimally on the basis of certain goals, specifically conveying information to the listener. 
+In this view, an utterance is \emph{interpreted} by a listener consulting her intuitive theory of speech \emph{production}, i.e. her theory of a speaker. This intuitive theory of a speaker has the assumption that speakers choose utterances approximately optimally on the basis of certain goals, specifically conveying information to the listener. 
 A listener then ``inverts'' her model of a speaker and, combined with other relevant world knowledge, arrives at a pragmatic interpretation of an utterance. 
 This model is posed at the computational or rational level \cite{Marr1980, Anderson1991}. 
 It is not intended as an explicit model of the \emph{process} of language comprehension; rather, it is a computational model of pragmatic competence under the cooperative principle \cite{Grice1975}. 
@@ -226,31 +226,35 @@ P_{L}(x  \mid u) \propto P_{S}(u \mid x) \cdot P(x) \label{eq:RSA_L}
 $$
 She does this by integrating her prior beliefs about the world $P(x)$ with the likelihood that a speaker ($S$) would have produced the utterance $u$ given a world $x$: $P_{S}(u \mid x)$.
 Prior beliefs about the world $P(x)$ capture relevant world-knowledge, which is important for deriving context-specific interpretations \red{(cite Degen, Tessler, Goodman cogsci?)}.
-The production model $P_{S}$ is defined recursively with the listener model: The speaker produces the utterance proportionally to the probability that the listener would infer the world $x$ given the utterance $u$: $P_{L}(x  \mid u)$, jointly with the prior probability of the utterance $P(u)$.
+The production model $P_{S}$ is defined recursively with the listener model: The speaker produces the utterance proportionally \red{(softmax?)} to the probability that the listener would infer the world $x$ given the utterance $u$: $P_{L}(x  \mid u)$, jointly with the prior probability of the utterance $P(u)$.
 $$
 P_{S}(u \mid x) \propto P_{L}(x  \mid u) \cdot P(u) \label{eq:RSA_S}
 $$
 The prior probability of an utterance $P(u)$ can include information about an utterance's cost or complexity as well as the alternative utterances available to a speaker. 
-Manipulating an utterance's cost can be used to derive Manner implicatures \red{(cite Bergen?)}, though in many applications utterance cost is kept constant. 
+Manipulating an utterance's cost can be used to derive Manner implicatures \red{(cite Bergen?)}, though in many applications utterance cost is kept uniform across alternative utterances. 
 The specification of alternatives is an area of ongoing research \red{(cite something?, Franke cogsci 2015?, Peloquin and Frank cogsci 2016?)} and is currently determined by the modeler for the problem at hand.
 
-This recursive model needs a base case in order to make predictions. RSA relies upon the notion of a literal semantics or a context-invariant mapping from utterances and worlds to truth values:  $\denote{u}: X \rightarrow \text{Boolean}$. From this, we can construct a base case of a \emph{literal listener}, who interprets utterances with respect to their literal meaning.
+The recursive speaker--listener model requires a base case in order to make predictions. 
+RSA relies upon the notion of a literal semantics or a context-invariant mapping from utterances and worlds to truth values:  $\denote{u}: X \rightarrow \text{Boolean}$. 
+From this, we can construct a base case of a \emph{literal listener}, who interprets utterances with respect to their literal meaning.
 %
 $$
 P_{L_{literal}}(x \mid u ) \propto {\delta_{\denote{u}(x)} P(x)} \label{eq:RSA_L0}
 $$
 Note that this model is the same as $P_L$ except for the likelihood function. 
 %
-Here, $\delta_{\denote{u}(x)}$ is the Kronecker delta function returning $1$ for states $x$ compatible with utterance $u$, and $0$ otherwise.
-This recursion formalizes the Gricean maxim to be information: The speaker produces utterances not with respect to their literal meaning, but with respect to how a naive listener would interpret them, given her prior beliefs and the literal meaning.
+Here, the likelihood $\delta_{\denote{u}(x)}$ is the Kronecker delta function returning $1$ for states $x$ compatible with utterance $u$, and $0$ otherwise.
+This recursion formalizes the Gricean maxim to be information: The speaker produces utterances not with respect to their literal meaning, but with respect to how a naive listener would interpret them, given the literal meaning and her prior beliefs.
 This base case also captures the Gricean maxim to be truthful: the speaker who reasons about the literal listener has the goal of communicating the state $x$ given an utterance $u$ and its literal meaning $\denote{u}$. 
 In principle, the speaker--listener recursion could grow for ever. In practice, stable pragmatic phenomena can be observed with just one level of recursion \red{(CITE something?)}. 
 
-
-
-
-
-
+\mht{This paragraph is pretty abstract, and may be better suited for the discussion}
+This general framework has been applied to host of language and reasoning phenomena including understanding scalar implicature \cite{Goodman2013, Degen2015}, communication in a noisy channel \cite{Bergen2015}, question--answer behavior \cite{Hawkins2015}, syllogistic reasoning \cite{Tessler2014}, and figurative language use like hyperbole \cite{Kao2014}, metaphor \cite{Kao2014b}, and irony \cite{Kao2015}.
+In addition, RSA has been used to understand the very meaning of words in domains where meanings are hard to specify like vague adjectives \cite{Lassiter2015}.
+These extensions often take the approach of introducing additional uncertainty for the listener. In addition to the listener being uncertain about the state of the world ($x$, above), she may have uncertainty about what is common ground, what is the question under discussion, and even what is the very meaning of the word. These kinds of uncertainty can be plausibly posited both at the pragmatic level ($L$) and/or at the base-case, the literal listener. 
+However, empirical studies show that the richness of human pragmatic inference often requires this uncertainty only at the pragmatic level. 
+This is because human reasoning about these kinds of uncertainty involve incorporating the Gricean pressure to be informative, which is only captured at levels of recursion beyond the base case.
+The fact that pragmatic reasoning can be used for semantic inference (i.e. for learning the meaning of words) is suggestive that the difference between semantics and pragmatics is at least a little bit fuzzy.
 
 \begin{itemize}
 \item Scalar implicature example
