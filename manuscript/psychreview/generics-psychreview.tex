@@ -277,13 +277,33 @@ The fact that pragmatic reasoning can be used for semantic inference (i.e. for l
 
 \subsubsection*{The pragmatic theory of generic meaning}
 
-
 We follow the treatment of RSA applied to vague adjectives (e.g.~\emph{tall}), using an underspecified threshold criterion \cite{Lassiter2013,Lassiter2015}.
 
-We imagine a hypothetical, pragmatic listener ($L_1$) concerned with learning the prevalence of a certain property in a certain category, $x=P(F \mid K)$, who reasons about an informative speaker ($S_1$), who in turn reasons about a literal listener ($L_0$):
+We imagine a hypothetical, pragmatic listener ($L_1$) concerned with learning the prevalence of a certain property in a certain category, $x=P(F \mid K)$, who reasons about an informative speaker ($S_1$)
+
 \begin{eqnarray}
-P_{L_{1}}(x , \tau \mid u) &\propto& P_{S_{1}}(u \mid x, \tau) \cdot P(x) \cdot P(\tau) \label{eq:L1}\\
-P_{S_{1}}(u \mid x, \tau) &\propto&  {P_{L_{0}}(x \mid u, \tau)}^{\lambda} \label{eq:S1}\\
+P_{L_{1}}(x , \tau \mid u) &\propto& P_{S_{1}}(u \mid x, \tau) \cdot P(x) \cdot P(\tau) \label{eq:L1}
+\end{eqnarray}
+
+The pragmatic listener $L_1$ (Eq.~\ref{eq:L1}) is trying to resolve how widespread F is within K (i.e.~$x = P(F\mid K) \in [0, 1]$) upon hearing a generic utterance $u$. 
+The meaning of the generic utterance for $L_1$ is a simple threshold on prevalence: $\denote{\text{K F}}(x, \tau)=x>\tau$, but we leave the semantic variable $\tau$ (i.e. the threshold) underspecified in the lexicon. 
+That is, the listener has uncertainty about the threshold, expressed in a prior distribution over possible thresholds $P(\tau)$.
+In principle, thresholds could be learned over time for different contexts, but here we assume no informative knowledge about the threshold: $\tau \sim \text{Uniform([0,1])}$.
+To resolve an appropriate meaning then, the listener must use her knowledge of what she knows about property F in general---what prevalence $x$ is F likely to be present in, expressed in a prior distribution $P(x)$ over prevalence of F. 
+The listener also uses her intuitive theory of the speaker $S_{1}$ as an informed and helpful interlocutor to resolve the meaning.
+\begin{eqnarray}
+P_{S_{1}}(u \mid x, \tau) &\propto&  {P_{L_{0}}(x \mid u, \tau)}^{\lambda} \label{eq:S1}
+\end{eqnarray}
+
+%$L_1$ assumes  expresses something about how common the property is 
+%(she knows it is a threshold on prevalence), 
+%but doesn't know exactly what it conveys (she has uncertainty about the threshold.
+She believes the speaker $S_1$ knows what $\tau$ is and was trying to be informative about what he knows (here, the prevalence $x$).
+Like in other RSA models, we assume the speaker $S_1$ is a soft-max optimal speaker: the level of speaker optimality is governed by $\lambda$.
+$S_1$ calculates what is informative with respect to an idealized literal listener ($L_{0}$, our base case).
+The literal listener has access to the threshold $\tau$, and simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
+
+\begin{eqnarray}
 P_{L_{0}}(x \mid u, \tau) &\propto& {\delta_{\denote{u}(x, \tau)} P(x)} \label{eq:L0}
 \end{eqnarray}
 
@@ -294,25 +314,32 @@ P_{L_{0}}(x \mid u, \tau) &\propto& {\delta_{\denote{u}(x, \tau)} P(x)} \label{e
 %All results reported are similar when the alternative utterance is stipulated to be the negation---\emph{It is not the case that robins lay eggs.}---or the generic of the negation---\emph{Robins do not lay eggs.}---as opposed to the \emph{null} utterance.}.
 
  %generic utterance (\emph{Ks have F.}) from the speaker $S_{1}$ (Eq. \ref{eq:S1}). 
-The pragmatic listener $L_1$ (Eq.~\ref{eq:L1}) is trying to resolve how widespread F is within K (i.e.~$x = P(F\mid K) \in [0, 1]$) upon hearing a generic utterance $u$. 
-The meaning of the generic utterance for $L_1$ is a simple threshold on prevalence: $\denote{\text{K F}}(x, \tau)=x>\tau$, but we leave the semantic variable $\tau$ (i.e. the threshold) underspecified in the lexicon. 
-That is, the listener has uncertainty about the threshold, expressed in a prior distribution over possible thresholds $P(\tau)$.
-In principle, thresholds could be learned over time for different contexts, but here we assume no informative knowledge about the threshold: $\tau \sim \text{Uniform([0,1])}$.
-To resolve an appropriate meaning then, the listener must use her knowledge of what she knows about property F in general---what prevalence $x$ is F likely to be present in, expressed in a prior distribution $P(x)$ over prevalence of F. 
-The listener also uses her intuitive theory of the speaker $S_{1}$ as an informed and helpful interlocutor (Eq. \ref{eq:S1}) to resolve the meaning.
-%$L_1$ assumes  expresses something about how common the property is 
-%(she knows it is a threshold on prevalence), 
-%but doesn't know exactly what it conveys (she has uncertainty about the threshold.
-She believes the speaker $S_1$ knows what $\tau$ is and was trying to be informative about what he knows (here, the prevalence $x$).
-$S_1$ calculates what is informative with respect to an idealized literal listener ($L_{0}$, Eq. \ref{eq:L0}).
-The literal listener has access to the threshold $\tau$, and simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
-
 
 Pragmatic interpretation of language assumes the production of an utterance was a deliberate decision on behalf of the speaker who could have said other things but didn't. 
 In order to model the interpretation of a generic utterances out of context, we assume the speaker had the options of uttering the generic utterance or staying quiet---the \emph{null utterance} alternative carries no information (i.e.~$\denote{null}(x, \tau)=T$) and produces a posterior distribution in the listener identical with the prior.\footnote{
 This alternative can be realized in at least two other ways: the speaker could have said the negation of the utterance (i.e. \emph{It is not the case that robins lay eggs.}) or the negative generic (i.e. \emph{Robins do not lay eggs.}). All results reported are similar for these two alternatives, and we use the alternative of the \emph{null} utterance for simplicity of demonstration.}
 We choose the \emph{null} utterance as the alternative in order to give the generic its communicative force; the option of staying silent makes the generic utterance into a \emph{speech-act}.
+In the next section, we will show example interpretations of generic utterances.
+
+The pragmatic listener $L_1$ (Eq.~\ref{eq:L1}) is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
+We can now imagine a speaker $S_2$ who reasons about this kind of listener: 
+%$S_2$ knows some prevalence $x$ and is trying to decide whether or not to produce a generic to describe it to $L_1$.
+
+\begin{equation} 
+P_{S_{2}}(u \mid x) \propto  \int_{\tau} P_{L_{1}}(x , \tau \mid u) % =  P_{L_{1}}(x \mid u)
+\label{eq:S2}
+\end{equation}
+
+Speaker $S_2$ is a model of felicity or truth judgments \cite{Degen2014}.
+The speaker considers the thought-processes of listener $L_1$ (Eq.~\ref{eq:L1}) and decides if the generic is a good (albeit, vague) way to describe the  prevalence $x$. 
+$S_2$'s decision is with respect to the alternative of saying nothing: He will choose to produce the generic when the true prevalence $x$ is more likely under $L_1$'s posterior than under her prior. 
+Critically, speaker $S_{2}$ doesn't actually know what the generic means (i.e. doesn't have access to the threshold $\tau$), but knows that $L_{1}$ will have to consider it, and integrates over the likely values she'll consider.
+Hence, $S_2$ is a mapping from some subjective prevalence $x$ to the probability of endorsing a generic utterance. A fully specified version of the generics model, as well as the structured prior model (described below), can be found at \url{http://forestdb.org/models/generics.html}
+%We use $S_{2}$ (Eq.~\ref{eq:S2}) to model
+
 %
+
+\mht{This seems anomalous here...}
 \red{
 Throughout this paper we will treat the bare plural construction as generic utterances with a threshold semantics: $\denote{\text{K F}}(x, \tau)=x>\tau$.
 The bare plural construction may additionally be ambiguous between a generic interpretation and a specific plural predication (consider \emph{dogs are on my lawn} compared to \emph{dogs have fur}), and disambiguation itself may be a pragmatic process \cite{Cimpian2008}. 
@@ -325,27 +352,7 @@ The prior and likelihood distributions of the model are fully specified by Eqs.~
 We will later measure this, but for now we show some schematics.
 %We illustrate the model of generic interpretation using a number of 
 
-Example interpretation distributions for $P_{L_{1}}(x , \tau \mid u)$ upon hearing a generic utterance can be seen in Figure \ref{fig:priors1a}. 
-Also shown are the corresponding prior beliefs, $P(x)$, about the prevalence of the property (which are also the posteriors upon hearing the null utterance).
-We see that the interpretation of the generic depends a great deal on the shape of the prior.
-When the prior is very left-skewed as in the case of \textsc{carries malaria}, then $\tau$ can plausibly be quite low while still being informative, since a low threshold still rules out many possible alternative kinds (and their corresponding degree of prevalence).
-If the prior is right-skewed (e.g. \textsc{doesn't attack swimmers}), even an intermediate threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_1$ unless the property is practically-universal within the target category. 
-Priors for properties that are unimodal with low variance (e.g. \textsc{is female}) are present in every kind in almost exactly the same proportion and thus are too obvious and certain to allow for a realistic, informative utterance: The posterior is not very different from the prior. 
 
-The pragmatic listener $L_1$ (Eq.~\ref{eq:L1}) is a model of generic interpretation: Upon hearing a generic, what prevalence is a listener likely to infer?
-We can now imagine a speaker $S_2$ who reasons about this type of listener: 
-%$S_2$ knows some prevalence $x$ and is trying to decide whether or not to produce a generic to describe it to $L_1$.
-
-\begin{equation} 
-P_{S_{2}}(u \mid x) \propto  \int_{\tau} P_{L_{1}}(x , \tau \mid u) % =  P_{L_{1}}(x \mid u)
-\label{eq:S2}
-\end{equation}
-
-Speaker $S_2$ is a model of felicity or truth judgments \cite{Degen2014}.
-The speaker considers the thought-processes of listener $L_1$ (Eq.~\ref{eq:L1}) and decides if the generic is a good (albeit, vague) way to describe the prevalence $x$. 
-$S_2$'s decision is with respect to the alternative of saying nothing: He will choose to produce the generic when the true prevalence $x$ is more likely under $L_1$'s posterior than under her prior. 
-Critically, speaker $S_{2}$ doesn't actually know what the generic means (i.e. doesn't have access to the threshold $\tau$), but knows that $L_{1}$ will have to consider it, and integrates over the likely values she'll consider\footnote{A fully specified version of the generics model, as well as the structured prior model (described below), can be found at \url{http://forestdb.org/models/generics.html.}}.
-%We use $S_{2}$ (Eq.~\ref{eq:S2}) to model
 
 
 %\subsection*{The structure of prevalence priors}
@@ -360,6 +367,7 @@ The sentences were also chosen to elicit a range of acceptability judgments (``a
 In Expt.~1b we collect human judgements about the acceptability of these sentences. 
 In order to compare the results to the model we will need appropriate prior beliefs about the relevant properties; 
 in Expt.~1a we empirically measure the prior distribution over prevalence of these properties.
+In doing this measurement, we discover the prior distribution over prevalence $P(x)$ has an important latent structure.
 
 \section*{Experiment 1a: The structure of prevalence priors}
 
@@ -374,24 +382,25 @@ We recruited 60 participants over Amazon's crowd-sourcing platform Mechanical Tu
 We chose this number of participants based on intuition with similar experiments and model comparison; 
 since this is a quantitative experiment with no planned comparisons, power analysis in not appropriate.
 Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating (the same criteria apply to all experiments reported). 
-%3 participants where unintentionally allowed to do the experiment for a second time; we excluded their second responses (resulting in $n=57$).
-%2 participants self-reported a native language other than English; removing their data ($n=55$) has no effect on the results reported. 
-%The experiment took about 10 minutes and participants were compensated \$1.00.
+3 participants where unintentionally allowed to do the experiment for a second time; we excluded their second responses (resulting in $n=57$).
+2 participants self-reported a native language other than English; removing their data ($n=55$) has no effect on the results reported. 
+The experiment took about 10 minutes and participants were compensated \$1.00.
 
 \subsubsection*{Procedure and materials}
 On each trial of the experiment, participants filled out a table where each row was an animal category and each column was a property. 
 In order to alleviate the dependence of the distribution on our animal categories of interest, half of the animal categories were self-generated by the participant; the other half were randomly sampled from a set corresponding to the generic sentences used in Expt. 1b (e.g. \textsc{robins, mosquitos}).
-%The experiment in full can be viewed at http://stanford.edu/~mtessler/experiments/generics/experiments/real-kinds/prior-2.html.
+Thus, participants began the experiment by seeing a column list of 6 animal kinds, and asked to list 5 of their own. Then, a column appeared to the right of the animal names with a property in the header (e.g. ``lays eggs'').
 Participants were asked to fill in each row with the percentage of members of each of the species that had the property (e.g. ``50\%'').
-Each participant reported on sixteen properties (see {\it SI Section A} for more details).
- %
-We used a set of properties associated with generics of theoretical interest (twenty-one properties in total), as described above.
+Eight property--columns appeared in the table, and this whole procedure was repeated 2 times. In total, each participant generated 10 animal names and reported on the prevalence of sixteen properties for 22 animals (their own 10 and the experimentally-supplied 12). 
+Properties were randomly sampled from a set of 21 properties associated with generics of theoretical interest, as described above.
 % motivated by conceptual distinctions pointed out by \citeA{Prasada2013}. 
 %The conceptual categories used to generate the properties (and their corresponding generics in Expt.~1b) were: majority characteristic (e.g. \emph{have spots}), minority characteristic (e.g. \emph{have manes}), striking (e.g. \emph{attack swimmers.}), and majority false generalizations (e.g. \emph{are female.}) \cite{Prasada2013}.
 For a full list of the properties, and generic sentences used in Expt.~1b, see Table S1.
- 
+The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/experiments/generics/experiments/real-kinds/prior-2.html}.
+
 \subsection*{Data analysis and results}
  
+ $P(x)$ is a distribution on the prevalence of a given property (e.g. \textsc{lays eggs}) across animal categories. Prevalence judgments for a particular property are used to approximate this distribution. 
 While each $P(x)$ is a single distribution on prevalence, it may be structured as the result of deeper conceptual knowledge. 
 For instance, if participants believe that some kinds have a causal mechanism that \emph{could} give rise to the property, while others do not, then we would expect $P(x)$ to be structured as a mixture distribution (cf. \citeA{Griffiths2005}).
 If a kind can have the property, we assume the prevalence follows a Beta distribution with mean $\gamma$ and concentration $\xi$. 
@@ -409,55 +418,29 @@ Thus, $\theta$ is the potential of a property to be present in a kind and $\gamm
 %	 P(d) = \theta \cdot \text{Beta}(d \mid \gamma,\xi)+ (1 - \theta) \cdot \delta_{d=0} 
 %\end{align*}
 We put uninformative priors over all the parameters, $\theta \sim \text{Uniform}(0,1)$, 
-$\gamma \sim \text{Uniform}(0,1)$, $\xi \sim \text{Uniform}(0, 50)$, and implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. This statistical model reproduces the prior elicitation data with a low reconstruction error ($r^2 = 0.94$; see {\it SI Fig. 1}), strongly supporting the assumption of a structured prior. 
+$\gamma \sim \text{Uniform}(0,1)$, $\xi \sim \text{Uniform}(0, 50)$, and implemented this Bayesian statistical model using the probabilisitic programming language WebPPL \cite{dippl}. We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta, \gamma$, and $\xi$ with 3 MCMC chains of 100,000 iterations removing the first 50,000 iterations for burn-in.
+To test the validity of this model, we conduct a posterior predictive check by generating prevalence judgments for each property using the inferred parameter values. We discretize the prevalence judgments both by the model and the data to  12 discrete bins: $\{[0-0.01), (0.01-0.05), (0.05-0.15), (0.15-0.25),  ..., (0.75-0.85), (0.85-0.95), (0.95-1]\}$.
+This statistical model reproduces the prior elicitation data with a low reconstruction error ($r^2 = 0.94$), strongly supporting the assumption of a structured prior. 
 
-%
-%We assume that \emph{when the property is possible}, its prevalence is distributed according to a Beta distribution with mean $\gamma$ and concentration $\xi$: 
-%$P(x)=\theta \cdot \beta(\gamma,\xi)(x) + (1-\theta) \cdot \delta_{x=0}$.\footnote{This is similar in spirit to Hurdle Models of epidemiological data, where the observed counts of zeros is substantially greater than one would expect from standard models, such as the Poisson (e.g. adverse events to vaccines)\cite{hurdleModels}.}
-%
-%We will describe the analysis model from the perspective of inferring the distribution of a particular property (e.g. \textsc{lays eggs}). 
-%The same general structure is implemented for each item independently. 
-%As well, we describe the models for Expt.~1a and ~2a together, as they use the same structure. 
-%%We hypothesized that the prior elicitation task has an important latent structure. 
-%For Expt.~1a, participants are asked to report the percentage of a kind with the property, for several different kinds of animals.
-%Kinds can be divided into those that can have property and those that cannot.
-%The relative contribution of these two components is governed by mixture parameter $\theta$, inferred from the data.
-%Overall: 
-%$ d_{observed}   \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{x=0} $.
-%
-%%\begin{minipage}{0.5 \textwidth} \small
-%\begin{align*}
-%	d_{observed} & \sim \begin{cases}
-%				 \text{Beta}(\gamma, \xi) & \mbox{if } \text{Bernoulli}(\theta) = \textsc{t}  \\
-%				 \delta_{x=0} & \mbox{if }\text{Bernoulli}(\theta) = \textsc{f} \\
-%				\end{cases} \\
-%	 d_{observed} &  \sim \theta \cdot \beta(\gamma,\xi)+ (1 - \theta) \cdot \delta_{x=0} 
-%\end{align*}
-%%\end{minipage}
-%%
+The only substantial disagreement between the prior model and the data occur for  the properties \textsc{is male, is female} in the bin $(0.45-0.55)$. 
+The normalized empirical counts put about 75\% probability in this bin; the model predicts roughly 50\% probability of this bin. 
+This discrepancy can be attributed to a number of 100\% or 0\% responses present in the data (e.g. some participants self-generated the category \textsc{cow}, and rated that 100\% of cows are female). 
+Since the model assumes a smooth Beta distribution, these responses work to flatten out the distribution.
 
-
-
-%We used the Metropolis-Hastings algorithm to estimate the posterior distribution over the latent parameters $\theta, \gamma$, and $\phi$ with 3 MCMC chains of 100,000 iterations removing the first 50,000 iterations.
-
-%Intuition suggests that, for a given property (e.g. \textsc{lay eggs}), kinds fall into two distinct categories: those for which the property is possible (e.g. \textsc{ducks}) and those for which the property is impossible (e.g. \textsc{lions}).
-%We hypothesized that participants' responses were structured in such a way as to be generated from a mixture of two distributions---$P_{present}(x)$ and $P_{absent}(x)$--- with mixture parameter $\theta$.
-%$P_{present}(x)$ is comprised of the animal kinds for which the property is present (i.e. prevalence greater than 0\%), and we assume participants' responses are sampled from a Beta distribution with unknown mean $\gamma$ and concentration $\delta$. 
-%$P_{absent}(x)$ corresponds to the animal kinds for which the property is absent (i.e. prevalence equal to 0\%), and the distribution we assume is a delta function at 0\% prevalence\footnote{This is similar in spirit to Hurdle Models of epidemiological data where the observed counts of zeros is greater than one would expect from standard models of count data such as the Poisson model \cite<e.g. adverse events to vaccines; >{hurdleModels}.}.
-
-
-% Figure \ref{fig:priors1a} (insets) shows five example elicited prior distributions.
+\begin{figure}
+\centering
+    \includegraphics[width=0.6\columnwidth]{postPred-priorModel.pdf}
+    \caption{Posterior predictive distribution of the structured, statistical model thought to give rise to the human data in the prior elicitation task. The close alignment between model and data suggests the assumption of a structured prior is warranted.}
+  \label{fig:pp-priorModel}
+\end{figure}
 
 
 Using this structure, we can explore our twenty-one properties:
 Figure \ref{fig:priors1a} shows the estimated mixture-parameter $\theta$ (the potential of the property to be present in a kind) and the mean prevalence when the property is present, $\gamma$. 
 We see significant diversity among these properties in both dimensions, resulting in priors over prevalence with dramatically different shapes (insets). 
 This diversity matters because the model predictions for generic interpretation and felicity depend on the shape of the prior distribution (insets show example $L_1$ interpretation posteriors).
-Lowering $\theta$ effectively makes the property more distinctive by increasing the relative probability mass at 0\%; this relaxes the truth conditions by making a lower threshold more informative.
+Lowering $\theta$ effectively makes the property more distinctive by increasing the relative probability mass at 0\%; this relaxes the truth conditions by making a lower threshold more informative.\mht{Make a comment how $\theta$ is not the same as cue-validity?}.
 Increasing $\gamma$ means the property is expected to be present in more members of the category; this tends to make truth conditions stricter, by reducing the range of prevalence values higher than the prior expectation. 
-
-
-
 
 %
 \begin{figure*}
@@ -477,8 +460,13 @@ Increasing $\gamma$ means the property is expected to be present in more members
   \label{fig:priors1a}
 \end{figure*}
 
-
-
+Before comparing the speaker model $P_{S_{2}}(u \mid x)$ to truth judgments, we explore example interpretation distributions for $P_{L_{1}}(x , \tau \mid u)$ upon hearing a generic utterance (Figure \ref{fig:priors1a} insets). 
+The corresponding prior beliefs, $P(x)$, can also be interpreted as the posteriors upon hearing the null utterance, because the null utterance has no information content.
+We see in our empirically derived priors, the interpretation of the generic is quite variable. 
+For instance, the prior is very left-skewed in the case of \textsc{carries malaria}; here, $\tau$ can plausibly be quite low while still being informative, since a low threshold still rules out many possible alternative kinds (and their corresponding degree of prevalence).
+Properties like \textsc{doesn't attack swimmers} are very right-skewed; here, even a relatively high threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_2$ unless the property is practically-universal within the target category. 
+Some of these properties have priors that are unimodal with low variance (e.g. \textsc{is female}); these properties are present in every kind in almost exactly the same proportion and thus are too obvious and certain to allow for a realistic, informative utterance: The posterior is not very different from the prior. 
+We explore the quantitative predictions of the $S_2$ model in the following experiment. 
 
 \section*{Experiment 1b: Truth judgments of familiar generics}
 
