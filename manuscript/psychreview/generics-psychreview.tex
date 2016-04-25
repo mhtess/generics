@@ -878,8 +878,14 @@ On a by-item level, the pragmatic listener model predictions closely align with 
 
 
 There is a surprising d\'{e}colage between the truth conditions and interpretations of generic language: Interpretations are characteristically strong while truth conditions are flexible. 
-Experimentally, \citeA{Cimpian2010} have shown that novel generics are interpreted as implying a higher prevalence than that required to assert the exact same generic.
-We use a procedure adapted from these authors to test both speaker $S_2$ and listener $L_1$ models in the same experiment.
+Experimentally, \citeA{Cimpian2010} have shown that generic statements of novel kinds with biological properties (e.g. \emph{Glippets have yellow fur.}) show an asymmetry between their \emph{truth conditions} and the prevalence implied by the generic (``\emph{implied prevalence}''). 
+As noted above, upon reading a generic, participants inferred that the property was widespread (e.g. almost all glippets have yellow fur); That is, the implied prevalence was near ceiling.
+By contrast, in their paradigm, generic sentences were endorsed for a wide-range of prevalence levels (e.g. even when ``30\% of glippets have yellow fur.''). 
+Because generics get judged ``true'' at almost all prevalence levels, the average prevalence to yield a ``true'' response was substantially less than the average prevalence inferred upon hearing a generic. 
+Additionally, this mismatch between \emph{truth conditions} and \emph{implied prevalence} was significantly reduced for generics of properties plausibly construed as accidental (e.g. \emph{Glippets have wet fur.}).
+
+Below we replicate the asymmetry findings of \citeA{Cimpian2010} and reveal even more variability in the mismatch between \emph{truth conditions} and \emph{implied prevalence} using our expanded stimulus set from Expt.~2a.
+Finally, we test whether our pair of speaker $S_2$ and listener $L_1$ models predicts this same behavior of the asymmetry.
 
 %Expt.~2b revealed how generics imply the property is more widespread than what would be expected \emph{a priori}. 
 %Comparing to the average prevalence required to assent is another way to explore how generics exaggerate the evidence. 
@@ -889,13 +895,17 @@ We use a procedure adapted from these authors to test both speaker $S_2$ and lis
 
 We recruited 40 participants over MTurk.  
 We chose a sample size at least twice as large as the original study by \citeA{Cimpian2010} (original n=20), and to match Expt.~2b. 
+All participants were native English speakers. 
+None of the participants completed Expt.~2b (interpretations of novel generics).
+The experiment took about 5 minutes and participants were compensated \$0.60.
 
 \subsubsection*{Procedure and materials}
 
-
 The cover story and materials were the same as in Expt.~2b.
-We told participants one of five frequencies for each property type (e.g. \emph{50\% of feps have yellow fur.}), and then asked for truth judgments of the corresponding generic sentence (e.g. \emph{Feps have yellow fur.}). Prevalence varied between 10, 30, 50, 70, and 90\%.
-The experiment consisted of twenty-five trials: 5 trials for each of 5 types of properties measured in Expt.~2a. 
+On each trial, participants were given a statement about a property's prevalence within a novel kind (e.g. \emph{50\% of feps have yellow fur.}). Participants were then asked whether or not they agreed or disagreed with the corresponding generic sentence (e.g. \emph{Feps have yellow fur.}). Prevalence varied between 10, 30, 50, 70, and 90\%.
+
+The experiment consisted of 25 trials: 5 trials for each of 5 types of properties measured in Expt.~2a (part, color part, vague part, common accidental, rare accidental). 
+Each prevalence level appeared once for each property type (5 prevalence levels x 5 property types). 
 
 \subsection*{Analysis and results}
 
@@ -903,9 +913,9 @@ For both behavioral data and model predictions (Eq.~\ref{eq:S2}) we computed the
 For example, if a participant agreed with the generic whenever the prevalence was 70\% or 90\% and disagreed at the other prevalence levels, that participant received an \emph{average prevalence score} of 80\%.
 
 After integrating out the one parameter of the speaker $S_2$ model, we subjected our model to the same procedure. 
-The speaker model $S_2$ returns a posterior probability of producing the generic, for each level of prevalence\footnote{We assume here that the prevalence told to the participant is the subjective probability that that speaker $S_2$ is trying to communicate. This assumption is mostly likely incorrect due to theory-driven considerations on behalf of the speaker. For example, if the participant believes the prevalence being reported in the experiment is describing a temporary or accidental state and not one that is likely to be predictive of the future prevalence, the speaker may derive a subjective probability substantially less than that stated verbally in the experiment. Addressing this issue is beyond the scope of this article, and is not necessary for the relatively coarse-grained comparison of \emph{average truth conditions} to \emph{implied prevalence}}. 
-We sample a response from this posterior distribution for each prevalence level, simulating a single subject's data.
-Just as with the human data, we took the trials where the model agreed with the generic, and took the mean of the prevalence levels corresponding to those trials, giving us the average prevalence at which the model assented to the generic.
+The speaker model $S_2$ returns a posterior probability of producing the generic, for each level of prevalence\footnote{We assume here that the prevalence told to the participant is the subjective probability that that speaker $S_2$ is trying to communicate. This assumption is mostly likely incorrect due to theory-driven considerations on behalf of the speaker. For example, if the participant believes the prevalence being reported in the experiment is describing a temporary or accidental state and not one that is likely to be predictive of the future prevalence, the speaker may derive a subjective probability substantially less than that stated verbally in the experiment. Addressing this issue is beyond the scope of this article, and is not necessary for the simulations presented here. We take up this issue again in the discussion.}. 
+We sample a response (\emph{agree} / \emph{disagree}) from this posterior distribution for each prevalence level, simulating a single subject's data.
+As with the human data, we took the trials where the model agreed with the generic, and took the mean of the prevalence levels corresponding to those trials, giving us the average prevalence at which the model assented to the generic.
 We repeated this for each type of property 40 times to simulate a sample of 40 participants. 
 We repeated this procedure 1000 times to bootstrap 95\% confidence intervals.
 
