@@ -547,7 +547,6 @@ Thus, we see the probabilistic pragmatics model explains the truth judgments whe
 Our model explains the puzzling flexibility of generic truth-conditions as the result of communicative pressures (\emph{be truthful}, \emph{be informative}) operating over diverse prior beliefs about the properties. 
  
 
-
 %\begin{figure}
 %\centering
 %    \includegraphics[width=\columnwidth]{tj_n100_tjVsPostpred_95hdi.pdf}
@@ -766,7 +765,10 @@ By contrast, accidental properties (both ``rare'' and ``common'') follow unimoda
 
 \section*{Experiment 2b: Interpretations of novel generics}
 
-We tested the degree to which the $L_1$ listener model, Eq.~\ref{eq:L1}, coupled with the empirically-elicited priors, $P(x)$, from Expt.~2a predicted the interpretation of a generic sentence consisting of a novel category with one of the forty properties described above.
+The pragmatic listener model $L_1$ (Eq.~\ref{eq:L1}) predicts that the interpretations of generics in terms of prevalence should vary as a function of the prevalence prior.
+Here, we test the degree to which the predictions based on the empirically elicited prevalence priors for 40 items (from Expt.~2a) match human judgments of how the widespread the property is upon hearing a generic.
+
+%We tested the degree to which the $L_1$ listener model, Eq.~\ref{eq:L1}, coupled with the empirically-elicited priors, $P(x)$, from Expt.~2a predicted the interpretation of a generic sentence consisting of a novel category with one of the forty properties described above.
 %degree to which the generic implied the property was widespread in the kind. 
 
 %The full cover story is described in {\it SI Section C} and is the same for Expt.~2c.
@@ -788,29 +790,36 @@ We tested the degree to which the $L_1$ listener model, Eq.~\ref{eq:L1}, coupled
 We recruited 40 participants over MTurk to determine how widespread different properties are believed to be upon hearing a novel generic.  
 The experimental design is very similar to \citeA{Cimpian2010}, and we chose to have a sample size at least twice as large as the original study (original n=15). 
 This is a quantitative experiment with only quantitative comparisons planned.
-
-%Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
-%All participants were native English speakers. 
-%The experiment took about 5 minutes and participants were compensated \$0.60.
+Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
+All participants were native English speakers. 
+The experiment took about 5 minutes and participants were compensated \$0.60.
 
 \subsubsection*{Procedure and materials}
 
-Participants were told they were the resident zoologist of a team of scientists on a recently discovered island with many unknown animals; their task was to provide their expert opinion on questions about these animals\footnote{The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/asymmetry/asymmetry-2.html}}. 
+In order to get participants motivated to reason about novel kinds, they were told they were the resident zoologist of a team of scientists on a recently discovered island with many unknown animals; their task was to provide their expert opinion on questions about these animals
 Participants were supplied with the generic (e.g. ``Feps have yellow fur.'') and asked to judge prevalence: ``What percentage of feps do you think have yellow fur?''. 
 Participants completed in randomized order 25 trials: 5 for each of the biological properties and 10 for the accidental (described in Expt.~2a).
+The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/asymmetry/asymmetry-2.html}. 
 
 \subsection*{Analysis and results}
 
-The pragmatic listener $L_1$ model predicts the prevalence implied by a  generic utterance based on the prior distribution of prevalence (measured in Expt.~2a) and the fact a speaker chose to say a generic sentence.
-%The model predicts 
-We integrate out the single free parameter the using the same Bayesian model analysis as before (details in SI Section D).
+
+The pragmatic listener $L_1$ model predicts the prevalence implied by a generic utterance based on the prior distribution of prevalence (measured in Expt.~2a) and the fact a speaker chose to say a generic sentence.
+As before, the model has one parameter governing the optimality of the hypothetical speaker $S_1$ in Eq.~2. 
+We put the same uninformative prior over this parameter: $\lambda_{\text{implied prevalence}} \sim \text{Uniform}(0, 20)$.
+We learn about the parameter's \emph{a posteriori} credible values by collecting 2 MCMC chains of 100,000 samples (removing 50,000 for burn-in) using the Metropolis-Hastings algorithm. The MAP and 95\% credible interval for $\lambda$ are 3.3 [1.2, 4.7].
+
+We look at the posterior predictive distribution of $L_1$, integrating out the model parameter.
 We first explore two important trends predicted by the pragmatic listener model.
 In Figure \ref{fig:exp2b}, solid lines, we see the implied prevalence judgments are predicted (at the property class level) to vary linearly with the \emph{a proiri} expected prevalence. 
 A mixed-effects linear model with random by-participant effects of intercept and slope indeed reveals the more widespread a property is expected to be \emph{a priori}, the stronger the implications of a generic statement ($\beta = 0.57; SE = 0.08; t(39) = 7.12; p < 0.001$).
 The prevalence implied by a generic is also predicted to be greater than the \emph{a proiri} expected prevalence.
 A mixed-effects linear model with random by-participant effects of intercept and random by-item effects of intercept and condition reveals implied prevalence after hearing a generic is significantly greater than the \emph{a priori} prevalence ($\beta = 0.17; SE = 0.018; t(39) = 9.7; d = 0.64; p < 0.001$).
 %The generic thus does more than simply signal the category has the property; it carries with it the communicative weight of a speech-act, and implies a prevalence even higher than one would infer just by generalizing based on instances.
-Over all, the pragmatic listener model predictions closely align with the human judgments of prevalence for novel generics ($r^2(40)=0.89$, MSE=0.006), displaying sensitivity of interpretation to details of the property (Figure \ref{fig:impliedByItem}). 
+On a by-item level, the pragmatic listener model predictions closely align with the human judgments of prevalence for novel generics ($r^2(40)=0.89$, MSE=0.006), displaying the same sensitivity of interpretation to details of the property (Figure \ref{fig:impliedByItem}). 
+
+
+
 
 %\mht{I'm a little unsure what the order of this should be right. Right now: linear effect of a priori prevalence; implied prevalence > a priori prevalence; pragmatics model predictions}
 
@@ -976,6 +985,13 @@ The model was able to explain two qualitative puzzles of generics: their extreme
 %This shouldn't surprise us. 
 %In much the same way, ``John is tall'' does not actually tell a listener about what \emph{tall} means\footnote{However, ``John is a person'' does tell a listener about what \emph{tall} means in ``John is tall''.}. 
 %Rather, the listener is expected to come to the conversation with some beliefs about heights, and knowing that John is a person, be able to infer likely meanings for \emph{tall}.
+
+\subsection*{Previous psychological work on generics}
+
+\citeA{Gelman2002} found that adult and children participants interpreted generics about familiar kinds (e.g. \emph{Bears like to eat ants.}) as implying that all or almost-all bears like to.
+\citeA{Cimpian2010} replicated this conceptually with novel categories (e.g. \textsc{lorches}) and found that the strong interpretation of generics could be weakened by predicating the kind with accidental properties (e.g. \emph{Lorches have muddy feathers.}).
+
+
 
 \subsection*{Generics and conceptual structure}
 
