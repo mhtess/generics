@@ -23,6 +23,14 @@ HPDlo<- function(s){
 }
 
 
+theta <- function(x,xdata,na.rm=T) {mean(xdata[x],na.rm=na.rm)}
+
+ci.low <- function(x,na.rm=T) {
+  mean(x,na.rm=na.rm) -quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,.025,na.rm=na.rm)}
+
+ci.high <- function(x,na.rm=T) {
+  quantile(bootstrap(1:length(x),1000,theta,x,na.rm=na.rm)$thetastar,
+           .975,na.rm=na.rm) - mean(x,na.rm=na.rm)}
 
 bootstrap.ci <- function(x){
   agr = aggregate(response ~ sentence, data=x, FUN=mean)
@@ -153,6 +161,11 @@ tj.wPrev<-left_join(tj.bs %>% select(-CILow, -CIHigh),
                     m.summary %>% rename(prev = map, 
                                          prevHigh = credHigh,
                                          prevLow = credLow), by = "sentence")
+```
+
+
+```{r}
+
 
 with(tj.wPrev, cor(response,prev))^2
 with(tj.wPrev, mse(response,prev))
@@ -160,7 +173,7 @@ with(tj.wPrev, mse(response,prev))
 
 qplot(data=tj.wPrev,
       x=prev,y=response,
-      color=prev)+
+      fill=prev)+
   geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey39')+
   geom_errorbar(aes(ymin=YMin, ymax=YMax),
                 size =1, position=position_dodge(),
@@ -168,28 +181,92 @@ qplot(data=tj.wPrev,
   geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
                   size = 1,
                  subset = .(prev >=0.5))+
-  geom_point(size=4, subset = .(prev >=0.5))+
+  geom_point(shape=21,size=4, subset = .(prev >=0.5))+
   geom_errorbar(aes(ymin=YMin, ymax=YMax),
                 size =1,  position=position_dodge(),
                  subset = .(prev <0.5))+
   geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
                 size = 1,  position=position_dodge(),
                  subset = .(prev <0.5))+
-  geom_point(size=4,  subset = .(prev <0.5))+
+  geom_point(shape=21,size=4,  subset = .(prev <0.5))+
   xlab("\n Within-kind prevalence")+
-  ylab("Human judgment \n")+
+  ylab("Human endorsement \n")+
 #  guides()+
   xlim(-0.05,1.05)+
   ylim(-0.05,1.05)+
   coord_fixed()+
   #scale_color_gradient(low='#386cb0', high = '#f0027f')+
-  scale_color_gradient(low='black', high ='#addd8e', limits=c(0,1),
-                       breaks=c(0,0.5,1))+
-  theme(legend.title = element_text(hjust=0))
+  scale_fill_gradient(
+                       #high='#92c5de', 
+                       high='#92c5de',
+                       low = "#023858",
+                       #low = "#4d9221",
+                       #high = "#f1b6da",
+                       #high = "black",
+                       #low = "white",
+                       #high ='#e78ac3',
+                       limits=c(0,1),
+                       breaks=c(0,0.5,1)
+                       )+
+  theme(legend.title = element_text(hjust=0),
+        legend.position="bottom",
+        legend.direction="horizontal")
 
 
+
+#ggsave(file='~/Documents/research/habituals/writing/spp/figures/tj_n100_tjVsPrevalence_95hdi-colorPrev.pdf', width=10, height=5)
 
 #ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n100_tjVsPrevalence_95hdi-colorPrev.pdf', width=12, height=6)
+
+
+
+qplot(data=tj.wPrev,
+      x=prev,y=response,
+      fill=prev)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey49')+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                size =1, position=position_dodge(),
+                subset = .(prev >=0.5), color='grey39')+
+  geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
+                  size = 1,
+                 subset = .(prev >=0.5), color='grey39')+
+  geom_point(shape=21,size=4, subset = .(prev >=0.5), color='grey89')+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                size =1,  position=position_dodge(),
+                 subset = .(prev <0.5), color='grey39')+
+  geom_errorbarh(aes(xmin = prevLow, xmax=prevHigh),
+                size = 1,  position=position_dodge(),
+                 subset = .(prev <0.5), color='grey39')+
+  geom_point(shape=21,size=4,  subset = .(prev <0.5), color='grey89')+
+  xlab("\n % of category with property")+
+  ylab("Human endorsement \n")+
+#  guides()+
+  scale_x_continuous(limits=c(-0.05,1.05), breaks=c(0,0.5,1))+
+  scale_y_continuous(limits=c(-0.05,1.05), breaks=c(0,0.5,1))+
+  coord_fixed()+
+  #scale_color_gradient(low='#386cb0', high = '#f0027f')+
+  scale_fill_gradient(
+                       #high='#92c5de', 
+                       high='#fee8c8',
+                       low = "#e34a33",
+                       #low = "#4d9221",
+                       #high = "#f1b6da",
+                       #high = "black",
+                       #low = "white",
+                       #high ='#e78ac3',
+                       limits=c(0,1),
+                       breaks=c(0,0.5,1)
+                       )+
+  theme_black()+
+  theme(legend.title = element_text(hjust=0),
+        legend.position="bottom",
+        legend.direction="horizontal")
+
+ggsave(file='~/Documents/research/habituals/talks/frisem-2016-generics/figures/tj_n100_tjVsPrevalence_95hdi-colorPrev.pdf', width=10, height=5)
+
+
+
+ggplot()
 
 
 #write.csv(tj.wPrev,
@@ -226,14 +303,26 @@ with(tj.wPrev, cor(prev, response, method='spearman'))
 
 
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
-samples =50000
-previter = 50000
-prioriter = 50000
+samples =100000
+previter = 100000
+prioriter =100000
+
+# m1<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000a.csv",sep=''))
+# m2<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000b.csv",sep=''))
+# m3<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000c.csv",sep=''))
+
+m1<-as.data.frame(fread(paste(m.path,
+        "generics-truthJudgment-trueSOPTprior100-previter100000_prevprioriter100000-priord50Zero-n60_IncrMH200000_burn100000b.csv",
+      sep='')))
+m2<-as.data.frame(fread(paste(m.path,
+        "generics-truthJudgment-trueSOPTprior100-previter100000_prevprioriter100000-priord50Zero-n60_IncrMH200000_burn100000b.csv",
+      sep='')))
+m3<-as.data.frame(fread(paste(m.path,
+        "generics-truthJudgment-trueSOPTprior100-previter100000_prevprioriter100000-priord50Zero-n60_IncrMH200000_burn100000c.csv",
+      sep='')))
 
 
-m1<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000a.csv",sep=''))
-m2<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000b.csv",sep=''))
-m3<-read.csv(paste(m.path,"generics-truthJudgment-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000c.csv",sep=''))
+#m<- as.data.frame(fread(paste(m.path, "generics-truthJudgment-trueSOPTprior40-previter100000_prevprioriter100000-priord50Zero-n60_IncrMH200000_burn100000a.csv", sep="")))
 
 m<- bind_rows(m1,m2,m3)
 
@@ -258,7 +347,7 @@ ggplot(m.params %>% filter(Parameter=='speakerOptimality'), aes(x=Value))+
   #geom_density()+
   #facet_wrap(~Parameter, scales='free')+
   #xlim(0,10)+
-  xlim(0,20)+
+  #xlim(0,20)+
   xlab(expression(lambda))+
   ylab("Posterior probability")
 
@@ -320,21 +409,75 @@ combined.model.data <- combined.model.data %>%
 qplot(data=combined.model.data,
       x=posMode,y=response,
       fill=Prevalence)+
-  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey39')+
+  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey49')+
   geom_errorbar(aes(ymin=YMin, ymax=YMax),
                 size =1, width=.01,  position=position_dodge(),
-                subset = .(Prevalence >=0.5))+
+                subset = .(Prevalence >=0.5), color='grey39')+
   geom_errorbarh(aes(xmin = credLo, xmax=credHi),
                   size = 1, height=.01, 
-                 subset = .(Prevalence >=0.5))+
-  geom_point(shape=21,size=4, subset = .(Prevalence >=0.5))+
+                 subset = .(Prevalence >=0.5), color='grey39')+
+  geom_point(shape=21,size=4, subset = .(Prevalence >=0.5), color='grey89')+
   geom_errorbar(aes(ymin=YMin, ymax=YMax),
                 size =1,  width=.01,  position=position_dodge(),
-                 subset = .(Prevalence <0.5))+
+                 subset = .(Prevalence <0.5), color='grey39')+
   geom_errorbarh(aes(xmin = credLo, xmax=credHi),
                 size = 1, height=.01, position=position_dodge(),
-                 subset = .(Prevalence <0.5))+
-  geom_point(shape=21,size=4,  subset = .(Prevalence <0.5))+
+                 subset = .(Prevalence <0.5), color='grey39')+
+  geom_point(shape=21,size=4,  subset = .(Prevalence <0.5), color='grey89')+
+  xlab("\n Model prediction")+
+  ylab("Human endorsement \n")+
+#  guides()+
+  scale_x_continuous(limits=c(-0.05,1.05), breaks=c(0,0.5,1))+
+  scale_y_continuous(limits=c(-0.05,1.05), breaks=c(0,0.5,1))+
+  coord_fixed()+
+  #scale_color_gradient(low='#386cb0', high = '#f0027f')+
+  theme_black()+
+    #scale_color_gradient(low='#386cb0', high = '#f0027f')+
+  scale_fill_gradient(
+                       #high='#92c5de', 
+                       high='#fee8c8',
+                       low = "#e34a33",
+                       #low = "#4d9221",
+                       #high = "#f1b6da",
+                       #high = "black",
+                       #low = "white",
+                       #high ='#e78ac3',
+                       limits=c(0,1),
+                       breaks=c(0,0.5,1)
+                       )+
+    theme(legend.title = element_text(hjust=0),
+        legend.position="bottom",
+        legend.direction="horizontal")
+
+#ggsave(file='~/Documents/research/habituals/talks/frisem-2016-generics/figures/generics-model-data.pdf', width=10, height=5)
+
+#ggsave(file='~/Documents/research/habituals/writing/spp/figures/generics-model-data.pdf', width=10, height=5)
+
+#ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n96-postpred-colorPrev7.pdf', width=12, height=6)
+
+qplot(data=combined.model.data,
+      x=posMode,y=response,
+      fill=Prevalence)+
+  geom_abline(intercept=0,slope=1,linetype=2, size=1,color='grey39')+
+  geom_errorbar(aes(ymin=YMin, ymax=YMax),
+                size =1, width=.01,  position=position_dodge())+
+  geom_errorbarh(aes(xmin = credLo, xmax=credHi),
+                  size = 1, height=.01)+
+   geom_point(shape=21,size=4)+
+#   geom_errorbar(aes(ymin=YMin, ymax=YMax),
+#                 size =1, width=.01,  position=position_dodge(),
+#                 subset = .(Prevalence >=0.5))+
+#   geom_errorbarh(aes(xmin = credLo, xmax=credHi),
+#                   size = 1, height=.01, 
+#                  subset = .(Prevalence >=0.5))+
+#    geom_point(shape=21,size=4, subset = .(Prevalence >=0.5))+
+#   geom_errorbar(aes(ymin=YMin, ymax=YMax),
+#                 size =1,  width=.01,  position=position_dodge(),
+#                  subset = .(Prevalence <0.5))+
+#   geom_errorbarh(aes(xmin = credLo, xmax=credHi),
+#                 size = 1, height=.01, position=position_dodge(),
+#                  subset = .(Prevalence <0.5))+
+#  geom_point(shape=21,size=4,  subset = .(Prevalence <0.5))+
   xlab("\n Model posterior predictive")+
   ylab("Human endorsement \n")+
 #  guides()+
@@ -344,7 +487,7 @@ qplot(data=combined.model.data,
   #scale_color_gradient(low='#386cb0', high = '#f0027f')+
   scale_fill_gradient(
                        #high='#92c5de', 
-                       high = "#fed976",
+                       high='#92c5de',
                        low = "#023858",
                        #low = "#4d9221",
                        #high = "#f1b6da",
@@ -354,9 +497,11 @@ qplot(data=combined.model.data,
                        limits=c(0,1),
                        breaks=c(0,0.5,1)
                        )+
-  theme(legend.title = element_text(hjust=0))
+    theme(legend.title = element_text(hjust=0),
+        legend.position="bottom",
+        legend.direction="horizontal")
 
-#ggsave(file='~/Documents/research/generics/manuscript/figures/tj_n96-postpred-colorPrev7.pdf', width=12, height=6)
+
 
 with(combined.model.data, cor(posMode, response))^2
 

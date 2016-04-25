@@ -220,9 +220,9 @@ P_{L_{0}}(x \mid u, \tau) &\propto& {\delta_{\denote{u}(x, \tau)} P(x)}. \label{
 The pragmatic listener $L_{1}$ (Eq. \ref{eq:L1}) has heard an utterance $u$, which is either a generic statement (e.g.~\emph{Robins lay eggs.}) or an uninformative \emph{null} utterance. 
  %generic utterance (\emph{Ks have F.}) from the speaker $S_{1}$ (Eq. \ref{eq:S1}). 
 $L_1$ is trying to resolve how common F is within K (i.e.~$x = P(F\mid K) \in [0, 1]$); she does so by considering both what she knows about property F in general---the probability distribution $P(x)$ over prevalence of F---and her model of the speaker $S_{1}$ as an informed and helpful interlocutor (Eq. \ref{eq:S1}).
-$L_1$ knows that the meaning of the generic utterance, if used, depends on a prevalence threshold, $\pi$, but does not know what this threshold is: $\tau \sim \text{Uniform([0,1])}$.
-Speaker $S_1$ has a particular $\pi$ in mind, and is trying to be informative about the prevalence $x$ to the listener in his head---an idealized literal listener ($L_{0}$, Eq. \ref{eq:L0}).
-The literal listener has access to the threshold $\pi$, and simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
+$L_1$ knows that the meaning of the generic utterance, if used, depends on a prevalence threshold, $\tau$, but does not know what this threshold is: $\tau \sim \text{Uniform([0,1])}$.
+Speaker $S_1$ has a particular $\tau$ in mind, and is trying to be informative about the prevalence $x$ to the listener in his head---an idealized literal listener ($L_{0}$, Eq. \ref{eq:L0}).
+The literal listener has access to the threshold $\tau$, and simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
 The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \tau)=x>\tau$; while the null utterance is always true, $\denote{null}(x, \tau)=T$.\footnote{All results reported are similar when the alternative utterance is stipulated to be the negation---\emph{It is not the case that robins lay eggs.}---or the generic of the negation---\emph{Robins do not lay eggs.}---as opposed to the \emph{null} utterance.}
 
 Example posterior distributions for $P_{L_{1}}(x , \tau \mid u)$ upon hearing a generic utterance can be seen in Figure \ref{fig:priors1a}. 

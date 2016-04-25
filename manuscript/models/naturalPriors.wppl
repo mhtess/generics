@@ -1,5 +1,6 @@
 // time webppl naturalPriors.wppl --require naturalUtils
 
+// time ~/webppl-paul/webppl naturalPriors.wppl --require naturalUtils
 var priorModel = function(){
 
 	// var phi = uniform(0,1)
@@ -8,42 +9,71 @@ var priorModel = function(){
 	foreach(properties, function(p){
 
 		var propertyData = subset(df_prior, "Property", p)
-		var responseData = _.pluck(propertyData, "prevalence")
+		var responseData = _.pluck(propertyData, "alignedResponse")
 
-		var prob_hasF = beta(1,1)
+		var theta = uniform(0,1)
+		// display("theta_0 = " + theta)
 
-		var scr1 = reduce(function(d, memo) {
-							// console.log(d)
-						    return memo + bernoulliERP.score([prob_hasF], d!=0)
-							}, 0, responseData)
-		factor(scr1)
+		// var scr1 = reduce(function(d, memo) {
+		// 					// console.log(d)
+		// 				    return memo + bernoulliERP.score([prob_hasF], d!=0)
+		// 					}, 0, responseData)
+		// factor(scr1)
 
 		// for just doing inference over the priors 
-		query.add(["prevalencePrior",p,"na","prob_hasF"], prob_hasF)
+		// query.add(["prevalencePrior",p,"na","prob_hasF"], prob_hasF)
 
-		var gamma = uniform(0,1)
-		var delta = uniform(0,50)
+		var g = uniform(0,1)
+		var d = uniform(0,50)
+		// pseudocount parameterization
+		var a = shape_alpha(g,d)
+		var b = shape_beta(g,d)
 
-		var discreteBetaProbs = discretizeBeta(gamma, delta)
-		var discreteBetaProbsNormalized = map(function(x){return x/sum(discreteBetaProbs)}, discreteBetaProbs)
+		// var discreteBetaProbs = discretizeBeta(gamma, delta)
+		// var discreteBetaProbsNormalized = map(function(x){return x/sum(discreteBetaProbs)}, discreteBetaProbs)
 
-		var scr2 = reduce(function(d, memo) {
-							var x = d==0? 0 :  
-								Math.log(
-									(phi*guessing) + 
-									((1-phi) * discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
-									)
-						    return memo + x
-							}, 0, responseData)
+		// var scr2 = reduce(function(d, memo) {
+		// 					var x = d==0? 0 :  
+		// 						Math.log(
+		// 							(phi*guessing) + 
+		// 							((1-phi) * discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
+		// 							)
+		// 				    return memo + x
+		// 					}, 0, responseData)
 
-		factor(scr2)
-		
+		// factor(scr2)
+
+		// var scr = reduce(function(d, memo) {
+		// 					// console.log(d)
+		// 					var loglike = Math.log(
+		// 										(d==0)*(1-prob_hasF) + 
+		// 										(d>0)*prob_hasF*discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))]
+		// 									)
+		// 				    return memo + loglike
+		// 					}, 0, responseData)		
+	// console.log(responseData)
+
+		// reformat data so that 0s are not rounded to 0.01
+		var scr = sum(map(function(d) {
+							var prob = (d==0.01 ? 1 : 0)*(1-theta) + (d>0.01 ? 1 : 0)*theta*Math.exp(betaERP.score([a,b], d))
+							return Math.log(prob)
+						}, responseData))
+		// display(responseData)
+		factor(scr)
+
 		// for linking with truthJudgments.wppl
-		// var discretized_prevalence = discretizedPriorModel(prob_hasF, gamma, delta)
+		var discretized_prevalence = discretizedPriorModel(theta, g, d)
+
+		foreach(_.zip([0, 0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99], 
+			discretized_prevalence),
+		function(lst){query.add(["prevalencePrior",p,lst[0],"posteriorPredictive"], lst[1])}
+		)
+
 		// query.add(p, discretized_prevalence)
-		// for just doing inference over the priors 
-		query.add(["prevalencePrior",p,"na","gamma"], gamma)
-		query.add(["prevalencePrior",p,"na","delta"], delta)
+		// // for just doing inference over the priors 
+		query.add(["prevalencePrior",p,"na","theta"], theta)
+		query.add(["prevalencePrior",p,"na","gamma"], g)
+		query.add(["prevalencePrior",p,"na","delta"], d)
 
 	})
 	
@@ -52,13 +82,31 @@ var priorModel = function(){
 }
 
 // for just doing inference 
-var mhiter = 100000
+var mhiter = 10
 var burn = mhiter/2
-var resultsERP = IncrementalMH(priorModel, mhiter, {verbose:"true", burnin: burn})
-var outfile = '../model-results/generics-naturalPriors-n57-incrMH'+mhiter+'_burn'+burn+'c.csv'
+// var resultsERP = IncrementalMH(priorModel, mhiter, {verbose:"true", burn: burn, verboseLag:10})
+// resultsERP
+
+// priorModel()
+var steps = 5
+var stepSize = 0.001
+
+var resultsERP = MCMC(priorModel, {
+	kernel: {HMC: {
+		steps: steps,
+		stepSize: stepSize
+	}},
+	verbose:"true",
+	samples: mhiter,
+	burn: burn
+})
+
+
+var outfile = "/Users/mht/Documents/research/tests/HMC/generics-naturalPriors-HMC"+mhiter+'_b'+burn+'st'+steps+'si'+stepSize+'.csv'
+// var outfile = '../model-results/generics-naturalPriors-singleFactor-postPred-n57-continuous-incrMH'+mhiter+'_burn'+burn+'a.csv'
 naturalUtils.erpWriter(resultsERP, outfile)
 console.log('wrote to... ' + outfile)
-
+// resultsERP
 // df_prior
 // properties.length
 // var p = properties[2]

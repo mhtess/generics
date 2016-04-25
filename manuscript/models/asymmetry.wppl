@@ -23,15 +23,16 @@ var priorERP = IncrementalMH(priorModel, prioriter, {"verbose":"true", "burnin":
 
 var priorERPobject = _.object(map(function(c){
 	return [c, marginalizeERP(priorERP, c)]
-}, conditions))
+// }, conditions))
+}, items))
 
-// var tasks = ["truth_conditions"]
+var tasks = ["truth_conditions"]
 
 var dataModel = function(){
 	
-	// var phi = uniform(0,1)
-	var softmax = uniform(0,5)
-	var phi = 0
+	var phi = uniform(0,1)
+	// var softmax = uniform(0,5)
+	// var phi = 0
 	foreach(tasks,
 		function(task){
 			// console.log(task)
@@ -39,8 +40,8 @@ var dataModel = function(){
 			var speakerOptimality = uniform(0,20)
 
 
-			foreach(conditions, 
-			// foreach(items, 
+			// foreach(conditions, 
+			foreach(items, 
 				function(type){
 					// console.log(type)
 
@@ -56,7 +57,8 @@ var dataModel = function(){
 
 								var df_accepted_prev = _.pluck(subset(df_accept_type,"stim_prevalence", prevalence), "response")
 								// console.log(prevalence)
-								var agreeERP = softmaxSpeaker(truthSpeaker2(prevalence/100, prior, speakerOptimality, 1), softmax)
+								// var agreeERP = softmaxSpeaker(truthSpeaker2(prevalence/100, prior, speakerOptimality, 1), softmax)
+								var agreeERP = truthSpeaker2(prevalence/100, prior, speakerOptimality, 1)
 								var linkedERP = guessingLink(agreeERP, task, phi)
 
 								var scr = reduce(function(response, memo) {
@@ -70,10 +72,9 @@ var dataModel = function(){
 						)
 					
 					} else {
-						// var implied1opt = uniform(0,20)
 
-						var df_implied_type = subset(df_implied, "type", type)
-						// var df_implied_type = subset(df_implied, "stim_property", type)
+						// var df_implied_type = subset(df_implied, "type", type)
+						var df_implied_type = subset(df_implied, "stim_property", type)
 						var df_implied_prev = _.pluck(df_implied_type, "response")
 
 						var impliedERP = numberSpeaker2("generic is true", prior, speakerOptimality, 1)
@@ -103,7 +104,7 @@ var dataModel = function(){
 
 		})
 	query.add(["NA", "phi","NA"], phi)
-	query.add(["NA", "softmax","NA"], softmax)
+	// query.add(["NA", "softmax","NA"], softmax)
 
 	return query
 
@@ -125,7 +126,8 @@ var dataModel = function(){
 // // df_accepted_prev
 var mhiter = 20000
 var resultsERP = IncrementalMH(dataModel, mhiter,  {"verbose":"true", "burnin": mhiter/2})
-var outfile = "../model-results/generics-implied_truth-softmax-priord50iter"+prioriter+'_mh'+mhiter+'a.csv'
+// var outfile = "../model-results/generics-implied_truth-softmax-priord50iter"+prioriter+'_mh'+mhiter+'a.csv'
+var outfile = "../model-results/generics-truth-byItem-phi-priord50iter"+prioriter+'_mh'+mhiter+'b.csv'
 console.log('inference complete')
 asymUtils.erpWriter(resultsERP, outfile)
 console.log("ouput written to " +outfile)

@@ -89,7 +89,7 @@ var prevalenceModel = function(p, k){
 						"prevalence")
 
 	var gamma = uniform(0,1)
-	var delta = uniform(0,20)
+	var delta = uniform(0,50)
 
 	var discreteBetaProbs = discretizeBeta(gamma, delta)
 	var discreteBetaProbsNormalized = map(function(x){return x/sum(discreteBetaProbs)}, discreteBetaProbs)

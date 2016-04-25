@@ -29,11 +29,15 @@ HPDlo<- function(s){
 ```{r}
 m.path<-"~/Documents/research/generics/manuscript/model-results/"
 
-samples = 50000
+samples = 150000
 prefix<-'generics-naturalPrevalence-n57-incrMH100000_burn50000' 
 m1<-read.csv(paste(m.path, prefix, 'a.csv', sep=''))
 m2<-read.csv(paste(m.path, prefix, 'b.csv', sep=''))
 m3<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
+
+m<-read.csv(paste(m.path,'generics-naturalPrevalence-continuousFactoring-n57-incrMH10000_burn5000.csv', sep=''))
+
+m<-read.csv(paste(m.path,'generics-naturalPrevalence-continuousFactoring-n57-HMC100_burn50_step5stepSize0.0015.csv', sep=''))
 
 m<-bind_rows(m1,m2,m3)
 
@@ -64,6 +68,8 @@ m.summary<- m %>%
             map = estimate_mode(Value),
             credLow =HPDlo(Value),
             credHigh= HPDhi(Value))
+
+#save(m.summary, file='~/Documents/research/generics/manuscript/data/naturalkinds-withinK-prevalence.Rdata')
 
 # write.csv(m.summary, 
 #            file='~/Documents/research/generics/manuscript/model-results/natural-prevalence-intervals-n57.csv')
@@ -110,10 +116,11 @@ ggplot(m.prev, aes(x=Value))+
   #geom_histogram(binwidth=0.01,aes(y=..count../sum(..count..)))+
   geom_histogram(aes(y=..count../sum(..count..)))+
   facet_wrap(~Pairing, scales='free')+
-  xlim(0,1)+
+  #xlim(0,1)+
   xlab("Prevalence")+
   ylab("Posterior probability")+
-  ggtitle("Distribution on gamma")
+  ggtitle("Distribution on gamma")+
+  theme_bw()
 
 #ggsave(plt1,file='~/Documents/research/generics/manuscript/figures/diagnostics/naturalPrevalence-gammas-allChains.pdf', width = 15, height=15)
 

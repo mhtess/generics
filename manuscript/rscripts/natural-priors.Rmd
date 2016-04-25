@@ -334,13 +334,15 @@ ggplot(m.join, aes(x = gamma, y = prob_hasF, label=Property))+
 
 ```{r fig1.insets}
 
-prefix<-'generics-truthJudgment-wState-previter10000_prevprioriter10000-priord50Zero-n57_mh50000_burn25000'
+prefix<-'generics-truthJudgment-wState-previter10000_prevprioriter10000-priord50Zero-n57_mh10000_burn5000'
+#prefix<-'generics-truthJudgment-wTheta-previter50000_prevprioriter50000-priord50Zero-n57_mh100000_burn50000'
 
-t<-read.csv(paste(m.path, prefix, 'c.csv', sep=''))
+t<-as.data.frame(fread(paste(m.path, prefix, 'c.csv', sep='')))
 
 
 t.tidy <- t %>%
   filter(Parameter=='statePosterior') %>%
+  #filter(Parameter=='thetaPosterior') %>%
   select(-Negation, -Parameter) %>%
   rename(bin = Category)
 
@@ -395,6 +397,7 @@ d.sty$src<-factor(d.sty$src,
                   levels=c("Prior prevalence", 
                            "Posterior prevalence"))
 
+load(file='~/Documents/research/generics/manuscript/data/naturalkinds-withinK-prevalence.Rdata')
 
 m.prevTargets <- m.summary %>%
   filter(Category%in%c("Robins", "Mosquitos", 
@@ -402,35 +405,66 @@ m.prevTargets <- m.summary %>%
 
 m.prevTargets <- m.prevTargets[c(1,5,7, 10,11),]
 
-for (t in target){
+for (ti in target){
 #  ggplot(d.samples %>% filter(Property == t), 
 #          aes(x=Prevalence))+
-   ggplot(d.sty%>% filter(Property == t), 
-          aes(x=Prevalence, linetype=src, color=src, alpha=src))+
-    geom_density(aes(y=..scaled..), size=1, color ='black',
-                 fill='black')+
-       scale_color_manual(values=c("#bdbdbd","#f0f0f0"))+
-  scale_alpha_manual(values=c(0.6,0.1))+
-    #geom_density(size=1, alpha=0.7)+
-     geom_errorbarh(data = m.prevTargets %>% filter(Property==t),
-                    aes(x= map, xmin = credLow, xmax = credHigh,
-                    y = 1.05), color='#2ca25f', size = 1.1,
-                    height = 0.1, inherit.aes=F)+
-  scale_linetype_manual(values=c(1,2))+
-  xlab("Prevalence")+
-  guides(fill=F, color=F, alpha=F, linetype=F)+
-  facet_wrap(~Property, scales='free')+
-  scale_x_continuous(limits=c(0,1), breaks=c(0,0.5,1))+
-  scale_y_continuous(limits=c(0,1.1), breaks=c(0,0.5,1))+
-  ylab("Scaled density")+
-  theme(strip.text.x=element_text(size=16))+
-  coord_fixed()
-    
+#    ggplot(d.sty%>% filter(Property == ti), 
+#           aes(x=Prevalence, linetype=src, color=src, alpha=src))+
+#       geom_density(aes(y=..scaled..), size=1, color ='black',fill='black')+
+#        scale_color_manual(values=c("#bdbdbd","#f0f0f0"))+
+#   scale_alpha_manual(values=c(0.6,0.1))+
+#     #geom_density(size=1, alpha=0.7)+
+#      geom_errorbarh(data = m.prevTargets %>% filter(Property==ti),
+#                     aes(x= map, xmin = credLow, xmax = credHigh,
+#                     y = 1.05), color='#2ca25f', size = 1.1,
+#                     height = 0.1, inherit.aes=F)+
+#   scale_linetype_manual(values=c(1,2))+
+#   xlab("Prevalence")+
+#   guides(fill=F, color=F, alpha=F, linetype=F)+
+#   facet_wrap(~Property, scales='free')+
+#   scale_x_continuous(limits=c(0,1), breaks=c(0,0.5,1))+
+#   scale_y_continuous(limits=c(0,1.1), breaks=c(0,0.5,1))+
+#   ylab("Scaled density")+
+#   theme(strip.text.x=element_text(size=16))+
+#   coord_fixed()
+#     
 
 #ggsave(file=paste('~/Documents/research/generics/manuscript/figures/truthjudge-prevalences-priors-posteriors-wTarget-',t,'.pdf',sep=''), 
 #       width=5, height=3.5)
 
-print(t)
+  
+# black theme
+
+ggplot(d.sty%>% filter(Property == ti), 
+          aes(x=Prevalence, linetype=src, color=src, alpha=src, fill=src))+
+  geom_density(aes(y=..scaled..), size=1, color ='white')+
+  #scale_color_manual(values=c("#bdbdbd","#f0f0f0"))+
+  scale_fill_manual(values = c("#ffffb3","#8dd3c7"))+
+  scale_alpha_manual(values=c(0.9,0.6))+
+  geom_errorbarh(data = m.prevTargets %>% filter(Property==ti),
+                    aes(x= map, xmin = credLow, xmax = credHigh,
+                    y = 1.05), color='#bebada', size = 1.1,
+                    height = 0.1, inherit.aes=F)+
+  scale_linetype_manual(values=c(1,2))+
+  xlab("Prevalence")+
+  guides(alpha=F, color=F)+
+  facet_wrap(~Property, scales='free')+
+  scale_x_continuous(limits=c(0,1), breaks=c(0,0.5,1))+
+  scale_y_continuous(limits=c(0,1.1), breaks=c(0,0.5,1))+
+  ylab("Scaled density")+
+  theme_black()+
+  theme(strip.text.x=element_text(size=16))+
+  coord_fixed()
+    
+  
+  
+  
+  
+  
+ggsave(file=paste('~/Documents/research/habituals/talks/frisem-2016-generics/figures/truthjudge-prevalences-priors-posterior-wTarget-',ti,'.pdf',sep=''), 
+       width=5, height=3.5)
+  
+print(ti)
 
 }
 ```

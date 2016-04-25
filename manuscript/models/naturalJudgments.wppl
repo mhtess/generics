@@ -1,12 +1,15 @@
 // time webppl naturalJudgments.wppl --require naturalUtils
 
-// console.log(properties)
-// console.log(df_prior)
-
-var previter = 10000
+var previter = 100000
 console.log('inferring prevalence of property-category pairs...')
-var prevalenceERP = IncrementalMH(prevalenceModel, previter, {"verbose":"true",
-																"burnin": previter/2})
+var prevalenceERP = IncrementalMH(prevalenceModel, 
+										previter, 
+										{
+											"verbose":"true",
+											"verboseLag":previter/10,
+											"burn": previter/2
+										}
+									)
 console.log('prevalence of property-category pairs inferred!')
 
 
@@ -18,10 +21,10 @@ var prevalenceERPobject = _.object(map(function(p){
 }, properties))
 
 
-var prevprioriter = 10000
+var prevprioriter = 100000
 console.log('inferring prevalence priors...')
-var priorERP = IncrementalMH(priorModel, prevprioriter, {"verbose":"true",
-														"burnin": prevprioriter/2})
+var priorERP = IncrementalMH(priorModel, prevprioriter, {"verbose":"true", "verboseLag":prevprioriter/10,
+														"burn": prevprioriter/2})
 console.log('prevalence priors inferred!')
 
 var priorERPobject = _.object(map(function(p){
@@ -35,11 +38,10 @@ var responseDictionary = {
 
 var modelAnalysis = function(){
 
-	var speakerOptimality = uniform(0,20)
+	var speakerOptimality = uniform(0,100)
 	var cost = 1
-	var phi = uniform(0,1)
-	// var phi = 0.0001
-	// var softmax = uniform(0,5)
+	// var phi = uniform(0,1)
+	var phi = 0.001
 
 	foreach(properties,
 		function(property){
@@ -53,21 +55,21 @@ var modelAnalysis = function(){
 			foreach(categories,
 				function(k){
 					var categoryData = subset(propertyData, "Category", k)
+					
 					var prevalencePropCat = prevalenceERPobject[property][k]
 					var prevalence = sample(prevalencePropCat)
+					// console.log(property + k + prevalence)
+
 					var responseData = _.pluck(categoryData, "response")
 
-			     	var predictionERP = truthSpeaker2(prevalence, prior, speakerOptimality, 1)
+			     	var predictionERP = speaker2(prevalence, prior, speakerOptimality)
 
 			     	//note, there must be at least a tiny amount of noise, otherwise for the items with 0 prevalence, the model crashes
 			     	var linkedERP = guessingLink(predictionERP, phi)
-			     	// to use softmax (in conjunction with at least a little noise)
-			     	// var linkedERP = softmaxSpeaker(guessinglinkedERP, softmax)
 					
-
-					var scr = reduce(function(d, memo) {
-								    return memo + linkedERP.score([], responseDictionary[d])
-										}, 0, responseData)
+					var scr = sum(map(function(d) {
+								    return linkedERP.score([], responseDictionary[d])
+										}, responseData))
 					// console.log(property + k + scr)
 					factor(scr)
 
@@ -78,7 +80,7 @@ var modelAnalysis = function(){
 					// 			Math.exp(predictionERP.score([], "generic is true")))
 
 
-					query.add(["prevalence",property, k, "0"], prevalence)
+					// query.add(["prevalence",property, k, "0"], prevalence)
 
 					// })
 				})
@@ -100,25 +102,45 @@ var modelAnalysis = function(){
 	query.add(["speakerOptimality","na","na","na"], speakerOptimality)
 	// query.add(["softmax","na","na","na"], softmax)
 
-	query.add(["phi","na","na","na"], phi)
+	// query.add(["phi","na","na","na"], phi)
 	return query
 }
 
 
-var mhiter = 50000
+var mhiter = 200000
 var burn = mhiter/2
 console.log('doing the full bayesian dance...')
 var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true,
-												"burnin":burn}
+												"burnin":burn,
+												verboseLag:mhiter/50}
 												)
 console.log('FBT complete')
 
+// var mhiter = 1000
+// var burn = mhiter/2
 
-var outfile = '../model-results/generics-truthJudgment-phi-previter'+previter+
-				'_prevprioriter'+prevprioriter+'-priord50Zero-n60_mh'+mhiter+'_burn'+burn+'c.csv'
+// var steps = 5
+// var stepSize = 0.001
+
+// var resultsERP = MCMC(modelAnalysis, {
+// 	kernel: {HMC: {
+// 		steps: steps,
+// 		stepSize: stepSize
+// 	}},
+// 	verbose:"true",
+// 	samples: mhiter,
+// 	burn: burn
+// })
+
+
+
+var outfile = '../model-results/generics-truthJudgment-trueSOPTprior100-previter'+previter+
+				'_prevprioriter'+prevprioriter+'-priord50Zero-n60_IncrMH'+
+	mhiter+'_burn'+burn+'c.csv'
 
 naturalUtils.erpWriter(tfbt, outfile)
 console.log('wrote to... ' + outfile )
+
 
 // prevalenceERP
 // prevalenceERPobject["lay eggs"]["Sharks"]

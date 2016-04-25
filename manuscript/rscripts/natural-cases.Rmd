@@ -130,7 +130,9 @@ nonenglish<-c(1,4,19,38,39)
 catch<-c[c$pass==0,]$workerid
 
 tj <-read.csv(file = paste(d.path,'real-kinds-truth-1-trials.csv',sep=''))
-tj <- tj %>% filter(!(workerid %in% c(nonenglish, catch)))
+#tj <- tj %>% filter(!(workerid %in% c(nonenglish, catch)))
+tj <- tj %>% filter(!(workerid %in% catch))
+
 
 tj<- tj %>% 
   mutate(Category = sub(rexp,"\\1",sentence),
@@ -168,8 +170,10 @@ for (n in negations){
 
 
 
-write.csv(d.out,file='~/Documents/research/generics/models/data/real-kinds-prior-2-trials-n57-formatted.csv', row.names=F)
+#write.csv(d.out,file='~/Documents/research/generics/models/data/real-kinds-prior-2-trials-n57-formatted.csv', row.names=F)
 #write.csv(tj,file='~/Documents/research/generics/models/data/real-kinds-truth-1-trials-formatted.csv',row.names=F)
+#write.csv(tj,file='~/Documents/research/generics/manuscript/data/naturalGenerics-trials-minusCatch-n96-formatted.csv',row.names=F)
+
 
 
 ```

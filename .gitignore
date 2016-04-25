@@ -49,3 +49,4 @@ experiments/turk*
 manuscript/models/node_modules/naturalUtils/node_modules
 manuscript/models/node_modules/asymUtils/node_modules
 *npm-debug.log
+.Rproj.user

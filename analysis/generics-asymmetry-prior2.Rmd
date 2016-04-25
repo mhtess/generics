@@ -35,7 +35,7 @@ Plotted below are the trial-wise responses to the 2 questions (question 1 on x-a
 ```{r prior2}
 library(VGAM)
 d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-prior-2/asymmetry-prior-2-trials.csv')
-#d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-prior-3/asymmetry-prior-3-trials.csv')
+d<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-prior-3/asymmetry-prior-3-trials.csv')
 #d<-(d %>% filter(workerid>29))
 
 
@@ -68,6 +68,15 @@ ggplot(d.tidy, aes(x=val,fill=stim_type))+
   geom_histogram(alpha=0.5)+
   geom_density(alpha=0.5)+
   facet_grid(stim_type~resp, scales='free')
+
+
+ggplot(d.tidy, aes(x=val))+
+  geom_histogram(alpha=0.5)+
+  geom_density(alpha=0.5)+
+  facet_grid(.~resp, scales='free')
+
+
+
 ```
 
 **Note: scales='free' so the y-axis is different across plots. This is to improve visual clarity but be careful doing visual-quantitative comparisons across plots.**
@@ -81,6 +90,14 @@ Accidental properties are rare both within and across categories.
 Color properties are rare across categories (response0) but pretty generalizable within (response1).
 
 Vague properties are somewhat more common across categories than the color and accidental properties, and also pretty generalizable within categories.
+
+```{r}
+d.targ<-d %>% filter(stim_type %in% c("vaguelong", "dangerous"))
+
+rs<-lmer(response0~stim_type + (1 | workerid), data=d.targ)
+summary(rs)
+```
+
 
 ## Inferred betas
 

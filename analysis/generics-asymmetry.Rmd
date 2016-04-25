@@ -659,7 +659,7 @@ n = 40 ($0.60)
 #d.accept<-read.csv('~/Documents/research/generics/experiments/turk/asymmetry-2/truth-conditions-2-trials.csv')
 
 d<-read.csv('~/Documents/research/generics/models/data/asymmetry-2-trials-medSplitAccidental.csv')
-
+d<-read.csv('~/Documents/research/generics/models/data/asymmetry-2-trials-medSplitAccidentalFBT.csv')
 
 d.accept<- d %>% filter(trial_type=='truth_conditions')
 d.implied<- d %>% filter(trial_type=='implied_prevalence')
@@ -808,7 +808,7 @@ rs2<-lmer(data=d.implied, response~ type + (1 | workerid))
 
 #rs3<-lmer(data=d.implied, response~ type + (1 + type | workerid)+
 #                                            (1 | stim_property))
-summary(rs3)
+summary(rs2)
 
 anova(rs1,rs2)
 summary(rs1)

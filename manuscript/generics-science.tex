@@ -87,7 +87,7 @@
 \usepackage{geometry}
 
 \geometry{letterpaper, margin=1in}
-\usepackage{times}
+%\usepackage{times}
 \usepackage{pslatex}
 \usepackage{apacite}
 \usepackage{url}
@@ -330,9 +330,9 @@ P_{L_{0}}(x \mid u, \tau) &\propto& {\delta_{\denote{u}(x, \tau)} P(x)}. \label{
 The pragmatic listener $L_{1}$ (Eq. \ref{eq:L1}) has heard an utterance $u$, which is either a generic statement (e.g.~\emph{Robins lay eggs.}) or an uninformative \emph{null} utterance. 
  %generic utterance (\emph{Ks have F.}) from the speaker $S_{1}$ (Eq. \ref{eq:S1}). 
 $L_1$ is trying to resolve how common F is within K (i.e.~$x = P(F\mid K) \in [0, 1]$); she does so by considering both what she knows about property F in general---the probability distribution $P(x)$ over prevalence of F---and her model of the speaker $S_{1}$ as an informed and helpful interlocutor (Eq. \ref{eq:S1}).
-$L_1$ knows that the meaning of the generic utterance, if used, depends on a prevalence threshold, $\pi$, but does not know what this threshold is: $\tau \sim \text{Uniform([0,1])}$.
-Speaker $S_1$ has a particular $\pi$ in mind, and is trying to be informative about the prevalence $x$ to the listener in his head---an idealized literal listener ($L_{0}$, Eq. \ref{eq:L0}).
-The literal listener has access to the threshold $\pi$, and simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
+$L_1$ knows that the meaning of the generic utterance, if used, depends on a prevalence threshold, $\tau$, but does not know what this threshold is: $\tau \sim \text{Uniform([0,1])}$.
+Speaker $S_1$ has a particular $\tau$ in mind, and is trying to be informative about the prevalence $x$ to the listener in his head---an idealized literal listener ($L_{0}$, Eq. \ref{eq:L0}).
+The literal listener has access to the threshold $\tau$, and simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true.
 The generic utterance has a threshold semantics, $\denote{\text{K F}}(x, \tau)=x>\tau$; while the null utterance is always true, $\denote{null}(x, \tau)=T$.\footnote{All results reported are similar when the alternative utterance is stipulated to be the negation---\emph{It is not the case that robins lay eggs.}---or the generic of the negation---\emph{Robins do not lay eggs.}---as opposed to the \emph{null} utterance.}
 
 Example posterior distributions for $P_{L_{1}}(x , \tau \mid u)$ upon hearing a generic utterance can be seen in Figure \ref{fig:priors1a}. 
@@ -704,10 +704,10 @@ The pragmatic listener model closely aligns with human judgments, displaying the
 %Why is generic language interpreted so strongly if the criterion for endorsement is so flexible? 
 %}
 
-\citeA{Cimpian2010} reported a surprising d\'{e}colage: Novel generics were interpreted as implying a higher prevalence than that required to assent to the exact same generic.
+There is a surprising d\'{e}colage between the truth conditions and interpretations of generic language: Novel generics are interpreted as implying a higher prevalence than that required to assent to the exact same generic \cite{Cimpian2010}.
 % and the average prevalence required to assent to the exact same utterance: generics were interpreted as implying a higher prevalence than required to assent to the same generic.
 %\footnote{This asymmetry did not exist for the quantifier ``Most'', thought to be the most similar quantifier to the generic.}.
-Our model predicts that this effect should hold, but only for properties with most extreme prior beliefs (particularly mean prevalence when present, $\gamma$; see Figure \ref{fig:exp2b}, right.
+Our model predicts that this effect should hold, but only for properties with most extreme prior beliefs (particularly mean prevalence when present, $\gamma$; see Figure \ref{fig:exp2b}, right).
 To explore this prediction, we recruited participants ($n=40$) to help determine the average prevalence at which a speaker would assent to the generic. 
 %\ndg{why would we want this?} 
 We told participants one of five frequencies for each type of property (e.g. \emph{50\% of lorches have green feathers.}), and then asked for truth judgments of the corresponding generic sentence (e.g. \emph{Lorches have green feathers.}). 
