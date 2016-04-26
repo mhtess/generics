@@ -198,29 +198,42 @@ These distinct relation types manifest themselves as different inferences one co
 These different kinds of relations relate to \citeA{Leslie2007}'s distinctions among generics.
 Generics like \emph{Birds lay eggs.} (in which only a minority of K have F) exhibit characteristics of principled connections, though striking generics (e.g. \emph{Mosquitos carry malaria}) have causal connections. This is taken as support for Leslie's claims of the different types of default generalizations.
 
-The puzzles of generic language then reduce to puzzles about mental representation of kind-property relations.
+%The puzzles of generic language then reduce to puzzles about mental representation of kind-property relations.
 
 
 \subsubsection*{Statistical accounts of generics}
 
+Not all accounts of generic language reduce to puzzles about mental representation of kind--property relations.
+Accounts from the tradition of formal semantics tend to look towards precise, quantifiable conditions to determine if a sentence is true or false.
+The most promising account in this tradition was put forth in \citeA{Cohen1999}.
+To understand this theory, let's introduce some minimal notation:
 
+For a given kind $K$ (e.g.~\textsc{robins}) and property $F$ (e.g.~\textsc{lays eggs}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F\mid K)$, as the \emph{prevalence} of $F$ within $K$.
+Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F\mid K)>0$, \emph{all} is $P(F\mid K)=1$). 
+Assuming the generic relates to the property prevalence, then the simplest meaning would similarly be a threshold on prevalence: $P(F\mid K)>\tau$. \citeA{Cohen1999} takes $\tau = 0.5$; that is, \emph{Robins lay eggs} is taken to mean \emph{Most robins lay eggs}. 
 
-However, generic language is not unique in its flexibility.
-Language understanding in general depends on assumptions interlocutors make about each other and can result in manifold interpretations with a complex sensitivity to context \cite{Clark1996,Grice1975,Levinson2000}. 
+Of course most robins do not lay eggs; none of the male robins lay eggs. Cohen's system resolves this issue by introducing certain constraints into the computation of prevalence: $P(F\mid K)$. In particular, prevalence is computed with respect to a \emph{partition set}. In this theory, \emph{lays eggs} induces a set of alternatives that all have to do with procreation (e.g. \emph{gives birth to live young}, \emph{undergo mitosis}, ...). Then, the individuals that enter into the prevalence computation are only those individuals that would satisfy one or another alternative. \emph{Birds lay eggs} is taken to mean \emph{Most female birds lay eggs}. 
+
+Though the theory is precise, it relies upon a number of a working parts that seem to be determined in some (unspecified) way by pragmatics. 
+In addition, it is not clear what this semantic theory relates to the conceptual accounts of generics, and why it is that generic language is so ubiquitous and early acquired.
+
+We aim to unify these two disparate ways of understanding generic language. 
+We begin with the intuition that generic language is not unique in its flexibility.
+Language understanding in general depends on assumptions interlocutors make about each other and what content is under discussion. 
+Pragmatic analyses reveal that utterances carry a mosaic of interpretations with a complex sensitivity to context \cite{Clark1996,Grice1975,Levinson2000}. 
 Can the puzzles of generic language be understood as effects of pragmatic reasoning?
 If so, it may be unnecessary to encode abstract mental representations into the semantics of generics.
-We propose a relatively simple semantic theory, phrased in terms of statistical regularities, measured with probability. 
+Abstract representations, however, may be the backdrop against which generic language gets interpreted. 
+
 
 %If this is the case, then a relatively simple semantic theory, phrased in terms of statistical regularities in the world, could be enough to formalize generic language.
 %Abstract, mental representations may still operate; yet we suggest generic language operates through the common currency of probability. 
 
 \subsubsection*{Formal model}
 
-For a given kind $K$ (e.g.~\textsc{robins}) and property $F$ (e.g.~\textsc{lays eggs}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F\mid K)$, as the \emph{prevalence} of $F$ within $K$.\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability, not the actual frequency in the world.}
-Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F\mid K)>0$, \emph{all} is $P(F\mid K)=1$). 
-Extending this, it seems the simplest meaning for generic statements would be a similar threshold on prevalence: $P(F\mid K)>\tau$ \cite{Cohen1999}. 
-However, no fixed value of the threshold, $\tau$, would allow for the extreme flexibility generics exhibit (e.g. \emph{Robins lay eggs} vs. \emph{Robins are female}; \emph{Mosquitos carry malaria}).% simultaneously with the interpretations of some novel generics being strong. 
-
+We propose a relatively simple semantic theory, phrased in terms of statistical regularities, measured with probability. 
+We follow \citeA{Cohen1999} and adopt the simplest meaning for generic statements: a similar threshold on prevalence: $P(F\mid K)>\tau$.\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability, not the actual frequency in the world.}
+Of course, no fixed value of the threshold, $\tau$, allows for the extreme flexibility generics exhibit (e.g. \emph{Robins lay eggs} vs. \emph{Robins are female}; \emph{Mosquitos carry malaria}).% simultaneously with the interpretations of some novel generics being strong. 
 
 We suggest that this threshold is not a fixed property of the language, but is established in context through communicative principles.
 This inference depends on background knowledge about properties and categories, but is otherwise a general mechanism of language not specific to interpreting generic statements.
