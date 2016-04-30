@@ -48,7 +48,8 @@ var animalColorParts = {
     "flower":[["stems","col1"],["petals","col3"]],
     "fish": [["bodies","col1"],["fins","col2"]],
     "bug":[["legs","col1"],["heads","col2"]],
-    "bird": [["bodies","col2"],["wings","col3"]]};
+    "bird": [["bodies","col2"],["wings","col3"]]
+};
 
 
 var prevalences = [0, 0.33, 0.66, 1];
@@ -97,8 +98,23 @@ var animalNames =
     {list:2, category: "thups"},
     {list:3, category: "crullets"},
     {list:3, category: "feps"}]
-      
-var propertySizes = [[0,0],[0,0.5],[0,1],[0.5,0],[0.5,1],[1,0],[1,0.5],[1,1]];
+
+
+var generateIntrinsicOrigins = function(kind, feature){
+    return "Here's how they grew. They grew up with " + feature + 
+            ". First they were born, then they got bigger, then they got bigger."
+}
+
+var generateExtrinsicOrigins = function(kind, feature){
+    return "Here's what they did. They put on " + feature + ". First they were here, then they did this, then they looked like this."
+}
+
+var propertyMaintained = "Then one day they drank a yummy drink. They got very full and happy, and this is how they looked."
+var propertyLost = "Then one day they drank a bad chemical. They got very sick, and this is how they looked."
+
+
+// var propertySizes = [[0,0],[0,0.5],[0,1],[0.5,0],[0.5,1],[1,0],[1,0.5],[1,1]];
+var propertySizes = [[1,1]];
 var propertytestSizes = [[0,0.5],[1,0]];
 var testcolors = {
     "green":"#85E085",
