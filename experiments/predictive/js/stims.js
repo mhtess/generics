@@ -101,17 +101,21 @@ var animalNames =
     {list:3, category: "feps"}]
 
 
-var generateIntrinsicOrigins = function(kind, feature){
-    return "Here is how they grew. They grew up with " + feature + 
-            ".<br> First they were born, then they got bigger, then they were full size."
+var generateOrigins = {
+    intrinsic: function(kind, feature){
+        return "Here is how they grew. They grew up with " + feature + 
+               ".<br> First they were born, then they got bigger, then they were full size."
+    },
+    extrinsic: function(kind, feature){
+        return "Here's what they did. They put on " + feature + 
+        ".<br>First they were here, then they did this, then they looked like this."
+    }
 }
 
-var generateExtrinsicOrigins = function(kind, feature){
-    return "Here's what they did. They put on " + feature + ".<br>First they were here, then they did this, then they looked like this."
+var eventOutcomes = {
+    maintained: "Then one day they drank a yummy drink. <br>They got very full and happy, and this is how they looked.",
+    lost: "Then one day they drank a bad chemical.<br> They got very sick, and this is how they looked."
 }
-
-var propertyMaintained = "Then one day they drank a yummy drink. <br>They got very full and happy, and this is how they looked."
-var propertyLost = "Then one day they drank a bad chemical.<br> They got very sick, and this is how they looked."
 
 
 var propertySizes = _.map([[0,0],[0,0.5],[0,1],[0.5,0],[0.5,1],[1,0],[1,0.5],[1,1]],

@@ -84,24 +84,15 @@ function make_slides(f) {
     name: "truth_conditions",
 
 
-    present :  exp.stims1.shift(),//exp.stims[0],
+    present :  exp.stims,//exp.stims[0],
 
     present_handle : function(stim) {
 
       this.startTime = Date.now();
       this.stim = stim;
 
-      this.stim.prevalence = this.stim[0]["prevalence"]
-      this.stim.category = this.stim[1]["kind"]
-      this.stim.property = this.stim[1]["property"]
-      this.stim.propertyName = this.stim[1]["propertyName"]
       this.stim.proptype = _.sample(["part","color-part"])
-      this.stim.colorword = colors.getKeyByValue(this.stim[2])
-      this.stim.categoryName = this.stim[3]["category"]
-
-      this.stim.determiner = this.stim[4]
-
-      this.stim.propSizes = this.stim[5]
+      this.stim.colorTag = colors[this.stim.color]
 
       var colorPart;
 
@@ -115,11 +106,11 @@ function make_slides(f) {
       // --> sample an appropriate body part
       // --> sample a color
       this.stim.proptype == 'color' ?
-          this.stim.color = this.stim[2] :
+          null :
           this.stim.color = "#FFFFFF"
 
       if (this.stim.proptype == 'color-part') {
-           colorPart = _.sample(animalColorParts[this.stim.category]);
+           colorPart = _.sample(animalColorParts[this.stim.kind]);
            this.stim.colorPart = colorPart[0];
            this.stim.colorPartLabel = colorPart[1];
            this.stim.colorPartColor = _.sample(colors);
@@ -129,25 +120,27 @@ function make_slides(f) {
           this.stim.colorPartColor = this.stim.color
       } // no distinguishing color)
 
+    
       this.stim.colorpartword = colors.getKeyByValue(this.stim.colorPartColor)
 
       this.stim.np = this.stim.determiner == 'generic' ? 
-         utils.upperCaseFirst(this.stim.categoryName) :
-         utils.upperCaseFirst(this.stim.determiner) + " " + this.stim.categoryName
+         utils.upperCaseFirst(this.stim.category) :
+         utils.upperCaseFirst(this.stim.determiner) + " " + this.stim.category
 
       this.stim.feature = this.stim.proptype == 'part' ? this.stim.propertyName : 
                       this.stim.proptype == 'color-part' ? this.stim.colorpartword +" "+ this.stim.colorPart:
                       this.stim.proptype == 'color' ? this.stim.colorword +" bodies":
                       "[[feature error]]"
 
-      this.stim.intrinsic = generateIntrinsicOrigins(this.stim.np, this.stim.feature)
+      this.stim.originStory = generateOrigins[this.stim.origins](this.stim.np, this.stim.feature)
+      this.stim.eventStory = eventOutcomes[this.stim.eventOutcome]
 
        this.utterance = this.stim.proptype == 'part' ? this.stim.np + " have " + this.stim.propertyName:
                         this.stim.proptype == 'color' ? this.stim.np + " are " + this.stim.colorword:
                         this.stim.proptype == 'color-part' ? this.stim.np + " have " + this.stim.colorpartword +" "+ this.stim.colorPart:
                        "error"
 
-      $(".prompt").html("These are " + this.stim.categoryName + ".");
+      $(".prompt").html("These are " + this.stim.category + ".");
 
       var scale = 0.5;
       var cells = ['svg0','svg1','svg2','svg3','svg4','svg5'];
@@ -162,8 +155,8 @@ function make_slides(f) {
         "col5":{"mean":this.stim.color},
         "tar1":0, // never has a tail
         "tar2":0, // never has a crest
-        "prop1":{"mean":this.stim.propSizes[0]}, // mean size, unif(0, 0.5, 1)
-        "prop2":{"mean":this.stim.propSizes[1]},
+        "prop1":{"mean":this.stim.prop1size}, // mean size, unif(0, 0.5, 1)
+        "prop2":{"mean":this.stim.prop2size},
         "var":0.001, //overall variance (overwritten by any specified variances)
       };
 
@@ -175,19 +168,19 @@ function make_slides(f) {
         "col5":{"mean":"#FFFFFF"},
         "tar1":0, // never has a tail
         "tar2":0, // never has a crest
-        "prop1":{"mean":this.stim.propSizes[0]}, // mean size, unif(0, 0.5, 1)
-        "prop2":{"mean":this.stim.propSizes[1]},
+        "prop1":{"mean":this.stim.prop1size}, // mean size, unif(0, 0.5, 1)
+        "prop2":{"mean":this.stim.prop2size},
         "var":0.001, //overall variance (overwritten by any specified variances)
       };
 
-      var negGenus = new Ecosystem.Genus(this.stim.category, negGenusOptions)
+      var negGenus = new Ecosystem.Genus(this.stim.kind, negGenusOptions)
 
       this.genusOptions[this.stim.colorPartLabel].mean = this.stim.colorPartColor
 
       this.stim.proptype == 'part' ? this.genusOptions[this.stim.property] = 1 : null
 
       var genus = new Ecosystem.Genus(
-        this.stim.category, 
+        this.stim.kind, 
         this.genusOptions)
 
       var animalsWithProperties = Math.round(this.stim.prevalence*6)
@@ -216,9 +209,9 @@ function make_slides(f) {
       if (this.flag == 0) {
         // after showing 6 dobles, show origins.
         ['svg0','svg1','svg2','svg3','svg4','svg5'].map(function(cell){$('#'+cell).empty()});
-        $(".prompt").html(this.stim.intrinsic);
+        $(".prompt").html(this.stim.originStory);
 
-        var genus = new Ecosystem.Genus(this.stim.category, this.genusOptions)
+        var genus = new Ecosystem.Genus(this.stim.kind, this.genusOptions)
 
         genus.draw("svg0", {}, 0.2)
         genus.draw("svg1", {}, 0.4)
@@ -227,9 +220,9 @@ function make_slides(f) {
       } else if (this.flag==1) {
 
         var cells = ['svg0','svg1','svg2','svg3','svg4','svg5']
-        $(".prompt").html(propertyMaintained);
+        $(".prompt").html(this.stim.eventStory);
         cells.map(function(cell){$('#'+cell).empty()});
-        var genus = new Ecosystem.Genus(this.stim.category, this.genusOptions);
+        var genus = new Ecosystem.Genus(this.stim.kind, this.genusOptions);
         cells.map(function(x){genus.draw(x, {}, 0.5)});
         this.flag = 2
 
@@ -476,6 +469,28 @@ function init() {
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
   var determiners = _.map(utils.fillArray("generic",8), function(x){return {determiner: x}})
 
+
+  var conditions = [
+    {
+      origins: "intrinsic",
+      eventOutcome: "maintained"
+    },
+    {
+      origins: "intrinsic",
+      eventOutcome: "lost"
+    },
+    {
+      origins: "extrinsic",
+      eventOutcome: "maintained"
+    },
+    {
+      origins: "extrinsic",
+      eventOutcome: "lost"
+    }
+  ]
+
+
+
   exp.numTrials = animalNames.length;
 
   var shuffledStims = _.shuffle(animalNames);
@@ -486,10 +501,12 @@ function init() {
       _.shuffle(_.map(_.keys(colors), function(c){return {color: c}})),
       shuffledStims.slice(0,8), 
       determiners,
-      _.shuffle(propertySizes)
-      ), function(lst){return _.extend(lst[0], lst[1], lst[2], lst[3], lst[4], lst[5])})
+      _.shuffle(propertySizes),
+      _.shuffle(_.flatten([conditions, conditions]))
+      ), function(lst){return _.extend(lst[0], lst[1], lst[2], lst[3], lst[4], lst[5], lst[6])})
 
-  debugger;
+  console.log(exp.stims)
+
   exp.system = {
       Browser : BrowserDetect.browser,
       OS : BrowserDetect.OS,
