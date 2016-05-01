@@ -235,7 +235,7 @@ function make_slides(f) {
 
       } else if (this.flag==2) { 
 
-        $(".prompt").html(this.utterance);
+        $(".prompt").html("Do you agree or disagree that:<br>" + this.utterance);
 
         $('#radio1').parent().show();
         $('#radio2').parent().show();
@@ -474,18 +474,22 @@ function init() {
 
 //  exp.stimtype = _.shuffle(["bare","danger","irrelevant"]);
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
-  var determiners = [utils.fillArray("generic",8)]
+  var determiners = _.map(utils.fillArray("generic",8), function(x){return {determiner: x}})
 
   exp.numTrials = animalNames.length;
 
   var shuffledStims = _.shuffle(animalNames);
-  exp.stims1 = [_.zip(_.shuffle(prevlevObj),
-                _.shuffle(propertyObj),
-                _.shuffle(colors),
-                shuffledStims.slice(0,8), 
-                determiners.pop(),
-                _.shuffle(propertySizes))]
 
+  exp.stims = _.map(_.zip(
+      _.shuffle(prevlevObj),
+      _.shuffle(propertyObj),
+      _.shuffle(_.map(_.keys(colors), function(c){return {color: c}})),
+      shuffledStims.slice(0,8), 
+      determiners,
+      _.shuffle(propertySizes)
+      ), function(lst){return _.extend(lst[0], lst[1], lst[2], lst[3], lst[4], lst[5])})
+
+  debugger;
   exp.system = {
       Browser : BrowserDetect.browser,
       OS : BrowserDetect.OS,

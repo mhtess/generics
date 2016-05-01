@@ -42,7 +42,8 @@ var colors = {
     "black":"#000000"
 }
 
-var categories = ['fish','flower','bird','bug']
+// var categories = ['fish','flower','bird','bug']
+var categories = ['fish','bird','bug']
 
 var animalColorParts = {
     "flower":[["stems","col1"],["petals","col3"]],
@@ -101,20 +102,21 @@ var animalNames =
 
 
 var generateIntrinsicOrigins = function(kind, feature){
-    return "Here's how they grew. They grew up with " + feature + 
-            ". First they were born, then they got bigger, then they got bigger."
+    return "Here is how they grew. They grew up with " + feature + 
+            ".<br> First they were born, then they got bigger, then they were full size."
 }
 
 var generateExtrinsicOrigins = function(kind, feature){
-    return "Here's what they did. They put on " + feature + ". First they were here, then they did this, then they looked like this."
+    return "Here's what they did. They put on " + feature + ".<br>First they were here, then they did this, then they looked like this."
 }
 
-var propertyMaintained = "Then one day they drank a yummy drink. They got very full and happy, and this is how they looked."
-var propertyLost = "Then one day they drank a bad chemical. They got very sick, and this is how they looked."
+var propertyMaintained = "Then one day they drank a yummy drink. <br>They got very full and happy, and this is how they looked."
+var propertyLost = "Then one day they drank a bad chemical.<br> They got very sick, and this is how they looked."
 
 
-// var propertySizes = [[0,0],[0,0.5],[0,1],[0.5,0],[0.5,1],[1,0],[1,0.5],[1,1]];
-var propertySizes = [[1,1]];
+var propertySizes = _.map([[0,0],[0,0.5],[0,1],[0.5,0],[0.5,1],[1,0],[1,0.5],[1,1]],
+    function(x){return {prop1size: x[0], prop2size: x[1]}});
+// var propertySizes = [[1,1]];
 var propertytestSizes = [[0,0.5],[1,0]];
 var testcolors = {
     "green":"#85E085",
