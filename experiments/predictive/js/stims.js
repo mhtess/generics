@@ -42,8 +42,7 @@ var colors = {
     "black":"#000000"
 }
 
-// var categories = ['fish','flower','bird','bug']
-var categories = ['fish','bird','bug']
+var categories = ['fish','flower','bird','bug']
 
 var animalColorParts = {
     "flower":[["stems","col1"],["petals","col3"]],
@@ -55,15 +54,6 @@ var animalColorParts = {
 
 var prevalences = [0, 0.33, 0.66, 1];
 
-var prevlevObj = [{"prevalence":0}, {"prevalence":0},
-                      {"prevalence":0.33},{"prevalence":0.33},
-                      {"prevalence":0.66},{"prevalence":0.66},
-                      {"prevalence":1},{"prevalence":1}];
-
-var propertyObj = [{"kind":"fish","property":"tar1","propertyName":"fangs"},{"kind":"fish","property":"tar2","propertyName":"whiskers"},
-                  {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
-                  {"kind":"bug","property":"tar1","propertyName":"antennae"},{"kind":"bug","property":"tar2","propertyName":"wings"},
-                  {"kind":"bird","property":"tar1","propertyName":"tails"},{"kind":"bird","property":"tar2","propertyName":"crests"}];
 
 
 var animalNames = 
@@ -108,7 +98,7 @@ var generateOrigins = {
     },
     extrinsic: function(kind, feature){
         return "Here's what they did. They put on " + feature + 
-        ".<br>First they were here, then they did this, then they looked like this."
+        ".<br>First they were here on the left, then they went away (middle), and then they looked like this on the right."
     }
 }
 

@@ -160,7 +160,7 @@ function make_slides(f) {
         "var":0.001, //overall variance (overwritten by any specified variances)
       };
 
-      var negGenusOptions = {
+      this.negGenusOptions = {
         "col1":{"mean":"#FFFFFF"},
         "col2":{"mean":"#FFFFFF"},
         "col3":{"mean":"#FFFFFF"},
@@ -173,7 +173,7 @@ function make_slides(f) {
         "var":0.001, //overall variance (overwritten by any specified variances)
       };
 
-      var negGenus = new Ecosystem.Genus(this.stim.kind, negGenusOptions)
+      var negGenus = new Ecosystem.Genus(this.stim.kind, this.negGenusOptions)
 
       this.genusOptions[this.stim.colorPartLabel].mean = this.stim.colorPartColor
 
@@ -191,8 +191,10 @@ function make_slides(f) {
 
       // debugger;
       // genus.draw("svg0", {}, scale)
+      this.stim.origins == "intrinsic" ?
+        cells.map(function(x){genus.draw(x, {}, scale)}) : 
+        cells.map(function(x){negGenus.draw(x, {}, scale)})
 
-      cells.map(function(x){genus.draw(x, {}, scale)})
       $('#radio1').parent().hide();
       $('#radio2').parent().hide();
 
@@ -212,10 +214,18 @@ function make_slides(f) {
         $(".prompt").html(this.stim.originStory);
 
         var genus = new Ecosystem.Genus(this.stim.kind, this.genusOptions)
+        var negGenus = new Ecosystem.Genus(this.stim.kind, this.negGenusOptions)
 
-        genus.draw("svg0", {}, 0.2)
-        genus.draw("svg1", {}, 0.4)
-        genus.draw("svg2", {}, 0.6)
+        if (this.stim.origins == "intrinsic") {
+          genus.draw("svg0", {}, 0.2)
+          genus.draw("svg1", {}, 0.4)
+          genus.draw("svg2", {}, 0.6)
+        } else { 
+          negGenus.draw("svg0", {}, 0.5)
+          negGenus.draw("svg1", {}, 0.3)
+          genus.draw("svg2", {}, 0.5)
+        }
+
         this.flag = 1
       } else if (this.flag==1) {
 
@@ -223,7 +233,14 @@ function make_slides(f) {
         $(".prompt").html(this.stim.eventStory);
         cells.map(function(cell){$('#'+cell).empty()});
         var genus = new Ecosystem.Genus(this.stim.kind, this.genusOptions);
-        cells.map(function(x){genus.draw(x, {}, 0.5)});
+        var negGenus = new Ecosystem.Genus(this.stim.kind, this.negGenusOptions)
+
+        if (this.stim.eventOutcome=="maintained") {
+          cells.map(function(x){genus.draw(x, {}, 0.5)});
+        } else {
+          cells.map(function(x){negGenus.draw(x, {}, 0.5)});
+        };
+      
         this.flag = 2
 
       } else if (this.flag==2) { 
@@ -283,12 +300,12 @@ function make_slides(f) {
         "stim_color": this.stim.colorsave,
         "stim_part":this.stim.propsave
       });
-    },
+    }//,
 
-    end : function() {
-      this.present = exp.stims1.shift();
-      //exp.stims.shift();
-    }
+    // end : function() {
+    //   this.present = exp.stims1.shift();
+    //   //exp.stims.shift();
+    // }
 
   });
 
@@ -489,20 +506,35 @@ function init() {
     }
   ]
 
+  var prevlevObj = [{"prevalence":0}, {"prevalence":0},
+                        // {"prevalence":0.33},{"prevalence":0.33},
+                        // {"prevalence":0.66},{"prevalence":0.66},
+                        {"prevalence":1},{"prevalence":1}];
 
 
-  exp.numTrials = animalNames.length;
+  var propertyObj = [{"kind":"fish","property":"tar1","propertyName":"fangs"},//{"kind":"fish","property":"tar2","propertyName":"whiskers"},
+                    // {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
+                    //{"kind":"bug","property":"tar1","propertyName":"antennae"},
+                    {"kind":"bug","property":"tar2","propertyName":"wings"},
+                    {"kind":"bird","property":"tar1","propertyName":"tails"},
+                    {"kind":"bird","property":"tar2","propertyName":"crests"}];
+
+
+  var ntrials = 4
+
+  exp.numTrials = ntrials//animalNames.length;
 
   var shuffledStims = _.shuffle(animalNames);
 
+
   exp.stims = _.map(_.zip(
-      _.shuffle(prevlevObj),
-      _.shuffle(propertyObj),
-      _.shuffle(_.map(_.keys(colors), function(c){return {color: c}})),
-      shuffledStims.slice(0,8), 
-      determiners,
-      _.shuffle(propertySizes),
-      _.shuffle(_.flatten([conditions, conditions]))
+      _.shuffle(prevlevObj).slice(0,ntrials),
+      _.shuffle(propertyObj).slice(0,ntrials),
+      _.shuffle(_.map(_.keys(colors), function(c){return {color: c}})).slice(0,ntrials),
+      shuffledStims.slice(0,ntrials), 
+      determiners.slice(0,ntrials),
+      _.shuffle(propertySizes).slice(0,ntrials),
+      _.shuffle(conditions, conditions)
       ), function(lst){return _.extend(lst[0], lst[1], lst[2], lst[3], lst[4], lst[5], lst[6])})
 
   console.log(exp.stims)
@@ -530,7 +562,7 @@ function init() {
    //                 exp.condition, 
    //                 'subj_info', 
    //                 'thanks'];
-  exp.structure = ['truth_conditions'];
+  exp.structure = ['truth_conditions',"thanks"];
 
   exp.data_trials = [];
   //make corresponding slides:
