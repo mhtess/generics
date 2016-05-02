@@ -1,0 +1,153 @@
+---
+title: "schematic-priors"
+author: "mht"
+date: "May 2, 2016"
+output: html_document
+---
+
+Schematic priors and posteriors for paper.
+
+```{r}
+library(rwebppl)
+```
+
+```{r webppl.model}
+rsa<-"
+// discretized range between 0 - 1
+var bins = [0.001,0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+
+// function returns a discretized beta PDF
+var discretizeBeta = function(g, d){
+  var shape_alpha =  g * d;
+  var shape_beta = (1-g) * d;
+  var betaPDF = function(x){
+    return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
+  }
+  return map(betaPDF, bins)
+}
+
+var discretizeBetaStandard = function(shape_alpha, shape_beta){
+  console.log(shape_alpha)
+  var betaPDF = function(x){
+    console.log(Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1))
+    return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
+  }
+  return map(betaPDF, bins)
+}
+
+var s1optimality = 5
+var thresholdBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+var thresholdPrior = function() {
+  var threshold = uniformDraw(thresholdBins)
+  return threshold
+}
+
+var utterancePrior = function() {
+  var utterances = ['generic', 'mu']  
+  //    var utterances = ['generic is true',
+  //                 'generic is false']  
+  return uniformDraw(utterances)
+}
+
+var meaning = function(utt,state, threshold) {
+  return _.isNumber(utt) ? state == utt :
+  utt=='generic'? state>threshold :
+  utt=='specific'? state==0.001 :
+  utt=='generic is false'? state<=threshold :
+  utt=='mu'? true:
+  utt=='some'? state>0:
+  utt=='most'? state>= 0.5:
+  utt=='all'? state >= 0.99:
+  true
+}
+
+var listener0 = cache(function(utterance, threshold, params) {
+  Enumerate(function(){
+    var causeIsPresent = flip(params.theta)
+    var state = causeIsPresent ? 
+        bins[discrete(discretizeBetaStandard(params.a1,params.b1))] : 
+        bins[discrete(discretizeBetaStandard(params.a0,params.b0))]
+
+    var m = meaning(utterance, state, threshold)
+    condition(m)
+    return state
+  })
+})
+
+var speaker1 = function(state, threshold, params) {
+  Enumerate(function(){
+    var utterance = utterancePrior()
+    var L0 = listener0(utterance, threshold, params)
+    factor(s1optimality*L0.score([],state))
+    return utterance
+  })
+}
+
+
+var listener1 = function(utterance, params) {
+  Enumerate(function(){
+    var causeIsPresent = flip(params.theta)
+    var state = causeIsPresent ? 
+        bins[discrete(discretizeBetaStandard(params.a1,params.b1))] : 
+        bins[discrete(discretizeBetaStandard(params.a0,params.b0))]
+
+    var threshold = thresholdPrior()
+    var S1 = speaker1(state, threshold, params)
+    factor(S1.score([],utterance))
+    return state
+  })
+}
+
+
+var speaker2 = function(prevalence, prior){
+  Enumerate(function(){
+    var utterance = utterancePrior()
+    var wL1 = listener1(utterance, prior)
+    factor(wL1.score([], prevalence))
+    return utterance
+  })
+}
+
+var thePrior = Enumerate(function(){
+  return flip(myPrior[0].theta) ? 
+          bins[discrete(discretizeBetaStandard(myPrior[0].a1,myPrior[0].b1))] :
+          bins[discrete(discretizeBetaStandard(myPrior[0].a0,myPrior[0].b0))]
+})
+
+//console.log(myPrior[0])
+var output = {prior: thePrior, l1: listener1('generic', myPrior[0])}
+output
+"
+```
+
+
+```{r}
+
+my_priors <- data.frame(
+  label= c("uniform", "convex", "concave", "left-skew", "right-skew"),
+  theta = c(1, 1, 1, 1, 1),
+  a1 = c(1, 0.1, 10, 10, 0.1),
+  b1 = c(1, 0.1, 10, 0.1, 10),
+  a0 = c(0,0,0,0,0),
+  b0 = c(0,0,0,0,0)
+)
+
+
+model_results<-data.frame()
+my_prior <- my_priors[1,]
+
+temp_post<-webppl(model_code=rsa, data =my_prior, data_var = "myPrior")
+model_results<-bind_rows(
+  model_results,
+    bind_cols(
+      data.frame(priorLabel = rep(my_prior$label,  length(temp_post$prior$support))),
+      left_join(
+        data.frame(temp_post$prior) %>% rename(prior = probs),
+        data.frame(temp_post$l1) %>% rename(l1 = probs)
+      ) %>% select(support, prior, l1)
+    )
+  )
+
+
+``` 
+
