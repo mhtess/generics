@@ -1,0 +1,107 @@
+---
+title: "cue-validity"
+author: "mht"
+date: "May 3, 2016"
+output: html_document
+---
+```{r}
+library(rwebppl)
+```
+
+
+```{r clean}
+d<-read.csv("/Users/mht/Documents/research/generics/manuscript/data/naturalGenerics-prior-trials-n57.csv")
+
+upperFirst <- function(name){
+  return (paste(toupper(substr(name, 1, 1)), substr(name, 2, nchar(name)), sep=""))
+}
+
+removeS <- function(name.in){
+  exceptions = c("Turtles", "Bees", "Horses", "Giraffes","Whales","Beetles","Eagles","Snakes","Moles")
+  bluejays =  c("Blue jay","Blue Jay","Bluejay")
+  fleas = c("Flea", "Fly")
+  name<-removeSpace(name.in)
+  last<-substr(name,nchar(name),nchar(name))
+  last2<-substr(name,nchar(name)-1,nchar(name))
+  if (name%in%exceptions){
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else if (name%in%bluejays){
+    name.singular <- "Bluejay"
+  } else if (name%in%fleas){
+    name.singular <- "Flea"
+  } else if (name=="Wolves") {
+    name.singular <- "Wolf"
+  } else if (name=='Dolpin') {
+    name.singular <- "Dolphin"
+  } else if (name=='Giraffs') {
+    name.singular <- "Giraffe"
+  }  else if (last2=='es') {
+    name.singular <- substr(name,1,nchar(name)-2)
+  } else if (last=='s') {
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else {
+    name.singular <- name
+  }
+  
+return(name.singular)
+}
+
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+
+removeSpace <- function(name){
+  if (substrRight(name,1)==' ') {
+    name.edit <- substr(name,1, nchar(name)-1)
+  } else {
+    name.edit <- name
+  }
+  return(name.edit)
+}
+
+d$animal.parsed<- factor(
+  tolower(
+    unlist(
+      Map(
+        removeS, 
+        upperFirst(as.character(d$Category))
+        )
+      )
+    )
+  )
+```
+
+
+```{r stat}
+d.stat<- d %>%
+  group_by(Property, animal.parsed) %>%
+  multi_boot_standard(column='prevalence') %>%
+  rename(Category = animal.parsed)
+
+
+```
+
+
+```{r model}
+
+d.item <- d.stat %>% filter(Property=='carry malaria')
+
+model<-'
+
+var allKinds = _.pluck(df, "Category")
+var kind = uniformDraw(allKinds)
+
+var cueValidity = function(){
+  var kind = uniformDraw(allKinds)
+   var p_f_given_k = df[_.sortedIndex(df, 
+                          {Category: kind}, 
+                          "Category")].mean;
+   var feature = flip(p_f_given_k/100)
+   condition(feature)
+   return kind
+}
+
+Enumerate(cueValidity)
+'
+webppl(model, data=d.item, data_var ="df")
+```
