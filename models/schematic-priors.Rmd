@@ -14,7 +14,8 @@ library(rwebppl)
 ```{r webppl.model}
 rsa<-"
 // discretized range between 0 - 1
-var bins = [0.001,0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+// var bins = [0.001,0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99, 0.999]
+var bins = [0.001,0.01,0.05, 0.1,0.15, 0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99, 0.999]
 
 // function returns a discretized beta PDF
 var discretizeBeta = function(g, d){
@@ -27,16 +28,14 @@ var discretizeBeta = function(g, d){
 }
 
 var discretizeBetaStandard = function(shape_alpha, shape_beta){
-  console.log(shape_alpha)
   var betaPDF = function(x){
-    console.log(Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1))
     return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
   }
   return map(betaPDF, bins)
 }
 
 var s1optimality = 5
-var thresholdBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+var thresholdBins = [0,0.001,0.01,0.05, 0.1,0.15, 0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99, ]
 var thresholdPrior = function() {
   var threshold = uniformDraw(thresholdBins)
   return threshold
@@ -114,40 +113,71 @@ var thePrior = Enumerate(function(){
           bins[discrete(discretizeBetaStandard(myPrior[0].a0,myPrior[0].b0))]
 })
 
-//console.log(myPrior[0])
 var output = {prior: thePrior, l1: listener1('generic', myPrior[0])}
 output
 "
 ```
 
+Run model for many different priors
+
+
+Kinds of bimodal priors:
+
+1. 50 / 50 mixture: delta + concave
+2. 50 / 50 mixture: delta + uniform
+3. 50 / 50 mixture: delta + left-centered-concave
 
 ```{r}
-
 my_priors <- data.frame(
   label= c("uniform", "convex", "concave", "left-skew", "right-skew"),
   theta = c(1, 1, 1, 1, 1),
-  a1 = c(1, 0.1, 10, 10, 0.1),
-  b1 = c(1, 0.1, 10, 0.1, 10),
+  a1 = c(1, 0.2, 5, 5, 0.2),
+  b1 = c(1, 0.2, 5, 0.2, 5),
   a0 = c(0,0,0,0,0),
   b0 = c(0,0,0,0,0)
 )
 
 
 model_results<-data.frame()
-my_prior <- my_priors[1,]
+for (i in levels(my_priors$label)){
+  
+  my_prior <- my_priors %>% filter(label==i)
 
-temp_post<-webppl(model_code=rsa, data =my_prior, data_var = "myPrior")
-model_results<-bind_rows(
-  model_results,
-    bind_cols(
-      data.frame(priorLabel = rep(my_prior$label,  length(temp_post$prior$support))),
-      left_join(
-        data.frame(temp_post$prior) %>% rename(prior = probs),
-        data.frame(temp_post$l1) %>% rename(l1 = probs)
-      ) %>% select(support, prior, l1)
+  temp_post<-webppl(model_code=rsa, data =my_prior, data_var = "myPrior")
+  
+  model_results<-bind_rows(
+    model_results,
+      bind_cols(
+        data.frame(priorLabel = rep(i,  length(temp_post$prior$support))),
+        left_join(
+          data.frame(temp_post$prior) %>% rename(prior = probs),
+          data.frame(temp_post$l1) %>% rename(l1 = probs)
+        ) %>% select(support, prior, l1)
+      )
     )
-  )
-
+  print(i)
+}
 
 ``` 
+
+Plot the results 
+
+```{r plot}
+
+model_results %>% 
+  gather(key, val, prior, l1) %>%
+  ggplot(., aes(x=support, y=val, color=key, fill=key, alpha=key))+
+  #geom_point()+
+  #geom_smooth(se=F, method="loess")+
+  geom_density(stat='identity')+
+  scale_alpha_manual(values=c(1,0.4))+
+  facet_wrap(~priorLabel)+
+  ylab("Probability")+
+  xlab("Prevalence")
+
+
+
+
+```
+
 
