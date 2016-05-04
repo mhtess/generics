@@ -17,6 +17,13 @@ rsa<-"
 // var bins = [0.001,0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99, 0.999]
 var bins = [0.001,0.01,0.05, 0.1,0.15, 0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99, 0.999]
 
+var marginalize = function(myERP, label){
+    Enumerate(function(){
+        var x = sample(myERP)
+        return x[label]
+    })
+}
+
 // function returns a discretized beta PDF
 var discretizeBeta = function(g, d){
   var shape_alpha =  g * d;
@@ -35,22 +42,25 @@ var discretizeBetaStandard = function(shape_alpha, shape_beta){
 }
 
 var s1optimality = 5
-var thresholdBins = [0,0.001,0.01,0.05, 0.1,0.15, 0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99, ]
+var thresholdBins = [0.01,0.05, 0.1,0.15, 0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
 var thresholdPrior = function() {
   var threshold = uniformDraw(thresholdBins)
   return threshold
 }
 
 var utterancePrior = function() {
-  var utterances = ['generic', 'mu']  
+  var utterances = ['generic', 'mu', 'generic is false']  
   //    var utterances = ['generic is true',
   //                 'generic is false']  
   return uniformDraw(utterances)
+  //return utterances[discrete([1,50, 1])]
 }
 
 var meaning = function(utt,state, threshold) {
+//var meaning = function(utt,state, threshold, threshold2) {
   return _.isNumber(utt) ? state == utt :
   utt=='generic'? state>threshold :
+ // utt=='not generic' ? state<threshold2 :
   utt=='specific'? state==0.001 :
   utt=='generic is false'? state<=threshold :
   utt=='mu'? true:
@@ -73,7 +83,7 @@ var listener0 = cache(function(utterance, threshold, params) {
   })
 })
 
-var speaker1 = function(state, threshold, params) {
+var speaker1 = function(state, threshold,params) {
   Enumerate(function(){
     var utterance = utterancePrior()
     var L0 = listener0(utterance, threshold, params)
@@ -91,9 +101,11 @@ var listener1 = function(utterance, params) {
         bins[discrete(discretizeBetaStandard(params.a0,params.b0))]
 
     var threshold = thresholdPrior()
+    //var threshold2 = thresholdPrior()
     var S1 = speaker1(state, threshold, params)
     factor(S1.score([],utterance))
-    return state
+    return {state: state,
+            threshold: threshold}
   })
 }
 
@@ -113,7 +125,14 @@ var thePrior = Enumerate(function(){
           bins[discrete(discretizeBetaStandard(myPrior[0].a0,myPrior[0].b0))]
 })
 
-var output = {prior: thePrior, l1: listener1('generic', myPrior[0])}
+var l1post = listener1('generic', myPrior[0])
+
+var output = {
+  prior: thePrior, 
+  priorTheta: Enumerate(function(){return thresholdPrior()}),
+  l1state: marginalize(l1post, 'state'), 
+  l1theta: marginalize(l1post, 'threshold')
+}
 output
 "
 ```
@@ -136,23 +155,32 @@ my_priors <- data.frame(
   a0 = c(0,0,0,0,0),
   b0 = c(0,0,0,0,0)
 )
+#my_prior = my_priors[1,]
 
+#my_priors <- droplevels(my_priors %>% filter(label=='concave'))
 
 model_results<-data.frame()
 for (i in levels(my_priors$label)){
   
   my_prior <- my_priors %>% filter(label==i)
 
-  temp_post<-webppl(model_code=rsa, data =my_prior, data_var = "myPrior")
+  temp_post<-webppl(model_code=rsa, data =my_prior, 
+                    data_var = "myPrior")
   
   model_results<-bind_rows(
     model_results,
       bind_cols(
         data.frame(priorLabel = rep(i,  length(temp_post$prior$support))),
         left_join(
-          data.frame(temp_post$prior) %>% rename(prior = probs),
-          data.frame(temp_post$l1) %>% rename(l1 = probs)
-        ) %>% select(support, prior, l1)
+         left_join(
+            left_join(
+              data.frame(temp_post$prior) %>% rename(prior = probs),
+              data.frame(temp_post$l1state) %>% rename(l1state = probs)
+              ),
+            data.frame(temp_post$l1theta) %>% rename(l1theta = probs)
+         ),
+        data.frame(temp_post$priorTheta) %>% rename(priorTheta = probs)
+        ) %>% select(support, prior, l1state, l1theta, priorTheta)
       )
     )
   print(i)
@@ -165,12 +193,20 @@ Plot the results
 ```{r plot}
 
 model_results %>% 
-  gather(key, val, prior, l1) %>%
-  ggplot(., aes(x=support, y=val, color=key, fill=key, alpha=key))+
+  gather(key, val, prior, l1state, l1theta, priorTheta) %>%
+  mutate(key = factor(key, 
+                      levels=c("prior", "priorTheta","l1state", "l1theta"), 
+                      labels=c("Prior prevalence","Prior threshold",
+                               "Posterior prevalence", "Posterior threshold"))) %>%
+  separate(key, c("Distribution","Parameter")) %>%
+  ggplot(., aes(x=support, y=val, 
+                color=Parameter, linetype=Distribution, 
+                fill=Parameter, alpha=Distribution))+
   #geom_point()+
   #geom_smooth(se=F, method="loess")+
-  geom_density(stat='identity')+
-  scale_alpha_manual(values=c(1,0.4))+
+  geom_density(stat='identity', size = 2)+
+  scale_linetype_manual(values = c(1, 3))+
+  scale_alpha_manual(values=c(0.7, 0.4))+
   facet_wrap(~priorLabel)+
   ylab("Probability")+
   xlab("Prevalence")
