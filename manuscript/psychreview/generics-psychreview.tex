@@ -31,7 +31,7 @@
 \fancyhf{}
 \fancyhead[R]{\thepage}
 \lhead{\textsc{pragmatic theory of generic language}}
-
+ 
 \graphicspath{{../figures/}}
   
 \def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
@@ -410,6 +410,7 @@ P_{L_{0}}(x \mid u, \tau) &\propto& {\delta_{\denote{u}(x, \tau)} P(x)} \label{e
     The posterior distribution over prevalence is heavily driven by the prior, but is also substantially shifted to the right. 
     The bottom row uses a prior distribution that is a mixture of the distribution above it with a second component Beta(0.5, 4.5).
     In each case, the addition of this second component pulls the posterior distribution over the threshold to the, lowering the effective threshold, though the posterior distribution over prevalence is not heavily affected.
+    Note that the prior distribution over prevalence will be the same as $L_1$'s posterior distribution upon hearing the ``null'' utterance.
     }
   \label{fig:schematic-unif}
 \end{figure}
@@ -446,31 +447,17 @@ $S_2$'s decision (like the simpler $S_1$'s decision) is with respect to the alte
 Critically, in contrast to the hypothetical speaker $S_1$, speaker $S_{2}$ doesn't actually know what the generic means (i.e. doesn't have access to the threshold $\tau$), but knows that $L_{1}$ will have to consider it, and integrates over the likely values she'll consider.
 Hence, $S_2$ is a mapping from subjective probability or prevalence $x$ to the probability of endorsing a generic utterance. 
 In this way, $S_2$ is a model of felicity or truth judgments \cite{Degen2014}.
+The first test of our theory will be to see if the $S_2$ model of felicity judgments corresponds to human judgments of the felicity of familiar generic sentences. 
 A fully specified version of the generics model can be found at \url{http://forestdb.org/models/generics.html}
 %We use $S_{2}$ (Eq.~\ref{eq:S2}) to model
 
 %
 
-\mht{This seems anomalous here...}
-\red{
-Throughout this paper we will treat the bare plural construction as generic utterances with a threshold semantics: $\denote{\text{K F}}(x, \tau)=x>\tau$.
-The bare plural construction can also indicate a specific plural predication (consider \emph{dogs are on my lawn} compared to \emph{dogs have fur};  \citeNP{Carlson1977}), and identification of a generic meaning from a bare plural may itself be a pragmatic process \cite{Cimpian2008, Declerck1991}. 
-In this paper we are concerned with the interpretation of a truly generic utterance, once identified as such.
-}
-
-\subsubsection*{Model simulations}
-
-The prior and likelihood distributions of the model are fully specified by Eqs.~\ref{eq:L1}-\ref{eq:L0} with the exception of the listener's background knowledge about the prevalence of property $F$, specified by $P(x)$.
-In our empirical investigations, we will measure $P(x)$. 
-In this section, we illustrate the model using some schematic prior distributions.
-
-If the prior distribution over prevalence is completely uninformative
-
 \section*{Flexible truth conditions}
 
 Any theory of generic language must explain their puzzling flexibility of usage with respect to prevalence.
-For instance, \emph{Mosquitos carry malaria} and \emph{Birds lay eggs}, but \emph{Birds are female} is not a good thing to say.
-To test the ability of the pragmatic $S_2$ model, Eq.~\ref{eq:S2}, we constructed thirty generic sentences 
+For instance, \emph{Mosquitos carry malaria} and \emph{Birds lay eggs} are reasonable things to say, but \emph{Birds are female} is not.
+To test the ability of the pragmatic speaker $S_2$ model, Eq.~\ref{eq:S2}, we constructed thirty generic sentences 
 that cover a range of conceptual distinctions  \cite{Prasada2013}: characteristic (e.g. \emph{Ducks have wings.}), minority (e.g. \emph{Robins lay eggs.}), striking (e.g. \emph{Mosquitos carry malaria.}), false generalization (e.g. \emph{Robins are female.}), and false (e.g. \emph{Lions lay eggs.}).
 The sentences were also chosen to elicit a range of acceptability judgments (``acceptable'', ``unacceptable'', and ``uncertain'') with low-, medium-, and high-prevalence properties.
 In Expt.~1b we collect human judgements about the acceptability of these sentences. 
@@ -1104,39 +1091,69 @@ The model was able to explain two philosophical puzzles of generics: their extre
 %This shouldn't surprise us. 
 %In much the same way, ``John is tall'' does not actually tell a listener about what \emph{tall} means\footnote{However, ``John is a person'' does tell a listener about what \emph{tall} means in ``John is tall''.}. 
 %Rather, the listener is expected to come to the conversation with some beliefs about heights, and knowing that John is a person, be able to infer likely meanings for \emph{tall}.
-\subsection*{Implications for development}
 
-\subsection*{Relation to previous empirical work on prevalence in generics}
+\subsection*{Relation to previous empirical work on generics}
 
-The truth conditions of generic language have been of interest to linguists and philosophers. 
+%The truth conditions of generic language have been of interest to linguists and philosophers. 
 
-
-How generic language gets interpreted has been of interest to psychologists because of its ubiquity in natural conversation as well as its role in the growth of category knowledge. 
-\citeA{Gelman2002} was the first to demonstrate that children and adults believe the prevalence implied by a novel generic utterance (e.g. \emph{Bears like to eat ants.}) is high, but distinct from quantifier statements like ``some'' or ``all''. 
+Generic language has been of interest to psychologists primarily because of its ubiquity in natural conversation and its role conceptual development.
+\citeA{Gelman2002} demonstrated that children and adults believe the prevalence implied by a novel generic utterance (e.g. \emph{Bears like to eat ants.}) is high, but distinct from quantifier statements like ``some'' or ``all''. 
 The properties used in this experiment were plausible construed as biological or essential \cite{Gelman2003}.
-In Expt.~2, we showed how the structure of prevalence priors about biological properties leads to this inference.  
+This work was conceptually replicated by \citeA{Cimpian2010} with novel categories (e.g. \textsc{lorches}) and extended to show that the strong interpretation of generics could be weakened by predicating the kind with accidental properties (e.g. \emph{Lorches have muddy feathers.}).
+Causal beliefs about kinds have been argued to be the driving force behind these these variable interpretations \cite{Gelman2007, Cimpian2010c}.
 
-This early work was conceptually replicated by \citeA{Cimpian2010} with novel categories (e.g. \textsc{lorches}) and extended to show that the strong interpretation of generics could be weakened by predicating the kind with accidental properties (e.g. \emph{Lorches have muddy feathers.}).
-Indeed, causal beliefs about kinds have been argued to be the driving force behind these these variable interpretations\cite{Gelman2007, Cimpian2010c}.
-Our work formalizes the relation between causal beliefs about kinds, prevalence, and generic language, and we have shown how this framework supports these prior claims.
+Our theory claims that causal beliefs about kinds and properties lead to differences in prevalence distributions, and these differences lead to variable interpretations of generic sentences for the formal model. 
+In Expt.~2, we showed how the structure of prevalence priors about these kinds of properties leads to this inference. 
+Biological properties tend to have bimodal prior distributions on prevalence (with 0\% and 100\% prevalence being the most likely \emph{a priori}) and get updated to concave posterior distributions peaked at 100\%.
+Accidental properties have unimodal prior distributions (peaked at only 0\%). This distinction arises because even when participants knew the property is present in the category, they were not willing to extend it to many others of the category. This prior distribution of prevalence for accidental properties gets updated to a convex posterior distribution. This posterior distribution has high variance, indicating that interpretations of generic statements about accidental properties should be highly variable. This was corroborated by the empirical data. 
 
+Much of the extant empirical literature on generics argues that prevalence alone is insufficient to account for the truth conditions of generic statements.
+The typical empirical demonstration is to measure felicity judgments of common generic statements (as we did in Expt.~1b) and ask a separate set of participants about the prevalence of the property for the target category \cite<e.g. the percentage of birds that lay eggs; >{Khemlani2012, Prasada2013}.
+Our claim is not that the prevalence of the property for the target category alone explains the felicity judgments. 
+Rather, we claim the target-category prevalence must be interpreted with respect the prior distribution on prevalence. 
+This falls out of basic principles of communication. 
+Information is can only be informative with respect to some prior beliefs.
 
-\subsection*{Generic identification}
+These studies also posit another statistical construct, \emph{cue validity}, that could explain generic truth conditions. Cue validity is defined as the probability of the kind given the feature: $P(K \mid F)$ (e.g. the probability that an animal is a mosquito given that is has malaria).
+It should be noted that our mixture parameter $\theta$ (the potential of the property to be present in a kind) is not the same as cue validity, though in some cases, they seem similar.
+For instance, \emph{having a mane} is a good cue for being a \emph{lion} and similarly \emph{has manes} has a low $\theta$ parameter (since it is not present in many kinds). 
+But note that cue validity is defined with respect to a particular kind and property, whereas our mixture parameter is only defined with respect to a particular property.
+Cue validity takes into account the prevalence of the property in the kind and the prior probability of that kind, by Bayes' rule: $P(K \mid F) \propto P(F \mid K) \cdot P(K)$. 
+To take a different example, learning that some animal \emph{ate a person} is not particularly good cue for any particular animal  (though perhaps tigers more so than house cats), and yet the mixture parameter $\theta$ is still very low because most animals don't eat people.
 
-The puzzle of generic \emph{meaning} is often contrasted with the problem of generic \emph{identification}. 
-Within this line of thinking, a sentence is hard to identify as conveying a generic meaning because generic meaning can be signaled using a number of morphosyntactic forms. 
-For example, both \emph{Dogs are friendly} and \emph{A dog is friendly} are thought to both signal a generic interpretation.
-Additionally, the morphosyntax alone is not a sufficient cue to generic meaning: \emph{Dogs are friendly} conveys a generic meaning while \emph{Dogs are on my front lawn} does not.
+%We should note that we did not directly measure $P(K \mid F)$ in our studies, though it can derived from our prevalence distributions using Bayes' rule
+%$$
+%P(K \mid F) \propto P(F \mid K) \cdot P(K)
+%$$
+%Specifying what functional form $P(K)$ should be is not obvious: For instance, is $P(K)$ a uniform distribution over all possible animal kinds, or is it subject to how typical an animal each kind is?
 
-\citeA{Declerck1991} suggests that generic and nongeneric bare plurals can be treated in the same way, and that pragmatic considerations may resolve interpretative differences. 
+%\mht{Probably will add a discussion of empirical claims against prevalence, and how prevalence in our theory is about \emph{subjective probability} which is tied to both people's abstract beliefs and to the state of the world.}
+
+\subsection*{The parallel problem of generic identification}
+
+Throughout this paper we treated the bare plural construction as a generic utterance with a threshold semantics: $\denote{\text{K F}}(x, \tau)=x>\tau$.
+The bare plural construction can also indicate a specific plural predication (consider \emph{dogs are on my lawn} compared to \emph{dogs have fur};  \citeNP{Carlson1977}).
+The problem of \emph{identifying} a generic meaning from a bare plural may is a hard problem, itself perhaps relying on pragmatic processes \cite{Cimpian2008, Declerck1991}. 
+
+For instance, \citeA{Declerck1991} suggests that generic and nongeneric bare plurals can be treated in the same way, and that pragmatic considerations may resolve interpretative differences. 
 We support this idea.
-Consider, for example, the likely prevalence of animals on your front lawn. 
+Consider, for example, the probability of animals being on your front lawn. 
 It is extremely unlikely for there to be many instances of \emph{any} animal on your front lawn (due to the spatial constraints of your lawn, and the lack of any good reason for an animal to be on your lawn). 
-Thus, the prevalence prior would likely resemble that of an accidental property (Expt.~2a).
-The $L_1$ listener model would in this case, interpret that bare plural as implying that just a few instances of dogs were on your front lawn. 
+Thus, the prior distribution over the probability would likely resemble that of an accidental property (Expt.~2a).
+Future work should address the relation between the prevalence priors and actual numbers of instances that can observed.
+%The $L_1$ listener model would in this case, interpret that bare plural as implying that just a few instances of dogs were on your front lawn. 
+
+%In this paper, we concerned ourself with the problem of generic meaning, once a generic utterance has been identified as such. 
+% the interpretation of a truly generic utterance, once identified as such.
+
+%The puzzle of generic \emph{meaning} is often contrasted with the problem of generic \emph{identification}. 
+%Within this line of thinking, a sentence is hard to identify as conveying a generic meaning because generic meaning can be signaled using a number of morphosyntactic forms. 
+%For example, both \emph{Dogs are friendly} and \emph{A dog is friendly} are thought to both signal a generic interpretation.
+%Additionally, the morphosyntax alone is not a sufficient cue to generic meaning: \emph{Dogs are friendly} conveys a generic meaning while \emph{Dogs are on my front lawn} does not.
 
 
-\subsection*{Implications for conceptual structure}
+
+\subsection*{Implications for conceptual structure and development}
 
 
 Previous psychological and philosophical work on generics has looked beyond prevalence and focused on conceptual distinctions and relations \cite{Gelman2003,Prasada2013,Leslie2007,Leslie2008}. 
@@ -1183,6 +1200,8 @@ Further research will be needed to explore the predicted relationship between co
 %The results of these studies, as well  future research and model development.
 
 %How interlocutors arrive at estimates of the prevalence, and what other inferences are licensed in a context, may be the result of a deeper conceptual model of the world. 
+
+\subsection*{Conclusion}
 
 It might seem paradoxical that a part of language that is so common in communication and central to learning should be vague. 
 Shouldn't speakers and teachers want to express their ideas as crisply as possible?
@@ -1244,266 +1263,6 @@ This work was supported in part by National Science Foundation Graduate Research
 by John S. McDonnell Foundation Scholar Award 220020252 (to N.D.G.) and 
 Office of Naval Research Grant N00014-13-1-0788 (to N.D.G.)
 
-%\end{acknowledgments}
-%
-
-%\begin{thebibliography}{10}
-%
-%\bibitem{Carlson1977}
-%Carlson GN (1977) Reference to kinds in english, Ph.D. thesis (University of Massachusetts, Amherst).
-%
-%\bibitem{Leslie2008}
-%Leslie SJ (2008) {Generics: Cognition and acquisition}.
-%\newblock {\em Philosophical Review} 117(1).
-%
-%\bibitem{Behrens2005}
-%Behrens L (2005) {Genericity from a cross-linguistic perspective}.
-%\newblock {\em Linguistics} 43(2):275--344.
-%
-%\bibitem{Carlson1995}
-%Carlson GN, Pelletier FJ (1995) {\em The generic book.}
-%\newblock (Chicago University Press).
-%
-%\bibitem{Gelman2004}
-%Gelman SA (2004) {\em Learning words for kinds: Generic noun phrases in
-%  acquisition}.
-%\newblock (MIT Press), pp. 445--484.
-%
-%\bibitem{Gelman2008}
-%Gelman SA, Goetz PJ, Sarnecka BW, Flukes J (2008) {Generic Language in
-%  Parent-Child Conversations}.
-%\newblock {\em Language Learning and Development} 4(1):1--31.
-%
-%\bibitem{Cimpian2008}
-%Cimpian A, Markman EM (2008) {Preschool children's use of cues to generic
-%  meaning}.
-%\newblock {\em Cognition} 107:19--53.
-%
-%\bibitem{GelmanEtAl2004}
-%Gelman SA, Taylor MG, Nguyen SP, Leaper C, Bigler RS (2004) {Mother-child
-%  conversations about gender: Understanding the acquisition of essentialist
-%  beliefs}.
-%\newblock {\em Monographs of the Society for Research in Child Development}
-%  69(1):vii, 116--127.
-%
-%\bibitem{Rhodes2012}
-%Rhodes M, Leslie SJ, Tworek CM (2012) {Cultural transmission of social
-%  essentialism}.
-%\newblock {\em Proceedings of the National Academy of Sciences}
-%  109(34):13526--13531.
-%
-%\bibitem{Leslie2015}
-%Leslie SJ, Cimpian A, Meyer M, Freeland E (2015) {Expectations of brilliance
-%  underlie gender distributions across academic disciplines}.
-%\newblock {\em Science} 347(6219):262--265.
-%
-%\bibitem{Cimpian2010motivation}
-%Cimpian A (2010) {The impact of generic language about ability on children's
-%  achievement motivation.}
-%\newblock {\em Developmental psychology} 46(5):1333--1340.
-%
-%\bibitem{Gelman2002}
-%Gelman SA, Star JR, Flukes JE (2002) {Children's Use of Generics in Inductive
-%  Inferences}.
-%\newblock {\em Journal of Cognition and Development} 3(2):179--199.
-%
-%\bibitem{Cimpian2010}
-%Cimpian A, Brandone AC, Gelman SA (2010) {Generic statements require little
-%  evidence for acceptance but have powerful implications.}
-%\newblock {\em Cognitive science} 34(8):1452--1482.
-%
-%\bibitem{Brandone2014}
-%Brandone AC, Gelman SA, Hedglen J (2014) {Children's Developing Intuitions
-%  About the Truth Conditions and Implications of Novel Generics Versus
-%  Quantified Statements.}
-%\newblock {\em Cognitive science} pp. 1--28.
-%
-%\bibitem{Carlson1995essay}
-%Carlson GN (1995) Truth conditions of generic sentences: Two contrasting views
-%  in {\em The Generic Book}, eds.{} Carlson GN, Pelletier FJ.
-%\newblock (Univ. of Chicago Press), pp. 224--38.
-%
-%\bibitem{Prasada2000}
-%Prasada S (2000) {Acquiring generic knowledge}.
-%\newblock {\em TiCS} 4(2):66--72.
-%
-%\bibitem{Prasada2012}
-%Prasada S, Hennefield L, Otap D (2012) {Conceptual and Linguistic
-%  Representations of Kinds and Classes}.
-%\newblock {\em Cognitive Science} 36(7):1224--1250.
-%
-%\bibitem{Clark1996}
-%Clark HH (1996) {\em Using language}.
-%\newblock (Cambridge University Press).
-%
-%\bibitem{Grice1975}
-%Grice HP (1975) {\em Logic and conversation.}
-%\newblock (Blackwell).
-%
-%\bibitem{Levinson2000}
-%Levinson S (2000) {\em Presumptive meanings: The theory of generalized
-%  conversational implicature}.
-%\newblock (The MIT Press).
-%
-%\bibitem{Frank2012}
-%Frank MC, Goodman ND (2012) Predicting pragmatic reasoning in language games.
-%\newblock {\em Science} 336(6084).
-%
-%\bibitem{Goodman2013}
-%Goodman ND, Stuhlm{\"u}ller A (2013) Knowledge and implicature: Modeling
-%  language understanding as social cognition.
-%\newblock {\em Topics in Cognitive Science}.
-%
-%\bibitem{Cohen1999}
-%Cohen A (1999) {Generics, Frequency Adverbs, and Probability}.
-%\newblock {\em Linguistics and Philosophy} 22.
-%
-%\bibitem{Lassiter2013}
-%Lassiter D, Goodman ND (2013) {\em Context, scale structure, and statistics in
-%  the interpretation of positive-form adjectives}.
-%
-%\bibitem{Lassiter2015}
-%Lassiter D, Goodman ND (2015) Adjectival vagueness in a bayesian model of
-%  interpretation.
-%\newblock {\em Synthese}.
-%
-%\bibitem{Degen2014}
-%Degen J, Goodman ND (2014) {\em Lost your marbles? The puzzle of dependent
-%  measures in experimental pragmatics}.
-%
-%\bibitem{Griffiths2005}
-%Griffiths TL, Tenenbaum JB (2005) {Structure and strength in causal induction.}
-%\newblock {\em Cognitive psychology} 51(4):334--84.
-%
-%\bibitem{hurdleModels}
-%Rose CE, Martin SW, Wannemuehler KA, Plikaytis BD (2006) On the use of
-%  zero-inflated and hurdle models for modeling vaccine adverse event count
-%  data.
-%\newblock {\em Journal of biopharmaceutical statistics} 16(4):463--481.
-%
-%\bibitem{LW2014}
-%Lee MD, Wagenmakers E (2014) {\em Bayesian Cognitive Modeling: A Practical
-%  Course}.
-%\newblock (Cambridge University Press, Cambridge).
-%
-%\bibitem{Prasada2013}
-%Prasada S, Khemlani S, Leslie SJ, Glucksberg S (2013) {Conceptual distinctions
-%  amongst generics.}
-%\newblock {\em Cognition} 126(3):405--22.
-%
-%\bibitem{Nisbett1983}
-%Nisbett RE, Krantz DH, Jepson C, Kunda Z (1983) {The use of statistical
-%  heuristics in everyday inductive reasoning.}
-%\newblock {\em Psychological Review} 90(4):339--363.
-%
-%\bibitem{Gelman2003}
-%Gelman SA (2005) {\em Essential Child: Origins of Essentialism in Everyday
-%  Thought.}
-%\newblock (Oxford University Press).
-%
-%\bibitem{Leslie2007}
-%Leslie SJ (2007) {Generics and the Structure of the Mind}.
-%\newblock {\em Philosophical Perspectives} 21(1):375--403.
-%
-%\bibitem{Goodmanconcepts}
-%Goodman ND, Tenenbaum JB, Gerstenberg T (2015) {\em Concepts in a probabilistic
-%  language of thought}.
-%\newblock (MIT Press).
-%
-%\bibitem{Keil1992}
-%Keil FC (1992) {\em Concepts, kind, and cognitive development.}
-%\newblock (MIT Press).
-%
-%\bibitem{Piantadosi2012}
-%Piantadosi ST, Tily H, Gibson E (2012) {The communicative function of ambiguity
-%  in language}.
-%\newblock {\em Cognition} 122(3):280--291.
-%
-%\bibitem{Cimpian2011a}
-%Cimpian A, Markman EM (2011) {The Generic/Nongeneric Distinction Influences How
-%  Children Interpret New Information About Social Others}.
-%\newblock {\em Child Development} 82(2):471--492.
-%
-%\bibitem{Cimpian2012b}
-%Cimpian A, Mu Y, Erickson LC (2012) {Who Is Good at This Game? Linking an
-%  Activity to a Social Category Undermines Children's Achievement}.
-%\newblock {\em Psychological Science} 23(5):533--541.
-%
-%\bibitem{dippl}
-%Goodman ND, Stuhlm\"{u}ller A (2014) {The Design and Implementation of
-%  Probabilistic Programming Languages} (\url{http://dippl.org}).
-%\newblock Accessed: 2015-7-17.
-%
-%\end{thebibliography}
-
-%\end{article}
-
-%\begin{figure*}
-%\centering
-%    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists2.pdf}
-%    \caption{Prevalence prior distributions empirically elicited for twenty-one animal properties.
-%    Prior distributions are summarized by $\theta$----a property's potential to be present in a category----and $\gamma$----the mean prevalence when it is possible for the property to be present in a category.
-%    Inset plots display example empirical prior distributions over prevalence together with corresponding $L_1$ model predictions: the posterior after hearing a generic utterance. 
-%    Intervals on the top of plots show human beliefs about the prevalence of the property within a target category.
-%%    Posterior distributions show what happens to a listener's belief about the prevalence after hearing the associated generic. 
-%    Felicitous generic utterances result when the target prevalence is more likely under the posterior than under the prior.
-% %   \ndg{should mark the observed within-category prevalence for target kinds in pop-outs? or maybe one of the axes of main plot should be that?}
-%     Error bars denote 95\% Bayesian credible intervals.
-%    }
-%  \label{fig:priors1a}
-%\end{figure*}
-%
-%\begin{figure}
-%\centering
-%    \includegraphics[width=0.49\columnwidth]{truthjudge-scatter-wLabels.pdf}
-%    \caption{Human acceptability judgments and model predictions for thirty generic utterances about familiar animals and properties. 
-%    Color denotes target-category prevalence of the property, with darker colors indicating lower prevalence. 
-%    Intermediate prevalences (quartiles 2 \& 3) are in intermediate shades (marked on color bar).
-%    Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions.
-%    }
-%  \label{fig:modeldataBars}
-%\end{figure}
-%
-%
-%\begin{figure*}
-%\centering
-%    \includegraphics[width=\columnwidth]{prevalence-asymmetry-scatterwDists-byItem.pdf}
-%    \caption{Prevalence prior distributions empirically elicited for 40 animal properties.
-%    Parameters of the structured statistical model---$\theta$ and $\gamma$---reveal quantitative differences in beliefs about the prevalence of conceptually different types of properties (scatterplot). 
-%    Inset plots show differences in shapes between biological properties (red, green, blue; bimodal) and accidental properties (orange, purple; unimodal).   
-%  These differences give rise to the variability of interpretations of generic utterances. 
-%      Error bars denote Bayesian 95\% credible intervals.
-%  }
-%  \label{fig:prior2}
-%\end{figure*}
-%
-%
-%\begin{figure}
-%\centering
-%    \includegraphics[width=0.48\columnwidth]{implied-byItem-mh100kX2b.pdf}
-%    \caption{Human interpretation of prevalence upon hearing a generic compared with the $L_1$ model posterior predictive. 
-%    Participants display graded endorsements of generics in terms of prevalence based on type of property (which is also associated with \emph{mean prevalence when present} $\gamma$, see Figure 3).
-%    The model displays the same variability of interpretation, producing strong interpretations for generics of biological properties (red, blue, green) and weaker interpretations of generics of accidental properties (purple, orange).
-%        Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
-%  \label{fig:impliedByItem}
-%\end{figure}
-%
-%\begin{figure*}
-%\centering
-%    \includegraphics[width=\columnwidth]{asym-lines-data-model-2phi-2so-50kx3.pdf}
-%    \caption{Human judgments and model predictions of prevalence implied by novel generic utterances (implied prevalence task; solid line) and average prevalence that leads to an acceptable generic utterance (truth conditions task; dotted line) as it relates to the \emph{a priori} mean prevalence when present $\gamma$.
-%    Expectations of prevalence are higher after hearing a generic than before hearing it (solid line compared to $y=x$ line; both for human data and model).
-%    %$y = x$ line denotes the prevalence inferred upon knowing the property is prettyesent in the kind. 
-%    %For each kind of property, the generic utterance implies a higher than expected prevalence.
-%    Generic statements about biological properties, imply that a high proportion of the category has the property, for both human participants and the model (solid line: red, blue and green). 
-%    Generics about accidental properties do not result in such a high implied prevalence (solid line: purple and orange).  
-%	While the implications of generic utterances are highly variable across the different types of properties, the average prevalence that leads to an acceptable generic does not vary, for participants or the model.
-%        %Generic statements are accepted for a range of prevalences, resulting in a intermediate average prevalence (dotted line) that deoesn't vary by property type for the truth conditions task. 
-%    Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.
-%%    \ndg{change x-axis label to "a priori expected prevalence" or something like that -- "within-category prevalence" is ambiguous.}
-%}
-%  \label{fig:exp2b}
-%\end{figure*}
 \newpage
 \bibliographystyle{apacite}
 
@@ -1511,6 +1270,129 @@ Office of Naval Research Grant N00014-13-1-0788 (to N.D.G.)
 \setlength{\bibindent}{-\bibleftmargin}
 
 \bibliography{generics}
+
+\newpage
+
+\section*{Appendix}
+
+
+
+\begin{table}[h]
+\centering
+
+\caption{Stimuli used in Experiment 1. 
+Estimates are proportion agreement for truth judgments and Maximum A-Posteriori (MAP) estimates for prevalence. 
+Brackets denote 95\% confidence intervals for truth judgments and 95\% credible intervals for prevalences.}
+\begin{tabular}{| l | l | p{3.5cm} | p{3.5cm} |}
+\hline
+Conceptual type & Item & Truth judgment & Prevalence \\
+\hline \hline
+Majority characteristic       & 1. Leopards have spots.    &0.956	[0.912, 0.989] & 92.7 [85.9, 99.0]\\
+                                          & 2. Ducks have wings.                       &0.945	[0.89, 0.989] & 98.5 [95.2, 99.9]\\
+                                          & 3. Cardinals are red.                       &0.989	[0.967, 1] & 75.5 [62.1, 86.9]\\
+                                          & 4. Swans are white.                       &0.901	[0.835, 0.967] & 67.3 [57.1, 73.8] \\
+                                          & 5. Peacocks have beautiful feathers. &  0.989	[0.967, 1] & 92.0 [77.7, 100] \\
+Minority characteristic       & 6. Lions have manes.       &0.945	[0.89, 0.989] & 54.3 [48.1, 63.0]\\
+                                          & 7. Kangaroos have pouches.                        &0.967 [0.923, 1]& 69.9 [65.8, 79.6]\\
+                                          & 8. Robins lay eggs.                        &0.934	[0.879, 0.978]& 68.5 [61.1, 74.9]\\
+Striking                      & 9. Sharks attack swimmers. &0.879	[0.813. 0.945] & 41.8 [32.0, 54.7]\\
+                                  & 10. Mosquitos carry malaria.                        &0.989	[0.967, 1] & 47.2 [38.1,	 52.9]\\
+                                  & 11. Ticks carry Lyme disease.                        &0.967	[0.923, 1] &  42.6 [40.0, 54.2]\\
+                                  & 12. Tigers eat people.                        &0.692	[0.593, 0.78] & 37.3 [23.3, 49.9]\\
+False generalization & 13. Robins are female.      &0.429	[0.33, 0.527] & 51.9 [47.8. 55.4]\\
+                                              & 14.  Lions are male.                       &0.571	[0.473, 0.67] & 49.9 [46.6, 53.9]\\
+                                         & 15. Swans are full-grown. & 0.725	[0.637, 0.802] & 59.7[51.0, 66.0]\\
+                                         & 16. Leopards are juvenile. & 0.143	[0.077,0.22] & 28.3 [22.9, 38.2] \\
+                                         & 17. Sharks are white. & 0.341	[0.253, 0.44] & 32.2 [15.8, 44.6] \\
+False or Uncertain & 18. Leopards have wings.       &0.022	[0, 0.055]& 1.0 [0.0, 4.1]\\
+                                              & 19. Kangaroos have spots.                       & 0.033 [0, 0.077]& 5.0 [0.1, 13.5]\\
+                                              & 20.  Tigers have pouches.                       &0.011	[0, 0.033]& 2.0 [0.0, 12.3]\\
+                                              & 21.  Robins carry malaria.                       &0.055	[0.011, 0.099]& 5.4 [1.6, 9.1]\\
+                                              & 22. Sharks have manes.                       &0.044	[0.011, 0.099]& 0.3 [0.0, 5.7]\\
+                                              & 23. Lions lay eggs.                       &0 [0, 0] & 0.1 [0.0, 4.3]\\
+                                              & 24. Sharks don't attack swimmers.                       &0.231 [0.154, 0.319] & 59.3 [49.8, 75.1]\\
+                                              & 25. Ticks don't carry Lyme disease.                       &0.044 [0.011, 0.088] & 55.1 [46.6, 60.8]]\\
+                                              & 26. Mosquitos don't carry malaria.                       &0.077 [0.033, 0.132] & 58.7 [50.5, 65.3]]\\                                              
+                                              & 27. Tigers don't eat people.                       &0.297 [0.198, 0.385]& 65.3 [56.9, 97.7]\\                                              
+                                              & 28. Peacocks don't have beautiful feathers.                       &0.022 [0, 0.055] & 17.4 [0.5, 27.5]\\                                              
+                                               & 29. Mosquitos attack swimmers.       &0.385 [0.286, 0.495] & 26.5 [8.4, 39.2]\\
+			                         & 30. Sharks lay eggs.       &0.088 [0.033, 0.143] & 18.5 [0.6, 41.3]\\
+\hline
+
+\end{tabular}
+
+\label{tab:expt1}
+\end{table}
+
+%\csvautotabular{novelKinds-prevalencePrior-byItem-gammaCIs.csv}
+
+%\begin{table}[h]
+%\begin{tabular}{| l || l | l | l |}
+%   \bfseries Person & \bfseries Matr.~No.% specify table head
+%    \csvreader[head to column names]{novelKinds-prevalencePrior-byItem-gammaCIs.csv}{}% use head of csv as column names
+%    {\\\hline\Parameter	& \distinctiveness}% specify your coloumns here
+%    \end {tabular}
+%    \end{table}
+    
+\begin{table}[h]
+\centering
+\caption{Stimuli used in Experiment 2 and statistics of the priors measure in the prior elicitation task. 
+\emph{Potential to be present} is a measure of how many different kinds are expected to have the property. Mean prevalence when present is a measure of how widespread the property is expected to be, assuming that it is present within a kind.
+Maximum A-Posteriori (MAP) estimates and 95\% Highest Probability Density Intervals from the Bayesian data analysis model described in Section \ref{sec:bda2} are shown for each measure.
+The majority of these items are taken from Cimpian et al. (2010)}
+\label{tab:novelGenericsStimuli}
+\begin{tabular}{| l || l | l | l |}
+\hline
+Property type     & Item               & Potential to be present $\theta$ & Mean prevalence when present $\gamma$ \\
+\hline
+\hline
+Body part         & fur                & 0.78 {[}0.81, 0.69{]}   & 0.90 {[}0.828, 0.93{]}       \\
+                  & skin               & 0.89 {[}0.93, 0.85{]}   & 0.89 {[}0.853, 0.93{]}       \\
+                  & feathers           & 0.68 {[}0.74, 0.61{]}   & 0.90 {[}0.827, 0.91{]}       \\
+                  & legs               & 0.88 {[}0.93, 0.81{]}   & 0.87 {[}0.819, 0.94{]}       \\
+                  & tails              & 0.75 {[}0.82, 0.65{]}   & 0.91 {[}0.881, 0.93{]}       \\
+                  & ears               & 0.85 {[}0.89, 0.80{]}   & 0.88 {[}0.839, 0.91{]}       \\
+                  & claws              & 0.73 {[}0.74, 0.61{]}   & 0.87 {[}0.749, 0.89{]}       \\
+                  & teeth              & 0.83 {[}0.88, 0.77{]}   & 0.88 {[}0.810, 0.91{]}       \\
+Color             & silver legs        & 0.37 {[}0.46, 0.30{]}   & 0.58 {[}0.472, 0.64{]}       \\
+                  & yellow fur         & 0.53 {[}0.65, 0.48{]}   & 0.69 {[}0.594, 0.76{]}       \\
+                  & violet skin        & 0.39 {[}0.51, 0.33{]}   & 0.63 {[}0.524, 0.74{]}       \\
+                  & orange ears        & 0.46 {[}0.54, 0.35{]}   & 0.60 {[}0.488, 0.69{]}       \\
+                  & blue claws         & 0.38 {[}0.44, 0.26{]}   & 0.66 {[}0.481, 0.69{]}       \\
+                  & pink teeth         & 0.22 {[}0.37, 0.21{]}   & 0.54 {[}0.421, 0.66{]}       \\
+                  & orange tails       & 0.51 {[}0.57, 0.38{]}   & 0.65 {[}0.581, 0.75{]}       \\
+                  & purple feathers    & 0.48 {[}0.54, 0.36{]}   & 0.64 {[}0.509, 0.72{]}       \\
+Vague             & big claws          & 0.63 {[}0.70, 0.55{]}   & 0.78 {[}0.682, 0.84{]}       \\
+                  & long teeth         & 0.60 {[}0.66, 0.50{]}   & 0.73 {[}0.694, 0.84{]}       \\
+                  & rough skin         & 0.62 {[}0.72, 0.55{]}   & 0.74 {[}0.672, 0.80{]}       \\
+                  & curly fur          & 0.55 {[}0.64, 0.48{]}   & 0.76 {[}0.669, 0.82{]}       \\
+                  & long legs          & 0.63 {[}0.68, 0.55{]}   & 0.76 {[}0.680, 0.83{]}       \\
+                  & smooth feathers    & 0.62 {[}0.68, 0.50{]}   & 0.80 {[}0.692, 0.83{]}       \\
+                  & long tails         & 0.62 {[}0.69, 0.53{]}   & 0.82 {[}0.738, 0.85{]}       \\
+                  & small ears         & 0.65 {[}0.70, 0.55{]}   & 0.81 {[}0.751, 0.85{]}       \\
+Common accidental & torn tails         & 0.47 {[}0.54, 0.32{]}   & 0.23 {[}0.202, 0.35{]}       \\
+                  & wet fur            & 0.57 {[}0.66, 0.47{]}   & 0.45 {[}0.376, 0.56{]}       \\
+                  & dusty skin         & 0.45 {[}0.56, 0.39{]}   & 0.44 {[}0.393, 0.58{]}       \\
+                  & torn feathers      & 0.46 {[}0.58, 0.40{]}   & 0.29 {[}0.218, 0.35{]}       \\
+                  & fungus-covered fur & 0.37 {[}0.51, 0.29{]}   & 0.37 {[}0.294, 0.49{]}       \\
+                  & worn-out claws     & 0.54 {[}0.62, 0.46{]}   & 0.41 {[}0.336, 0.54{]}       \\
+                  & muddy feathers     & 0.41 {[}0.58, 0.36{]}   & 0.39 {[}0.291, 0.45{]}       \\
+                  & sore teeth         & 0.39 {[}0.51, 0.33{]}   & 0.25 {[}0.188, 0.33{]}       \\
+Rare accidental   & broken legs        & 0.30 {[}0.44, 0.23{]}   & 0.13 {[}0.098, 0.17{]}       \\
+                  & swollen ears       & 0.42 {[}0.52, 0.32{]}   & 0.24 {[}0.196, 0.34{]}       \\
+                  & itchy tails        & 0.37 {[}0.48, 0.28{]}   & 0.33 {[}0.231, 0.38{]}       \\
+                  & rotten teeth       & 0.56 {[}0.62, 0.42{]}   & 0.31 {[}0.225, 0.39{]}       \\
+                  & sore legs          & 0.43 {[}0.53, 0.34{]}   & 0.24 {[}0.209, 0.34{]}       \\
+                  & cracked claws      & 0.50 {[}0.60, 0.36{]}   & 0.24 {[}0.194, 0.36{]}       \\
+                  & infected ears      & 0.42 {[}0.54, 0.34{]}   & 0.18 {[}0.131, 0.23{]}       \\
+                  & burned skin        & 0.32 {[}0.40, 0.23{]}   & 0.19 {[}0.133, 0.25{]}      \\
+                         \hline
+
+\end{tabular}
+\end{table}
+    
+
+
 
 \end{document}
 
