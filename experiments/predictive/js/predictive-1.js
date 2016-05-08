@@ -143,7 +143,7 @@ function make_slides(f) {
       $(".prompt").html("These are " + this.stim.category + ".");
 
       var scale = 0.5;
-      var cells = ['svg0','svg1','svg2','svg3','svg4','svg5'];
+      var cells = ['svg0','svg1','svg2','svg3','svg4','svg5','svg6','svg7'];
 
       cells.map(function(cell){$('#'+cell).empty()});
 
@@ -199,6 +199,10 @@ function make_slides(f) {
       $('#radio2').parent().hide();
 
       this.flag = 0
+      // $('#table_of_3').hide();
+      $("#door").hide()
+      // var cells2 = ["svg0a","svg1a","svg2a"]
+      // cells2.map(function(cell){$('#'+cell).empty()});
 
       // _.zip(cells,properties).map(function(x){x[1] ? 
       //                                       genus.draw(x[0], {}, scale):
@@ -210,26 +214,46 @@ function make_slides(f) {
 
       if (this.flag == 0) {
         // after showing 6 dobles, show origins.
-        ['svg0','svg1','svg2','svg3','svg4','svg5'].map(function(cell){$('#'+cell).empty()});
+       ['svg0','svg1','svg2','svg3','svg4','svg5','svg6','svg7'].map(function(cell){$('#'+cell).empty()});
+        // $('#table_of_6').hide();
+
+        $("#door").show()
+
         $(".prompt").html(this.stim.originStory);
 
         var genus = new Ecosystem.Genus(this.stim.kind, this.genusOptions)
         var negGenus = new Ecosystem.Genus(this.stim.kind, this.negGenusOptions)
 
+        // $('#table_of_3').show();
+        // debugger;
         if (this.stim.origins == "intrinsic") {
-          genus.draw("svg0", {}, 0.2)
-          genus.draw("svg1", {}, 0.4)
-          genus.draw("svg2", {}, 0.6)
+          this.stim.kind=="bird" ? 
+            $("#tdsvg0").css("background", "url(stims_raw/egg.png)") : 
+            $("#tdsvg0").css("background", "url(stims_raw/larva.jpg)")
+          // var h = $("#svg1").css("height")
+          $("#tdsvg0").css("background-size", "50%")
+          $("#tdsvg0").css("background-repeat", "no-repeat")
+          genus.draw("svg1", {}, 0.3)
+          genus.draw("svg2", {}, 0.45)
+          genus.draw("svg3", {}, 0.6)
+          // genus.draw("svg2", {}, 0.6)
         } else { 
           negGenus.draw("svg0", {}, 0.5)
+          $("#tdsvg2").css("background", "url(stims_raw/doors.png)")
+          // var h = $("#svg1").css("height")
+          $("#tdsvg2").css("background-size", "60%")
+          $("#tdsvg2").css("background-repeat", "no-repeat")
           negGenus.draw("svg1", {}, 0.3)
-          genus.draw("svg2", {}, 0.5)
+          genus.draw("svg3", {}, 0.5)
         }
 
         this.flag = 1
       } else if (this.flag==1) {
-
-        var cells = ['svg0','svg1','svg2','svg3','svg4','svg5']
+        $("#tdsvg2").css("background", "none")
+        $("#tdsvg0").css("background", "none")
+        // $('#table_of_3').hide();
+        // $('#table_of_6').show();
+        var cells = ['svg0','svg1','svg2','svg3','svg4','svg5','svg6','svg7']
         $(".prompt").html(this.stim.eventStory);
         cells.map(function(cell){$('#'+cell).empty()});
         var genus = new Ecosystem.Genus(this.stim.kind, this.genusOptions);
