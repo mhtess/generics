@@ -1,11 +1,3 @@
-// directish replication of BGH (2014), adult condition
-
-// structure
-// practice trials: 4 trials
-// main trials: 4 blocks of 8 trials each
-// 1 quantifier / block (all, some, most, generic)
-
-
 Object.prototype.getKeyByValue =function( value ) {
     for( var prop in this ) {
         if( this.hasOwnProperty( prop ) ) {
@@ -143,7 +135,7 @@ function make_slides(f) {
       $(".prompt").html("These are " + this.stim.category + ".");
 
       var scale = 0.5;
-      var cells = ['svg0','svg1','svg2','svg3','svg4','svg5','svg6','svg7'];
+      var cells = ['svg0','svg1','svg2','svg3','svg4','svg5','svg6','svg7', 'svg8', 'svg9'];
 
       cells.map(function(cell){$('#'+cell).empty()});
 
@@ -157,7 +149,8 @@ function make_slides(f) {
         "tar2":0, // never has a crest
         "prop1":{"mean":this.stim.prop1size}, // mean size, unif(0, 0.5, 1)
         "prop2":{"mean":this.stim.prop2size},
-        "var":0.001, //overall variance (overwritten by any specified variances)
+        "var":0.001, //overall variance (overwritten by any specified variances),
+        // "drawOnly":["tar1","tar2"]
       };
 
       this.negGenusOptions = {
@@ -178,7 +171,7 @@ function make_slides(f) {
       this.genusOptions[this.stim.colorPartLabel].mean = this.stim.colorPartColor
 
       this.stim.proptype == 'part' ? this.genusOptions[this.stim.property] = 1 : null
-
+      
       var genus = new Ecosystem.Genus(
         this.stim.kind, 
         this.genusOptions)
@@ -186,14 +179,11 @@ function make_slides(f) {
       var animalsWithProperties = Math.round(this.stim.prevalence*6)
       var properties = _.shuffle(utils.fillArray(true,animalsWithProperties).concat(
                                  utils.fillArray(false,6-animalsWithProperties)))
-
-      // cells = ['svg0','svg1','svg2'];
-
-      // debugger;
-      // genus.draw("svg0", {}, scale)
-      this.stim.origins == "intrinsic" ?
-        cells.map(function(x){genus.draw(x, {}, scale)}) : 
+      if (this.stim.origins == "intrinsic") {
+        cells.map(function(x){genus.draw(x, {}, scale)})
+      } else {
         cells.map(function(x){negGenus.draw(x, {}, scale)})
+      }
 
       $('#radio1').parent().hide();
       $('#radio2').parent().hide();
@@ -201,12 +191,6 @@ function make_slides(f) {
       this.flag = 0
       // $('#table_of_3').hide();
       $("#door").hide()
-      // var cells2 = ["svg0a","svg1a","svg2a"]
-      // cells2.map(function(cell){$('#'+cell).empty()});
-
-      // _.zip(cells,properties).map(function(x){x[1] ? 
-      //                                       genus.draw(x[0], {}, scale):
-      //                                       negGenus.draw(x[0],{}, scale)});
 
 
     },
@@ -214,7 +198,7 @@ function make_slides(f) {
 
       if (this.flag == 0) {
         // after showing 6 dobles, show origins.
-       ['svg0','svg1','svg2','svg3','svg4','svg5','svg6','svg7'].map(function(cell){$('#'+cell).empty()});
+       ['svg0','svg1','svg2','svg3','svg4','svg5','svg6','svg7', 'svg8', 'svg9'].map(function(cell){$('#'+cell).empty()});
         // $('#table_of_6').hide();
 
         $("#door").show()
@@ -223,6 +207,11 @@ function make_slides(f) {
 
         var genus = new Ecosystem.Genus(this.stim.kind, this.genusOptions)
         var negGenus = new Ecosystem.Genus(this.stim.kind, this.negGenusOptions)
+
+        // console.log(this.stim.property)
+        this.genusOptionsDrawOnly = _.clone(this.genusOptions);
+        this.genusOptionsDrawOnly.drawOnly = [this.stim.property];
+        var justPropertyDraw = new Ecosystem.Genus(this.stim.kind, this.genusOptionsDrawOnly);
 
         // $('#table_of_3').show();
         // debugger;
@@ -233,18 +222,23 @@ function make_slides(f) {
           // var h = $("#svg1").css("height")
           $("#tdsvg0").css("background-size", "50%")
           $("#tdsvg0").css("background-repeat", "no-repeat")
+          $("#tdsvg0").css("background-position", "bottom")
           genus.draw("svg1", {}, 0.3)
-          genus.draw("svg2", {}, 0.45)
-          genus.draw("svg3", {}, 0.6)
+          genus.draw("svg2", {}, 0.4)
+          genus.draw("svg3", {}, 0.45)
+          genus.draw("svg4", {}, 0.6)
           // genus.draw("svg2", {}, 0.6)
         } else { 
           negGenus.draw("svg0", {}, 0.5)
-          $("#tdsvg2").css("background", "url(stims_raw/doors.png)")
+          negGenus.draw("svg1", {}, 0.5)
+          justPropertyDraw.draw("svg5", {}, 0.5)
+          justPropertyDraw.draw("svg6", {}, 0.5)
+          // $("#tdsvg2").css("background", "url(stims_raw/doors.png)")
           // var h = $("#svg1").css("height")
-          $("#tdsvg2").css("background-size", "60%")
+          $("#tdsvg2").css("background-size", "80%")
           $("#tdsvg2").css("background-repeat", "no-repeat")
-          negGenus.draw("svg1", {}, 0.3)
           genus.draw("svg3", {}, 0.5)
+          genus.draw("svg4", {}, 0.5)
         }
 
         this.flag = 1
@@ -253,7 +247,7 @@ function make_slides(f) {
         $("#tdsvg0").css("background", "none")
         // $('#table_of_3').hide();
         // $('#table_of_6').show();
-        var cells = ['svg0','svg1','svg2','svg3','svg4','svg5','svg6','svg7']
+        var cells = ['svg0','svg1','svg2','svg3','svg4','svg5','svg6','svg7', 'svg8', 'svg9']
         $(".prompt").html(this.stim.eventStory);
         cells.map(function(cell){$('#'+cell).empty()});
         var genus = new Ecosystem.Genus(this.stim.kind, this.genusOptions);
@@ -536,9 +530,10 @@ function init() {
                         {"prevalence":1},{"prevalence":1}];
 
 
-  var propertyObj = [{"kind":"fish","property":"tar1","propertyName":"fangs"},//{"kind":"fish","property":"tar2","propertyName":"whiskers"},
+  var propertyObj = [{"kind":"fish","property":"tar1","propertyName":"fangs"},
+                  {"kind":"fish","property":"tar2","propertyName":"whiskers"},
                     // {"kind":"flower","property":"tar1","propertyName":"thorns"},{"kind":"flower","property":"tar2","propertyName":"spots"},
-                    //{"kind":"bug","property":"tar1","propertyName":"antennae"},
+                    {"kind":"bug","property":"tar1","propertyName":"antennae"},
                     {"kind":"bug","property":"tar2","propertyName":"wings"},
                     {"kind":"bird","property":"tar1","propertyName":"tails"},
                     {"kind":"bird","property":"tar2","propertyName":"crests"}];
@@ -561,7 +556,7 @@ function init() {
       _.shuffle(conditions, conditions)
       ), function(lst){return _.extend(lst[0], lst[1], lst[2], lst[3], lst[4], lst[5], lst[6])})
 
-  console.log(exp.stims)
+  // console.log(exp.stims)
 
   exp.system = {
       Browser : BrowserDetect.browser,

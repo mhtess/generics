@@ -55,7 +55,6 @@ var animalColorParts = {
 var prevalences = [0, 0.33, 0.66, 1];
 
 
-
 var animalNames = 
     [{list:0,category: "morseths"},
     {list:1, category: "ollers"},
@@ -97,8 +96,8 @@ var generateOrigins = {
                ".<br> First they were born, then they got bigger, then they were full size."
     },
     extrinsic: function(kind, feature){
-        return "Here's what they did. They put on " + feature + 
-        ".<br>First they were here on the left, then they went away (middle), and then they looked like this on the right."
+        return "Here is what they did. They found some "+feature+" and put on " + feature + 
+        ".<br>First they were on the left, then they just found them, and when they came back, they looked like this on the right."
     }
 }
 
@@ -116,10 +115,13 @@ var testcolors = {
     "green":"#85E085",
     "blue":"#80A8E6"
 }
-  var testprevlev = [{"prevalence":0.33},
+var testprevlev = [{"prevalence":0.33},
                           {"prevalence":0.66}];
 
-  var testpropertyObj = [{"kind":"fish","property":"tar2","propertyName":"whiskers"},{"kind":"bird","property":"tar2","propertyName":"crests"}];
+var testpropertyObj = [
+{"kind":"fish","property":"tar2","propertyName":"whiskers"},
+{"kind":"bird","property":"tar2","propertyName":"crests"}
+];
 
 
 var testanimalNames = 
