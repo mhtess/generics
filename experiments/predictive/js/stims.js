@@ -91,13 +91,17 @@ var animalNames =
 
 
 var generateOrigins = {
-    intrinsic: function(kind, feature){
-        return "Here is how they grew. They grew up with " + feature + 
+    intrinsic: function(kind, feature, proptype){
+        return proptype == "color" ?  "Here is how they grew. They grew up with " + feature + 
+               " skin.<br> First they were born, then they got bigger, then they were full size." : 
+         "Here is how they grew. They grew up with " + feature + 
                ".<br> First they were born, then they got bigger, then they were full size."
     },
-    extrinsic: function(kind, feature){
-        return "Here is what they did. They found some "+feature+" and put on " + feature + 
-        ".<br>First they were on the left, then they just found them, and when they came back, they looked like this on the right."
+    extrinsic: function(kind, feature, proptype){
+        return proptype == "color" ? "Here is what they did. They found some "+feature+" paint and painted themselves " + feature + 
+                            ".<br>First they were on the left, then they found the paint, and then they looked like this on the right." : 
+                "Here is what they did. They found some "+feature+" and put on " + feature + 
+                    ".<br>First they were on the left, then they just found them, and when they came back, they looked like this on the right."
     }
 }
 
