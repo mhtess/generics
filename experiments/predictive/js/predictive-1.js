@@ -83,7 +83,7 @@ function make_slides(f) {
       this.startTime = Date.now();
       this.stim = stim;
 
-      this.stim.proptype = _.sample(["part", "color"])
+      // this.stim.proptype = _.sample(["part", "color"])
       console.log(this.stim.proptype)
       this.stim.colorTag = colors[this.stim.color]
 
@@ -135,9 +135,9 @@ function make_slides(f) {
 
 
 
-       this.utterance = this.stim.proptype == 'part' ? this.stim.np + " have " + this.stim.propertyName:
-                        this.stim.proptype == 'color' ? this.stim.np + " are " + this.stim.color:
-                        this.stim.proptype == 'color-part' ? this.stim.np + " have " + this.stim.colorpartword +" "+ this.stim.colorPart:
+       this.utterance = this.stim.proptype == 'part' ? this.stim.np + " have " + this.stim.propertyName +".":
+                        this.stim.proptype == 'color' ? this.stim.np + " are " + this.stim.color +".":
+                        this.stim.proptype == 'color-part' ? this.stim.np + " have " + this.stim.colorpartword +" "+ this.stim.colorPart + ".":
                        "error"
 
       $(".prompt").html("These are " + this.stim.category + ".");
@@ -233,14 +233,14 @@ function make_slides(f) {
               genus.draw("svg0", {}, 0.15)
           } else if (this.stim.kind=="bird") {
              $("#tdsvg0").css("background", "url(stims_raw/egg.png)")
-              $("#tdsvg0").css("background-size", "50%")
+              $("#tdsvg0").css("background-size", "40%")
               $("#tdsvg0").css("background-repeat", "no-repeat")
-              $("#tdsvg0").css("background-position", "bottom")
+              $("#tdsvg0").css("background-position", "50% 60%")
           } else {
               $("#tdsvg0").css("background", "url(stims_raw/larva.jpg)")
-              $("#tdsvg0").css("background-size", "50%")
+              $("#tdsvg0").css("background-size", "40%")
               $("#tdsvg0").css("background-repeat", "no-repeat")
-              $("#tdsvg0").css("background-position", "bottom")
+              $("#tdsvg0").css("background-position", "50% 60%")
           }
           // var h = $("#svg1").css("height")
 
@@ -346,11 +346,13 @@ function make_slides(f) {
         "trial_type" : "truth_conditions",
         "response" : $("input[name=radio_button]:checked").val(),
         "rt":this.rt,
+        "origins":this.stim.origins,
+        "event_outcome": this.stim.eventOutcome,
         "stim_prevalence": this.stim.prevalence,
         "stim_word": this.stim.determiner,
         "stim_proptype":this.stim.proptype,
-        "stim_category": this.stim.category,
-        "stim_name": this.stim.categoryName,
+        "stim_kind": this.stim.kind,
+        "stim_name": this.stim.category,
         "stim_color": this.stim.colorsave,
         "stim_part":this.stim.propsave
       });
@@ -511,8 +513,7 @@ function make_slides(f) {
           "system" : exp.system,
           "condition" : exp.condition,
           "subject_information" : exp.subj_data,
-          "time_in_minutes" : (Date.now() - exp.startT)/60000,
-          "fingerprintData" : fingerprint
+          "time_in_minutes" : (Date.now() - exp.startT)/60000
       };
       setTimeout(function() {turk.submit(exp.data);}, 1000);
     }
@@ -540,6 +541,8 @@ function init() {
 //  exp.stimtype = ["bare","danger/distinct","nondistinctive"]; //because there is list1, list2, list3
   var determiners = _.map(utils.fillArray("generic",8), function(x){return {determiner: x}})
 
+  var stimproptypes = [{proptype: "color"},{proptype: "part"}];
+
 
   var conditions = [
     {
@@ -560,11 +563,14 @@ function init() {
     }
   ]
 
+  // intrinsic with both part and color; extrinsic both part and color
+ conditions = _.map(_.zip(conditions, _.flatten([_.shuffle(stimproptypes), _.shuffle(stimproptypes)])),
+    function(c){return _.extend(c[0], c[1])})
+
   var prevlevObj = [{"prevalence":0}, {"prevalence":0},
                         // {"prevalence":0.33},{"prevalence":0.33},
                         // {"prevalence":0.66},{"prevalence":0.66},
                         {"prevalence":1},{"prevalence":1}];
-
 
   var propertyObj = [{"kind":"fish","property":"tar1","propertyName":"fangs"},
                   {"kind":"fish","property":"tar2","propertyName":"whiskers"},
@@ -582,6 +588,7 @@ function init() {
   var shuffledStims = _.shuffle(animalNames);
 
 
+
   exp.stims = _.map(_.zip(
       _.shuffle(prevlevObj).slice(0,ntrials),
       _.shuffle(propertyObj).slice(0,ntrials),
@@ -589,7 +596,8 @@ function init() {
       shuffledStims.slice(0,ntrials), 
       determiners.slice(0,ntrials),
       _.shuffle(propertySizes).slice(0,ntrials),
-      _.shuffle(conditions, conditions)
+      // _.shuffle(stimproptypes),
+      _.shuffle(conditions)
       ), function(lst){return _.extend(lst[0], lst[1], lst[2], lst[3], lst[4], lst[5], lst[6])})
 
   // console.log(exp.stims)
@@ -617,7 +625,7 @@ function init() {
    //                 exp.condition, 
    //                 'subj_info', 
    //                 'thanks'];
-  exp.structure = ['truth_conditions',"thanks"];
+  exp.structure = ["i0","tc_instructions",'truth_conditions',"thanks"];
 
   exp.data_trials = [];
   //make corresponding slides:
