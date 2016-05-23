@@ -253,6 +253,11 @@ function make_slides(f) {
           negGenus.draw("svg0", {}, 0.5)
           negGenus.draw("svg1", {}, 0.5)
 
+          $("#svg0").css('border', '1px solid black')
+          $("#svg0").css('border-right', 'none')
+          $("#svg1").css('border', '1px solid black')
+          $("#svg1").css('border-left', 'none')
+
           if (this.stim.proptype == "color") {
             // put splotch of paint into table
             var paper = new Raphael(document.getElementById('svg7'), 250, 250);
@@ -275,10 +280,22 @@ function make_slides(f) {
           // $("#tdsvg2").css("background-repeat", "no-repeat")
           genus.draw("svg3", {}, 0.5)
           genus.draw("svg4", {}, 0.5)
+
+          $("#svg3").css('border', '1px solid black')
+          $("#svg3").css('border-right', 'none')
+          $("#svg4").css('border', '1px solid black')
+          $("#svg4").css('border-left', 'none')
+
         }
 
         this.flag = 1
       } else if (this.flag==1) {
+
+        $("#svg0").css('border', 'none')
+        $("#svg1").css('border', 'none')
+        $("#svg3").css('border', 'none')
+        $("#svg4").css('border', 'none')
+
         $("#tdsvg2").css("background", "none")
         $("#tdsvg0").css("background", "none")
         // $('#table_of_3').hide();
@@ -299,7 +316,7 @@ function make_slides(f) {
 
       } else if (this.flag==2) { 
 
-        $(".prompt").html("Do you agree or disagree that:<br>" + this.utterance);
+        $(".prompt").html("Do you agree or disagree that:<br><strong>" + this.utterance + "</strong>");
 
         $('#radio1').parent().show();
         $('#radio2').parent().show();
@@ -328,10 +345,10 @@ function make_slides(f) {
      this.stim.proptype == 'part' ? 
         this.stim.colorsave = 'white' : 
         this.stim.proptype == 'color' ? 
-          this.stim.colorsave = this.stim.colorword :
+          this.stim.colorsave = this.stim.color :
           this.stim.proptype == 'color-part' ?
           this.stim.colorsave = this.stim.colorpartword : 
-            null
+            "NA"
 
      this.stim.proptype == 'part' ? 
         this.stim.propsave = this.stim.propertyName : 
@@ -339,7 +356,7 @@ function make_slides(f) {
           this.stim.propsave = 'full' :
           this.stim.proptype == 'color-part' ?
           this.stim.propsave = this.stim.colorPart : 
-            null
+            "NA"
 
 
       exp.data_trials.push({
@@ -497,7 +514,9 @@ function make_slides(f) {
         age : $("#age").val(),
         gender : $("#gender").val(),
         education : $("#education").val(),
-        comments : $("#comments").val(),
+        problems: $("#problems").val(),
+        fairprice: $("#fairprice").val(),
+        comments : $("#comments").val()
       };
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
@@ -524,6 +543,18 @@ function make_slides(f) {
 
 /// init ///
 function init() {
+
+  repeatWorker = false;
+  (function(){
+      var ut_id = "mht-generics-20160524";
+      if (UTWorkerLimitReached(ut_id)) {
+        $('.slide').empty();
+        repeatWorker = true;
+        alert("You have already completed the maximum number of HITs allowed by this requester. Please click 'Return HIT' to avoid any impact on your approval rating.");
+      }
+  })();
+
+
   // var prev_levels = ["0","0","0.33","0.33","0.66","0.66","1","1"];
   var prev_levels = ["1","1","1","1","1","1","1","1"];
 
@@ -625,7 +656,7 @@ function init() {
    //                 exp.condition, 
    //                 'subj_info', 
    //                 'thanks'];
-  exp.structure = ["i0","tc_instructions",'truth_conditions',"thanks"];
+  exp.structure = ["i0","tc_instructions",'truth_conditions',"subj_info","thanks"];
 
   exp.data_trials = [];
   //make corresponding slides:
