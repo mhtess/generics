@@ -342,20 +342,20 @@ function make_slides(f) {
 
     log_responses : function() {
 
-     this.stim.proptype == 'part' ? 
-        this.stim.colorsave = 'white' : 
-        this.stim.proptype == 'color' ? 
-          this.stim.colorsave = this.stim.color :
-          this.stim.proptype == 'color-part' ?
-          this.stim.colorsave = this.stim.colorpartword : 
-            "NA"
+     // this.stim.proptype == 'part' ? 
+     //    this.stim.colorsave = 'white' : 
+     //    this.stim.proptype == 'color' ? 
+     //      this.stim.colorsave = this.stim.color :
+     //      this.stim.proptype == 'color-part' ?
+     //      this.stim.colorsave = this.stim.colorpartword : 
+     //        "NA"
 
-     this.stim.proptype == 'part' ? 
-        this.stim.propsave = this.stim.propertyName : 
+     this.stim.propsave = this.stim.proptype == 'part' ? 
+                            this.stim.propertyName : 
         this.stim.proptype == 'color' ? 
-          this.stim.propsave = 'full' :
+                             this.stim.color :
           this.stim.proptype == 'color-part' ?
-          this.stim.propsave = this.stim.colorPart : 
+                           this.stim.colorPart : 
             "NA"
 
 
@@ -370,8 +370,8 @@ function make_slides(f) {
         "stim_proptype":this.stim.proptype,
         "stim_kind": this.stim.kind,
         "stim_name": this.stim.category,
-        "stim_color": this.stim.colorsave,
-        "stim_part":this.stim.propsave
+        // "stim_color": this.stim.colorsave,
+        "stim_property":this.stim.propsave
       });
     }//,
 

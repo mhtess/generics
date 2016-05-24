@@ -79,7 +79,7 @@ var animalNames =
     {list:2, category: "kazzes"},
     {list:0,category: "lorches"},
     {list:1, category: "plovs"},
-    {list:2, category: "noobs"},
+    {list:2, category: "dobles"},
     {list:0,category: "glippets"},
     {list:1, category: "sapers"},
     {list:2, category: "stups"},
