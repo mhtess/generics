@@ -101,7 +101,7 @@ var generateOrigins = {
         return proptype == "color" ? "Here is what they did. They found some "+feature+" paint and painted themselves " + feature + 
                             ".<br>First they looked like this on the left, then they found the paint, and then they looked like this on the right." : 
                 "Here is what they did. They found some "+feature+" and put on " + feature + 
-                    ".<br>First they looked like this on the left, then they just found them, and when they came back, they looked like this on the right."
+                    ".<br>First they looked like this on the left, then they found "+feature+", and when they came back, they looked like this on the right."
     }
 }
 
