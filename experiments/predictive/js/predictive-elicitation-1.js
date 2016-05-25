@@ -548,7 +548,7 @@ function init() {
    //                 exp.condition, 
    //                 'subj_info', 
    //                 'thanks'];
-  exp.structure = ['predictive_elicitation',"i0","tc_instructions","subj_info","thanks"];
+  exp.structure = ["i0","tc_instructions",'predictive_elicitation',"subj_info","thanks"];
 
   exp.data_trials = [];
   //make corresponding slides:
