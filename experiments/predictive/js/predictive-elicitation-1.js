@@ -372,7 +372,7 @@ function make_slides(f) {
 
 
       exp.data_trials.push({
-        "trial_type" : "predictive_likelihood",
+        "trial_type" : "predictive_" + exp.condition,
         "response" : exp.sliderPost,
         "rt":this.rt,
         "origins":this.stim.origins,
