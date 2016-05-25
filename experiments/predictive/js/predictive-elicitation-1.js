@@ -93,13 +93,36 @@ function make_slides(f) {
       this.stim.eventStory = eventOutcomes[this.stim.eventOutcome]
 
 
-        var prompt =  "If you were to encounter another " + this.stim.np +". How likely is it that it would " 
-       this.utterance = this.stim.proptype == 'part' ? prompt + " have " + this.stim.propertyName +".":
-                        this.stim.proptype == 'color' ? prompt+ " be " + this.stim.color +".":
-                        this.stim.proptype == 'color-part' ? prompt+ " have " + this.stim.colorpartword +" "+ this.stim.colorPart + ".":
+      var singular = this.stim.category
+
+
+      if (exp.condition == "likelihood") {
+        var prompt =  "If you were to encounter another " + singular.substring(0, singular.length-1) +", how likely is it that it would " 
+       this.utterance = this.stim.proptype == 'part' ? prompt + " have " + this.stim.propertyName +"?":
+                        this.stim.proptype == 'color' ? prompt+ " be " + this.stim.color +"?":
+                        this.stim.proptype == 'color-part' ? prompt+ " have " + this.stim.colorpartword +" "+ this.stim.colorPart + "?":
                        "error" 
 
-       
+      $(".left").html("very unlikely")
+      $(".right").html("very likely")
+
+      } else if (exp.condition=='frequency') { 
+        var prompt =  "There are 100 other " + this.stim.category +" on the planet. <br> How many of them do you think  " 
+         this.utterance = this.stim.proptype == 'part' ? prompt + " have " + this.stim.propertyName +"?":
+                        this.stim.proptype == 'color' ? prompt+ " are " + this.stim.color +"?":
+                        this.stim.proptype == 'color-part' ? prompt+ " have " + this.stim.colorpartword +" "+ this.stim.colorPart + "?":
+                       "error" 
+        $(".left").html("0")
+      $(".right").html("100")
+      } else {
+        console.log("error")
+      }
+
+
+
+
+
+
 
       $(".prompt").html("These are " + this.stim.category + ".");
 
@@ -169,6 +192,7 @@ function make_slides(f) {
       exp.sliderPost = null;
 
       $('#slider_table').hide();
+      $(".slider_number").hide();
 
     },
 
@@ -287,6 +311,11 @@ function make_slides(f) {
         $(".prompt").html(this.utterance);
 
         $('#slider_table').show();
+        if (exp.condition == 'frequency') {
+          $(".slider_number").show()
+          $(".slider_number").html("---")        
+        }
+
 
         this.flag = 3
 
@@ -307,13 +336,22 @@ function make_slides(f) {
 
     },
 
+    // init_sliders : function() {
+    //   utils.make_slider("#single_slider", function(event, ui) {
+    //     exp.sliderPost = ui.value;
+    //   });
+    // },
+
     init_sliders : function() {
-      utils.make_slider("#single_slider", function(event, ui) {
-        exp.sliderPost = ui.value;
-      });
+      utils.make_slider("#single_slider" , this.make_slider_callback());
     },
 
-
+    make_slider_callback : function() {
+      return function(event, ui) {
+        exp.sliderPost = ui.value;
+        (exp.condition=="frequency") ? $(".slider_number").html(Math.round(exp.sliderPost*100)) : null
+      };
+    },
 
     // init_sliders : function() {
     //   console.log('init sliders')
@@ -416,7 +454,7 @@ function init() {
   exp.catch_trials = [];
   // exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
   // exp.condition = "predictive_prevalence"
-  exp.condition = "truth_conditions"
+  exp.condition = _.sample(["frequency","likelihood"])
 
   exp.practice = "practice_tc";
   exp.practiceinstructions = "practice_tc_instructions";
