@@ -113,7 +113,30 @@ function make_slides(f) {
                         this.stim.proptype == 'color-part' ? prompt+ " have " + this.stim.colorpartword +" "+ this.stim.colorPart + "?":
                        "error" 
         $(".left").html("0")
-      $(".right").html("100")
+        $(".right").html("100")
+
+      } else if (exp.condition == "likelihood_bornToday"){
+        var prompt =  "A new " + singular.substring(0, singular.length-1) +" was born today. <br> When it becomes full grown, how likely is it that it would " 
+       this.utterance = this.stim.proptype == 'part' ? prompt + " have " + this.stim.propertyName +"?":
+                        this.stim.proptype == 'color' ? prompt+ " be " + this.stim.color +"?":
+                        this.stim.proptype == 'color-part' ? prompt+ " have " + this.stim.colorpartword +" "+ this.stim.colorPart + "?":
+                       "error" 
+
+      $(".left").html("very unlikely")
+      $(".right").html("very likely")
+
+      } else if (exp.condition == "likelihood_otherSide"){
+
+        var prompt =  "If you were to encounter a " + singular.substring(0, singular.length-1) +" on the other side of the planet, how likely is it that it would " 
+       this.utterance = this.stim.proptype == 'part' ? prompt + " have " + this.stim.propertyName +"?":
+                        this.stim.proptype == 'color' ? prompt+ " be " + this.stim.color +"?":
+                        this.stim.proptype == 'color-part' ? prompt+ " have " + this.stim.colorpartword +" "+ this.stim.colorPart + "?":
+                       "error" 
+
+      $(".left").html("very unlikely")
+      $(".right").html("very likely")
+
+
       } else {
         console.log("error")
       }
@@ -454,7 +477,8 @@ function init() {
   exp.catch_trials = [];
   // exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
   // exp.condition = "predictive_prevalence"
-  exp.condition = _.sample(["frequency","likelihood"])
+  // exp.condition = _.sample(["frequency","likelihood"])
+  exp.condition = _.sample(["likelihood_bornToday", "likelihood_otherSide"])
 
   exp.practice = "practice_tc";
   exp.practiceinstructions = "practice_tc_instructions";
