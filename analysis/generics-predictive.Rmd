@@ -1,0 +1,70 @@
+---
+title: "generics-predictive"
+author: "mht"
+date: "May 23, 2016"
+output: html_document
+---
+
+
+# Pilot 1: generic endorsement
+
+```{r}
+d <- read.csv("data/predictive/pilots/predictive-1-trials.csv")
+
+```
+
+Generic endorsement by origins and event outcomes
+
+```{r}
+d.stat<- d %>%
+  group_by(origins,event_outcome) %>%
+  multi_boot_standard(column="response")
+
+d %>%
+  group_by(stim_proptype,origins) %>%
+  summarize(length(origins))
+
+
+ggplot(d.stat, aes(x=origins, y = mean, 
+                   ymin=ci_lower, ymax=ci_upper, group=event_outcome,
+                   fill=event_outcome))+
+  geom_bar(stat='identity', 
+           width = 0.8, position=position_dodge(0.8), 
+           color='black')+
+  geom_errorbar(position=position_dodge(0.8), width = 0.5)+
+  theme_paper()+
+  ylab("Generic endorsement")
+
+  
+```
+
+Broken down by property type (color vs. part)
+
+```{r}
+d.stat2<- d %>%
+  group_by(origins,event_outcome, stim_proptype) %>%
+  multi_boot_standard(column="response")
+
+d %>%
+  group_by(stim_proptype,origins,event_outcome) %>%
+  summarize(length(origins))
+
+ggplot(d.stat2, aes(x=origins, y = mean, 
+                   ymin=ci_lower, ymax=ci_upper, group=event_outcome,
+                   fill=event_outcome))+
+  geom_bar(stat='identity', 
+           width = 0.8, position=position_dodge(0.8), 
+           color='black')+
+  geom_errorbar(position=position_dodge(0.8), width = 0.5)+
+  theme_paper()+
+  ylab("Generic endorsement")+
+  facet_wrap(~stim_proptype)
+```
+
+# Pilot 2: predictive likelihood or frequency
+
+```{r}
+d2<- read.csv("experiments/turk/predictive-elicitation-pilot-1/predictive-elicitation-1-trials.csv")
+
+```
+
