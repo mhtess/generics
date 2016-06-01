@@ -478,7 +478,7 @@ function init() {
   // exp.condition = _.sample(["truth_conditions", "implied_prevalence"]); //can randomize between subject conditions here
   // exp.condition = "predictive_prevalence"
   // exp.condition = _.sample(["frequency","likelihood"])
-  exp.condition = _.sample(["likelihood_bornToday", "likelihood_otherSide"])
+  exp.condition = "likelihood_bornToday";
 
   exp.practice = "practice_tc";
   exp.practiceinstructions = "practice_tc_instructions";
