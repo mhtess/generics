@@ -1,0 +1,68 @@
+
+var shape_alpha = function(gamma,delta){return gamma * delta}
+var shape_beta = function(gamma,delta){return (1-gamma) * delta}
+
+var Priordata0 = mht.readCSV("../data/asymmetry-prior-4splitAccidental-trials.csv").data
+var Priordata = Priordata0.slice(0, Priordata0.length-1)
+
+var df = dataFrame(Priordata, ["response0","response1"])
+
+var conditions = "part"//_.uniq(_.pluck(df,"type"))
+
+var avoidEnds = function(response){
+	return response==0 ? 0.01 : response==1 ? 0.99 : response
+}
+
+var header = "Measure,Parameter,Item,Gender,Value,Probability"
+var samples = 50000
+var burn = samples/2
+var mcmcOpts = {samples:samples/2, burn:burn, verbose:true, kernel:"MH"}
+
+
+var questionDictionary = {
+	"response0":"across",
+	"response1":"within"
+}
+
+var priorModel = function(c){
+
+	var conditionData = subset(df, "type", c)
+
+	foreach(["response0","response1"],
+		function(r){
+
+		var responseData = map(avoidEnds, _.pluck(conditionData,r))
+
+		var outfile = "priors_results/priors"+c+"_"+questionDictionary[r]+
+		console.log(i)
+		var h0file = mht.openFile(outfile)
+		mht.writeLine(h0file, header)
+
+		var myErp = MCMC(function(){
+
+			var g = uniform(0,1)
+			var d = uniform(0,50)
+			var shape_a = shape_alpha(g,d)
+			var shape_b = shape_beta(g,d)
+
+			var scrs = map(function(di){
+				return Beta.score({a: shape_a, b:shape_b})
+			}, responseData)
+
+			factor(sum(scrs))
+
+			query.add([c,questionDictionary[r],'gamma'], g)
+			query.add([c,questionDictionary[r],'delta'], d)
+	
+		return query
+
+		}, mcmcOpts)
+
+		mht.writeERP(myErp, h0file)
+		console.log(c + " / " + r +  " items written to file")
+		mht.closeFile(h0file)
+	})
+}
+
+foreach(conditions, function(c){priorModel(c)})
+
