@@ -1,0 +1,50 @@
+// time ~/webppl-infer/webppl dobles.wppl --require mht
+// Prior: load saved results 
+
+var Priordata0 = mht.readCSV("../data/asymmetry-prior-4splitAccidental-trials.csv").data
+var Priordata = Priordata0.slice(0, Priordata0.length-1)
+var df = dataFrame(Priordata, ["response0","response1"])
+var conditions = _.uniq(_.pluck(df,"type"))
+
+var questionDictionary = {
+	"response0":"across",
+	"response1":"within"
+}
+
+var priorERPobject = _.object(map(function(i){
+	console.log('loading prior ERP for ' + i)
+	return [i, _.object(map(function(dm){
+			var fpath = "priors_results/priors"+i+"_"+questionDictionary[dm]+".csv"
+			var df = readQueryERP(fpath)
+			return [dm, df]
+		}, ["response0", "response1"]))]
+},conditions))
+
+
+var model = function(){
+
+	var speaker1_optimality = sample(UniformDrift({a: 0, b: 20, r: 1.0}));
+	var speaker2_optimality = sample(UniformDrift({a: 0, b: 5, r: 0.5}));
+
+	// color, body part
+	foreach(properties, function(p){
+
+		var pr_exist_param = sample(priorERPobject[p]["response0"]); //exist params
+		var pr_exist = beta(
+			shape_alpha(pr_exist_param.Gamma_posterior, pr_exist_param.Delta_posterior),
+			shape_beta(pr_exist_param.Gamma_posterior, pr_exist_param.Delta_posterior)
+			)
+
+		var pr_project_param = sample(priorERPobject[p]["response1"]); 
+
+		var prior = priorMixtureModel(pr_exist, pr_project_param);
+
+		// origins X outcome
+		foreach(conditions, function(c){
+
+
+
+
+
+
+		})
