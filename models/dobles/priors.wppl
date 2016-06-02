@@ -1,4 +1,4 @@
-
+// ~/webppl-infer/webppl priors.wppl --require mht
 var shape_alpha = function(gamma,delta){return gamma * delta}
 var shape_beta = function(gamma,delta){return (1-gamma) * delta}
 
@@ -7,22 +7,24 @@ var Priordata = Priordata0.slice(0, Priordata0.length-1)
 
 var df = dataFrame(Priordata, ["response0","response1"])
 
-var conditions = "part"//_.uniq(_.pluck(df,"type"))
+var conditions = _.uniq(_.pluck(df,"type"))
 
 var avoidEnds = function(response){
 	return response==0 ? 0.01 : response==1 ? 0.99 : response
 }
 
-var header = "Measure,Parameter,Item,Gender,Value,Probability"
-var samples = 50000
+var header = "Category,Measure,Parameter,Value,Probability"
+var samples = 500
 var burn = samples/2
-var mcmcOpts = {samples:samples/2, burn:burn, verbose:true, kernel:"MH"}
-
+// var mcmcOpts = {samples:samples/2, burn:burn, verbose:true, kernel:"MH"}
 
 var questionDictionary = {
 	"response0":"across",
 	"response1":"within"
 }
+
+// Infer({method: 'MCMC', samples: 1000, lag: 100, burn: 5}, thunk);
+var inferopts = {method: 'MCMC', samples: samples, burn: burn, verbose:true}
 
 var priorModel = function(c){
 
@@ -33,12 +35,12 @@ var priorModel = function(c){
 
 		var responseData = map(avoidEnds, _.pluck(conditionData,r))
 
-		var outfile = "priors_results/priors"+c+"_"+questionDictionary[r]+
-		console.log(i)
+		var outfile = "priors_results/priors"+c+"_"+questionDictionary[r]+".csv"
+		console.log(r)
 		var h0file = mht.openFile(outfile)
 		mht.writeLine(h0file, header)
 
-		var myErp = MCMC(function(){
+		var myErp = Infer(inferopts, function(){
 
 			var g = uniform(0,1)
 			var d = uniform(0,50)
@@ -46,17 +48,17 @@ var priorModel = function(c){
 			var shape_b = shape_beta(g,d)
 
 			var scrs = map(function(di){
-				return Beta.score({a: shape_a, b:shape_b})
+				return Beta({a: shape_a, b:shape_b}).score(d)
 			}, responseData)
 
 			factor(sum(scrs))
 
-			query.add([c,questionDictionary[r],'gamma'], g)
-			query.add([c,questionDictionary[r],'delta'], d)
+			query.add([c,questionDictionary[r],'Gamma_posterior'], g)
+			query.add([c,questionDictionary[r],'Delta_posterior'], d)
 	
 		return query
 
-		}, mcmcOpts)
+		})
 
 		mht.writeERP(myErp, h0file)
 		console.log(c + " / " + r +  " items written to file")
