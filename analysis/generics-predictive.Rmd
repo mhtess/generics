@@ -6,11 +6,34 @@ output: html_document
 ---
 
 
-# Pilot 1: generic endorsement
+# Truth judgments (dobles / predictive task)
+
+```{r truth.load}
+project.path<- "~/Documents/research/generics/"
+d <- read.csv(paste(project.path, 
+                    "/data/predictive/predictive-1-trials.csv", sep=""))
+```
+
+Reaction time distributions
 
 ```{r}
-d <- read.csv("data/predictive/pilots/predictive-1-trials.csv")
+d %>%
+  ggplot(., aes(x=rt))+
+  geom_histogram()+
+  xlim(0,100)
 
+d %>%
+  ggplot(., aes(x=rt, fill=origins))+
+  geom_histogram(position=position_dodge())
+
+d %>%
+  ggplot(., aes(x=rt, fill=event_outcome))+
+  geom_histogram(position=position_dodge())
+
+d %>%
+  ggplot(., aes(x=rt))+
+  geom_histogram()+
+  facet_grid(origins~event_outcome)
 ```
 
 Generic endorsement by origins and event outcomes
@@ -19,10 +42,6 @@ Generic endorsement by origins and event outcomes
 d.stat<- d %>%
   group_by(origins,event_outcome) %>%
   multi_boot_standard(column="response")
-
-d %>%
-  group_by(stim_proptype,origins) %>%
-  summarize(length(origins))
 
 
 ggplot(d.stat, aes(x=origins, y = mean, 
@@ -35,7 +54,7 @@ ggplot(d.stat, aes(x=origins, y = mean,
   theme_paper()+
   ylab("Generic endorsement")
 
-  
+
 ```
 
 Broken down by property type (color vs. part)
@@ -61,10 +80,95 @@ ggplot(d.stat2, aes(x=origins, y = mean,
   facet_wrap(~stim_proptype)
 ```
 
-# Pilot 2: predictive likelihood or frequency
+Statistical models
 
 ```{r}
-d2<- read.csv("experiments/turk/predictive-elicitation-pilot-1/predictive-elicitation-1-trials.csv")
+
+rs<-glmer(response ~ event_outcome * origins + (1 | workerid), 
+          d, family='binomial')
+
+rs<-glmer(response ~ event_outcome * origins * stim_proptype+ (1 | workerid), 
+          d, family='binomial')
+
+
+```
+
+# Predictive elicitation
+
+```{r predictive.load}
+d2<- read.csv(paste(project.path,
+                    "/data/predictive/predictive-elicitation-1-trials.csv",
+                    sep=""))
+```
+
+Reaction time distributions
+```{r}
+d2 %>%
+  ggplot(., aes(x=rt))+
+  geom_histogram()+
+  xlim(0,100)
+
+
+# should probably log-transform and censor based on SDs...
+```
+
+Response distributions
+
+```{r}
+d2 %>%
+  ggplot(., aes(x=response))+
+  geom_histogram()+
+  facet_grid(origins~event_outcome)
+```
+
+```{r}
+
+
+d2.stat <- d2 %>%
+  group_by(trial_type, origins, event_outcome) %>%
+  multi_boot_standard(column='response')
+
+ggplot(d2.stat, aes(x=origins, y = mean, 
+                   ymin=ci_lower, ymax=ci_upper, group=event_outcome,
+                   fill=event_outcome))+
+  geom_bar(stat='identity', 
+           width = 0.8, position=position_dodge(0.8), 
+           color='black')+
+  geom_errorbar(position=position_dodge(0.8), width = 0.5)+
+  theme_paper()+
+  facet_wrap(~trial_type)+
+  ylab("Predictive prevalence")
+
+
+```
+
+```{r}
+
+d2.stat <- d2 %>%
+  group_by(trial_type, origins, event_outcome) %>%
+  multi_boot_standard(column='response')
+
+ggplot(d2.stat, aes(x=origins, y = mean, 
+                   ymin=ci_lower, ymax=ci_upper, group=event_outcome,
+                   fill=event_outcome))+
+  geom_bar(stat='identity', 
+           width = 0.8, position=position_dodge(0.8), 
+           color='black')+
+  geom_errorbar(position=position_dodge(0.8), width = 0.5)+
+  theme_paper()+
+  facet_wrap(~trial_type)+
+  ylab("Predictive prevalence")
+
+
+
+ggplot(d2, aes(x=origins, y = response, group = event_outcome, 
+                   fill=trial_type))+
+  geom_bar(stat='identity', 
+           width = 0.8, position=position_dodge(0.8), 
+           color='black')+
+  theme_paper()+
+  facet_wrap(trial_type~workerid)+
+  ylab("Predictive prevalence")
 
 ```
 
