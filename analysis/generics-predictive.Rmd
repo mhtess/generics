@@ -121,11 +121,12 @@ d2 %>%
   facet_grid(origins~event_outcome)
 ```
 
+
+Average predictive prevalence
+
 ```{r}
-
-
 d2.stat <- d2 %>%
-  group_by(trial_type, origins, event_outcome) %>%
+  group_by(origins, event_outcome) %>%
   multi_boot_standard(column='response')
 
 ggplot(d2.stat, aes(x=origins, y = mean, 
@@ -135,40 +136,37 @@ ggplot(d2.stat, aes(x=origins, y = mean,
            width = 0.8, position=position_dodge(0.8), 
            color='black')+
   geom_errorbar(position=position_dodge(0.8), width = 0.5)+
-  theme_paper()+
-  facet_wrap(~trial_type)+
   ylab("Predictive prevalence")
-
-
 ```
 
-```{r}
 
-d2.stat <- d2 %>%
-  group_by(trial_type, origins, event_outcome) %>%
+Broken down by property type (color vs. part), for extrinsic-maintained and intrinsic-lost
+
+```{r}
+d2 %>%
+  filter( (origins=='intrinsic' & event_outcome == 'lost') |
+            (origins=='extrinsic' & event_outcome == 'maintained')) %>%
+  ggplot(., aes(x=response))+
+  geom_histogram()+
+  facet_grid(stim_proptype~origins)
+```
+
+Averages, by origins, outcome, and type
+
+```{r}
+d2.stat.item <- d2 %>%
+  group_by(origins, event_outcome, stim_proptype) %>%
   multi_boot_standard(column='response')
 
-ggplot(d2.stat, aes(x=origins, y = mean, 
+ggplot(d2.stat.item, aes(x=origins, y = mean, 
                    ymin=ci_lower, ymax=ci_upper, group=event_outcome,
                    fill=event_outcome))+
   geom_bar(stat='identity', 
            width = 0.8, position=position_dodge(0.8), 
            color='black')+
   geom_errorbar(position=position_dodge(0.8), width = 0.5)+
-  theme_paper()+
-  facet_wrap(~trial_type)+
-  ylab("Predictive prevalence")
+  ylab("Predictive prevalence")+
+  facet_wrap(~stim_proptype)
 
-
-
-ggplot(d2, aes(x=origins, y = response, group = event_outcome, 
-                   fill=trial_type))+
-  geom_bar(stat='identity', 
-           width = 0.8, position=position_dodge(0.8), 
-           color='black')+
-  theme_paper()+
-  facet_wrap(trial_type~workerid)+
-  ylab("Predictive prevalence")
 
 ```
-
