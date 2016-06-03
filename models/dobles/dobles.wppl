@@ -1,7 +1,7 @@
 // ~/webppl-infer/webppl dobles.wppl --require mht --require utils
 // Prior: load saved results 
 
-var conditions = ["part","color"];//_.uniq(_.pluck(df,"type"))
+var conditions = ["part"];//_.uniq(_.pluck(df,"type"))
 
 var questionDictionary = {
 	"response0":"across",
@@ -61,18 +61,36 @@ var model = function(){
 			var origin_data = subset(df_truth, "origins", or)
 
 			foreach(outcomes, function(ou){
-				var response_data = _.pluck(subset(df_truth, "event_outcome", ou), "response")
+				var response_data = _.pluck(subset(origin_data, "event_outcome", ou), "response")
 				var pfk = avg_predictive_prevalence[or][ou]
-				// console.log(pfk)
+
 				var s2 = speaker2(pfk, prior, speaker1_optimality, speaker2_optimality)
 
 				var scrs = map(function(d) { return s2.score(d) }, response_data)
 
-				console.log(sum(scrs))
+				factor(sum(scrs))
+
+				query.add(["s2_predictive", p, or, ou], expectation(s2))
+
 			})
 		})
 
 	})
-}
 
-model()
+	query.add(["parameter", "s1_optimality", "NA", "NA"], speaker1_optimality)
+	query.add(["parameter", "s2_optimality", "NA", "NA"], speaker2_optimality)
+	return query
+
+}
+var samples = 1000
+var burn = samples/2
+var inferopts = {method: 'MCMC', samples: samples, burn: burn, verbose:true}
+
+var posterior = Infer(inferopts, model)
+
+var outputFile = "model_results/dobles-MH" + samples/1000 + "k_burn" + burn/1000 +"k.csv"
+
+var header = "Type,Parameter,Origin,Outcome,Value"
+mht.erpWriter(posterior, outputFile, header)
+
+console.log("written to " + outputFile)
