@@ -1,0 +1,172 @@
+---
+title: "generics-predictive-model"
+author: "mht"
+date: "June 3, 2016"
+output: html_document
+---
+
+```{r}
+histToSamples <- function(df, samples){
+  df[rep(row.names(df), df[,tail(names(df),1)]*(samples)), 1:ncol(df)-1]
+}
+```
+
+```{r data}
+project.path<- "~/Documents/research/generics/"
+d <- read.csv(paste(project.path, 
+                    "/data/predictive/predictive-1-trials.csv", sep=""))
+
+d.stat<- d %>%
+  group_by(origins,event_outcome) %>%
+  multi_boot_standard(column="response")
+
+ggplot(d.stat, aes(x=origins, y = mean, 
+                   ymin=ci_lower, ymax=ci_upper, group=event_outcome,
+                   fill=event_outcome))+
+  geom_bar(stat='identity', 
+           width = 0.8, position=position_dodge(0.8), 
+           color='black')+
+  geom_errorbar(position=position_dodge(0.8), width = 0.5)+
+  theme_paper()+
+  ylab("Generic endorsement")
+```
+
+
+```{r}
+m<- read.csv(paste(project.path,
+                   "/models/dobles/model_results/", 
+                   "dobles-MH1k_burn0.5k.csv", sep=""))
+                   #"dobles-byProperty-partPriors-MH1k_burn0.5k.csv", sep=""))
+```
+
+```{r}
+m.params <- m %>%
+  filter(Type == 'parameter') %>%
+  select(-Origin, -Outcome, -Type)
+
+m.param.samples <- histToSamples(m.params, 1000)
+```
+
+```{r}
+ggplot(m.param.samples, aes(x=Value))+
+  geom_histogram()+
+  facet_wrap(~Parameter, scales='free')
+```
+
+
+```{r}
+m.predictive <- m %>%
+  filter(Type == 's2_predictive') %>%
+  select(-Type)
+
+m.pred.samples <- histToSamples(m.predictive, 1000)
+```
+
+
+```{r}
+m.pred.summ <- m.pred.samples %>%
+  group_by(Parameter, Origin, Outcome) %>%
+  summarize(MAP = estimate_mode(Value),
+            cred_lower = hdi_lower(Value),
+            cred_upper = hdi_upper(Value))
+
+ggplot(m.pred.summ, aes(x=Origin, fill=Outcome, group=Outcome,
+                        y=MAP, ymin=cred_lower, ymax=cred_upper))+
+  geom_bar(stat='identity', 
+           width = 0.8, position=position_dodge(0.8), 
+           color='black')+
+  geom_errorbar(position=position_dodge(0.8), width = 0.5)+
+  theme_paper()+
+  ylab("Model predicted generic endorsement")+
+  facet_wrap(~Parameter)
+
+```
+
+# Broken by property type
+
+## Data
+```{r}
+d.stat<- d %>%
+  group_by(stim_proptype, origins,event_outcome) %>%
+  multi_boot_standard(column="response")
+
+ggplot(d.stat, aes(x=origins, y = mean, 
+                   ymin=ci_lower, ymax=ci_upper, group=event_outcome,
+                   fill=event_outcome))+
+  geom_bar(stat='identity', 
+           width = 0.8, position=position_dodge(0.8), 
+           color='black')+
+  geom_errorbar(position=position_dodge(0.8), width = 0.5)+
+  theme_paper()+
+  ylab("Generic endorsement")+
+  facet_wrap(~stim_proptype)
+```
+
+
+## Model
+
+Using the "body part" priors for both (only difference is predictive prevalence)
+
+```{r}
+m<- read.csv(paste(project.path,
+                   "/models/dobles/model_results/", 
+                  # "dobles-MH1k_burn0.5k.csv", sep=""))
+                   "dobles-byProperty-partPriors-MH1k_burn0.5k.csv", sep=""))
+
+
+m.predictive <- m %>%
+  filter(Type == 's2_predictive') %>%
+  select(-Type)
+
+m.pred.samples <- histToSamples(m.predictive, 1000)
+
+m.pred.summ <- m.pred.samples %>%
+  group_by(Parameter, Origin, Outcome) %>%
+  summarize(MAP = estimate_mode(Value),
+            cred_lower = hdi_lower(Value),
+            cred_upper = hdi_upper(Value))
+
+ggplot(m.pred.summ, aes(x=Origin, fill=Outcome, group=Outcome,
+                        y=MAP, ymin=cred_lower, ymax=cred_upper))+
+  geom_bar(stat='identity', 
+           width = 0.8, position=position_dodge(0.8), 
+           color='black')+
+  geom_errorbar(position=position_dodge(0.8), width = 0.5)+
+  theme_paper()+
+  ylab("Model predicted generic endorsement")+
+  facet_wrap(~Parameter)
+```
+
+
+Using priors for colors and body parts 
+(Though, "color" prior were for colored body parts)
+
+```{r}
+m<- read.csv(paste(project.path,
+                   "/models/dobles/model_results/", 
+                   "dobles-byProperty-byPropertyPriors-MH5k_burn2.5k.csv",
+                   sep=""))
+
+
+m.predictive <- m %>%
+  filter(Type == 's2_predictive') %>%
+  select(-Type)
+
+m.pred.samples <- histToSamples(m.predictive, 5000)
+
+m.pred.summ <- m.pred.samples %>%
+  group_by(Parameter, Origin, Outcome) %>%
+  summarize(MAP = estimate_mode(Value),
+            cred_lower = hdi_lower(Value),
+            cred_upper = hdi_upper(Value))
+
+ggplot(m.pred.summ, aes(x=Origin, fill=Outcome, group=Outcome,
+                        y=MAP, ymin=cred_lower, ymax=cred_upper))+
+  geom_bar(stat='identity', 
+           width = 0.8, position=position_dodge(0.8), 
+           color='black')+
+  geom_errorbar(position=position_dodge(0.8), width = 0.5)+
+  theme_paper()+
+  ylab("Model predicted generic endorsement")+
+  facet_wrap(~Parameter)
+```
