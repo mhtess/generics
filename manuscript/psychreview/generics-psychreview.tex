@@ -1109,27 +1109,44 @@ The trial proceeded by participants reading the text, and clicking a button to c
 
 Participants saw 4 trials: 2 in which the creatures were born with the property, and 2 in which the creatures were shown coming across and putting on the property (e.g. painting themselves brown).
 This was crossed with either the creatures drinking a bad chemical and losing the feature, or drinking a yummy drink and feeling very full.
-The outcome of this event determined the final screen of images the participant saw (e.g. either 10 dobles with claws or 10 without). 
+The outcome of this event determined the final screen of images the participant saw (e.g. either 10 dobles with claws or 10 without).
 
 
 While this final screen was present, we measured \emph{predictive prevalence} by telling participants: ``A new doble was born today. When it becomes full grown, how likely is it that it would have claws?''.
 Participants responded using sliders ranging from ``very unlikely'' to ``very likely''.
+
+We had 2 different types of properties: colors (e.g. \emph{Lorches are green.}) and body parts (e.g. \emph{Dobles have claws}).
+The creatures were either birds, bugs, or fish, with randomly sampled dimensions.
 The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/predictive/predictive-elicitation-1-elicitation.html}.
 
 
+\subsubsection*{Results and truth judgment predictions}
 
-\subsubsection*{Results and model predictions}
+The average predicted prevalence for the 4 experimental conditions are shown in Figure \ref{fig:dobles-predictive}(a, top).
+We observe a main effect of origins, such that when participants read that the creatures had the property from birth, future creatures  are much more likely to have the property as compared to when the property is acquired.
+Surprisingly, we see that participants are also sensitive to the outcome of the event.
+When participants observe a creature who loses the property by drinking a chemical, they report future members of the category are less likely to have the property.
+This inference may be driven by beliefs about the property (e.g. the property could be an unstable property if you can lose it simply by drinking something) or by beliefs about the event (e.g. participants may believe this ``chemical drinking'' event is a relatively normal event, and thus it could happen in the future).
+Examining the data by item type (color vs. body part), we see this effect is slightly more pronounced for the body parts than the colors (Figure \ref{fig:dobles-predictive}a, bottom). 
 
+We use these predicted probabilities as the prevalence $x$ that the speaker model is trying to communicate: $S_2(u\mid x)$.
+For priors $P(x)$, we use the body part and color priors elicited in Expt.~2a.
+We see that the model predictions track closely the predicted prevalence, including the subtle by-item difference (Figure \ref{fig:dobles-predictive}b, top and bottom).
+We do not observe substantial deviations from the predicted prevalence because there are only two different priors being used, and the shapes of those distributions do not vary appreciably (see Figure \ref{fig:prior2}).
 
 \begin{figure*}
 \begin{tabular}{l l}
-(a) & (b)\\
+(a) Elicited predicted prevalence & (b) Truth judgment model predictions\\
+\\
 \centering
     \includegraphics[width=0.5\columnwidth]{dobles-predictive.pdf} &
     \includegraphics[width=0.5\columnwidth]{dobles-model.pdf} \\
+    \includegraphics[width=0.5\columnwidth]{dobles-predictive-byItem.pdf} &
+      \includegraphics[width=0.5\columnwidth]{dobles-model-byItem.pdf} \\
 \end{tabular}
     \caption{
     (a) Average predicted probability of a future creature having the property. (b) Truth judgment model predictions given the predicted prevalence in (a).
+    Bottom row shows data and predictions broken down by item.
   }
   \label{fig:dobles-predictive}
 \end{figure*}
