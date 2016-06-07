@@ -355,6 +355,7 @@ generics.of.interest <- data.frame(
 d<-read.csv(file = '../experiments/turk/real-kinds-prior-2/real-kinds-2-trials.csv')
 d0<-read.csv(file='../experiments/turk/real-kinds-prior-2/real-kinds-2pilot5/real-kinds-2-trials.csv')
 
+
 d0$workerid = max(d$workerid) + d0$workerid+1
 d<-bind_rows(d,d0)
 
@@ -524,6 +525,54 @@ ggplot(data = filter(d,property%in%selection), aes(x=prevalence))+
 
 
 Binned distributions (for model)
+
+```{r}
+bins <- c(0, 0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99)
+nearest_bin <- function(x, bins) {
+  max_bin <- max(bins)
+  min_bin <- min(bins)
+  if (x > max_bin) {
+    max_bin
+  } else if (x <= min_bin) {
+    min_bin
+  } else {
+    bins[round(x*10)+2]
+  }
+}
+
+d<- read.csv(file="../models/data/real-kinds-prior-2-trials-n57-formatted.csv")
+
+workers <- unique(d$workerid)
+d.bin.full <- data.frame()
+
+for (i in 1:10) {
+  sampled.workers <- sample(workers, 57, replace=TRUE) # sample participants with replacement
+  d.bs <- data.frame()
+  d.bin <- expand.grid(Property = levels(d$Property), bin = factor(bins)) # initialize data frame
+  for (j in sampled.workers) {
+      d.bs <- bind_rows(d.bs, filter( d, workerid == j ) )
+  }
+  d.bin <- left_join(d.bin, 
+                     d.bs %>%
+                        rowwise() %>%
+                        mutate(bin = nearest_bin(prevalence / 100 , bins)) %>% # round to bin
+                        ungroup() %>%
+                        mutate(bin = factor(bin)) %>%
+                        group_by(Property, bin) %>%
+                        summarize(n = n()),
+                     by=c("Property", "bin")) %>%
+    ungroup() %>%
+    mutate(n = ifelse(is.na(n), 0, n)) %>%
+    mutate(n = n + 1, # add-1 smoothing
+           i = i) # track bootstrap sample number
+  d.bin.full <- bind_rows(d.bin.full, d.bin)
+  print(i)
+}
+
+```
+
+
+
 
 ```{r}
 d <- d %>% mutate(roundval=factor(round(prevalence/10)*10))
