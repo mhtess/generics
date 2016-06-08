@@ -378,7 +378,59 @@ With the only alternatives being to produce the generic or stay silent, $S_2$ is
 We implemented this model in the probabilisitic programming language WebPPL \cite{dippl}, and a fully specified version of the model can be found at \url{http://forestdb.org/models/generics.html}
 
 
+This model makes the prediction that the interpretation of a generic statement (and hence, it's corresponding truth judgment) depends on the prior on prevalence $P(x)$.
+We explore the model by running simulations of $L_1$ and $S_2$ under various schematic priors.
+Recall $P(x)$ is a distribution on the prevalence of a given property (e.g. \textsc{lays eggs}) across animal categories. 
+Thus, a sample from this prior distribution would be an animal category (e.g., \textsc{ducks}), and the corresponding property prevalence for that category (e.g., 50\%).
+In Figure \ref{fig:schematic-unif}, are $L_1$ (Eq.~\ref{eq:L1}) posterior prevalence distributions $x$ (red solid line) for a couple example prior prevalence distributions $P(x)$ (blue dashed line), as well as the $S_2$ generic endorsement probability for different levels of prevalence.
+We name these example prior distributions to suggest properties that might be associated with such priors. (Later, we will empirically measure these priors for properties of interest.)
+First, we explore generic interpretation and endorsement for priors of three different shapes (top row). 
+For each of these, the $L_1$ posterior distribution over prevalence is heavily driven by the prior, though the distribution is only slightly shifted to the right. 
+This is because the prevalence of the property is relatively homogeneous across categories (prevalence comes fro a single distribution). 
+$S_2$ endorsement probabilities for the generic increase as a function of prevalence, and what counts as ``true'' (in terms of the prevalence) depends on the prior. 
 
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{schematics_s2.pdf}
+    \caption{Schematic prior distributions for prevalence $x$ (blue dashed), the pragmatic listener $L_1$ model's posterior distribution over prevalence upon hearing a generic utterance (red), and speaker $S_2$ model's endorsement of a generic utterance for different levels of prevalence (black).
+    The names given to these priors are meant to be suggestive of what kinds of properties these distributions might correspond to.
+    The top row uses prevalence priors corresponding to a Beta(5,5), Beta(4,1), and Beta(4,16).
+      The bottom row uses a prior distribution that is a mixture of the distribution above it with a second component Beta(0.5, 4.5), reflecting creatures with 0\% property prevalence.
+    Horizontal dashed line at 0.5 is for convenience of comparing the point at which an utterance is neither true nor false for $S_2$.
+	Note that the prior distribution over prevalence will be the same as $L_1$'s posterior distribution upon hearing the ``null'' utterance.
+    }
+  \label{fig:schematic-unif}
+\end{figure}
+
+
+To take one example, consider the distribution over what might be ``are female'' (top-left facet).
+The \emph{a priori} prevalence is centered around 0.5.
+Because of pragmatics, the pressure to be \emph{truthful} will drive likely threshold values below 0.5 (lower values are more likely to be true). 
+%At the same time, the maximum posterior density of the threshold is substantially greater than the lower bound. 
+At the same time, the pressure to be \emph{informative} will drive the threshold values up: Higher values are more likely to be informative. 
+The result is a posterior over prevalence that is somewhat greater than the prior, making higher prevalence values more likely after hearing the generic. 
+But the relative information gain is very little (the posterior is not very different from the prior), and thus the $S_2$ model is reluctant to endorse the generic unless the property is especially prevalent. 
+The same basic phenomenon can be observed for the other two example priors (top row): The posterior over prevalence heavily depends upon the prior. %the quantitative details of this inference are heavily dependent on the shape of the prior distribution (i.e. the posteriors look dramatically different).
+
+While each $P(x)$ is a single distribution on prevalence, it may be structured as the result of deeper conceptual knowledge. 
+For instance, if participants believe that some kinds have a causal mechanism that \emph{could} give rise to the property, while others do not, then we would expect $P(x)$ to be structured as a mixture distribution (cf. \citeA{Griffiths2005}).
+In Figure \ref{fig:schematic-unif} (bottom row), we explore how this structure would affect interpretations by including a second component of the prior, which heavily favors the property to be absent. 
+Consider the schematic prior over ``lay eggs''.
+We see the pragmatic listener $L_1$'s posterior prevalence distribution is not very different from the interpretation that doesn't include the second component in the prior (here, ``are female''), but it is dramatically different from the prior (compare red with blue dashed line for the bottom row).
+This suggests that when many categories have 0\% prevalence, lower thresholds are inferred. 
+Indeed, the $S_2$ model predicts that the generic becomes felicitous at lower prevalence levels (compare black line of top v. bottom row).
+For ``lay eggs'', when the property is prevalent in 50\% of the kind (e.g., 50\% of birds lay eggs), endorsement of the generic (e.g., \emph{Birds lay eggs}) by the $S_2$ roughly 0.85; for ``are female'', with the same prevalence (50\% of birds are female), endorsement for \emph{Birds are female} is 0.50: It is judged to be neither true nor false.
+%Interestingly, the posterior distribution over prevalence $x$ (red line) is not strongly affected by this component.
+
+
+%    In each case, the posterior distribution over prevalence is very different from the prior.
+%    The associated endorsement probabilities for the generic are substantially higher than when that the second component is absent (compare dark line between row 1 and row 2). 
+%    When the property does not exist in some number of creatures, the generic is substantially more felicitous.
+%    
+
+
+
+The model thus predicts differences in truth judgments depending on the prevalence prior. 
 The first test of our theory will be to see if the $S_2$ model of felicity judgments corresponds to human judgments of the felicity of familiar generic sentences. 
 
 %
@@ -393,47 +445,7 @@ The first test of our theory will be to see if the $S_2$ model of felicity judgm
 %In order to model the interpretation of a generic utterances out of context, we assume the speaker had the options of uttering the generic utterance or staying quiet---the \emph{null utterance} alternative carries no information (i.e.~$\denote{null}(x, \tau)=T$) and produces a posterior distribution in the listener identical with the prior.\footnote{
 %This alternative can be realized in at least two other ways: the speaker could have said the negation of the utterance (i.e. \emph{It is not the case that robins lay eggs.}) or the negative generic (i.e. \emph{Robins do not lay eggs.}). All results reported are similar for these two alternatives, and we use the alternative of the \emph{null} utterance for simplicity of demonstration.}
 %We choose the \emph{null} utterance as the alternative in order to give the generic its communicative force; the option of staying silent makes the generic utterance into a \emph{speech-act}.
-\begin{figure}
-\centering
-    \includegraphics[width=\columnwidth]{schematics_s2.pdf}
-    \caption{Schematic prior distributions for prevalence $x$ (blue dashed), the pragmatic listener $L_1$ model's posterior distribution over prevalence upon hearing a generic utterance (red), and speaker $S_2$ model's endorsement of a generic utterance for different levels of prevalence (black).
-    The names given to these priors are meant to be suggestive of what kinds of properties these distributions might correspond to.
-    The top row uses prevalence priors corresponding to a Beta(5,5), Beta(4,1), and Beta(4,16).
-      The bottom row uses a prior distribution that is a mixture of the distribution above it with a second component Beta(0.5, 4.5), reflecting creatures with 0\% property prevalence.
-	Note that the prior distribution over prevalence will be the same as $L_1$'s posterior distribution upon hearing the ``null'' utterance.
-    }
-  \label{fig:schematic-unif}
-\end{figure}
 
-
-    Endorsement probabilities for the generic as predicted by the $S_2$ model increase as a function of prevalence, but what counts as ``true'' depends on the prior. (Horizontal dashed line at 0.5 is for convenience of comparing the point at which an utterance is neither true nor false.)
-    In each case, the posterior distribution over prevalence is very different from the prior.
-    The associated endorsement probabilities for the generic are substantially higher than when that the second component is absent (compare dark line between row 1 and row 2). 
-    When the property does not exist in some number of creatures, the generic is substantially more felicitous.
-    
-
-This model makes the prediction that the interpretation of a generic statement depends on the prior on prevalence $P(x)$.
-We explore these predictions by running simulations of $L_1$ under various schematic priors.
-In Figure \ref{fig:schematic-unif}, are $L_1$ (Eq.~\ref{eq:L1}) marginal posterior distributions over prevalence $x$ (red solid line) for a couple example prior distributions over prevalence $P(x)$ (blue dashed line).
-We give the example prior distributions names of properties that might be associated with such priors.
-First we explore generic interpretation for priors of three different shapes (top row). 
-For each of these, the posterior distribution over prevalence is heavily driven by the prior, but is only slightly shifted to the right. 
-
-When the \emph{a priori} prevalence is centered around 0.5 (top-left facet; this could correspond to the distribution over the property ``are female''),
-% the posterior distribution over the threshold is centered around a value less than the mean of the prevalence prior distribution (dark blue line). 
-The pressure to be \emph{truthful} drives the threshold posterior to the left: Lower values are more likely to be true. 
-At the same time, the maximum posterior density of the threshold is substantially greater than the lower bound. 
-The pressure to be \emph{informative} drives the threshold posterior to the right: Higher values are more likely to be informative. 
-The posterior over prevalence is appreciably greater than the prior, making higher prevalence values more likely after hearing the generic. 
-The same qualitative phenomena can be observed for the other two example priors (top row), the quantitative details of this inference are heavily dependent on the shape of the prior distribution (i.e. the posteriors look dramatically different).
-
-Recall $P(x)$ is a distribution on the prevalence of a given property (e.g. \textsc{lays eggs}) across animal categories. 
-While each $P(x)$ is a single distribution on prevalence, it may be structured as the result of deeper conceptual knowledge. 
-For instance, if participants believe that some kinds have a causal mechanism that \emph{could} give rise to the property, while others do not, then we would expect $P(x)$ to be structured as a mixture distribution (cf. \citeA{Griffiths2005}).
-In Figure \ref{fig:schematic-unif} (bottom row), we explore how this structure would affect interpretations by including a second component of the prior, which heavily favors the property to be absent. 
-We see the pragmatic listener $L_1$'s posterior distribution over thresholds (blue line) is pulled to lower values, relative to when there is no such component (compare rows within a column). 
-This hints at the possibility that when many categories have 0\% prevalence, lower thresholds are inferred. 
-Interestingly, the posterior distribution over prevalence $x$ (red line) is not strongly affected by this component.
 
 
 %We use $S_{2}$ (Eq.~\ref{eq:S2}) to model
