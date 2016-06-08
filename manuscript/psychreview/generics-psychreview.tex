@@ -197,11 +197,44 @@ Generics express a relation between a kind K (e.g. \textsc{robins}) and a proper
 These are in contrast to properties only predicable of the kind as a whole (e.g., \emph{Dogs are widespread})\footnote{No particular instance of dog can itself be widespread.}.
 
 Given that generics express a property that can be applied to individuals, it would seem intuitive that the number of individuals with the property would be what makes the statement true or false.
-Counter-examples like \emph{Mosquitos carry malaria} and \emph{Birds lay eggs} v. \emph{Birds are female} stifles such intuition. 
-Statistical theories try to rescue the notion that a generic expresses something like \emph{Ks, in general, have F}, where \emph{in general} is often either restricted to particular domain or is calculated in a distorted way.
-Conceptual theories take a generic to mean \emph{Ks, in virtue of being the kind of things that Ks are, have F}.
+Counter-examples like \emph{Mosquitos carry malaria} and \emph{Birds lay eggs} v. \emph{Birds are female} stifle such intuition. 
+Semantic theories that appeal to the statistics of the world try to rescue the notion that a generic expresses something like \emph{Ks, in general, have F}, where \emph{in general} is often either restricted to particular domain or is calculated in a distorted way.
+Alternative, \emph{conceptual} theories take a generic to mean \emph{Ks, in virtue of being the kind of things that Ks are, have F}.
 These accounts appeal to structured, conceptual representations in deciding what kinds of generic statements are true or false.
-The statistical and conceptual are taken to express contrasting views of the truth conditions of generic statements \cite{Carlson1995essay}.
+Statistical and conceptual theories express contrasting views of the truth conditions of generic statements \cite{Carlson1995essay}. \footnote{We use the terms statistical and conceptual to refer to what \citeA{Carlson1995essay} referred to as ``inductive'' and ``rules and regulations'' views.}
+
+
+\subsubsection*{Statistical accounts of generics}
+
+Statistical accounts take the \textbf{property prevalence} to be fundamental: \emph{Birds lay eggs} means \emph{Birds, in general, lay eggs}. 
+Of course, birds do not in general lay eggs (it's only the adult, female ones that do).
+The primary way of dealing with such issues is to posit domain restrictions (``implicitly, we are only talking about the females'') when there are ``salient partitions'' \cite{Carlson1995}.
+%Not all accounts of generic language reduce to puzzles about mental representation of kind--property relations.
+%Accounts stemming from formal semantics tend to look towards precise, quantifiable conditions to determine if a sentence is true or false.
+The most fully-developed theory on this front is due to \citeA{Cohen1999}. %The most promising account of generics in this tradition was put forth by 
+To understand this theory, let's introduce some notation:
+
+For a given kind $K$ (e.g.~\textsc{robins}) and property $F$ (e.g.~\textsc{lays eggs}), we refer to the probability that an instance of kind $K$ has property $F$, that is $P(F\mid K)$, as the \emph{prevalence} of $F$ within $K$.
+Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F\mid K)>0$, \emph{all} is $P(F\mid K)=1$). 
+Assuming the generic relates to the property prevalence, then the simplest meaning would similarly be a threshold on prevalence: $P(F\mid K)>\tau$. \citeA{Cohen1999} takes $\tau = 0.5$; that is, \emph{Robins lay eggs} is roughly taken to mean \emph{Robins, in general, lay eggs}. 
+
+Cohen introduces constraints into the computation of prevalence: $P(F\mid K)$. In particular, prevalence is computed with respect to a \emph{partition set}. 
+The property \emph{lays eggs} induces a set of alternatives that all have to do with procreation (e.g. \emph{gives birth to live young}, \emph{undergo mitosis}, ...).
+The individuals that enter into the prevalence computation are only those individuals that would satisfy one or another alternative. 
+That is, the only individuals under consideration are the female members of kinds because only the female members can plausibly satisfy one or another of the alternatives.
+The inference, that this sort of domain restriction is applied as well as other constraints posited in the theory, is thought to be a pragmatic inference, though it is beyond the scope of the theory.
+This is troubling though because without a well specified theory of pragmatics, we do not have a general solution to going from prevalence to truth judgment.
+In addition, how prevalence-based accounts relate to the conceptual knowledge remains obscure \cite{Carlson1995essay}.
+\footnote{However, see \citeNP{Cohen2004} for a discussion of how his semantic constraints relate to different kinds of generics and different kinds of conceptual representational frameworks found in cognitive science.}
+
+%Thus, \emph{Birds lay eggs} is roughly taken to mean \emph{Most female birds lay eggs}. 
+%Further constraints are articulated with respect to time, so that incidental pertuba
+%Further constraints are posited (e.g. further partitions with respect to time). 
+%The constraints discussed 
+%The theory, though mathematically rigorous and rationally appealing, relies upon a number of a working parts that need to be determined in some (unspecified) way by pragmatics. 
+%In addition, it is unclear how to get from this semantic theory to the unspecified pragmatic theory on which it relies.
+
+
 
 %Theories concerning the meaning of generic statements fall under two main headers: the statistical and the conceptual \cite{Carlson1995essay}.
 %Statistical theories follow in the tradition of formal semantics, with an aim to provide a unified and quantitative set of conditions.
@@ -228,70 +261,54 @@ The statistical and conceptual are taken to express contrasting views of the tru
 %We follow \citeA{Carlson1995essay}, and organize the extant theoretical literature by theories that appeal to either the statistics of the world (e.g. \emph{Barns are red} because most barns are) or 
 \subsubsection*{Conceptual accounts of generics}
 
-The ``conceptual'' perspective emphasizes the structure of generic knowledge \cite{Prasada2000}, and views generic utterances as the way of expressing special mental relationships between kinds and properties \cite{Leslie2008, Prasada2012}. 
+Conceptual accounts of generics emphasizes the structure of generic knowledge \cite{Prasada2000}, and views generic utterances as the way of expressing special mental relationships between kinds and properties \cite{Leslie2008, Prasada2012}.
+\emph{Bishops move diagonally} because those are the rules of the game, not because they \emph{tend to} move diagonally.
+How do we know the rules of the game?
 \citeA{Leslie2007} introduces the notion that generics are tied to a ``default mode of generalization''. 
 This ``default mode'' comes equipped with the ability to single-out \emph{striking properties} (e.g. properties which are dangerous or appalling) as particularly useful aspects of the world to know about. 
-This is the reason why \emph{Mosquitos carry malaria} seems true: It is a useful bit of information to convey.
-\footnote{\citeauthor{Leslie2007} goes on to say that this argument depends also on the fact that non-malaria carrying mosquitos must have the potential to carry malaria, and this is why \emph{Insects carry malaria} or \emph{Animals carry malaria} do not seem as good of utterances.}
-For properties that are not striking (e.g. in \emph{Barns are red}), then statistical information must be consulted: If the majority of K have F, then the generic is judged to be true. Finally, \citeauthor{Leslie2007} invokes the distinction between ``negative'' and ``positive'' counter-instances. A negative counter-instance is one that is characterized by ``not having F'' (e.g. a bird that doesn't lay eggs) whereas a positive counter-instance is one that is characteristic by ``having not-F'' (e.g. a hypothetical bird that bears live young). Here, it is argued that when positive counter-instances exist, we are much less likely to accept the generic (e.g. \emph{Birds are female} seems weird because ``being male'' is a positive counter-instance of ``being female''). 
-When there are only negative counters-instances, the generic is acceptable (e.g. \emph{Birds lay eggs.} since there no such birds that bear live young).
+Hence, \emph{Mosquitos carry malaria} is true because it is a useful bit of information to convey.
 
-This account has support in the empirical literature.
+The argument is further expounded to include certain bits of knowledge: non-malaria carrying mosquitos must have the potential to carry malaria, otherwise \emph{Insects carry malaria} or \emph{Animals carry malaria} would also be true \cite{Leslie2007}.
+``Negative'' counter-instances must be distinguished from ``positive'' counter-instances: ``not having F'' (e.g. a bird that doesn't lay eggs) is not the same as ``having not-F'' (e.g. a hypothetical bird that bears live young).
+When positive counter-instances exist, the generic is much less reasonable (e.g. \emph{Birds are female} seems weird because ``being male'' is a positive counter-instance of ``being female''). 
+When only negative counters-instances exist, the generic is fine (e.g. \emph{Birds lay eggs.} since there no such birds that bear live young).
+For properties that have no principled relationship to the kind (e.g., in \emph{Barns are red}), conceptual accounts fall back to statistical information: \emph{Ks, in general, have F}.
+
+Empirical, psychological work supports this perspective.
 \citeA{Prasada2006} distinguish between \emph{statistical} and \emph{principled relations} within concepts. 
 These distinct relation types manifest themselves empirically as different inferences one could draw concerning the kind and property. 
 For example, these include the expectation that the relation will hold for future instances (operationalized using the phrase \emph{In general, Ks have F}), the explanation that the relation holds because of the kind of thing that K is (\emph{Ks have F by virtue of being a K}), and that the principled relation is normative (\emph{Ks should have Fs}).
-These different kinds of relations relate to \citeA{Leslie2007}'s distinctions among generics.
-For instnance, \citeA{Prasada2013} found generics like \emph{Birds lay eggs} (in which only a minority of K have F) exhibit characteristics of principled connections. 
+%These different kinds of relations relate to \citeA{Leslie2007}'s distinctions among generics.
+\citeA{Prasada2013} found generics like \emph{Birds lay eggs} (in which only a minority of K have F) exhibit characteristics of principled connections, supporting \citeA{Leslie2007}'s typology.. 
 Striking generics (e.g. \emph{Mosquitos carry malaria}) do not have the characteristics of principled connections, but do show characteristics of a third kind of connection: a \emph{causal connection} (operationalized using the phrase \emph{There is something about Ks that cause them to F}). 
 Different kinds of kind--property relations exhibit qualitatively different kinds of connections. 
-This is taken to support \citeA{Leslie2007}'s typology of different types of default generalizations.
+%This is taken to support \citeA{Leslie2007}'s typology of different types of default generalizations.
 
 %The puzzles of generic language then reduce to puzzles about mental representation of kind-property relations.
-
-
-\subsubsection*{Statistical accounts of generics}
-
-Not all accounts of generic language reduce to puzzles about mental representation of kind--property relations.
-Accounts stemming from formal semantics tend to look towards precise, quantifiable conditions to determine if a sentence is true or false.
-The most promising account of generics in this tradition was put forth by \citeA{Cohen1999}.
-To understand this theory, let's introduce some notation:
-
-For a given kind $K$ (e.g.~\textsc{robins}) and property $F$ (e.g.~\textsc{lays eggs}), we refer to the probability that an object of kind $K$ has property $F$, that is $P(F\mid K)$, as the \emph{prevalence} of $F$ within $K$.
-Logical quantifiers can be described as conditions on prevalence (i.e.~\emph{some} is $P(F\mid K)>0$, \emph{all} is $P(F\mid K)=1$). 
-Assuming the generic relates to the property prevalence, then the simplest meaning would similarly be a threshold on prevalence: $P(F\mid K)>\tau$. \citeA{Cohen1999} takes $\tau = 0.5$; that is, \emph{Robins lay eggs} is roughly taken to mean \emph{Most robins lay eggs}. 
-
-Of course most robins do not lay eggs; none of the male robins do. Cohen resolves this issue by introducing certain constraints into the computation of prevalence: $P(F\mid K)$. In particular, prevalence is computed with respect to a \emph{partition set}. In this theory, \emph{lays eggs} induces a set of alternatives that all have to do with procreation (e.g. \emph{gives birth to live young}, \emph{undergo mitosis}, ...). Then, the individuals that enter into the prevalence computation are only those individuals that would satisfy one or another alternative. 
-That is, the only individuals under consideration are the female members of kinds because only the female members could plausibly satisfy one of the alternatives.
-Thus, \emph{Birds lay eggs} is roughly taken to mean \emph{Most female birds lay eggs}. 
-
-Other constraints enter into the computation of prevalence as well (e.g. further partitions with respect to time). 
-The theory, though mathematically rigorous and rationally appealing, relies upon a number of a working parts that need to be determined in some (unspecified) way by pragmatics. 
-In addition, it is unclear how to get from this semantic theory to the unspecified pragmatic theory on which it relies.
-More generally, how this semantic theory relates to the conceptual accounts of generics also remains obscure (however, see \citeNP{Cohen2004} for a discussion of how his semantic constraints relate to different kinds of generics and different kinds of conceptual representational frameworks used in cognitive science).
 
 
 %If this is the case, then a relatively simple semantic theory, phrased in terms of statistical regularities in the world, could be enough to formalize generic language.
 %Abstract, mental representations may still operate; yet we suggest generic language operates through the common currency of probability. 
 
-\subsubsection*{The current approach}
+\subsubsection*{The pragmatic approach}
 
-We aim to unify the ``statistical'' and ``conceptual'' ways of understanding generic language. 
-We begin by noting that generic language is not unique in its flexibility.
-Language understanding in general depends on assumptions interlocutors make about each other and what content is under discussion. 
-Pragmatic analyses reveal that utterances carry a mosaic of interpretations with a complex sensitivity to context \cite{Clark1996,Grice1975,Levinson2000}. 
+We find both the statistical and the conceptual accounts compelling, but feel there is a third perspective that is underrepresented.
+We note that generic language is not unique in its flexibility.
+Language understanding in general depends upon assumptions interlocutors make about each other and what content is under discussion. 
+The pragmatic lens reveal that utterances carry a mosaic of interpretations with a complex sensitivity to context \cite{Clark1996,Grice1975,Levinson2000}. 
 Can the puzzles of generic language be understood as effects of pragmatic reasoning?
-If so, it may be unnecessary to encode abstract mental representations% and complex computational constraints 
-into the semantics of generics.
-Abstract representations, however, may be the backdrop against which generic language gets interpreted. 
+If so, we may be able to get away with a relatively simple semantic theory: a statistical theory.
+Abstract mental representations, then, may be the backdrop against which generic language gets interpreted. 
 
-We propose a relatively simple semantic theory, phrased in terms of statistical regularities.
-Following \citeA{Cohen1999}, we measure these regularities with probability and adopt the simplest meaning for generic statements: a threshold on prevalence: $P(F\mid K)>\tau$.\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability, not the actual frequency in the world.}
-Of course, no fixed value of the threshold, $\tau$, allows for the extreme flexibility generics exhibit (e.g. \emph{Robins lay eggs} vs. \emph{Robins are female}; \emph{Mosquitos carry malaria}).% simultaneously with the interpretations of some novel generics being strong. 
+We follow \citeA{Cohen1999} and use a threshold semantics that is judged against prevalence: $P(F\mid K)>\tau$.
+%\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability, not the actual frequency in the world.}
+Of course, no fixed value of the threshold, $\tau$, allows for the extreme flexibility generics exhibit (e.g. \emph{Mosquitos carry malaria}; \emph{Robins lay eggs} v. \emph{Robins are female}).% simultaneously with the interpretations of some novel generics being strong. 
 
 We suggest that this threshold is not a fixed property of the language, but is established in context through communicative principles.
-This inference depends on background knowledge about properties and categories, but is otherwise a general mechanism of language not specific to interpreting generic statements.
-We formalize this inference in the Rational Speech-Acts (RSA) theory---a probabilistic model of language understanding---as recursive Bayesian inference between speaker and listener \cite{Frank2012,Goodman2013}.
-We will describe the basic RSA framework before articulating the full pragmatic theory of generic meaning.
+This inference depends on background knowledge about properties and categories---potentially, structured conceptual knowledge---but is otherwise a general mechanism of language not specific to interpreting generic statements.
+We formalize this hypothesis in the Rational Speech-Acts (RSA) theory---a probabilistic model of language understanding---as recursive Bayesian inference between speaker and listener \cite{Frank2012,Goodman2013}.
+The reader unfamiliar with RSA is referred to Appendix \cite{append:rsa} for a brief tutorial.
+% We will describe the basic RSA framework before articulating the full pragmatic theory of generic meaning.
 
 \subsubsection*{The Rational Speech-Acts framework}
 
