@@ -1,5 +1,7 @@
 // time ~/webppl-infer/webppl naturalJudgments.wppl --require mht --require webppl-json --require naturalUtils
 
+var start_index = mht.wpParseFloat(last(process.argv)) // load index as last command line index
+console.log("starting index = " + start_index)
 var priors = json.read("../../models/data/realkinds-priors-n57-bootstrapped-1000.json")
 
 var bootstrapIndices = RandomInteger({n:1000})
@@ -93,18 +95,19 @@ var makeModel = function(bootstrap_index){
 	return query
 }
 
-repeat(100, function(){
-	var bootstrap_index = sample(bootstrapIndices) + 1
-	var mhiter = 10000
-	var burn = mhiter/2
-	var tfbt = Infer(
-		{method: "incrementalMH", samples: mhiter, burn: burn, verbose:false, verboseLag:500}, 
+var mhiter = 10000
+var burn = mhiter/2
+
+foreach(_.range(start_index, start_index + 10), function(bootstrap_index){
+	var tfbt = Infer({method: "incrementalMH", samples: mhiter, burn: burn}, 
 		function(){return makeModel(bootstrap_index)})
 	var header = "Parameter,Property,Category,Extra,Value"
 	var outfile = '../model-results/bootstrap/generics-tj-bootstrapPrior-so1-so2-_IncrMH'+ mhiter+'_burn'+burn+'_i'+bootstrap_index+'.csv'
 	mht.erpWriter(tfbt, outfile, header)
 	console.log('wrote to... ' + outfile )
 })
+
+
 
 
 
