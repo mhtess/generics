@@ -1,6 +1,5 @@
 // time ~/webppl-infer/webppl naturalJudgments.wppl --require mht --require webppl-json --require naturalUtils
 
-
 var priors = json.read("../../models/data/realkinds-priors-n57-bootstrapped-1000.json")
 
 var bootstrapIndices = RandomInteger({n:1000})
@@ -21,25 +20,12 @@ var properties = _.uniq(_.pluck(df_truth,"Property"))
 
 var prevalenceERPobject = _.object(map(function(p){
 	var categories = _.uniq(_.pluck(subset(df_truth, "Property", p), "Category"))
-	// console.log('loading prevalence ERP for ' + p)
 	return [p, _.object(map(function(k){
 			var fpath = "../../models/prevalence_results/prevalence_"+p+"_"+k+".csv"
 			var df = readQueryERP(fpath)
 			return [k, df]
 		}, categories))]
 },properties))
-
-// df_truth
-
-// sample(prevalenceERPobject["have beautiful feathers"]["Peacocks"])
-// var bootstrapIndices = Infer(,function(){
-
-// })
-// var x = [_.sample(_.uniq(_.pluck(priors, "i"))), _.sample(_.uniq(_.pluck(priors, "i")))]
-// x
-// priors
-
-// priors
 
 var guessingLink = function(myERP, phi){
 	Infer({method: "enumerate"}, function(){
@@ -50,7 +36,8 @@ var guessingLink = function(myERP, phi){
 	})
 }
 
-var model = function(){
+
+var makeModel = function(bootstrap_index){
 
 	var s1_optimality = sample(UniformDrift({a:0,b:20,r:2}))
 	var s2_optimality = sample(UniformDrift({a:0,b:5,r:0.5}))
@@ -58,7 +45,6 @@ var model = function(){
 	// var phi = uniform(0,1)
 	var phi = 0.00001
 
-	var bootstrap_index = bootstrapIndices.sample() + 1
 	var bs_prior = subset(priors, "i", bootstrap_index)
 	// var p = "are red" 
 
@@ -107,9 +93,21 @@ var model = function(){
 	return query
 }
 
-var mhiter = 1000
-var burn = mhiter/2
-var tfbt = Infer({method: "incrementalMH", samples: mhiter, burn: burn, verbose:true, verboseLag:100}, model)
+repeat(100, function(){
+	var bootstrap_index = sample(bootstrapIndices) + 1
+	var mhiter = 10000
+	var burn = mhiter/2
+	var tfbt = Infer(
+		{method: "incrementalMH", samples: mhiter, burn: burn, verbose:false, verboseLag:500}, 
+		function(){return makeModel(bootstrap_index)})
+	var header = "Parameter,Property,Category,Extra,Value"
+	var outfile = '../model-results/bootstrap/generics-tj-bootstrapPrior-so1-so2-_IncrMH'+ mhiter+'_burn'+burn+'_i'+bootstrap_index+'.csv'
+	mht.erpWriter(tfbt, outfile, header)
+	console.log('wrote to... ' + outfile )
+})
+
+
+
 // console.log('doing the full bayesian dance...')
 // var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true,
 // 												"burnin":burn,
@@ -117,8 +115,4 @@ var tfbt = Infer({method: "incrementalMH", samples: mhiter, burn: burn, verbose:
 // 												)
 // console.log('FBT complete')
 
-var header = "Parameter,Property,Category,Extra,Value"
-var outfile = '../model-results/generics-tj-bootstrapPrior-so1-so2-_IncrMH'+ mhiter+'_burn'+burn+'a.csv'
 
-mht.erpWriter(tfbt, outfile, header)
-console.log('wrote to... ' + outfile )
