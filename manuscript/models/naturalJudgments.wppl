@@ -1,66 +1,77 @@
-// time webppl naturalJudgments.wppl --require naturalUtils
+// time webppl naturalJudgments.wppl --require mht
 
-var previter = 100000
-console.log('inferring prevalence of property-category pairs...')
-var prevalenceERP = IncrementalMH(prevalenceModel, 
-										previter, 
-										{
-											"verbose":"true",
-											"verboseLag":previter/10,
-											"burn": previter/2
-										}
-									)
-console.log('prevalence of property-category pairs inferred!')
 
+var priors = json.read("../../models/data/realkinds-priors-n57-bootstrapped-1000.json")
+
+var bootstrapIndices = RandomInteger({n:1000})
+
+var Truthdata = mht.readCSV("../../models/data/real-kinds-truth-1-trials-formatted.csv").data
+var df_truth0 = dataFrame(Truthdata.slice(0, Truthdata.length - 1), ["negation"] )
+
+var responseDictionary = {
+	"agree-key":1,
+	"disagree-key":0
+}
+
+var df_truth = map(function(d){ 
+	return _.extend(d, {"binaryResponse": responseDictionary[d.response]})
+},df_truth0)
+
+var properties = _.uniq(_.pluck(df_truth,"Property"))
 
 var prevalenceERPobject = _.object(map(function(p){
 	var categories = _.uniq(_.pluck(subset(df_truth, "Property", p), "Category"))
+	// console.log('loading prevalence ERP for ' + p)
 	return [p, _.object(map(function(k){
-		[k, marginalizeERP(prevalenceERP, [k,p])]
-	}, categories))]
-}, properties))
+			var fpath = "../../models/prevalence_results/prevalence_"+p+"_"+k+".csv"
+			var df = readQueryERP(fpath)
+			return [k, df]
+		}, categories))]
+},properties))
+
+// df_truth
+
+// sample(prevalenceERPobject["have beautiful feathers"]["Peacocks"])
+// var bootstrapIndices = Infer(,function(){
+
+// })
+// var x = [_.sample(_.uniq(_.pluck(priors, "i"))), _.sample(_.uniq(_.pluck(priors, "i")))]
+// x
+// priors
 
 
-var prevprioriter = 100000
-console.log('inferring prevalence priors...')
-var priorERP = IncrementalMH(priorModel, prevprioriter, {"verbose":"true", "verboseLag":prevprioriter/10,
-														"burn": prevprioriter/2})
-console.log('prevalence priors inferred!')
+var model = function(){
 
-var priorERPobject = _.object(map(function(p){
-	return [p, marginalizeERP(priorERP, p)]
-}, properties))
-
-var responseDictionary = {
-	"agree-key":"generic is true",
-	"disagree-key":"mu"
-}
-
-var modelAnalysis = function(){
-
-	var speakerOptimality = uniform(0,100)
+	var s1_optimality = sample(UniformDrift({a:0,b:20,r:2})
+	var s2_optimality = sample(UniformDrift({a:0,b:5,r:0.5}))
 	var cost = 1
 	// var phi = uniform(0,1)
 	var phi = 0.001
 
+	var bootstrap_index = bootstrapIndices.sample() + 1
+	var bs_prior = subset(priors, "i", bootstrap_index)
+	var p = "are red"
+
+
 	foreach(properties,
-		function(property){
+		function(p){
 
 			var propertyData = subset(df_truth, "Property", property)
 			var categories = _.uniq(_.pluck(propertyData, "Category"))
 
-			var priorProperty_ERP = priorERPobject[property]
-			var prior = sample(priorProperty_ERP)
+			var property_prior = subset(bs_prior, "Property", p)
+			var prior = Categorical({
+				vs: _.pluck(property_prior,"bin"),
+				ps: _.pluck(property_prior, "n")})
 
 			foreach(categories,
 				function(k){
 					var categoryData = subset(propertyData, "Category", k)
 					
 					var prevalencePropCat = prevalenceERPobject[property][k]
-					var prevalence = sample(prevalencePropCat)
-					// console.log(property + k + prevalence)
+					var pfk = sample(prevalencePropCat)
 
-					var responseData = _.pluck(categoryData, "response")
+					var responseData = _.pluck(categoryData, "binaryResponse")
 
 			     	var predictionERP = speaker2(prevalence, prior, speakerOptimality)
 
@@ -99,50 +110,31 @@ var modelAnalysis = function(){
 			// 	function(x){query.add(['prevalencePrior',property,x[1],"0"], x[0])}
 			// 	)
 		})
-	query.add(["speakerOptimality","na","na","na"], speakerOptimality)
-	// query.add(["softmax","na","na","na"], softmax)
-
-	// query.add(["phi","na","na","na"], phi)
+	query.add(["s1_optimality","na","na","na"], s1_optimality)
+	query.add(["s2_optimality","na","na","na"], s2_optimality)
 	return query
 }
 
 
-var mhiter = 200000
-var burn = mhiter/2
-console.log('doing the full bayesian dance...')
-var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true,
-												"burnin":burn,
-												verboseLag:mhiter/50}
-												)
-console.log('FBT complete')
-
-// var mhiter = 1000
+// var mhiter = 50000
 // var burn = mhiter/2
-
-// var steps = 5
-// var stepSize = 0.001
-
-// var resultsERP = MCMC(modelAnalysis, {
-// 	kernel: {HMC: {
-// 		steps: steps,
-// 		stepSize: stepSize
-// 	}},
-// 	verbose:"true",
-// 	samples: mhiter,
-// 	burn: burn
-// })
+// console.log('doing the full bayesian dance...')
+// var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true,
+// 												"burnin":burn,
+// 												verboseLag:mhiter/50}
+// 												)
+// console.log('FBT complete')
 
 
+// var outfile = '../model-results/generics-truthJudgment-SOPTinS1_40-prior100-previter'+previter+
+// 				'_prevprioriter'+prevprioriter+'-priord50Zero-n60_IncrMH'+
+// 	mhiter+'_burn'+burn+'a.csv'
 
-var outfile = '../model-results/generics-truthJudgment-trueSOPTprior100-previter'+previter+
-				'_prevprioriter'+prevprioriter+'-priord50Zero-n60_IncrMH'+
-	mhiter+'_burn'+burn+'c.csv'
-
-naturalUtils.erpWriter(tfbt, outfile)
-console.log('wrote to... ' + outfile )
+// naturalUtils.erpWriter(tfbt, outfile)
+// console.log('wrote to... ' + outfile )
 
 
-// prevalenceERP
-// prevalenceERPobject["lay eggs"]["Sharks"]
+// // prevalenceERP
+// // prevalenceERPobject["lay eggs"]["Sharks"]
 
-	
+// 	
