@@ -1,41 +1,10 @@
-// time webppl naturalPrevalence.wppl --require-js ./truthUtils.js 
+// time webppl naturalPrevalence.wppl --require mht
 
-var foreach = function(lst, fn) {
-    var foreach_ = function(i) {
-        if (i < lst.length) {
-            fn(lst[i]);
-            foreach_(i + 1);
-        }
-    };
-    foreach_(0);
-};
-
-var subset = function(df, field, value){
-	return filter(function(d){
-		return (d[field]==value)
-	},df)
-}
-
-// use first row as (header) variable names
-var dataFrame = function(rawCSV){
-    return map(function(row){
-        return _.object(_.zip(rawCSV[0],row))
-    }, rawCSV.slice(1))
-}
-
-var shape_alpha = function(gamma,delta){return gamma * delta}
-var shape_beta = function(gamma,delta){return (1-gamma) * delta}
-
-var Priordata = truthUtils.readCSV("data/real-kinds-prior-2-trials-formatted.csv").data
-var Truthdata = truthUtils.readCSV("data/real-kinds-truth-1-trials-formatted.csv").data
-
-var df_prior = dataFrame(Priordata)
-var df_truth = dataFrame(Truthdata)
-
-var properties = _.uniq(_.pluck(df_prior,"Property"))
+var shape_alpha = function(g,d){return g * d}
+var shape_beta = function(g,d){return (1-g) * d}
 
 var avoidEnds = function(response){
-	return response==0 ? 0.01 : response==1 ? 0.99 : response
+	return response==0 ? 0.0001 : response==1 ? 0.9999 : response
 }
 
 var avoidUpperBound = function(response){
@@ -43,89 +12,84 @@ var avoidUpperBound = function(response){
 }
 
 var alignPrevalence = function(number){
-	return avoidEnds(Math.round(number/10)/10)
+	return avoidUpperBound(Math.round(number*10)/10)
 //	return avoidEnds(Math.round(number/5)/20)
 }
+
+var Priordata = mht.readCSV("data/real-kinds-prior-2-trials-formatted.csv").data
+var Truthdata = mht.readCSV("data/real-kinds-truth-1-trials-formatted.csv").data
+
+var df_prior0 = dataFrame(Priordata.slice(0, Priordata.length - 1), ["prevalence"] ) 
+var df_truth = dataFrame(Truthdata.slice(0, Truthdata.length - 1), ["negation"] )
+
+var df_prior = map(function(d){ 
+	return _.extend(d, {"roundedPrevalence": avoidEnds(d.prevalence/100)})
+},df_prior0)
+
+var properties = _.uniq(_.pluck(df_prior,"Property"))
+
+
 
 // var bins = [0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,
 // 				 0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
 var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
 
-var discretizeBeta = function(gamma, delta){
-	var shape_alpha =  gamma * delta
-	var shape_beta = (1-gamma) * delta
+var discretizeBeta = function(g, d){
+	var shape_alpha =  g * d
+	var shape_beta = (1-g) * d
 	var betaPDF = function(x){
 	  return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
 	}
 	return map(betaPDF, bins)
 }
 
-var discretizeBetaERP = function(gamma, delta){
-	var shape_alpha =  gamma * delta
-	var shape_beta = (1-gamma) * delta
-	var betaPDF = function(x){
-	  return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
-	}
-	var probs = map(betaPDF, bins)
-	return Enumerate(function(){
-		var x = bins[discrete(probs)]
-		return x
-	})
-}
+var header = "Property,Category,Prevalence,Probability"
+var samples = 50000
+var burn = samples/2
 
-
-var getProbsFromERP = function(myERP, orderedSupport){
-	return map(function(s){
-		Math.exp(myERP.score([], s))
-	}, orderedSupport)
-}
-
+var inferopts = {method: 'MCMC', samples: samples, burn: burn, verbose:true}
 
 var prevalenceModel = function(p, k){
 
-	var propertyData = subset(df_prior, "Property", p)
-	var categoryData = _.pluck(
-						subset(propertyData, "Category", k), 
-						"prevalence")
+	var prevalenceData = _.pluck(
+		subset(
+			subset(df_prior, 
+				"Property", p), 
+			"Category", k),
+		"roundedPrevalence")
 
-	var gamma = uniform(0,1)
-	var delta = uniform(0,50)
+	var g = uniform(0,1)
+	var d = uniform(0,50)
+	var a = shape_alpha(g,d)
+	var b = shape_beta(g,d)
 
-	var discreteBetaProbs = discretizeBeta(gamma, delta)
-	var discreteBetaProbsNormalized = map(function(x){return x/sum(discreteBetaProbs)}, discreteBetaProbs)
+	var scrs = map(function(d) {
+		return Beta({a:a,b:b}).score(d)
+	}, prevalenceData)
 
+	factor(sum(scrs))
 
-	// console.log(gamma, delta)
+	var predictive = beta(a,b)
 
-	var scr = reduce(function(d, memo) {
-				// console.log(p+ k+ ' prev = ' +  d + '  aligned prev = ' + alignPrevalence(d))
-				// console.log(bins.indexOf(alignPrevalence(d)))
-				// console.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
-				var x = Math.log(discreteBetaProbsNormalized[bins.indexOf(alignPrevalence(d))])
-			    return memo + x
-				}, 0, categoryData)
+	query.add([p,k],[alignPrevalence(predictive)])
 
-	// var scr = reduce(function(dataPoint, memo) {
-	// 				    return memo + betaERP.score([shape_alpha(gamma, delta),
-	// 				    							 shape_beta(gamma,delta)], 
-	// 				    							 avoidEnds(dataPoint/100))
-	// 					}, 0, categoryData)
+	return query
 
-	factor(scr)
-	// console.log(scr)
-
-	// var postpred = beta(shape_alpha(gamma, delta), shape_beta(gamma,delta))
-	// var postpred = sample(discreteBeta)
-	return alignPrevalence(Math.round(gamma*10)/10)
-	// return bins[discrete(discreteBetaProbs)]
-	// return postpred
-
-	// return avoidEnds(Math.round(postpred*10)/10)
-	// return avoidEnds(Math.round(gamma*10)/10)
-	// return [gamma, delta]
 }
 
-// var resultsERP = HashMH(function(){return prevalenceModel("lay eggs", "Ducks")},
-// 	10)
 
-// resultsERP
+foreach(properties, function(p){
+	var categories = _.uniq(_.pluck(subset(df_truth, "Property", p), "Category"))
+	foreach(categories, function(k){
+		var outfile = "prevalence_results/prevalence_"+p+"_"+k+".csv"
+		var h0file = mht.openFile(outfile)
+		mht.writeLine(h0file, header)
+		var results = Infer(inferopts, function() { prevalenceModel(p, k) } )
+		mht.writeERP(results, h0file)
+		console.log(k + " / " + p +  " items written to file")
+		mht.closeFile(h0file)		
+	})
+})
+
+
+
