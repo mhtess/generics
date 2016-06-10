@@ -6,14 +6,15 @@ var Priordata0 = mht.readCSV("../data/asymmetry-prior-4splitAccidental-trials.cs
 var Priordata = Priordata0.slice(0, Priordata0.length-1)
 var df = dataFrame(Priordata, ["response0","response1"])
 var conditions = _.uniq(_.pluck(df,"type"));
-var conditions = ["part","color"];
+// var conditions = ["part","color"];
+var items = _.uniq(_.pluck(df, "stim_property"));
 
 var avoidEnds = function(response){
-	return response==0 ? 0.01 : response==1 ? 0.99 : response
+	return response==0 ? 0.0001 : response==1 ? 0.9999 : response
 }
 
 var header = "Category,Measure,g,d,a,b,Probability"
-var samples = 50000
+var samples = 5000
 var burn = samples/2
 // var mcmcOpts = {samples:samples/2, burn:burn, verbose:true, kernel:"MH"}
 
@@ -27,14 +28,16 @@ var inferopts = {method: 'MCMC', samples: samples, burn: burn, verbose:true}
 
 var priorModel = function(c){
 
-	var conditionData = subset(df, "type", c)
+	// var conditionData = subset(df, "type", c)
+	var conditionData = subset(df, "stim_property", c);
 
 	foreach(["response0","response1"],
 		function(r){
 
 		var responseData = map(avoidEnds, _.pluck(conditionData,r))
 
-		var outfile = "priors_results/priors"+c+"_"+questionDictionary[r]+".csv"
+		// var outfile = "priors_results/priors"+c+"_"+questionDictionary[r]+".csv"
+		var outfile = "priors_results/items/priors"+c+"_"+questionDictionary[r]+".csv"
 		console.log(r)
 		var h0file = mht.openFile(outfile)
 		mht.writeLine(h0file, header)
@@ -64,5 +67,6 @@ var priorModel = function(c){
 	})
 }
 
-foreach(conditions, function(c){priorModel(c)})
+// foreach(conditions, function(c){priorModel(c)})
+foreach(items, function(c){priorModel(c)})
 
