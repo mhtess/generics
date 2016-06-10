@@ -1,0 +1,68 @@
+// ~/webppl-infer/webppl priors.wppl --require mht
+var shape_alpha = function(g,d){return g * d}
+var shape_beta = function(g,d){return (1-g) * d}
+
+var Priordata0 = mht.readCSV("../data/asymmetry-prior-4splitAccidental-trials.csv").data
+var Priordata = Priordata0.slice(0, Priordata0.length-1)
+var df = dataFrame(Priordata, ["response0","response1"])
+var conditions = _.uniq(_.pluck(df,"type"));
+var conditions = ["part","color"];
+
+var avoidEnds = function(response){
+	return response==0 ? 0.01 : response==1 ? 0.99 : response
+}
+
+var header = "Category,Measure,g,d,a,b,Probability"
+var samples = 50000
+var burn = samples/2
+// var mcmcOpts = {samples:samples/2, burn:burn, verbose:true, kernel:"MH"}
+
+var questionDictionary = {
+	"response0":"across",
+	"response1":"within"
+}
+
+// Infer({method: 'MCMC', samples: 1000, lag: 100, burn: 5}, thunk);
+var inferopts = {method: 'MCMC', samples: samples, burn: burn, verbose:true}
+
+var priorModel = function(c){
+
+	var conditionData = subset(df, "type", c)
+
+	foreach(["response0","response1"],
+		function(r){
+
+		var responseData = map(avoidEnds, _.pluck(conditionData,r))
+
+		var outfile = "priors_results/priors"+c+"_"+questionDictionary[r]+".csv"
+		console.log(r)
+		var h0file = mht.openFile(outfile)
+		mht.writeLine(h0file, header)
+
+		var myErp = Infer(inferopts, function(){
+
+			var g = uniform(0,1)
+			var d = uniform(0,50)
+			var shape_a = shape_alpha(g,d)
+			var shape_b = shape_beta(g,d)
+
+			var scrs = map(function(di){
+				return Beta({a: shape_a, b:shape_b}).score(d)
+			}, responseData)
+
+			factor(sum(scrs))
+
+			query.add([c,questionDictionary[r]], [g,d, shape_a, shape_b])
+	
+		return query
+
+		})
+
+		mht.writeERP(myErp, h0file)
+		console.log(c + " / " + r +  " items written to file")
+		mht.closeFile(h0file)
+	})
+}
+
+foreach(conditions, function(c){priorModel(c)})
+

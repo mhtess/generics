@@ -11,7 +11,7 @@ var questionDictionary = {
 var priorERPobject = _.object(map(function(i){
 	console.log('loading prior ERP for ' + i)
 	return [i, _.object(map(function(dm){
-			var fpath = "priors_results/priors"+i+"_"+questionDictionary[dm]+".csv"
+			var fpath = "../novel_priors/priors_results/priors"+i+"_"+questionDictionary[dm]+".csv"
 			var df = readQueryERP(fpath)
 			return [dm, df]
 		}, ["response0", "response1"]))]
