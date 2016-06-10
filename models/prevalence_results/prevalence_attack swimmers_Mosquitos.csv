@@ -1,12 +1,12 @@
 Property,Category,Prevalence,Probability
-attack swimmers,Mosquitos,0,0.5396599999999999
-attack swimmers,Mosquitos,0.2,0.06982
-attack swimmers,Mosquitos,0.9,0.028859999999999997
-attack swimmers,Mosquitos,0.4,0.03782
-attack swimmers,Mosquitos,0.3,0.05323999999999998
-attack swimmers,Mosquitos,0.6,0.029699999999999997
-attack swimmers,Mosquitos,0.1,0.12171999999999997
-attack swimmers,Mosquitos,0.5,0.037020000000000004
-attack swimmers,Mosquitos,0.7,0.028080000000000004
-attack swimmers,Mosquitos,0.8,0.028159999999999998
-attack swimmers,Mosquitos,0.99,0.025920000000000002
+attack swimmers,Mosquitos,0,0.49994
+attack swimmers,Mosquitos,0.5,0.03120000000000001
+attack swimmers,Mosquitos,0.2,0.055799999999999975
+attack swimmers,Mosquitos,0.9,0.05312000000000001
+attack swimmers,Mosquitos,0.7,0.031219999999999998
+attack swimmers,Mosquitos,0.4,0.031020000000000006
+attack swimmers,Mosquitos,0.6,0.031159999999999997
+attack swimmers,Mosquitos,0.1,0.09305999999999999
+attack swimmers,Mosquitos,0.3,0.03716
+attack swimmers,Mosquitos,0.99,0.09616
+attack swimmers,Mosquitos,0.8,0.04016
