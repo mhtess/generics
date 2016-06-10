@@ -1,10 +1,9 @@
 // time ~/webppl-infer/webppl naturalJudgments.wppl --require mht --require webppl-json --require naturalUtils
 
-var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99];
-var shape_alpha = function(g,d) { return g * d };
-var shape_beta = function(g,d) { return (1-g) * d };
-
 var start_index = mht.wpParseFloat(last(process.argv)) // load index as last command line index
+var priors = json.read("../../models/data/realkinds-priors-n57-bootstrapped-1000.json")
+
+var bootstrapIndices = RandomInteger({n:1000})
 
 var Truthdata = mht.readCSV("../../models/data/real-kinds-truth-1-trials-formatted.csv").data
 var df_truth0 = dataFrame(Truthdata.slice(0, Truthdata.length - 1), ["negation"] )
@@ -29,16 +28,6 @@ var prevalenceERPobject = _.object(map(function(p){
 		}, categories))]
 },properties))
 
-console.log('prevalences loaded')
-
-var priorERPobject = _.object(map(function(p){
-		var fpath = "../../models/prior_results/prevalence_"+p+"_MH50kb.csv"
-		var df = readQueryERP(fpath)
-		return [p, df]
-},properties))
-
-console.log('priors loaded')
-
 var guessingLink = function(myERP, phi){
 	Infer({method: "enumerate"}, function(){
 		var x = flip(1-phi) ? 
@@ -49,7 +38,7 @@ var guessingLink = function(myERP, phi){
 }
 
 
-var model = function(){
+var makeModel = function(bootstrap_index){
 
 	var s1_optimality = sample(UniformDrift({a:0,b:20,r:2}))
 	var s2_optimality = sample(UniformDrift({a:0,b:5,r:0.5}))
@@ -57,22 +46,20 @@ var model = function(){
 	// var phi = uniform(0,1)
 	var phi = 0.00001
 
+	var bs_prior = subset(priors, "i", bootstrap_index)
+	// var p = "are red" 
+
+
 	foreach(properties,
 		function(p){
 
 			var propertyData = subset(df_truth, "Property", p)
 			var categories = _.uniq(_.pluck(propertyData, "Category"))
 
-			var prior_parameters = sample(priorERPobject[p]);
-			var alph = shape_alpha(prior_parameters.Gamma, prior_parameters.Delta)
-			var bet = shape_beta(prior_parameters.Gamma, prior_parameters.Delta)
-
-			// console.log(prior_parameters)
-			var prior = Infer({method:"enumerate"}, function(){
-				return flip(prior_parameters.Theta) ? 
-						bins[discrete(map(function(b) { return Math.exp(Beta({a:alph,b:bet}).score(b)) }, bins ))] :
-						0
-			})
+			var property_prior = subset(bs_prior, "Property", p)
+			var prior = Categorical({
+				vs: map(function(x){return mht.wpParseFloat(x)}, _.pluck(property_prior,"bin")),
+				ps: _.pluck(property_prior, "n")})
 
 			foreach(categories,
 				function(k){
@@ -85,7 +72,8 @@ var model = function(){
 
 			     	// console.log(mht.isNumeric(sample(prior)))
 
-			     	var predictionERP = speaker2(pfk, prior, s1_optimality, s2_optimality)
+			     	var predictionERP = speaker2(pfk, 
+			     		prior, s1_optimality, s2_optimality)
 
 			     	//note, there must be at least a tiny amount of noise, otherwise for the items with 0 prevalence, the model crashes
 			     	var linkedERP = guessingLink(predictionERP, phi)
@@ -108,8 +96,26 @@ var model = function(){
 
 var mhiter = 10000
 var burn = mhiter/2
-var tfbt = Infer({method: "incrementalMH", samples: mhiter, burn: burn, verbose: true, verboseLag: 100}, model)
-var header = "Parameter,Property,Category,Extra,Value"
-var outfile = '../model-results/full-bayesian/generics-tj-bayesianPrior-so1-so2-_IncrMH'+ mhiter+'_burn'+burn+'_c'+start_index+'.csv'
-mht.erpWriter(tfbt, outfile, header)
-console.log('wrote to... ' + outfile )
+
+foreach(_.range(start_index, start_index + 10), function(bootstrap_index){
+	console.log("starting index = " + start_index)
+	var tfbt = Infer({method: "incrementalMH", samples: mhiter, burn: burn}, 
+		function(){return makeModel(bootstrap_index)})
+	var header = "Parameter,Property,Category,Extra,Value"
+	var outfile = '../model-results/bootstrap/generics-tj-bootstrapPrior-so1-so2-_IncrMH'+ mhiter+'_burn'+burn+'_i'+bootstrap_index+'.csv'
+	mht.erpWriter(tfbt, outfile, header)
+	console.log('wrote to... ' + outfile )
+})
+
+
+
+
+
+// console.log('doing the full bayesian dance...')
+// var tfbt = IncrementalMH(modelAnalysis,mhiter, {"verbose":true,
+// 												"burnin":burn,
+// 												verboseLag:mhiter/50}
+// 												)
+// console.log('FBT complete')
+
+
