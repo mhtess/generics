@@ -4,8 +4,7 @@ var start_index = mht.wpParseFloat(last(process.argv)) // load index as last com
 
 var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
 
-var fpath = "/Users/mht/Documents/research/generics/manuscript/";
-var asymData = mht.readCSV(fpath+"data/novelGenerics-trials-medSplitAccidental.csv").data;
+var asymData = mht.readCSV("../data/novelGenerics-trials-medSplitAccidental.csv").data;
 
 var df_asym = dataFrame(asymData.slice(0,asymData.length-1));
 var tasks = _.uniq(_.pluck(df_asym, "trial_type"));
@@ -83,7 +82,7 @@ var model = function(){
 
 			var impliedERP = listener1("generic is true", prior, s1_optimality)
 			// var linkedERP = guessingLink(impliedERP, task, phi)
-			
+
 			var scrs = map(function(d) {
 				return impliedERP.score(d)
 			}, df_implied_prev)
