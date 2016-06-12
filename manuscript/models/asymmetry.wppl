@@ -37,7 +37,7 @@ var questionDictionary = {
 	"response1":"within"
 }
 
-var samples = 10000
+var samples = 50000
 
 var priorERPobject = _.object(map(function(i){
 	console.log('loading prior ERP for ' + i)
@@ -116,7 +116,7 @@ var model = function(){
 	return query
 }
 
-var mhiter = 1000
+var mhiter = 100000
 var burn = mhiter/2
 console.log('before infer')
 var tfbt = Infer({method: "incrementalMH", samples: mhiter, burn: burn, verbose: true, verboseLag: 100}, model)
