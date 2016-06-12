@@ -52,7 +52,7 @@ var priorModel = function(c){
 			var shape_b = shape_beta(g,d)
 
 			var scrs = map(function(di){
-				return Beta({a: shape_a, b:shape_b}).score(d)
+				return Beta({a: shape_a, b:shape_b}).score(di)
 			}, responseData)
 
 			factor(sum(scrs))
