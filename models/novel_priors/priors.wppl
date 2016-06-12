@@ -30,8 +30,8 @@ var inferopts = {method: 'MCMC', samples: samples, burn: burn, verbose:true}
 
 var priorModel = function(c){
 
-	// var conditionData = subset(df, "type", c)
-	var conditionData = subset(df, "stim_property", c);
+	var conditionData = subset(df, "type", c)
+	// var conditionData = subset(df, "stim_property", c);
 
 	foreach(["response0","response1"],
 		function(r){
@@ -39,7 +39,7 @@ var priorModel = function(c){
 		var responseData = map(avoidEnds, _.pluck(conditionData,r))
 
 		// var outfile = "priors_results/priors"+c+"_"+questionDictionary[r]+".csv"
-		var outfile = "priors_results/items/priors"+c+"_"+questionDictionary[r]+"_MH"+samples/1000+"k.csv"
+		var outfile = "priors_results/priors"+c+"_"+questionDictionary[r]+"_MH"+samples/1000+"k.csv"
 		console.log(r)
 		var h0file = mht.openFile(outfile)
 		mht.writeLine(h0file, header)
@@ -69,10 +69,17 @@ var priorModel = function(c){
 	})
 }
 
-foreach(_.range(start_index, start_index + 5), function(index){
-	var c = items[index];
-	priorModel(c)
-})
+// foreach(_.range(start_index, start_index + 5), function(index){
+// 	var c = items[index];
+// 	priorModel(c)
+// })
+
+// foreach(conditions, function(c){
+// 	priorModel(c)
+// })
+
+priorModel(conditions[start_index])
+
 // items.length
 
 // foreach(conditions, function(c){priorModel(c)})
