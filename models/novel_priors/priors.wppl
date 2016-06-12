@@ -1,6 +1,8 @@
-// ~/webppl-infer/webppl priors.wppl --require mht
+// ~/webppl-infer/webppl priors.wppl --require mht 0
 var shape_alpha = function(g,d){return g * d}
 var shape_beta = function(g,d){return (1-g) * d}
+
+var start_index = mht.wpParseFloat(last(process.argv)) // load index as last command line index
 
 var Priordata0 = mht.readCSV("../data/asymmetry-prior-4splitAccidental-trials.csv").data
 var Priordata = Priordata0.slice(0, Priordata0.length-1)
@@ -14,7 +16,7 @@ var avoidEnds = function(response){
 }
 
 var header = "Category,Measure,g,d,a,b,Probability"
-var samples = 5000
+var samples = 50000
 var burn = samples/2
 // var mcmcOpts = {samples:samples/2, burn:burn, verbose:true, kernel:"MH"}
 
@@ -37,7 +39,7 @@ var priorModel = function(c){
 		var responseData = map(avoidEnds, _.pluck(conditionData,r))
 
 		// var outfile = "priors_results/priors"+c+"_"+questionDictionary[r]+".csv"
-		var outfile = "priors_results/items/priors"+c+"_"+questionDictionary[r]+".csv"
+		var outfile = "priors_results/items/priors"+c+"_"+questionDictionary[r]+"_MH"+samples/1000+"k.csv"
 		console.log(r)
 		var h0file = mht.openFile(outfile)
 		mht.writeLine(h0file, header)
@@ -67,6 +69,12 @@ var priorModel = function(c){
 	})
 }
 
+foreach(_.range(start_index, start_index + 5), function(index){
+	var c = items[index];
+	priorModel(c)
+})
+// items.length
+
 // foreach(conditions, function(c){priorModel(c)})
-foreach(items, function(c){priorModel(c)})
+// foreach(items, function(c){priorModel(c)})
 
