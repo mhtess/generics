@@ -40,7 +40,7 @@ var priorERPobject = _.object(map(function(i){
 	console.log('loading prior ERP for ' + i)
 	return [i, _.object(map(function(dm){
 			var fpath = "../../models/novel_priors/priors_results/items/priors"+
-							i+"_"+questionDictionary[dm]+"_MH10k.csv"
+							i+"_"+questionDictionary[dm]+"_MH50k.csv"
 			var df = readQueryERP(fpath)
 			return [dm, df]
 		}, ["response0", "response1"]))]
@@ -61,18 +61,17 @@ var model = function(){
 		foreach(items, function(item){
 			// console.log(item)
 
-			// var df_implied_type = subset(df_implied, "type", type)
-			var df_implied_type = subset(df_implied, "stim_property", item)
-			var df_implied_prev = _.pluck(df_implied_type, "alignedResponse")
+			var df_implied_prev = _.pluck(subset(df_implied, "stim_property", item), "alignedResponse")
 
 			var prior_across = sample(priorERPobject[item]["response0"])
 			var prior_within = sample(priorERPobject[item]["response1"])
 
-			var prior = Infer({method:"enumerate"}, function(){
-				var theta =  bins[discrete(map(function(bin) { 
-							return Math.exp(Beta({a:prior_across.a,b:prior_across.b}).score(bin)) 
-						}, bins ))]
+			var theta = beta({a:prior_across.a, b:prior_across.b})
 
+			var prior = Infer({method:"enumerate"}, function(){
+				// var theta =  bins[discrete(map(function(bin) { 
+				// 			return Math.exp(Beta({a:prior_across.a,b:prior_across.b}).score(bin)) 
+				// 		}, bins ))]
 				return flip(theta) ? 
 						bins[discrete(map(function(bin) { 
 							return Math.exp(Beta({a:prior_within.a,b:prior_within.b}).score(bin)) 
@@ -100,7 +99,7 @@ var model = function(){
 	return query
 }
 
-var mhiter = 10000
+var mhiter = 100000
 var burn = mhiter/2
 console.log('before infer')
 var tfbt = Infer({method: "incrementalMH", samples: mhiter, burn: burn, verbose: true, verboseLag: 100}, model)
