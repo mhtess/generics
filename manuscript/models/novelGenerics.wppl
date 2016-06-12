@@ -1,0 +1,137 @@
+// time ~/webppl-infer/webppl asymmetry.wppl --require mht --require asymUtils 1
+
+var start_index = mht.wpParseFloat(last(process.argv)) // load index as last command line index
+
+var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
+
+var asymData = mht.readCSV("../data/novelGenerics-trials-medSplitAccidental.csv").data;
+
+var df_asym = dataFrame(asymData.slice(0,asymData.length-1));
+var tasks = _.uniq(_.pluck(df_asym, "trial_type"));
+var df_accepted = subset(df_asym, "trial_type", "truth_conditions");
+var df_implied0 = subset(df_asym, "trial_type", "implied_prevalence");
+var prevalenceLevels = _.uniq(_.pluck(df_accepted, "stim_prevalence"));
+var items = _.uniq(_.pluck(df_implied0, "stim_property"));
+
+// var alignAgree = {"Agree":"generic is true",
+// 				  "Disagree": "mu"}
+var alignAgree = {"1":"generic is true",
+				  "0": "mu"}
+
+var avoidEnds = function(response){
+    return response==0 ? 0.01 : response==1 ? 0.99 : response
+}
+
+var alignElicitation = function(number){
+    return avoidEnds(Math.round(number*10)/10)
+}
+
+var df_implied = map(function(d){ 
+	return _.extend(d, {"alignedResponse": alignElicitation(d.response) })
+},df_implied0)
+
+
+var questionDictionary = {
+	"response0":"across",
+	"response1":"within"
+}
+
+var priorERPobject = _.object(map(function(i){
+	console.log('loading prior ERP for ' + i)
+	return [i, _.object(map(function(dm){
+			var fpath = "../../models/novel_priors/priors_results/items/priors"+
+							i+"_"+questionDictionary[dm]+"_MH50k.csv"
+			var df = readQueryERP(fpath)
+			return [dm, df]
+		}, ["response0", "response1"]))]
+},items))
+
+
+var tasks = ["implied_prevalence"];
+// items
+var model = function(){
+	
+	foreach(tasks, function(task){
+		
+		console.log(task)
+		var s1_optimality = sample(UniformDrift({a:0,b:20,r:2}))
+		// var s2_optimality = sample(UniformDrift({a:0,b:5,r:0.5}))
+
+		// foreach(conditions, 
+		foreach(items, function(item){
+			// console.log(item)
+
+			var df_implied_prev = _.pluck(subset(df_implied, "stim_property", item), "alignedResponse")
+
+			var prior_across = sample(priorERPobject[item]["response0"])
+			var prior_within = sample(priorERPobject[item]["response1"])
+
+			var theta = beta({a:prior_across.a, b:prior_across.b})
+
+			var prior = Infer({method:"enumerate"}, function(){
+				// var theta =  bins[discrete(map(function(bin) { 
+				// 			return Math.exp(Beta({a:prior_across.a,b:prior_across.b}).score(bin)) 
+				// 		}, bins ))]
+				return flip(theta) ? 
+						bins[discrete(map(function(bin) { 
+							return Math.exp(Beta({a:prior_within.a,b:prior_within.b}).score(bin)) 
+						}, bins ))] :
+						0
+			})
+
+			var impliedERP = listener1("generic is true", prior, s1_optimality)
+			// var linkedERP = guessingLink(impliedERP, task, phi)
+
+			var scrs = map(function(d) {
+				return impliedERP.score(d)
+			}, df_implied_prev)
+			// console.log(sum(scrs))
+			factor(sum(scrs))
+
+			query.add([task, item], expectation(impliedERP))
+
+		})
+
+	query.add(["s1_optimality","na"], s1_optimality)
+
+	})
+
+	return query
+}
+
+var mhiter = 100000
+var burn = mhiter/2
+console.log('before infer')
+var tfbt = Infer({method: "incrementalMH", samples: mhiter, burn: burn, verbose: true, verboseLag: 100}, model)
+var header = "Parameter,Property,Value"
+var outfile = '../model-results/full-bayesian/novel-interpretations-so1-_IncrMH'+ mhiter+'_burn'+burn+'_c'+start_index+'.csv'
+mht.erpWriter(tfbt, outfile, header)
+console.log('wrote to... ' + outfile )
+
+// model()
+
+			// if (task=="truth_conditions") {
+
+			// 	var df_accept_type = subset(df_accepted, "type", type)
+
+			// 	foreach(prevalenceLevels,
+			// 		function(prevalence){
+
+			// 			var df_accepted_prev = _.pluck(subset(df_accept_type,"stim_prevalence", prevalence), "response")
+			// 			// console.log(prevalence)
+			// 			// var agreeERP = softmaxSpeaker(truthSpeaker2(prevalence/100, prior, speakerOptimality, 1), softmax)
+			// 			var agreeERP = truthSpeaker2(prevalence/100, prior, speakerOptimality, 1)
+			// 			var linkedERP = guessingLink(agreeERP, task, phi)
+
+			// 			var scr = reduce(function(response, memo) {
+			// 							    return memo + linkedERP.score([], alignAgree[response])
+			// 								}, 0, df_accepted_prev)
+			// 			// console.log(scr)
+			// 			factor(scr)
+
+			// 			query.add([task,type,prevalence],Math.exp(linkedERP.score([], "generic is true")))
+			// 		}
+			// 	)
+			
+			// } else {
+
