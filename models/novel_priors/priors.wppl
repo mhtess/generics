@@ -46,8 +46,8 @@ var priorModel = function(c){
 
 		var myErp = Infer(inferopts, function(){
 
-			var g = uniform(0,1)
-			var d = uniform(0,50)
+			var g = sample(UniformDrift({a:0,b:1,r:0.3}))
+			var d = sample(UniformDrift({a:0,b:50,r:5}))
 			var shape_a = shape_alpha(g,d)
 			var shape_b = shape_beta(g,d)
 
