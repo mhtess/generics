@@ -120,7 +120,7 @@ var mhiter = 100000
 var burn = mhiter/2
 console.log('before infer')
 var tfbt = Infer({method: "incrementalMH", samples: mhiter, burn: burn, verbose: true, verboseLag: 100}, model)
-var header = "Parameter,Property,Value"
+var header = "Parameter,Property,Prevalence,Value"
 // var outfile = '../model-results/full-bayesian/novel-interpretations-so1-_IncrMH'+ mhiter+'_burn'+burn+'_c'+start_index+'.csv'
 var outfile = '../model-results/full-bayesian/asymmetry-so1x2_s2-integrateTheta_IncrMH'+ mhiter+'_burn'+burn+'_c'+start_index+'.csv'
 mht.erpWriter(tfbt, outfile, header)
