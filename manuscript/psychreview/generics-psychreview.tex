@@ -585,17 +585,38 @@ We also see the generics truth judgment model predicts uncertain truth judgments
 \emph{Sharks don't attack swimmers}, while true of most sharks, is judged to be not a good thing to say by both participants and the model.
 We have thus shown the puzzling flexibility of generic truth-conditions can be explained with a simple semantic theory coupled with basic communicative principles (\emph{be truthful}, \emph{be informative}) operating over diverse prior beliefs about the properties, all of which are at play in understanding language. 
 
+%\begin{figure}
+%\centering
+%    \includegraphics[width=0.7\columnwidth]{truthjudge-scatter-wLabels.pdf}
+%    \caption{Human acceptability judgments and model predictions for thirty generic utterances about familiar animals and properties. 
+%    Color denotes target-category prevalence of the property, with darker colors indicating lower prevalence. 
+%    Intermediate prevalences (quartiles 2 \& 3) are in intermediate shades (marked on color bar).
+%    Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions (same for Figures \ref{fig:impliedByItem} and \ref{fig:exp2b}).
+%    }
+%  \label{fig:modeldataBars}
+%
+%\end{figure}
+%)
+
 \begin{figure}
 \centering
-    \includegraphics[width=0.7\columnwidth]{truthjudge-scatter-wLabels.pdf}
-    \caption{Human acceptability judgments and model predictions for thirty generic utterances about familiar animals and properties. 
+    \includegraphics[width=\columnwidth]{generics-prior-prevalence-tj.pdf}
+    \caption{(a) 
+    Prevalence prior distributions empirically elicited for twenty-one animal properties.
+    Prior distributions summarized by two parameters of a structured Bayesian model: $\phi$----a property's potential to be present in a category----and $\gamma$----the mean prevalence when it is possible for the property to be present in a category.
+    Inset plots display example empirical prior distributions over prevalence and corresponding $L_1$ model predictions: the posterior after hearing a generic utterance. 
+    Intervals on the top of plots show human judgments about the prevalence of the property within a target category.
+    (b)
+    Human acceptability judgments compared with model predictions (left) and the target-category prevalence (right) for thirty generic utterances about familiar animals and properties. 
     Color denotes target-category prevalence of the property, with darker colors indicating lower prevalence. 
-    Intermediate prevalences (quartiles 2 \& 3) are in intermediate shades (marked on color bar).
-    Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions (same for Figures \ref{fig:impliedByItem} and \ref{fig:exp2b}).
+     Error bars denote 95\% Bayesian credible intervals
+%    Error bars correspond with 95\% bootstrapped confidence intervals for the participant data and 95\% highest probability intervals for the model predictions (same for Figures \ref{fig:impliedByItem} and \ref{fig:exp2b}).
     }
   \label{fig:modeldataBars}
 
 \end{figure}
+
+
 
 \subsection*{Extended model exploration: Conceptual structure}
 
@@ -683,22 +704,22 @@ This provides further evidence that the prior distribution over prevalence $P(x)
 %Increasing $\gamma$ means the property is expected to be present in more members of the category; this tends to make truth conditions stricter, by reducing the range of prevalence values higher than the prior expectation. 
 
 %
-\begin{figure*}
-%\floatbox[{\capbeside\thisfloatsetup{capbesideposition={right,top},capbesidewidth=4cm}}]{figure}[\FBwidth]
-%{\caption{A test figure with its caption side by side}\label{fig:test}}
-\centering
-    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists_wide.pdf}
-    \caption{Prevalence prior distributions empirically elicited for twenty-one animal properties.
-    Prior distributions are summarized by $\theta$----a property's potential to be present in a category----and $\gamma$----the mean prevalence when it is possible for the property to be present in a category.
-    Inset plots display example empirical prior distributions over prevalence together with corresponding $L_1$ model predictions: the posterior after hearing a generic utterance. 
-    Intervals on the top of plots show human beliefs about the prevalence of the property within a target category.
-%    Posterior distributions show what happens to a listener's belief about the prevalence after hearing the associated generic. 
-    Felicitous generic utterances result when the target prevalence is more likely under the posterior than under the prior.
- %   \ndg{should mark the observed within-category prevalence for target kinds in pop-outs? or maybe one of the axes of main plot should be that?}
-     Error bars denote 95\% Bayesian credible intervals (same for Figure \ref{fig:prior2}).
-    }
-  \label{fig:priors1a}
-\end{figure*}
+%\begin{figure*}
+%%\floatbox[{\capbeside\thisfloatsetup{capbesideposition={right,top},capbesidewidth=4cm}}]{figure}[\FBwidth]
+%%{\caption{A test figure with its caption side by side}\label{fig:test}}
+%\centering
+%    \includegraphics[width=\columnwidth]{prevalence-scatter-wDists_wide.pdf}
+%    \caption{Prevalence prior distributions empirically elicited for twenty-one animal properties.
+%    Prior distributions are summarized by $\theta$----a property's potential to be present in a category----and $\gamma$----the mean prevalence when it is possible for the property to be present in a category.
+%    Inset plots display example empirical prior distributions over prevalence together with corresponding $L_1$ model predictions: the posterior after hearing a generic utterance. 
+%    Intervals on the top of plots show human beliefs about the prevalence of the property within a target category.
+%%    Posterior distributions show what happens to a listener's belief about the prevalence after hearing the associated generic. 
+%    Felicitous generic utterances result when the target prevalence is more likely under the posterior than under the prior.
+% %   \ndg{should mark the observed within-category prevalence for target kinds in pop-outs? or maybe one of the axes of main plot should be that?}
+%     Error bars denote 95\% Bayesian credible intervals (same for Figure \ref{fig:prior2}).
+%    }
+%  \label{fig:priors1a}
+%\end{figure*}
 
 
 
@@ -811,11 +832,14 @@ By contrast, accidental properties (both ``rare'' and ``common'') follow unimoda
 
 \begin{figure*}
 \centering
-    \includegraphics[width=\columnwidth]{prevalence-asymmetry-scatterwDists-byItem3.pdf}
-    \caption{Prevalence prior distributions empirically elicited for 40 animal properties.
+    \includegraphics[width=\columnwidth]{prevalence-implied-wPriors}
+    \caption{(a) Prevalence prior distributions empirically elicited for 40 animal properties.
     Parameters of the structured statistical model---$\theta$ and $\gamma$---reveal quantitative differences in beliefs about the prevalence of conceptually different types of properties (scatterplot). 
     Inset plots show differences in shapes between biological properties (red, green, blue; bimodal) and accidental properties (orange, purple; unimodal).   
-  These differences give rise to the variability of interpretations of generic utterances. 
+  These differences give rise to the variability of interpretations of generic utterances.
+  (b)
+  Human interpretation of prevalence upon hearing a generic compared with the $L_1$ model posterior predictive. 
+    Participants and the model interpret generics differently for different property types: Generics of biological properties (red, blue, green) have  strong interpretations while generics of accidental properties (purple, orange) are weak 
   %    Error bars denote Bayesian 95\% credible intervals.
   }
   \label{fig:prior2}
@@ -940,13 +964,13 @@ On a by-item level, the pragmatic listener model predictions closely align with 
 
 There is a surprising d\'{e}colage between the truth conditions and interpretations of generic language: Interpretations are characteristically strong while truth conditions are flexible. 
 Experimentally, \citeA{Cimpian2010} have shown that generic statements of novel kinds with biological properties (e.g. \emph{Glippets have yellow fur.}) show an asymmetry between their \emph{truth conditions} and the prevalence implied by the generic (``\emph{implied prevalence}''). 
-As noted above, upon reading a generic, participants inferred that the property was widespread (e.g. almost all glippets have yellow fur); That is, the implied prevalence was near ceiling.
-By contrast, in their paradigm, generic sentences were endorsed for a wide-range of prevalence levels (e.g. even when ``30\% of glippets have yellow fur.''). 
-Because generics get judged ``true'' at almost all prevalence levels, the average prevalence to yield a ``true'' response was substantially less than the average prevalence inferred upon hearing a generic. 
-Additionally, this mismatch between \emph{truth conditions} and \emph{implied prevalence} was significantly reduced for generics of properties plausibly construed as accidental (e.g. \emph{Glippets have wet fur.}).
+Upon reading a generic, participants infer that the property is widespread (e.g. almost all glippets have yellow fur); That is, the implied prevalence was near ceiling.
+By contrast, using a truth judgment task, generics were endorsed for a wide-range of prevalence levels (e.g. even when ``30\% of glippets have yellow fur.''). 
+Because generics get judged ``true'' at almost all prevalence levels, the average prevalence to yield a ``true'' response is substantially less than the average prevalence inferred upon hearing a generic (which is near ceiling). 
+However, this mismatch between \emph{truth conditions} and \emph{implied prevalence} is significantly reduced for generics of properties plausibly construed as accidental (e.g. \emph{Glippets have wet fur.}).
 
-Below we replicate the asymmetry findings of \citeA{Cimpian2010} and reveal even more variability in the mismatch between \emph{truth conditions} and \emph{implied prevalence} using our expanded stimulus set from Expt.~2a.
-Finally, we test whether our pair of speaker $S_2$ and listener $L_1$ models predicts this same behavior of the asymmetry.
+Below we replicate the basic asymmetry findings of \citeA{Cimpian2010} and discover even more variability in the mismatch between \emph{truth conditions} and \emph{implied prevalence} using the expanded stimulus set from Expt.~2a.
+In addition, we test whether our pair of speaker $S_2$ and listener $L_1$ models predicts the asymmetry and the context-sensitivity of this phenomenon.
 
 %Expt.~2b revealed how generics imply the property is more widespread than what would be expected \emph{a priori}. 
 %Comparing to the average prevalence required to assent is another way to explore how generics exaggerate the evidence. 
@@ -987,15 +1011,15 @@ A similar absence of a gradient was observed in the human data ($\beta = 2.82; S
 Interpretations of generic utterances are stronger than their average truth conditions for the biological properties but not for the accidental properties (Figure \ref{fig:exp2b}), replicating \citeA{Cimpian2010} with both human data and the model; the extent of the difference is governed by prior property knowledge (mean prevalence when present $\gamma$, from Expt.~2a).
 The listener and speaker pair of models predicts human endorsements and interpretations of novel generic utterances well ($r^2(10) = 0.921$, MSE = 0.004).
 Thus, our model predicts that the asymmetry between truth conditions and implied prevalence should hold, but only for properties with the most extreme prior beliefs.
-
-\begin{figure}
-\centering
-    \includegraphics[width=0.5\columnwidth]{implied-byItem-mh100kX2b.pdf}
-    \caption{Human interpretation of prevalence upon hearing a generic compared with the $L_1$ model posterior predictive. 
-    Participants and the model interpret generics differently for different property types: Generics of biological properties (red, blue, green) have  strong interpretations while generics of accidental properties (purple, orange) are weak.}
-    %    Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
-  \label{fig:impliedByItem}
-\end{figure}
+%
+%\begin{figure}
+%\centering
+%    \includegraphics[width=0.5\columnwidth]{implied-byItem-mh100kX2b.pdf}
+%    \caption{Human interpretation of prevalence upon hearing a generic compared with the $L_1$ model posterior predictive. 
+%    Participants and the model interpret generics differently for different property types: Generics of biological properties (red, blue, green) have  strong interpretations while generics of accidental properties (purple, orange) are weak.}
+%    %    Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
+%  \label{fig:impliedByItem}
+%\end{figure}
 
 %Interestingly, we observe greater implied prevalence of common accidental properties than rare accidental properties, given our median split based on the prior elicitation task ($\beta=0.061; SE = 0.025; t(39) = 2.47; p = 0.018$) \footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}.
 %Implications of generics of body parts was significantly greater than those of the biological properties used by \cite{Cimpian2010} (here, ``color parts'') ($\beta=0.118; SE = 0.024; t(39) = 4.74; p < 0.001$). 
