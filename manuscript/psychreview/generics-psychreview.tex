@@ -7,7 +7,7 @@
 \linespread{1.25}
 %\linespread{2}
 \usepackage{geometry}
-  
+
 \geometry{letterpaper, margin=1in}
 %\usepackage{times}
 \usepackage{pslatex}
@@ -1231,8 +1231,8 @@ Our formal model is a minimal extension of the RSA theory of language understand
 The model was able to explain two major puzzles of generics: their extreme flexibility in truth conditions and the contrastingly strong interpretation of novel generics.
 Both of these phenomena were revealed to depend in systematic ways on prior knowledge about properties.
 This prior knowledge was revealed through Bayesian model analysis to be structured, providing a promising bridge to conceptual accounts of generic language.
-In the final experiment, we tested the novel prediction that generic language is about speaker's expectations of future prevalence, and not necessarily what the current world is like. 
-The formal model predicted the quantitative details of participants' judgments with high accuracy across all experiments.
+In the final experiment, we tested the novel prediction that generic language is about speakers' expectations of future prevalence, and not necessarily what the current world is like. 
+Across all experiments, the formal model predicted the quantitative details of participants' judgments with high accuracy.
 
 %generics have a simple but uncertain basic meaning---a threshold on property prevalence---which is refined by social reasoning.
 %a minimal extension of a general-purpose probabilistic model of language understanding wherein social-cognitive mechanisms act on uncertainty in the meaning of a generic utterance to produce a less uncertain meaning.
@@ -1255,19 +1255,58 @@ The formal model predicted the quantitative details of participants' judgments w
 %The truth conditions of generic language have been of interest to linguists and philosophers. 
 There have been numerous demonstrations arguing that prevalence is insufficient to explain generic meaning \cite{Gelman2002, Gelman2007, Cimpian2010, Cimpian2010c,Khemlani2012, Prasada2013}.
 We agree with the spirit of these claims, but disavow the conclusions.
-The ``null hypothesis'' of prevalence used in these demonstrations is a very limited proposal, lacking any sort of communicative constraint.
+Prevalence is usually framed as a ``null hypothesis'', bordering on straw-man.
 It is usually instantiated by measuring only the prevalence of the property for the target category \cite<e.g. the percentage of birds that lay eggs; >{Khemlani2012, Prasada2013}.
 It is what we have referred to as within-kind prevalence and it also fails to explain our data (Figure \ref{fig:commongenerics}b, right).
 
-Other proposals have looked to \emph{cue validity} to be a factor in generic truth conditions.
-Cue validity is defined as the probability of the kind given the feature: $P(K \mid F)$ (e.g. the probability that an animal is a mosquito given that is has malaria).
+Some have identified \emph{cue validity} to be a statistical factor in generic truth conditions \cite<e.g., >{Khemlani2012}.
+Cue validity is defined as the probability of the kind given the feature: $P(K \mid F)$ (e.g. the probability that an animal is a mosquito given that it has malaria).
 %By Bayes' rule, cue validity must take into account the prevalence of the property in the kind and the prior probability of that kind $P(K \mid F) \propto P(F \mid K) \cdot P(K)$. 
-It should be noted that our mixture parameter $\phi$ (the potential of the property to be present in a kind) is fundamentally different from cue validity.
-Cue validity is defined with respect to a particular kind and property, whereas our mixture parameter is only defined with respect to a  property.
-In some cases, the two can be easily confused.
+It should be noted that our mixture parameter $\phi$ (the potential of the property to be present in a kind) is a different statistic from cue validity.
+Cue validity is defined with respect to a particular kind and property, whereas our mixture parameter is only defined with respect to a property.
+In some cases, the two can be similar.
 For instance, \emph{having a mane} is a good cue for being a \emph{lion} and similarly \emph{has manes} has a low $\phi$ parameter (since it is not present in many kinds). 
 In other cases, it is clear that the two constructs are distinct.
 For the property \emph{eats people}, the mixture parameter $\phi$ is again very low because most animals don't eat people; yet learning that some animal \emph{ate a person} is not a particularly good cue for any one kind of animal.
+Additionally, unlike a data-analytic model (e.g., a regression model) that uses predictors of prevalence and cue-validity to \emph{describe} data, our model is a unified cognitive model --- a formal instantiation of an explicit psychological hypothesis --- that \emph{predicts} both generic endorsements and interpretations from a simple set of assumptions (a prior belief distribution and general pragmatic computation).
+
+\subsection*{The nature of the contrast class}
+
+In this paper, when accurately taking into account the shared knowledge that forms interlocutors' prior belief distribution, the puzzles of generic language are amenable to the basic principles of communication.
+The prior belief distribution for a property (e.g., lays eggs), is a distribution over kinds (and their associated prevalence of the property).
+We might refer to these other kinds as the \emph{contrast class}.
+This is analogous to how if we say of 10 year-old Abigail that ``Abigail is tall'', we mean she is tall relative to the contrast class of other 10 year olds, or perhaps 10 year old girls.
+
+Like almost all of the extant psychological work on generics, we have focused our efforts on simple sentences about natural kinds, particularly animals.
+In addition to being the main focus of past theoretical and empirical work, focusing on animals is methodologically convenient as the contrast class for animal properties is quite plausibly \emph{other animals}.
+Indeed, this assumption was explicit in our first experiment, where we elicited  property prevalence for many different animal kinds. 
+As we move away from statements about animals, or even natural kinds, determining what goes into the contrast class will be a formidable challenge.
+
+
+\subsection*{The parallel problem of generic identification}
+
+Throughout this paper we treated the bare plural construction as a generic utterance with a threshold semantics: $\denote{\text{K F}}(x, \theta)=x>\theta$.
+The bare plural construction can also indicate a specific plural predication (consider \emph{dogs are on my lawn} compared to \emph{dogs have fur};  \citeNP{Carlson1977}).
+The problem of \emph{identifying} a generic meaning from a bare plural may is a hard problem (generic meaning can be signaled using a number of morphosyntactic cues), itself perhaps relying on pragmatic processes \cite{Cimpian2008, Declerck1991}. 
+
+For instance, \citeA{Declerck1991} suggests that generic and nongeneric bare plurals can be treated in the same way, and that pragmatic considerations may resolve interpretative differences. 
+We find this idea plausible.
+Consider, for example, the probability of animals being on your front lawn. 
+It is extremely unlikely for there to be many instances of \emph{any} animal on your front lawn (due to the spatial constraints of your lawn, and the lack of any good reason for an animal to be on your lawn). 
+Thus, the prior distribution over the probability would likely resemble that of an accidental property (Expt.~2a).
+Future work should address the relation between the prevalence priors and actual numbers of instances that can be observed.
+%The $L_1$ listener model would in this case, interpret that bare plural as implying that just a few instances of dogs were on your front lawn. 
+
+%In this paper, we concerned ourself with the problem of generic meaning, once a generic utterance has been identified as such. 
+% the interpretation of a truly generic utterance, once identified as such.
+
+%The puzzle of generic \emph{meaning} is often contrasted with the problem of generic \emph{identification}. 
+%Within this line of thinking, a sentence is hard to identify as conveying a generic meaning because generic meaning can be signaled using a number of morphosyntactic forms. 
+%For example, both \emph{Dogs are friendly} and \emph{A dog is friendly} are thought to both signal a generic interpretation.
+%Additionally, the morphosyntax alone is not a sufficient cue to generic meaning: \emph{Dogs are friendly} conveys a generic meaning while \emph{Dogs are on my front lawn} does not.
+
+
+
 
 Finally, there are compelling demonstrations that causal beliefs about properties are the driving force behind the various interpretations of generic statements \cite{Gelman2007, Cimpian2010c}.
 \citeA{Gelman2002} demonstrated that children and adults believe the prevalence implied by a novel generic utterance (e.g. \emph{Bears like to eat ants.}) is high, but distinct from quantifier statements like ``some'' or ``all''. 
@@ -1299,29 +1338,6 @@ This was corroborated by the empirical data.
 %Specifying what functional form $P(K)$ should be is not obvious: For instance, is $P(K)$ a uniform distribution over all possible animal kinds, or is it subject to how typical an animal each kind is?
 
 %\mht{Probably will add a discussion of empirical claims against prevalence, and how prevalence in our theory is about \emph{subjective probability} which is tied to both people's abstract beliefs and to the state of the world.}
-
-\subsection*{The parallel problem of generic identification}
-
-Throughout this paper we treated the bare plural construction as a generic utterance with a threshold semantics: $\denote{\text{K F}}(x, \theta)=x>\theta$.
-The bare plural construction can also indicate a specific plural predication (consider \emph{dogs are on my lawn} compared to \emph{dogs have fur};  \citeNP{Carlson1977}).
-The problem of \emph{identifying} a generic meaning from a bare plural may is a hard problem (generic meaning can be signaled using a number of morphosyntactic cues), itself perhaps relying on pragmatic processes \cite{Cimpian2008, Declerck1991}. 
-
-For instance, \citeA{Declerck1991} suggests that generic and nongeneric bare plurals can be treated in the same way, and that pragmatic considerations may resolve interpretative differences. 
-We find this idea plausible.
-Consider, for example, the probability of animals being on your front lawn. 
-It is extremely unlikely for there to be many instances of \emph{any} animal on your front lawn (due to the spatial constraints of your lawn, and the lack of any good reason for an animal to be on your lawn). 
-Thus, the prior distribution over the probability would likely resemble that of an accidental property (Expt.~2a).
-Future work should address the relation between the prevalence priors and actual numbers of instances that can be observed.
-%The $L_1$ listener model would in this case, interpret that bare plural as implying that just a few instances of dogs were on your front lawn. 
-
-%In this paper, we concerned ourself with the problem of generic meaning, once a generic utterance has been identified as such. 
-% the interpretation of a truly generic utterance, once identified as such.
-
-%The puzzle of generic \emph{meaning} is often contrasted with the problem of generic \emph{identification}. 
-%Within this line of thinking, a sentence is hard to identify as conveying a generic meaning because generic meaning can be signaled using a number of morphosyntactic forms. 
-%For example, both \emph{Dogs are friendly} and \emph{A dog is friendly} are thought to both signal a generic interpretation.
-%Additionally, the morphosyntax alone is not a sufficient cue to generic meaning: \emph{Dogs are friendly} conveys a generic meaning while \emph{Dogs are on my front lawn} does not.
-
 
 
 \subsection*{Implications for conceptual structure}
