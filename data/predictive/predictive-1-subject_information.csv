@@ -1,0 +1,81 @@
+"workerid","language","enjoyment","gender","age","problems","comments","asses","fairprice","education"
+0,"english",1,"Male",21,"no","","Yes","yes",3
+1,"english",1,"Female",30,"no","","Yes","35",1
+2,"english",0,"Male",31,"no","","Yes","fair",3
+3,"English",0,"Male",29,"no","","Yes","yes",2
+4,"English",1,"Female",28,"No","Thanks.","Yes",".35",3
+5,"English",0,"Female",23,"","","Yes",".35",3
+6,"English",1,"Male",38,"No","","Yes",".40",2
+7,"English",1,"Female",23,"","","Yes","0.50",2
+8,"English",0,"Female",58,"no","","Yes",".50",3
+9,"english",0,"Male",20,"","","Yes",".30",2
+10,"english",1,"Female",25,"na","","Yes","30",2
+11,"english",0,"Female",46,"no","n/a","Yes",".35",0
+12,"ENGLISH",1,"Female",58,"NO PROBLEMS THANKS","FUN, THANKS","Yes",".40",2
+13,"English",1,"Female",27,"no","","Yes","yes",2
+14,"English",0,"Male",26,"None","None","Yes","0.75",3
+15,"english",1,"Male",24,"n/a","cute survey, thank you!","Yes","35",3
+16,"English",1,"Male",29,"no problems","","Yes","Yes",1
+17,"English",1,"Female",30,"no","","Yes","$.20",3
+18,"English",0,"Female",26,"no","","Confused","0.25",2
+19,"English",1,"Male",30,"No problems.","","Yes","0.35",2
+20,"English",1,"Male",47,"all of the images loaded. ","","Yes","0.35",3
+21,"English",0,"Female",28,"no","","Yes",".40",2
+22,"English",1,"Male",42,"None","None at this time.","Yes",".40",3
+23,"English",1,"Male",23,"","","Yes","Yes",2
+24,"english",0,"Male",34,"no","","Yes",".35",4
+25,"English",1,"Female",26,"No","Interesting, engaging, and fun experiment.","Yes","This is fair.",4
+26,"English",1,"Male",30,"No","","Yes",".35",2
+27,"English",1,"Female",31,"None","N/A","Yes","Yes",3
+28,"English",1,"Female",27,"","","Yes",".35",1
+29,"English",1,"Male",19,"","","Yes","40 cents",2
+30,"english",1,"Male",35,"no","","Yes","0.35",4
+31,"english",1,"Female",55,"No","Fun survey!","Yes","yes",1
+32,"english",1,"Male",63,"","","Yes","yes",4
+33,"English",0,"Male",33,"nope","","Yes","1.00",2
+34,"English",1,"Female",34,"No","","Yes","0.35",3
+35,"English",0,"Male",55,"No","","Yes",".75",3
+36,"english",0,"Male",54,"no","","Yes","yes",4
+37,"english",1,"Female",48,"no","","Yes",".35",3
+38,"English",1,"Female",34,"None noted","","Yes","Yes",2
+39,"English",1,"Female",25,"No","","Yes","0.30",2
+40,"english",1,"Female",44,"no","","Yes",".25",3
+41,"English",1,"Female",26,"no","","Yes",".35",1
+42,"English",1,"Female",51,"Only the lorches (bug joke).","Interesting and sort of fun.","Yes","0.40",3
+43,"English",1,"Female",28,"","cute","Yes","$.35",2
+44,"English",1,"Female",45,"no","I think all my confusion is probably what the HIT is about.  When you would say ""this is what they did,"" I took that to mean all the creatures of that type had done that, and so I reported on their current status, because of how the questions were worded.  Do zorbs have fangs?  I guess not - not anymore....","Yes","$1",4
+45,"English",1,"Male",26,"No. ","","Yes",".35",3
+46,"english",1,"Male",28,"","","Yes","",0
+47,"English",0,"Male",32,"","","Yes",".25",3
+48,"English",1,"Male",27,"","","Yes",".35 is quite fair.",2
+49,"English",1,"Male",30,"","","Yes","0.45",4
+50,"english",1,"Female",57,"no problems","","Yes","forty cents",1
+51,"English",0,"Male",25,"None, thank you!","No.","Yes",".35",2
+52,"ENGLISH",1,"Female",33,"","","Yes","yES",3
+53,"English",1,"Male",32,"","","Yes",".50",1
+54,"English",1,"Male",34,"None.","None.","Yes","0.35",1
+55,"English",1,"Male",29,"none","none","Yes",".20",3
+56,"English",1,"Male",39,"no","Thanks! ","Yes",".35",2
+57,"English",1,"Female",68,"none","none","Yes",".35",2
+58,"English",0,"Male",30,"","","Yes","0.35",2
+59,"Spanish, English",1,"Male",56,"no","none","Yes",".40",2
+60,"English",1,"Male",34,"No.","","Yes","Yes.",3
+61,"English",1,"Male",38,"no","","Yes",".35",4
+62,"English",0,"Male",47,"","","Yes","",3
+63,"english",1,"Male",22,"","","No",".35",2
+64,"English",1,"Female",26,"Zero. ","None. ","Yes",".35",3
+65,"English",0,"Male",30,"Nope.","","Yes","$.35 seems okay. $.40 or $.45 may be more prudent.",1
+66,"English",1,"Male",34,"no","","Yes","yes",4
+67,"English",0,"Male",57,"","","Yes","0.35",1
+68,"English",1,"Male",19,"No","","No","$0.40",2
+69,"English",0,"Female",35,"No.","","Yes",".35",3
+70,"English",1,"Female",25,"no","","Yes","yes",2
+71,"Englosh",1,"Male",40,"n/a","","Yes",".40",2
+72,"English",1,"Male",41,"None","","Yes",".30",2
+73,"vietnamese",1,"Female",29,"no","","Yes",".35",3
+74,"english",1,"Female",54,"no","Thanks for the opportunity to participate in your study!!","Yes",".35",3
+75,"english",1,"Male",25,"no","","Yes","0.35",3
+76,"English",0,"Male",46,"No.","No.","Yes","0.50",2
+77,"English",1,"Female",35,"None.","","Yes",".35",3
+78,"English",1,"Male",32,"no","","No","No.",3
+79,"English",1,"Male",34,"","","Yes",".35",3
