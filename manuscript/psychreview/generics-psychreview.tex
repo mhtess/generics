@@ -1295,15 +1295,23 @@ This is a promising area for future research.
 \subsection*{The parallel problem of generic identification}
 
 Throughout this paper we treated the bare plural construction as a generic utterance with a threshold semantics: $\denote{\text{K F}}(x, \theta)=x>\theta$.
-The bare plural construction can also indicate a specific plural predication (consider \emph{dogs are on my lawn} compared to \emph{dogs have fur};  \citeNP{Carlson1977}).
-The problem of \emph{identifying} a generic meaning from a bare plural may is a hard problem (generic meaning can be signaled using a number of morphosyntactic cues), itself perhaps relying on pragmatic processes \cite{Cimpian2008, Declerck1991}. 
+The bare plural construction can also indicate a specific plural predication.
+For example, ``Dogs are on my lawn'' picks out a specific group of dogs, while ``Dogs have fur''  does not \cite{Carlson1977}.
+The problem of \emph{identifying} a generic meaning from a bare plural construction is itself a hard problem because generic meaning can be signaled using a diverse array of morphosyntactic cues.
 
-For instance, \citeA{Declerck1991} suggests that generic and nongeneric bare plurals can be treated in the same way, and that pragmatic considerations may resolve interpretative differences. 
-We find this idea plausible.
-Consider, for example, the probability of animals being on your front lawn. 
-It is extremely unlikely for there to be many instances of \emph{any} animal on your front lawn (due to the spatial constraints of your lawn, and the lack of any good reason for an animal to be on your lawn). 
-Thus, the prior distribution over the probability would likely resemble that of an accidental property (Expt.~2a).
-Future work should address the relation between the prevalence priors and actual numbers of instances that can be observed.
+\citeA{Declerck1991} suggests that generic and non-generic bare plurals can be treated in the same way, and that pragmatic considerations alone may resolve interpretative differences. 
+Indeed it does appear that knowledge of the properties under discussion (e.g., the state of being on a front lawn; the state of having fur) could facilitate the generic identification process.
+Other pragmatic factors, like knowledge of the speaker, can also disambiguate generic and non-generic meaning \cite{Cimpian2008}.
+The formal theory introduced in this article couches generic language understanding in a communicative framework.
+Addressing the question of generic identification from an information-theoretic, communicative perspective is a natural extension.
+
+%There is some promising evidence to suggest this process may be pragmatic as well , Declerck1991}. 
+%For instance, 
+%We find this idea plausible.
+%Consider, for example, the probability of animals being on your front lawn. 
+%It is extremely unlikely for there to be many instances of \emph{any} animal on your front lawn (due to the spatial constraints of your lawn, and the lack of any good reason for an animal to be on your lawn). 
+%Thus, the prior distribution over the probability would likely resemble that of an accidental property (Expt.~2a).
+%Future work should address the relation between the prevalence priors and actual numbers of instances that can be observed.
 %The $L_1$ listener model would in this case, interpret that bare plural as implying that just a few instances of dogs were on your front lawn. 
 
 %In this paper, we concerned ourself with the problem of generic meaning, once a generic utterance has been identified as such. 
@@ -1317,29 +1325,6 @@ Future work should address the relation between the prevalence priors and actual
 
 
 
-Finally, there are compelling demonstrations that causal beliefs about properties are the driving force behind the various interpretations of generic statements \cite{Gelman2007, Cimpian2010c}.
-\citeA{Gelman2002} demonstrated that children and adults believe the prevalence implied by a novel generic utterance (e.g. \emph{Bears like to eat ants.}) is high, but distinct from quantifier statements like ``some'' or ``all''. 
-The properties used in this experiment were plausible construed as biological or essential \cite{Gelman2003}.
-This work was conceptually replicated by \citeA{Cimpian2010} with novel categories (e.g. \textsc{lorches}) and extended to show that the strong interpretation of generics could be weakened by predicating the kind with accidental properties (e.g. \emph{Lorches have muddy feathers.}).
-
-
-%This falls out of basic principles of communication. 
-%Information is can only be informative with respect to some prior beliefs.
-%
-%
-%Generic language has been of interest to psychologists primarily because of its ubiquity in natural conversation and its role conceptual development.
-
-
-Our theory claims that causal beliefs about kinds and properties lead to differences in prevalence distributions, and these differences lead to variable interpretations of generic sentences for the formal model. 
-In Expt.~2, we showed how the structure of prevalence priors about these kinds of properties leads to this inference. 
-Biological properties tend to have bimodal prior distributions on prevalence (with 0\% and 100\% prevalence being the most likely \emph{a priori}) and get updated to concave posterior distributions peaked at 100\%.
-Accidental properties have unimodal prior distributions (peaked at only 0\%). 
-This distinction arises because even when participants knew the property is present in one instance of the category, they were not willing to extend it to many others of the category \red{(Goodman, 1955?)}. 
-In this case, this prior distribution of prevalence for accidental properties gets updated to a convex posterior distribution.
-This posterior distribution has high variance, indicating that interpretations of generic statements about accidental properties should be highly variable.
-This was corroborated by the empirical data. 
-
-
 %We should note that we did not directly measure $P(K \mid F)$ in our studies, though it can derived from our prevalence distributions using Bayes' rule
 %$$
 %P(K \mid F) \propto P(F \mid K) \cdot P(K)
@@ -1347,6 +1332,7 @@ This was corroborated by the empirical data.
 %Specifying what functional form $P(K)$ should be is not obvious: For instance, is $P(K)$ a uniform distribution over all possible animal kinds, or is it subject to how typical an animal each kind is?
 
 %\mht{Probably will add a discussion of empirical claims against prevalence, and how prevalence in our theory is about \emph{subjective probability} which is tied to both people's abstract beliefs and to the state of the world.}
+
 
 
 \subsection*{Implications for conceptual structure}
@@ -1381,6 +1367,32 @@ It has been argued that conceptual structure takes the form represented by proba
 Such a representation would give rise to the prevalence distributions we observed are so crucial for understanding generic language. 
 Further work will be needed to make connection from the prevalence distributions uncovered here to probabilisitic causal models.
 %\subsection*{Subjective probability and cue validity}
+
+
+Finally, there are compelling demonstrations that causal beliefs about properties are the driving force behind the various interpretations of generic statements \cite{Gelman2007, Cimpian2010c}.
+\citeA{Gelman2002} demonstrated that children and adults believe the prevalence implied by a novel generic utterance (e.g. \emph{Bears like to eat ants.}) is high, but distinct from quantifier statements like ``some'' or ``all''. 
+The properties used in this experiment were plausible construed as biological or essential \cite{Gelman2003}.
+This work was conceptually replicated by \citeA{Cimpian2010} with novel categories (e.g. \textsc{lorches}) and extended to show that the strong interpretation of generics could be weakened by predicating the kind with accidental properties (e.g. \emph{Lorches have muddy feathers.}).
+
+
+%This falls out of basic principles of communication. 
+%Information is can only be informative with respect to some prior beliefs.
+%
+%
+%Generic language has been of interest to psychologists primarily because of its ubiquity in natural conversation and its role conceptual development.
+
+
+Our theory claims that causal beliefs about kinds and properties lead to differences in prevalence distributions, and these differences lead to variable interpretations of generic sentences for the formal model. 
+In Expt.~2, we showed how the structure of prevalence priors about these kinds of properties leads to this inference. 
+Biological properties tend to have bimodal prior distributions on prevalence (with 0\% and 100\% prevalence being the most likely \emph{a priori}) and get updated to concave posterior distributions peaked at 100\%.
+Accidental properties have unimodal prior distributions (peaked at only 0\%). 
+This distinction arises because even when participants knew the property is present in one instance of the category, they were not willing to extend it to many others of the category \red{(Goodman, 1955?)}. 
+In this case, this prior distribution of prevalence for accidental properties gets updated to a convex posterior distribution.
+This posterior distribution has high variance, indicating that interpretations of generic statements about accidental properties should be highly variable.
+This was corroborated by the empirical data. 
+
+
+
 
 \mht{say something about development?}
 
