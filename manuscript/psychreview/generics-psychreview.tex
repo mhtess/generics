@@ -566,22 +566,25 @@ We run the following analysis 500 times.
 Having specified the prior $P(x)$ empirically, the pragmatic speaker has two parameters: the speaker optimality parameters $\lambda_1$ and $\lambda_2$ (in Eqs.~\ref{eq:S1}, \ref{eq:S2} ).
 We infer likely values of these parameter using Bayesian data analysis.
 We put an uninformative priors over these parameters, with a range consistent with previous literature using the same model class.
-
-$$
-\lambda_1 \sim \text{Uniform}(0,20),
-\lambda_2 \sim \text{Uniform}(0,5)
-$$
-
+%
+\begin{eqnarray*}
+\lambda_1 &\sim& \text{Uniform}(0,20) \\
+\lambda_2 &\sim& \text{Uniform}(0,5)
+\end{eqnarray*}
+%
 We learn about the \emph{a posteriori} credible values of our model parameter by collecting MCMC chains of 10,000 iterations removing the first 5,000 iterations, using the Metropolis-Hastings algorithm. 
 This was repeating 500 times for bootstrapping the prior.
-\red{The 95\% Highest Probability Density (HPD) Interval for $\lambda_1$ is [3.36, 4.98] and $\lambda_2$ is [,].}
+The Maximum A-Posteriori (MAP) estimate and 95\% Highest Probability Density (HPD) Interval for $\lambda_1$ is 0.5 [0.004, 12.7] and $\lambda_2$ is 1.7 [1.3, 2.1] (full posterior distributions can be found in Appendix B; Figure \ref{fig:tj1-params}).
+The fact that $\lambda_1$ is plausibly less than 1 suggests that the assumption that ``staying silent'' and producing the generic are equally costly (as currently assumed by the model) may not be correct.
+However, we maintain using only the two $\lambda$ parameters in the model for simplicity.
+
 
 We compare the model's posterior predictive distribution of generic endorsement to the empirical truth judgments.
 The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data \emph{should look like} given the pragmatics model and the observed data. 
 This is akin to fitting the parameters and is the critical step in model validation: It shows what data is actually predicted by the model. 
 As we see in Figure \ref{fig:commongenerics}b, the pragmatic speaker model $S_2$, using empirically measured priors, explains nearly all of the variance in human truth judgments ($r^2=0.98$; MSE=0.003; Figure \ref{fig:commongenerics}b). 
 Generics that received definitive agreement or disagreement are predicte to be judged as such by the model (corners of Figure \ref{fig:commongenerics}b), including items for which target-category prevalence is not a good indicator of the acceptability (e.g. \emph{Mosquitos carry malaria}, for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.955$; MSE=0.005; Figure \ref{fig:commongenerics}b, intermediate shades).
-We also see the generics truth judgment model predicts uncertain truth judgments: e.g., \emph{Robins are female} is judged by both the model and human participants to be neither true nor false.
+We also see the generics truth judgment model predicts uncertain truth judgments: for instance, \emph{Robins are female} is judged by both the model and human participants to be neither true nor false.
 \emph{Sharks don't attack swimmers}, while true of most sharks, is judged to be not a good thing to say by both participants and the model.
 We have thus shown the puzzling flexibility of generic truth-conditions can be explained with a simple semantic theory coupled with basic communicative principles (\emph{be truthful}, \emph{be informative}) operating over diverse prior beliefs about the properties, all of which are at play in understanding language. 
 
@@ -669,7 +672,7 @@ with 3 MCMC chains of 100,000 iterations removing the first 50,000 iterations fo
 \subsubsection*{Results}
 
 
-Estimates of the mixture parameter $\phi$ and the mean of the ``has the potential'' component $\gamma$ for each property are shown in Figure \ref{fig:priors1a}.
+Estimates of the mixture parameter $\phi$ and the mean of the ``has the potential'' component $\gamma$ for each property are shown in Figure \ref{fig:commongenerics}.
 We see significant diversity among our properties in both parameters, corresponding to priors over prevalence with dramatically different shapes (insets). 
 
 Again, we look to the posterior predictive distribution to validate the structured prior model.
@@ -1004,7 +1007,8 @@ For both behavioral data and model predictions (Eq.~\ref{eq:S2}) we computed the
 For example, if a participant agreed with the generic whenever the prevalence was 70\% or 90\% and disagreed at the other prevalence levels, that participant received an \emph{average prevalence score} of 80\%.
 
 For our pair of models, there are two parameters (the two speaker optimality parameters).
-We integrate them out using the same Bayesian data analytic approach as before.
+We infer them using the same Bayesian data analytic approach as before. 
+The MAP and 95\% HPD intervals for $\lambda_1$ is 19.5 [10.5, 19.9] and $\lambda_2$ is 0.4 [0.34, 0.49].
 We then subjected the generic endorsement model to the same procedure as the human data. % subjected our model to the same procedure. 
 The speaker model $S_2$ returns a posterior probability of producing the generic, for each level of prevalence\footnote{We assume here that the prevalence told to the participant is the subjective probability that that speaker $S_2$ is trying to communicate. This assumption is mostly likely incorrect due to theory-driven considerations on behalf of the speaker. For example, if the participant believes the prevalence being reported in the experiment is describing a temporary or accidental state and not one that is likely to be predictive of the future prevalence, the speaker may derive a subjective probability substantially less than that stated verbally in the experiment. Addressing this issue is beyond the scope of this article, and is not necessary for the simulations presented here. We take up this issue again in the discussion.}. 
 We sample a response (\emph{agree} / \emph{disagree}) from this posterior distribution for each prevalence level, simulating a single subject's data.
@@ -1016,8 +1020,23 @@ The generic endorsement model (speaker $S_2$) predicted \emph{average truth cond
 %There are no sharp boundaries between acceptable and unacceptable generics. 
 A similar absence of a gradient was observed in the human data ($\beta = 2.82; SE = 4.02; t(39) = 0.70; p = 0.49$; Figure \ref{fig:exp2b}, dotted lines). 
 Interpretations of generic utterances are stronger than their average truth conditions for the biological properties but not for the accidental properties (Figure \ref{fig:exp2b}), replicating \citeA{Cimpian2010} with both human data and the model; the extent of the difference is governed by prior property knowledge (mean prevalence when present $\gamma$, from Expt.~2a).
-The listener and speaker pair of models predicts human endorsements and interpretations of novel generic utterances well ($r^2(10) = 0.921$, MSE = 0.004).
+The listener and speaker pair of models predicts human endorsements and interpretations of novel generic utterances well ($r^2(10) = 0.87$, MSE = 0.008).
 Thus, our model predicts that the asymmetry between truth conditions and implied prevalence should hold, but only for properties with the most extreme prior beliefs.
+
+Having corroborated the model with empirical data, we can again examine the model more closely.
+The $\lambda_2$ parameter, which is only used to model the truth judgments task, is credibly below 1: participants' behavior is more in the direction of guessing than veridical Bayesian updating according to our model.
+We assumed for the model's purposes that the prevalence that the speaker model was aiming to communicate was, in fact, the prevalence told to the participant.
+However, if participants' beliefs about properties are inconsistent with the prevalence statement they are given (e.g., 90\% of lorches have broken legs), they may reject the stated prevalence, and assign a truth judgment to the generic based on theory-derived considerations.
+If this is so, we would predict that the $\lambda_2$ parameter would be lowest for properties that are unlikely to be present at all prevalence levels (since the experiment was fully-randomized, each property type appears with each prevalence level).
+This would be the case for the accidental properties (which are unlikely to be present in high prevalence) and the body part properties (which are unlikely to be present in low prevalence; e.g. 10\% of lorches have wings).
+To investigate this, we implemented a model where the $\lambda_2$ parameter was allowed to vary by item-type.
+The posterior distributions over $\lambda_2$ are shown in Appendix Figure \ref{fig:asymmetry-params-byItem}.
+Indeed, we found that the $\lambda_2$ parameter is lowest for the rare accidental properties (HPD = [0.03, 0.24]), followed by the common accidental properties (MAP = [0.27, 0.60]) and then the body part properties (MAP = [0.33, 0.76]).
+For the colored and vaguely described body parts, the speaker optimality parameters were considerably higher (color HPD = [0.50, 0.99]; vague HPD = [0.72, 1.32]).
+This suggests frequency evidence is interpreted through the lens of theoretical considerations, and that has important implications for generic truth conditions.
+In our final experiment, we develop a paradigm for testing this idea.
+
+
 %
 %\begin{figure}
 %\centering
@@ -1033,7 +1052,7 @@ Thus, our model predicts that the asymmetry between truth conditions and implied
 %There was also a trending effect for the implications of vague body parts (e.g. curly fur) to be greater than those of color parts (e.g. yellow fur) ($\beta=0.032; SE = 0.016, t(54.8) = 1.95; p = 0.056$), possibly due to the belief that the same kind of animal can come in many different colors (e.g. dogs).
 \begin{figure*}
 \centering
-    \includegraphics[width=\columnwidth]{asym-lines-data-model-2phi-2so-50kx3.pdf}
+    \includegraphics[width=\columnwidth]{unfamiliar-asymmetry-predictive-data.pdf}
 %    \includegraphics[width=1.2\columnwidth]{asym-lines-data-model.pdf}
     \caption{Human judgments and model predictions of prevalence implied by novel generic utterances (implied prevalence task; solid line) and average prevalence that leads to an acceptable generic utterance (truth conditions task; dotted line) as it relates to the \emph{a priori} mean prevalence when present $\gamma$.
     Expectations of prevalence are higher after hearing a generic than before hearing it (solid line compared to $y=x$ line; both for human data and model).
@@ -1576,7 +1595,42 @@ This is because uncertainty at the pragmatic level can be resolved incorporating
 %\end{itemize}
 
 \newpage
-\section*{Appendix}
+\section*{Appendix B: Model parameter posteriors}
+
+
+\begin{figure*}[h]
+\centering
+    \includegraphics[width=\columnwidth]
+    {familiar-truthjudgments-parameters.pdf}
+    \caption{
+    Posterior distributions for truth judgments model parameters (Expt.~1b)
+}
+  \label{fig:tj1-params}
+\end{figure*}
+
+\begin{figure*}[h]
+\centering
+    \includegraphics[width=\columnwidth]
+    {unfamiliar-asymmetry-parameters.pdf}
+    \caption{
+    Posterior distributions for model parameters (Expt.~2c)
+}
+  \label{fig:asymmetry-params}
+\end{figure*}
+
+\begin{figure*}[h]
+\centering
+    \includegraphics[width=\columnwidth]
+    {unfamiliar-asymmetry-byItem-parameters.pdf}
+    \caption{
+    Posterior distributions for $\lambda_2$ inferred independently for each item type (Expt.~2c)
+}
+  \label{fig:asymmetry-params-byItem}
+\end{figure*}
+
+\newpage
+
+\section*{Appendix C: Tables}
 
 
 
