@@ -1,4 +1,4 @@
-// ~/webppl-infer/webppl dobles.wppl --require mht --require utils
+// ~/webppl/webppl dobles.wppl --require mht --require utils
 // Prior: load saved results 
 
 var conditions = ["part", "color"];//_.uniq(_.pluck(df,"type"))
@@ -8,10 +8,12 @@ var questionDictionary = {
 	"response1":"within"
 }
 
+var prior_samples = 50000
+
 var priorERPobject = _.object(map(function(i){
 	console.log('loading prior ERP for ' + i)
 	return [i, _.object(map(function(dm){
-			var fpath = "../novel_priors/priors_results/priors"+i+"_"+questionDictionary[dm]+".csv"
+			var fpath = "../novel_priors/priors_results/priors"+i+"_"+questionDictionary[dm]+"_MH"+prior_samples/1000+"k.csv"
 			var df = readQueryERP(fpath)
 			return [dm, df]
 		}, ["response0", "response1"]))]
@@ -25,6 +27,7 @@ var df_predictive = dataFrame(data_predictive.slice(0, data_predictive.length-1)
 var origins = _.uniq(_.pluck(df_predictive, "origins"))
 var outcomes = _.uniq(_.pluck(df_predictive, "event_outcome"))
 
+
 var avg_predictive_prevalence = _.object(map(function(property){
 	var property_data = subset(df_predictive, "stim_proptype", property)
 	return [property , _.object(map(function(a){
@@ -32,7 +35,7 @@ var avg_predictive_prevalence = _.object(map(function(property){
 		return [a, _.object(map(function(b){
 			var outcome_data = _.pluck(subset(origin_data, "event_outcome", b), "response");
 			var mean_prev = listMean(outcome_data);
-			var rounded_mean_prev = nearestBin(mean_prev, bins);
+			var rounded_mean_prev = mht.closest(mean_prev, bins);
 			return [b, rounded_mean_prev]
 		}, outcomes))]
 	}, origins))]
@@ -41,7 +44,7 @@ var avg_predictive_prevalence = _.object(map(function(property){
 // Dobles data: Load truth judgmenet data
 var data_truth = mht.readCSV("../../data/predictive/predictive-1-trials.csv").data
 var df_truth = dataFrame(data_truth.slice(0, data_truth.length-1), ["response"])
-
+// df_truth
 
 var model = function(){
 	var speaker1_optimality = sample(UniformDrift({a: 0, b: 20, r: 1.0}));
@@ -55,13 +58,17 @@ var model = function(){
 
 	// color, part
 	foreach(["color", "part"], function(p){
+		// console.log(p)
 
 		var pr_exist_param = sample(priorERPobject[p]["response0"]); //exist params
 		var pr_project_param = sample(priorERPobject[p]["response1"]); 
 
-		var pr_exist = beta(pr_exist_param.a, pr_exist_param.b);
-
-		var prior = structuredPrior(pr_exist, pr_project_param.a, pr_project_param.b);
+		var prior = Infer({method:"enumerate"}, function(){
+			var theta =  bins[discrete(betaPMF(pr_exist_param.a, pr_exist_param.b, bins))]
+			return flip(theta) ? 
+						 bins[discrete(betaPMF(pr_project_param.a, pr_project_param.b, bins))] :
+					0
+		})
 
 		// origins X outcome
 		foreach(origins, function(or){
@@ -89,13 +96,14 @@ var model = function(){
 	return query
 
 }
+
 var samples = 5000
 var burn = samples/2
-var inferopts = {method: 'MCMC', samples: samples, burn: burn, verbose:true}
+var inferopts = {method: 'incrementalMH', samples: samples, burn: burn, verbose:true, verboseLag: samples/20}
 
 var posterior = Infer(inferopts, model)
 
-var outputFile = "model_results/dobles-byProperty-byPropertyPriors-MH" + samples/1000 + "k_burn" + burn/1000 +"k.csv"
+var outputFile = "model_results/dobles-byProperty-byPropertyPriors-iMH" + samples/1000 + "k_burn" + burn/1000 +"k.csv"
 
 var header = "Type,Parameter,Origin,Outcome,Value"
 mht.erpWriter(posterior, outputFile, header)
