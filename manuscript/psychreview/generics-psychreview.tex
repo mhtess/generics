@@ -907,19 +907,19 @@ The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/gener
 The pragmatic listener $L_1$ model provides a mapping from prior beliefs and hearing a generic utterance to posterior beliefs about prevalence.
 This model has one parameter governing the optimality of the hypothetical speaker $S_1$ in Eq.~2. 
 We put the same uninformative prior over this parameter: $\lambda_{\text{implied prevalence}} \sim \text{Uniform}(0, 20)$.
-We learn about the parameter's \emph{a posteriori} credible values by collecting 3 MCMC chains of 100,000 samples (removing 50,000 for burn-in) using the Metropolis-Hastings algorithm. The MAP and 95\% credible interval for $\lambda$ are 3.3 [1.2, 4.7].
+We learn about the parameter's \emph{a posteriori} credible values by collecting 3 MCMC chains of 100,000 samples (removing 50,000 for burn-in) using the Metropolis-Hastings algorithm.
+The MAP and 95\% credible interval for $\lambda$ are 3.3 [1.2, 4.7].
 
 We look at the posterior predictive distribution of $L_1$, integrating out the model parameter.
 We first explore two important trends predicted by the pragmatic listener model.
 In Figure \ref{fig:exp2b}, solid lines, we see the implied prevalence judgments are predicted (at the property class level) to vary linearly with the \emph{a proiri} expected prevalence. 
-A mixed-effects linear model with random by-participant effects of intercept and slope indeed reveals the more widespread a property is expected to be \emph{a priori}, the stronger the implications of a generic statement ($\beta = 0.57; SE = 0.08; t(39) = 7.12; p < 0.001$).
+A mixed-effects linear model with random by-participant effects of intercept and slope indeed reveals the more prevalent a property is expected to be \emph{a priori}, the stronger the implications of a generic statement ($\beta = 0.57; SE = 0.08; t(39) = 7.12; p < 0.001$).
 The prevalence implied by a generic is also predicted to be greater than the \emph{a proiri} expected prevalence.
 A mixed-effects linear model with random by-participant effects of intercept and random by-item effects of intercept and condition reveals implied prevalence after hearing a generic is significantly greater than the \emph{a priori} prevalence ($\beta = 0.17; SE = 0.018; t(39) = 9.7; d = 0.64; p < 0.001$).
 %The generic thus does more than simply signal the category has the property; it carries with it the communicative weight of a speech-act, and implies a prevalence even higher than one would infer just by generalizing based on instances.
-On a by-item level, the pragmatic listener model predictions closely align with the human judgments of prevalence for novel generics ($r^2(40)=0.89$, MSE=0.006), displaying the same sensitivity of interpretation to details of the property (Figure \ref{fig:prior2}b). 
-This is strong support for our model of generic interpretation.
-
-
+As for the quantitative accuracy of the model, on a by-item level, the pragmatic listener model predictions closely align with the human judgments of prevalence for novel generics ($r^2(40)=0.89$, MSE=0.006).
+Human participants and our model display the same sensitivity of generic interpretation to details of the property (Figure \ref{fig:prior2}b). 
+We now have strong support for both of the major predictive components of our model: generic endorsement, modeled as a speaker $S_2$, and generic interpretation, modeled as a listener $L_1$.
 
 %\mht{I'm a little unsure what the order of this should be right. Right now: linear effect of a priori prevalence; implied prevalence > a priori prevalence; pragmatics model predictions}
 
