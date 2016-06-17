@@ -441,7 +441,7 @@ For ``lay eggs'', when the property is prevalent in 50\% of the kind (e.g., 50\%
 
 
 The model thus predicts differences in truth judgments depending on the prevalence prior. 
-The first test of our theory will be to see if the $S_2$ model of felicity judgments corresponds to human judgments of the felicity of familiar generic sentences. 
+The first test of our theory, then, will be to see if these predictions correspond to human truth judgments of familiar generic sentences. 
 
 %
 %
@@ -472,10 +472,10 @@ that cover a range of conceptual distinctions discussed in the literature  \cite
 The sentences were also chosen to elicit a range of acceptability judgments (intuitively, ``acceptable'', ``unacceptable'', and ``uncertain'') with low-, medium-, and high-prevalence properties.
 
 The pragmatic speaker model $S_2$ is fully-specified except for the prior distribution over prevalence $P(x)$, which plausibly varies by the type of property in question.
-To compare the model empirical truth judgments, we thus first measure the prior distribution over prevalence of these properties (Expt.~1a).
+To compare the model to empirical truth judgments, we thus first measure the prior distribution over prevalence of these properties (Expt.~1a).
 In Expt.~1b, we collect human judgements about the acceptability of the generic sentences. 
 
-\section*{Experiment 1a: Measuring prevalence priors}
+\section*{Experiment 1a: Prevalence priors}
 
 The prior $P(x)$ (in Eqs.~\ref{eq:L1}, \ref{eq:L0}) describes the belief distribution on the prevalence of a given property (e.g. \textsc{lays eggs}) across relevant categories. 
 In exploring the model, we saw that the shape of this distribution affects model predictions, and this shape may vary significantly among different properties.
@@ -516,10 +516,10 @@ We see the interpretation of the generic is quite variable across our empiricall
 For instance, in the case of \textsc{carries malaria}, the prior is very left-skewed; here, the threshold $\theta$ can plausibly be quite low while still being informative, since a low threshold still rules out many possible alternative kinds (and their corresponding degree of prevalence).
 Properties like \textsc{doesn't attack swimmers} are very right-skewed; here, even a relatively high threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_2$ unless the property is practically-universal within the target category. 
 Some properties have priors that are unimodal with low variance (e.g. \textsc{is female}); these properties are present in every kind in almost exactly the same proportion and thus are too obvious and certain to allow for an informative generic utterance: The posterior is not very different from the prior. 
-We now test whether a speaker who considers this kind of listener when deciding whether or not to produce a generic utterance can model human truth judgments.
+With $P(x)$ specified, we can now test if our speaker model predicts human truth judgments of generic statements about these properties.
 
 
-\section*{Experiment 1b: Measuring truth judgments}
+\section*{Experiment 1b: Truth judgments}
 
 %We tested the degree to which the $S_2$ model, Eq.~\ref{eq:S2}, coupled with the empirically-elicited prevalence priors from Expt.~1a predicted that a given category--property pair (e.g. \textsc{robins} and \textsc{lays eggs}) would result in a felicitous generic (e.g. \emph{Robins lay eggs.}). 
 
@@ -556,7 +556,7 @@ Indeterminate generics were agreed with \emph{less} likely than chance ($\beta =
  
  
  %Does subjective belief about the prevalence of the property within the target kind predict the felicity of a generic utterance?
-From the prevalence-prior data (Expt.~1a), we estimate participants' beliefs about the prevalence of a property \emph{for a given kind} (e.g.~the percentage of \textsc{robins} that \textsc{lay eggs}; see green intervals on Figure \ref{fig:commongenerics}a insets, and Appendix).
+From the prevalence prior data (Expt.~1a), we estimate participants' beliefs about the prevalence of a property \emph{for a given kind} (e.g.~the percentage of \textsc{robins} that \textsc{lay eggs}; see green intervals on Figure \ref{fig:commongenerics}a insets, and Appendix).
 As a simple baseline hypothesis, we first explore whether these prevalence values themselves predict generic endorsement (e.g.~does the fraction of \textsc{robins} that \textsc{lay eggs} predict the felicity of \emph{Robins lay eggs}?).
 We find a little over half of the variance in truth judgments data is explained this way ($r^2 = 0.599$; MSE=0.065; Figure \ref{fig:commongenerics}b, right). 
 This is not surprising given that our stimulus set included generics that are true with high-prevalence properties (e.g. \emph{Leopards have spots.}) and  generics that are false with low prevalence properties (e.g. \emph{Leopards have wings.}). 
@@ -566,14 +566,12 @@ However, large deviations from an account based purely on target-category preval
 %\mht{Add null model of cue validity?}
 
 The pragmatic speaker model, $S_2$ in Eq.~\ref{eq:S2}, predicts an endorsement probability for a generic sentence, given prior beliefs about the property and a prevalence-level within the kind-of-interest. 
-For the latter, we use the estimated within--kind prevalence as state of the world the speaker $S_2$ is trying to communicate, and use the empirically measured priors from Expt.~1a. 
+For the latter, we use the estimated within--kind prevalence as state of the world $x$ the speaker $S_2$ is trying to communicate, and use the empirically measured priors from Expt.~1a as the listener's prior $P(x)$. 
 
 
 We perform our analysis bootstrapping the empirical prior data (resampling with replacement 57 participants, discretizing and binning). 
-We run the following analysis 500 times.
-
 Having specified the prior $P(x)$ empirically, the pragmatic speaker has two parameters: the speaker optimality parameters $\lambda_1$ and $\lambda_2$ (in Eqs.~\ref{eq:S1}, \ref{eq:S2} ).
-We infer likely values of these parameter using Bayesian data analysis.
+We infer likely values of these parameter using Bayesian data analysis \cite{LW2014}.
 We put an uninformative priors over these parameters, with a range consistent with previous literature using the same model class.
 %
 \begin{eqnarray*}
@@ -583,19 +581,19 @@ We put an uninformative priors over these parameters, with a range consistent wi
 %
 We learn about the \emph{a posteriori} credible values of our model parameter by collecting MCMC chains of 10,000 iterations removing the first 5,000 iterations, using the Metropolis-Hastings algorithm. 
 This was repeating 500 times for bootstrapping the prior.
-The Maximum A-Posteriori (MAP) estimate and 95\% Highest Probability Density (HPD) Interval for $\lambda_1$ is 0.5 [0.004, 12.7] and $\lambda_2$ is 1.7 [1.3, 2.1] (full posterior distributions can be found in Appendix B; Figure \ref{fig:tj1-params}).
-The fact that $\lambda_1$ is plausibly less than 1 suggests that the assumption that ``staying silent'' and producing the generic are equally costly (as currently assumed by the model) may not be correct.
-However, we maintain using only the two $\lambda$ parameters in the model for simplicity.
-
+The Maximum A-Posteriori (MAP) estimate and 95\% Highest Probability Density (HPD) Interval for $\lambda_1$ is 0.5 [0.004, 12.7] and $\lambda_2$ is 1.7 [1.3, 2.1] (full posterior distributions can be found in Appendix B; Figure \ref{fig:tj1-params}).\footnote{
+The fact that $\lambda_1$ is credibly less than 1 suggests that the generic utterance may be more costly than ``staying silent'' (our model assumes equal cost).
+We maintain using only the two $\lambda$ parameters in the model for simplicity.
+}
 
 We compare the model's posterior predictive distribution of generic endorsement to the empirical truth judgments.
 The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data \emph{should look like} given the pragmatics model and the observed data. 
 This is akin to fitting the parameters and is the critical step in model validation: It shows what data is actually predicted by the model. 
 As we see in Figure \ref{fig:commongenerics}b, the pragmatic speaker model $S_2$, using empirically measured priors, explains nearly all of the variance in human truth judgments ($r^2=0.98$; MSE=0.003; Figure \ref{fig:commongenerics}b). 
-Generics that received definitive agreement or disagreement are predicte to be judged as such by the model (corners of Figure \ref{fig:commongenerics}b), including items for which target-category prevalence is not a good indicator of the acceptability (e.g. \emph{Mosquitos carry malaria}, for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.955$; MSE=0.005; Figure \ref{fig:commongenerics}b, intermediate shades).
+Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (corners of Figure \ref{fig:commongenerics}b), including items for which target-category prevalence is not a good indicator of the acceptability (e.g. \emph{Mosquitos carry malaria}, for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.955$; MSE=0.005; Figure \ref{fig:commongenerics}b, intermediate shades).
 We also see the generics truth judgment model predicts uncertain truth judgments: for instance, \emph{Robins are female} is judged by both the model and human participants to be neither true nor false.
 \emph{Sharks don't attack swimmers}, while true of most sharks, is judged to be not a good thing to say by both participants and the model.
-We have thus shown the puzzling flexibility of generic truth-conditions can be explained with a simple semantic theory coupled with basic communicative principles (\emph{be truthful}, \emph{be informative}) operating over diverse prior beliefs about the properties, all of which are at play in understanding language. 
+This is strong evidence that the puzzling flexibility of generic truth-conditions can be understood with a simple semantic theory coupled with basic communicative principles (\emph{be truthful}, \emph{be informative}) operating over diverse prior beliefs about the properties, all of which are at play in understanding language. 
 
 %\begin{figure}
 %\centering
@@ -630,19 +628,19 @@ We have thus shown the puzzling flexibility of generic truth-conditions can be e
 
 
 
-\subsection*{Extended model exploration: Conceptual structure}
+\subsection*{Extended model analysis: Conceptual structure}
 
 The pragmatics model only has a prevalence-based semantics yet it is able to explain the flexibility in truth judgments for a diverse range of generic statements.
 Conceptual accounts of generic statements have looked beyond prevalence, to structured representations as the critical factor in generic meaning \cite{Leslie2007, Prasada2013}. 
-With a formal model for generic meaning in hand, we can interrogate the model to see how it does what it does.
-In particular, we can ask where in our model structured representations may play a role. 
-
+With a formal model for generic meaning in hand, we can interrogate the model to see what is driving its predictions.
+In particular, we ask where structured representations might be found in our model.
 
 For a given property,  the prior distribution on prevalence $P(x)$ is a single distribution.
 However, the distribution may be structured as the result of deeper conceptual knowledge. 
 For instance, if participants believe that some kinds have a causal mechanism that \emph{could} give rise to the property, while kinds others do not, then we would expect $P(x)$ to be structured as a mixture distribution (cf. \citeA{Griffiths2005}).
-We know that prior knowledge plays a fundamental role in leading the pragmatics model to the human truth judgments. 
-We now explore the hypothesis that these are priors are structured, by further analyzing the data from Expt.~1a.
+We know that prior knowledge plays a fundamental role in leading the pragmatics model endorse or reject generics just like people do. 
+We now explore the hypothesis that this is because these are priors are structured. 
+We do this by further analyzing the prevalence prior data from Expt.~1a.
 
 \subsubsection*{Data analysis}
 
@@ -676,7 +674,7 @@ We put uninformative priors over all the parameters, $\phi \sim \text{Uniform}(0
 $\gamma \sim \text{Uniform}(0,1)$, $\xi \sim \text{Uniform}(0, 50)$, 
 and performed Bayesian inference separately for each property using the Metropolis-Hastings algorithm 
 %to estimate the posterior distribution over the latent parameters $\phi, \gamma$, and $\xi$ 
-with 3 MCMC chains of 100,000 iterations removing the first 50,000 iterations for burn-in.
+collecting 50,000 iterations removing the first 25,000 iterations for burn-in.
 
 \subsubsection*{Results}
 
