@@ -974,7 +974,7 @@ We now have strong support for both of the major predictive components of our mo
 %Why is generic language interpreted so strongly if the criterion for endorsement is so flexible? 
 %}
 
-\section*{Experiment 2c: The asymmetry between truth conditions and interpretations}
+\section*{Experiment 2c: The asymmetry between truth conditions and interpretations} 
 
 
 There is a surprising d\'{e}colage between the truth conditions and interpretations of generic language: Interpretations are characteristically strong while truth conditions are flexible. 
@@ -992,10 +992,14 @@ In addition, we now test both our models (generic endorsement [speaker $S_2$] an
 %Comparing to the average prevalence required to assent is another way to explore how generics exaggerate the evidence. 
 
 \subsection*{Method}
+
+We re-analyze the data from Expt.~2b as the \emph{implied prevalence} data.
+The following paradigm is to measure the corresponding \emph{truth conditions}.
+
 \subsubsection*{Participants}
 
 We recruited 40 participants over MTurk.  
-We chose a sample size at least twice as large as the original study by \citeA{Cimpian2010} (original n=20), and to match Expt.~2b. 
+%We chose a sample size at least twice as large as the original study by \citeA{Cimpian2010} (original n=20), and to match Expt.~2b. 
 All participants were native English speakers. 
 None of the participants completed Expt.~2b (interpretations of novel generics).
 The experiment took about 5 minutes and participants were compensated \$0.60.
@@ -1017,31 +1021,32 @@ For our pair of models, there are two parameters (the two speaker optimality par
 We infer them using the same Bayesian data analytic approach as before. 
 The MAP and 95\% HPD intervals for $\lambda_1$ is 19.5 [10.5, 19.9] and $\lambda_2$ is 0.4 [0.34, 0.49].
 We then subjected the generic endorsement model to the same procedure as the human data. % subjected our model to the same procedure. 
-The speaker model $S_2$ returns a posterior probability of producing the generic, for each level of prevalence\footnote{We assume here that the prevalence told to the participant is the subjective probability that that speaker $S_2$ is trying to communicate. This assumption is mostly likely incorrect due to theory-driven considerations on behalf of the speaker. For example, if the participant believes the prevalence being reported in the experiment is describing a temporary or accidental state and not one that is likely to be predictive of the future prevalence, the speaker may derive a subjective probability substantially less than that stated verbally in the experiment. Addressing this issue is beyond the scope of this article, and is not necessary for the simulations presented here. We take up this issue again in the discussion.}. 
+
+The speaker model $S_2$ returns a posterior probability of producing the generic, for each level of prevalence\footnote{We assume here that the prevalence told to the participant is the subjective probability that that speaker $S_2$ is trying to communicate. This assumption may be invalid due to theory-driven considerations on behalf of the speaker. For example, if the participant believes the prevalence being reported in the experiment is describing a temporary or accidental state and not one that is likely to be predictive of the future prevalence, the speaker may derive a subjective probability substantially less than that stated verbally in the experimental prompt.}. 
 We sample a response (\emph{agree} / \emph{disagree}) from this posterior distribution for each prevalence level, simulating a single subject's data.
 As with the human data, we took the trials where the model agreed with the generic, and took the mean of the prevalence levels corresponding to those trials, giving us the average prevalence at which the model assented to the generic.
 We repeated this for each type of property 40 times to simulate a sample of 40 participants. 
 We repeated this procedure 1000 times to bootstrap 95\% confidence intervals.
 
-The generic endorsement model (speaker $S_2$) predicted \emph{average truth conditions} that did not vary appreciably across the different types of properties, consistent with generics being acceptable for a wide range of prevalence levels for all property types.
-%There are no sharp boundaries between acceptable and unacceptable generics. 
+The generic endorsement model (speaker $S_2$) predicted that \emph{average truth conditions} should not vary appreciably across the different types of properties, consistent with the fact that generics are acceptable for broad range of prevalence levels for all property types.
 A similar absence of a gradient was observed in the human data ($\beta = 2.82; SE = 4.02; t(39) = 0.70; p = 0.49$; Figure \ref{fig:exp2b}, dotted lines). 
 Interpretations of generic utterances are stronger than their average truth conditions for the biological properties but not for the accidental properties (Figure \ref{fig:exp2b}), replicating \citeA{Cimpian2010} with both human data and the model; the extent of the difference is governed by prior property knowledge (mean prevalence when present $\gamma$, from Expt.~2a).
 The listener and speaker pair of models predicts human endorsements and interpretations of novel generic utterances well ($r^2(10) = 0.87$, MSE = 0.008).
 Thus, our model predicts that the asymmetry between truth conditions and implied prevalence should hold, but only for properties with the most extreme prior beliefs.
 
-Having corroborated the model with empirical data, we can again examine the model more closely.
-The $\lambda_2$ parameter, which is only used to model the truth judgments task, is credibly below 1: participants' behavior is more in the direction of guessing than veridical Bayesian updating according to our model.
-We assumed for the model's purposes that the prevalence that the speaker model was aiming to communicate was, in fact, the prevalence told to the participant.
-However, if participants' beliefs about properties are inconsistent with the prevalence statement they are given (e.g., 90\% of lorches have broken legs), they may reject the stated prevalence, and assign a truth judgment to the generic based on theory-derived considerations.
-If this is so, we would predict that the $\lambda_2$ parameter would be lowest for properties that are unlikely to be present at all prevalence levels (since the experiment was fully-randomized, each property type appears with each prevalence level).
-This would be the case for the accidental properties (which are unlikely to be present in high prevalence) and the body part properties (which are unlikely to be present in low prevalence; e.g. 10\% of lorches have wings).
+Having corroborated the model with empirical data, we again examine the model more closely.
+The $\lambda_2$ parameter, which is only used to model the truth judgments task, is credibly below 1: participants' behavior is slightly more random than veridical Bayesian updating according to our model.
+Our $S_2$ model predictions assume that the prevalence that the speaker model is aiming to communicate is, in fact, the prevalence told to the participant in the experimental prompt.
+However, if participants' beliefs about properties are inconsistent with the prevalence statement they are given (e.g., 90\% of lorches have broken legs), they may believe the current prevalence is aberrational, and assign a truth judgment to the generic based on theory-derived considerations (e.g., that in the future, fewer than 90\% of lorches will have broken legs).
+If this is so, we would predict that the $\lambda_2$ parameter would be lowest for properties that are unlikely to be present at all prevalence levels given in the experiment.
+We predict this would be the case for the accidental properties (which are unlikely to be present in high prevalence) and the body part properties (which are unlikely to be present in low prevalence; e.g. 10\% of lorches have wings).
 To investigate this, we implemented a model where the $\lambda_2$ parameter was allowed to vary by item-type.
 The posterior distributions over $\lambda_2$ are shown in Appendix Figure \ref{fig:asymmetry-params-byItem}.
-Indeed, we found that the $\lambda_2$ parameter is lowest for the rare accidental properties (HPD = [0.03, 0.24]), followed by the common accidental properties (MAP = [0.27, 0.60]) and then the body part properties (MAP = [0.33, 0.76]).
+Indeed, we found that the $\lambda_2$ parameter is lowest for the rare accidental properties (HPD = [0.03, 0.24]), followed by the common accidental properties (HPD = [0.27, 0.60]) and then the body part properties (HPD = [0.33, 0.76]).
 For the colored and vaguely described body parts, the speaker optimality parameters were considerably higher (color HPD = [0.50, 0.99]; vague HPD = [0.72, 1.32]).
-This suggests frequency evidence is interpreted through the lens of theoretical considerations, and that has important implications for generic truth conditions.
-In our final experiment, we develop a paradigm for testing this idea.
+This suggests that there is more to communicating generalizations than conveying the current frequency. % evidence is interpreted through the lens of theoretical considerations, and that has important implications for generic truth conditions.
+But what is prevalence if not the current frequency?
+%In our final experiment, we develop a paradigm for testing this idea.
 
 
 %
@@ -1094,7 +1099,7 @@ In our final experiment, we develop a paradigm for testing this idea.
 
 \section*{Prevalence is a predictive probability}
 
-So far, we have shown that property prevalence is sufficient to formalize the semantics of generation statements as an underspecified scalar denotation.
+So far, we have shown that property prevalence is sufficient to formalize the semantics of generic statements as an underspecified scalar denotation.
 But what is property prevalence?
 If generic language is truly conveying generalizations, it would be useful for it to reflect expectations, not just the current statistics in the world.
 The current frequency of a property is often a good indicator of future frequency, yet statistics can be distorted by spurious events.
