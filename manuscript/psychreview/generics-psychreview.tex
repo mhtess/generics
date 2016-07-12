@@ -906,9 +906,9 @@ The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/gener
 
 The pragmatic listener $L_1$ model provides a mapping from prior beliefs and hearing a generic utterance to posterior beliefs about prevalence.
 This model has one parameter governing the optimality of the hypothetical speaker $S_1$ in Eq.~2. 
-We put the same uninformative prior over this parameter: $\lambda_{\text{implied prevalence}} \sim \text{Uniform}(0, 20)$.
+We put the same uninformative prior over this parameter: $\lambda_1 \sim \text{Uniform}(0, 20)$.
 We learn about the parameter's \emph{a posteriori} credible values by collecting 3 MCMC chains of 100,000 samples (removing 50,000 for burn-in) using the Metropolis-Hastings algorithm.
-The MAP and 95\% credible interval for $\lambda$ are 3.3 [1.2, 4.7].
+The MAP and 95\% credible interval for $\lambda_1$ are 14.8 [6.4, 19.9].
 
 We look at the posterior predictive distribution of $L_1$, integrating out the model parameter.
 We first explore two important trends predicted by the pragmatic listener model.
@@ -1619,6 +1619,17 @@ This is because uncertainty at the pragmatic level can be resolved incorporating
     Posterior distributions for truth judgments model parameters (Expt.~1b)
 }
   \label{fig:tj1-params}
+\end{figure*}
+
+
+\begin{figure*}[h]
+\centering
+    \includegraphics[width=0.6\columnwidth]
+    {unfamiliar-interpretations-parameter.pdf}
+    \caption{
+    Posterior distributions for model parameter (Expt.~2b)
+}
+  \label{fig:interpretation-param}
 \end{figure*}
 
 \begin{figure*}[h]
