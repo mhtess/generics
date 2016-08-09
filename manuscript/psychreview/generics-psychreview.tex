@@ -684,7 +684,7 @@ We see significant diversity among our properties in both parameters, correspond
 
 Again, we look to the posterior predictive distribution to validate the structured prior model.
 Using the model with its inferred parameters, we generate prevalence judgments for different properties and compare that to the empirical counts. 
-\mht{Instead: make a quantile--quantile (ie cdf vs. cdf) plot?}
+%\mht{Instead: make a quantile--quantile (ie cdf vs. cdf) plot?}
 We discretize the prevalence judgments both by the model and the data to 12 discrete bins: $\{[0-0.01), (0.01-0.05), (0.05-0.15), (0.15-0.25),  ..., (0.75-0.85), (0.85-0.95), (0.95-1]\}$.
 This statistical model reproduces the prior elicitation data almost perfectly ($r^2 = 0.94$), strongly supporting the possibility of a structured prior. 
 
@@ -1396,18 +1396,18 @@ And though prevalence may not be consciously by the interlocutor when thinking a
 Indeed, we found that empirical prevalence distributions are structured in a way that reflects intuitions about causal mechanisms underlying different properties.
 It is plausible that richer conceptual knowledge also influences these distributions, such as higher-order conceptual knowledge about the nature of properties and categories \cite{Gelman2003,Keil1992}. 
 
-It has been argued that conceptual structure takes the form represented by probabilisitic causal models \red{(Pearl, Gopnik, Goodman et al., 2015)}. 
+It has been argued that conceptual structure takes the form represented by probabilisitic causal models \cite{pearl1988probabilistic, Gopnik2003theory, Goodmanconcepts}. 
 Such a representation would give rise to the prevalence distributions we observed are so crucial for understanding generic language. 
 Further work will be needed to make connection from the prevalence distributions uncovered here to probabilisitic causal models.
 
 Finally, it is important to note that our approach is based on \emph{subjective} probability, and not mere frequency.
 Indeed, we elucidated in Expt.~3, that participants' \emph{predictions} of probability perfectly track generic endorsement, when the present frequency would not hold.
-This resolves another theoretical issue in the generics literature: Current frequency is not sufficient.\footnote{This is usually paired alongside ``Frequency is not necessary'' and given the example of ``Mosquitos carry  malaria''. }
+This resolves another theoretical issue in the generics literature: Current frequency is not sufficient.%\footnote{This is usually paired alongside ``Frequency is not necessary'' and given the example of ``Mosquitos carry  malaria''.}
 The classic example of this phenomenon is the statement ``Supreme Court Justices have even social security numbers'', which is predicted by linguists to be rejected even if every single Supreme Court Justice has an even social security number.
-Our explanation is that abstract intuitive theories lead us to reject observed frequencies in forming our subjective probabilities
-That is, because we believe selection for the Supreme Court is not influenced by one's social security number, we would assign about 50\% subjective probability to the \emph{next} justice having an even number.
+Our explanation is that abstract intuitive theories lead us to reject observed frequencies in forming our subjective probabilities.
+That is, because we may believe selection for the Supreme Court is not influenced by one's social security number, we would assign roughly 50\% subjective probability to the \emph{next} justice having an even number.
 Thus, we would still reject the generic \emph{Supreme Court Justices have even social security numbers}, because the predictive prevalence would not be any different for Supreme Court Justices than any other profession. 
-Intriguingly, if we learned much more surprising information, such as all justices having \emph{prime numbered} social security numbers (a probabilistically much less likely outcome to happen by random sampling), we might be compelled to revise our theory, for instance appealing to a conspiracy; perhaps in this case, we might accept the generic.
+Our perspective makes the intriguing prediction that if we learned much more surprising information, such as all justices having \emph{prime numbered} social security numbers (a probabilistically much less likely outcome to happen by random sampling), we might be compelled to revise our theory, for instance appealing to a conspiracy; perhaps in this case, we might accept the generic.
 The relationship between conceptual distinctions, subjective probabilities for prevalence, and generic language is another area of research opened up by this work. 
 
 %We do not disagree with these claims. 
@@ -1435,7 +1435,7 @@ The relationship between conceptual distinctions, subjective probabilities for p
 
 
 
-\mht{say something about development?}
+%\mht{say something about development?}
 
 
 %Beliefs about prevalence in our approach are represented as probability distributions, a framework that is useful for representing rich, structured knowledge of the world \cite{Goodmanconcepts}. 
@@ -1537,7 +1537,7 @@ The goal of this section is introduce the reader to the Rational Speech-Acts fra
 The Rational Speech-Acts theory views language understanding as a special case of social cognition instantiated in a Bayesian model \cite{Frank2012, Goodman2013}. 
 In this view, an utterance is \emph{interpreted} by a Bayesian listener by integrating her prior beliefs with her generative model of the utterance.
 The generative model of the utterance is her intuitive theory of speech \emph{production}, i.e. her theory of a speaker. 
-This intuitive theory of speech production views speakers are rational actors who behave in accord with Bayesian decision-theory \cite{Berger1985}.
+This intuitive theory of speech production views speakers are rational actors who behave in accord with Bayesian decision-theory \cite{berger1988}.
 The rational speaker, thus, chooses utterances soft-max optimally on the basis of certain goals.
 In RSA, the goal of is to convey information to a naive listener. 
 The pragmatic listener ``inverts'' her Bayesian model of a speaker to arrive at a pragmatic interpretation of an utterance.
@@ -1575,7 +1575,7 @@ Here, the likelihood $\delta_{\denote{u}(x)}$ is the Kronecker delta function re
 The Rational Speech-Acts model formalizes the Gricean maxim to be information: The speaker produces utterances not with respect to their literal meaning, but with respect to how a naive listener (the literal listener) would interpret them, given the literal meaning and the listener's prior beliefs\footnote{Technically, this is what the listener believes the speaker believes is her prior beliefs.}.
 This literal listener base case also gives us the Gricean maxim to be truthful: the speaker who reasons about the literal listener has the goal of communicating the state $x$ given an utterance $u$ and given its literal meaning $\denote{u}$. 
 In principle, the speaker--listener recursion could grow for ever. 
-In practice, stable pragmatic phenomena can be observed with just one level of recursion \red{(CITE something?)}. 
+In practice, stable pragmatic phenomena can be observed with just one level of recursion. %\red{(CITE something?)}. 
 
 %\mht{This paragraph is pretty abstract, and may be better suited for the discussion}
 This general framework has been applied to host of language and reasoning phenomena including understanding scalar implicature \cite{Goodman2013, Degen2015cogsci}, communication in a noisy channel \cite{Bergen2015}, question--answer behavior \cite{Hawkins2015}, syllogistic reasoning \cite{Tessler2014}, and figurative language including hyperbole \cite{Kao2014}, metaphor \cite{Kao2014b}, and irony \cite{Kao2015}.
