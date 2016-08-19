@@ -483,7 +483,7 @@ That is, \emph{Mosquitos carry malaria} and \emph{Birds lay eggs} are reasonable
 The pragmatic speaker model $S_2$, Eq.~\ref{eq:S2}, is a model of truth judgments. 
 We test our model on thirty generic sentences 
 that cover a range of conceptual distinctions discussed in the literature  \cite{Prasada2013}: characteristic (e.g. \emph{Ducks have wings.}), minority (e.g. \emph{Robins lay eggs.}), striking (e.g. \emph{Mosquitos carry malaria.}), false generalization (e.g. \emph{Robins are female.}), and false (e.g. \emph{Lions lay eggs.}).
-The sentences were also chosen to elicit a range of acceptability judgments (intuitively, ``acceptable'', ``unacceptable'', and ``uncertain'') with low-, medium-, and high-prevalence properties.
+The sentences were also chosen to elicit a range of acceptability judgments (intuitively, ``acceptable'', ``unacceptable'', and ``uncertain'') with low-, medium-, and high-prevalence properties. \ndg{last bit is redundant with methods of 1b... maybe simplify here?}
 
 The pragmatic speaker model $S_2$ is fully-specified except for the prior distribution over prevalence $P(x)$, which plausibly varies by the type of property in question.
 To compare the model to empirical truth judgments, we thus first measure the prior distribution over prevalence of these properties (Expt.~1a).
@@ -523,14 +523,14 @@ The experiment can be viewed at \url{http://stanford.edu/~mtessler/experiments/g
 
 \subsection*{Data analysis and model predictions}
 
-To process the priors data, we discretize the prevalence judgments to 12 discrete bins: $\{[0-0.01), (0.01-0.05), (0.05-0.15), (0.15-0.25),  ..., (0.75-0.85), (0.85-0.95), (0.95-1]\}$, and look at the counts within each bin, performing add-1 Laplace smoothing, as the relative probability of that prevalence. 
+To process the priors data, we discretize the prevalence judgments to 12 discrete bins: $\{[0-0.01), (0.01-0.05), (0.05-0.15), (0.15-0.25),  ..., (0.75-0.85), (0.85-0.95), (0.95-1]\}$, and look at the counts within each bin, after doing add-1 Laplace smoothing, as the relative probability of that prevalence. 
 Using these priors, we can explore how $P_{L_{1}}(x , \theta \mid u)$, the pragmatic listener model, interprets a generic utterance (Figure \ref{fig:commongenerics}a, insets). 
 The prior beliefs over the prevalence of the property, $P(x)$, can also be interpreted as the pragmatic listener's posterior upon hearing the null utterance, because the null utterance has no information content.
 We see the interpretation of the generic is quite variable across our empirically measured priors.
 For instance, in the case of \textsc{carries malaria}, the prior is very left-skewed; here, the threshold $\theta$ can plausibly be quite low while still being informative, since a low threshold still rules out many possible alternative kinds (and their corresponding degree of prevalence).
 Properties like \textsc{doesn't attack swimmers} are very right-skewed; here, even a relatively high threshold would not result in an informative utterance (as not many kinds would be ruled out), and so the generic is unlikely to be used by speaker $S_2$ unless the property is practically-universal within the target category. 
 Some properties have priors that are unimodal with low variance (e.g. \textsc{is female}); these properties are present in every kind in almost exactly the same proportion and thus are too obvious and certain to allow for an informative generic utterance: The posterior is not very different from the prior. 
-With $P(x)$ specified, we can now test if our speaker model predicts human truth judgments of generic statements about these properties.
+With $P(x)$ now empirically established, we can test if our speaker model predicts human truth judgments of generic statements about these properties.
 
 
 \section*{Experiment 1b: Truth judgments}
@@ -580,9 +580,9 @@ However, large deviations from an account based purely on target-category preval
 %\mht{Add null model of cue validity?}
 
 The pragmatic speaker model, $S_2$ in Eq.~\ref{eq:S2}, predicts an endorsement probability for a generic sentence, given prior beliefs about the property and a prevalence-level within the kind-of-interest. 
-For the latter, we use the estimated within--kind prevalence as state of the world $x$ the speaker $S_2$ is trying to communicate, and use the empirically measured priors from Expt.~1a as the listener's prior $P(x)$. 
+For the latter, we use the empirically estimated within--kind prevalence as the $x$ that the speaker $S_2$ is trying to communicate, and use the empirically measured priors from Expt.~1a as the listener's prior $P(x)$. 
 
-
+\ndg{its a bit hard to follow why you're doing the things described in this paragraph. just add a bit of sign-posting? "in order to get model estimates of S2..."}
 We perform our analysis bootstrapping the empirical prior data (resampling with replacement 57 participants, discretizing and binning). 
 Having specified the prior $P(x)$ empirically, the pragmatic speaker has two parameters: the speaker optimality parameters $\lambda_1$ and $\lambda_2$ (in Eqs.~\ref{eq:S1}, \ref{eq:S2} ).
 We infer likely values of these parameter using Bayesian data analysis \cite{LW2014}.
@@ -593,16 +593,16 @@ We put an uninformative priors over these parameters, with a range consistent wi
 \lambda_2 &\sim& \text{Uniform}(0,5)
 \end{eqnarray*}
 %
-We learn about the \emph{a posteriori} credible values of our model parameter by collecting MCMC chains of 10,000 iterations removing the first 5,000 iterations, using the Metropolis-Hastings algorithm. 
+We learn about the \emph{a posteriori} credible values of our model parameter by collecting samples from MCMC chains of 10,000 iterations removing the first 5,000 iterations, using the Metropolis-Hastings algorithm. 
 This was repeating 500 times for bootstrapping the prior.
-The Maximum A-Posteriori (MAP) estimate and 95\% Highest Probability Density (HPD) Interval for $\lambda_1$ is 0.5 [0.004, 12.7] and $\lambda_2$ is 1.7 [1.3, 2.1] (full posterior distributions can be found in Appendix B; Figure \ref{fig:tj1-params}).\footnote{
+The Maximum A-Posteriori (MAP) estimate and 95\% Highest Probability Density (HPD) interval for $\lambda_1$ is 0.5 [0.004, 12.7] and $\lambda_2$ is 1.7 [1.3, 2.1] (full posterior distributions can be found in Appendix B; Figure \ref{fig:tj1-params}).\footnote{
 The fact that $\lambda_1$ is credibly less than 1 suggests that the generic utterance may be more costly than ``staying silent'' (our model assumes equal cost).
 We maintain using only the two $\lambda$ parameters in the model for simplicity.
 }
 
 We compare the model's posterior predictive distribution of generic endorsement to the empirical truth judgments.
-The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data \emph{should look like} given the pragmatics model and the observed data. 
-This is akin to fitting the parameters and is the critical step in model validation: It shows what data is actually predicted by the model. 
+(The posterior predictive distribution marginalizes over the inferred parameter values to produce predictions about what the data \emph{should look like} given the pragmatics model and the observed data. 
+This is akin to fitting the parameters and is the critical step in model validation: It shows what data is actually predicted by the model.) 
 As we see in Figure \ref{fig:commongenerics}b, the pragmatic speaker model $S_2$, using empirically measured priors, explains nearly all of the variance in human truth judgments ($r^2=0.98$; MSE=0.003; Figure \ref{fig:commongenerics}b). 
 Generics that received definitive agreement or disagreement are predicted to be judged as such by the model (corners of Figure \ref{fig:commongenerics}b), including items for which target-category prevalence is not a good indicator of the acceptability (e.g. \emph{Mosquitos carry malaria}, for prevalence quartiles 2 and 3, $r_{Q2,3}^2=0.955$; MSE=0.005; Figure \ref{fig:commongenerics}b, intermediate shades).
 We also see the generics truth judgment model predicts uncertain truth judgments: for instance, \emph{Robins are female} is judged by both the model and human participants to be neither true nor false.
