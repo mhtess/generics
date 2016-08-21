@@ -1282,72 +1282,76 @@ The semantics of generics can be understood as a threshold on property prevalenc
 
 \section*{General discussion}
 
-Generic language expresses dramatic flexibility that has confounded psychologists, linguists and philosophers who have tried to articulate what makes generic statements true or false. 
-We evaluated a theory of generic language derived from general principles of pragmatic language understanding using a simple, but uncertain, basic meaning---a threshold on property prevalence.
+Generic language is the simple and ubiquitous way by which generalizations are conveyed between people.
+Yet the dramatic flexibility of generic language has confounded psychologists, linguists and philosophers who have tried to articulate what exactly generic statements mean. 
+We evaluated a theory of generic language derived from general principles of language understanding using a simple, but uncertain, basic meaning---a threshold on property prevalence.
 Our formal model is a minimal extension of the RSA theory of language understanding, together with an underspecified threshold semantics.
 The model was able to explain two major puzzles of generics: their extreme flexibility in truth conditions and the contrastingly strong interpretation of novel generics.
 Both of these phenomena were revealed to depend in systematic ways on prior knowledge about properties.
 This prior knowledge was revealed through Bayesian model analysis to be structured, providing a promising bridge to conceptual accounts of generic language.
-In the final experiment, we tested the novel prediction that generic language is about speakers' expectations of future prevalence, and not necessarily what the current world is like. 
+With a formal model, we were able to test the novel prediction that generic language is about speakers' expectations of future prevalence, and not necessarily what the current state of the world is like. 
 Across all experiments, the formal model predicted the quantitative details of participants' judgments with high accuracy.
 
-%generics have a simple but uncertain basic meaning---a threshold on property prevalence---which is refined by social reasoning.
-%a minimal extension of a general-purpose probabilistic model of language understanding wherein social-cognitive mechanisms act on uncertainty in the meaning of a generic utterance to produce a less uncertain meaning.
-%Model predictions for interpretation of generic sentences depend on the listener's beliefs about the property in question and the communicative force of a speech-act. 
-%The model predicted participants' judgements with high quantitative accuracy for both goodness judgements for natural generic sentences, and interpretation of novel generic sentences.
-%Our model both the role of the speaker to produce felicitous generic utterances and the role of the listener to interpret those utterances in context, with high quantitative accuracy.
-%general-purpose language understanding mechanisms are 
-
-
-
-%%this paragraph isn't needed and is confusing....
-%Interpretation of generic language is strongly governed by listeners' beliefs about the domain in question. 
-%The generic, it would seem, doesn't convey any additional information beyond what the liste	ner already knew about the domain.
-%This shouldn't surprise us. 
-%In much the same way, ``John is tall'' does not actually tell a listener about what \emph{tall} means\footnote{However, ``John is a person'' does tell a listener about what \emph{tall} means in ``John is tall''.}. 
-%Rather, the listener is expected to come to the conversation with some beliefs about heights, and knowing that John is a person, be able to infer likely meanings for \emph{tall}.
+%In this discussion, we discuss the previous empirical findings that have been used to argue that property prevalence is not sufficient for formalizing generic language.
 
 \subsection*{Evidence against prevalence-based accounts}
 
 %The truth conditions of generic language have been of interest to linguists and philosophers. 
-There have been numerous demonstrations arguing that prevalence is insufficient to explain generic meaning \cite{Gelman2002, Gelman2007, Cimpian2010, Cimpian2010c,Khemlani2012, Prasada2013}.
-We agree with the spirit of these claims, but disavow the conclusions.
-Prevalence is usually framed as a ``null hypothesis'', bordering on straw-man.
-It is usually instantiated by measuring only the prevalence of the property for the target category \cite<e.g. the percentage of birds that lay eggs; >{Khemlani2012, Prasada2013}.
-It is what we have referred to as within-kind prevalence and it also fails to explain our data (Figure \ref{fig:commongenerics}b, right).
+There have been numerous demonstrations arguing that statistics (e.g., property prevalence) are insufficient to explain generic meaning \cite{Gelman2002, Gelman2007, Cimpian2010, Cimpian2010c,Khemlani2012, Prasada2013}.
+%We agree with the spirit of these claims, but disavow the conclusions.
+%Prevalence is usually framed as a ``null hypothesis'', bordering on straw-man.
+In these experiments, the prevalence considered is only the prevalence of the property for the target category \cite<e.g. the percentage of birds that lay eggs; >{Khemlani2012, Prasada2013}, what we have referred to as \emph{within-kind prevalence}. 
+It also fails to explain our data (Figure \ref{fig:commongenerics}b, right).
+Our formal model, by contrast, considers not only within-kind prevalence, but a listener's prior distribution on prevalence in order to arrive at a meaning for a generic utterance.
 
-Some have identified \emph{cue validity} to be a statistical factor in generic truth conditions \cite<e.g., >{Khemlani2012}.
-Cue validity is defined as the probability of the kind given the feature: $P(K \mid F)$ (e.g. the probability that an animal is a mosquito given that it has malaria).
-%By Bayes' rule, cue validity must take into account the prevalence of the property in the kind and the prior probability of that kind $P(K \mid F) \propto P(F \mid K) \cdot P(K)$. 
-It should be noted that our mixture parameter $\phi$ (the potential of the property to be present in a kind) is a different statistic from cue validity.
-Cue validity is defined with respect to a particular kind and property, whereas our mixture parameter is only defined with respect to a property.
-In some cases, the two can be similar.
-For instance, \emph{having a mane} is a good cue for being a \emph{lion} and similarly \emph{has manes} has a low $\phi$ parameter (since it is not present in many kinds). 
-In other cases, it is clear that the two constructs are distinct.
-For the property \emph{eats people}, the mixture parameter $\phi$ is again very low because most animals don't eat people; yet learning that some animal \emph{ate a person} is not a particularly good cue for any one kind of animal.
-Additionally, unlike a data-analytic model (e.g., a regression model) that uses predictors of prevalence and cue-validity to \emph{describe} data, our model is a unified cognitive model --- a formal instantiation of an explicit psychological hypothesis --- that \emph{predicts} both generic endorsements and interpretations from a simple set of assumptions (a prior belief distribution and general pragmatic computation).
+It has also been argued that \emph{cue validity} --- the probability of the kind given the feature: $P(K \mid F)$  --- is an important factor in generic meaning \cite<e.g., >{Khemlani2012}.
+For example, the \emph{cue validity} of malaria for mosquitos (i.e., the probability that an animal is a mosquito given that it carries malaria) is very high. 
+In our formal model, the mixture parameter $\phi$ (the potential of the property to be present in a kind) used in the prior distribution on prevalence is conceptually similar. 
+However, cue validity is defined with respect to a particular kind and property, whereas our mixture parameter is a function of the property alone. 
+That is, our theory makes the claim that speakers need not believe that the cue validity for a kind and property is high, only that the potential for the property to be present is low.
+For instance, for the property \emph{eats people}, the mixture parameter $\phi$ is very low because most animals don't eat people; yet learning that some animal \emph{ate a person} is not a particularly good cue for any one kind of animal.
 
-\subsection*{The nature of the contrast class and individual differences}
+Finally, we note that unlike a data-analytic model (e.g., a regression model) that uses predictors of prevalence and cue-validity to \emph{describe} data, our model is a unified cognitive model --- a formal instantiation of an explicit psychological hypothesis --- that \emph{predicts} both generic endorsements and interpretations from a simple set of assumptions (a prior belief distribution and general pragmatic computation).
 
-In this paper, when accurately taking into account the shared knowledge that forms interlocutors' prior belief distribution, the puzzles of generic language are amenable to the basic principles of communication.
+%In some cases, the two can be similar.
+%For instance, \emph{having a mane} is a good cue for being a \emph{lion} and similarly \emph{has manes} has a low $\phi$ parameter (since it is not present in many kinds). 
+%In other cases, it is clear that the two constructs are distinct.
+%Cue validity is defined as %By Bayes' rule, cue validity must take into account the prevalence of the property in the kind and the prior probability of that kind $P(K \mid F) \propto P(F \mid K) \cdot P(K)$. 
+%It should be noted that our mixture parameter $\phi$ (the potential of the property to be present in a kind) is a different statistic from cue validity.
+
+
+
+\subsection*{The nature of the comparison class}
+
+In this paper, we proposed a model for understanding generic language that relies upon interlocutors' belief distribution over the statistics of the property to accurately arrive at generic interpretation identical to that of human participants. 
 The prior belief distribution for a property (e.g., lays eggs), is a distribution over kinds (and their associated prevalence of the property).
-We might refer to these other kinds as the \emph{contrast class}.
-This is analogous to how if we say of 10 year-old Abigail that ``Abigail is tall'', we mean she is tall relative to the contrast class of other 10 year olds, or perhaps 10 year old girls.
+These other kinds form a \emph{comparison class} against which the target kind is evaluated. 
 
-Like almost all of the extant psychological work on generics, we have focused our efforts on simple sentences about natural kinds, particularly animals.
-In addition to being the main focus of past theoretical and empirical work, focusing on animals is methodologically convenient as the contrast class for animal properties is quite plausibly \emph{other animals}.
-Indeed, this assumption was explicit in our first experiment, where we elicited  property prevalence for many different animal kinds. 
-As we move away from statements about animals, or even natural kinds, determining what goes into the contrast class becomes a lot more complicated. 
+This framework opens up a number of interesting directions. 
+This is the first work to show how the understanding of generic language can depend on context.
+It makes the prediction that generics should be subject to context-effects in the a way analagous to how gradable adjectives (e.g., \emph{tall}) are subject to context-effects.
+Hearing that ``Abigail is tall'' means different things is Abigail is 20 years old or if she is 4. 
 
-There are some hints that the contrast class can be derived with respect to the property \cite{Keil1979}.
+Recent work in philosophy and linguistics suggest that such context-effects are present for generics \cite{Nickel2008, Sterken2015}.
+\citeA{Nickel2008} argues that \emph{Dobermans have floppy ears} may be true in the context of a discussion of evolutionary biology but that \emph{Dobermans have pointy ears} is true in a discussion of dog breeding.
+Our theory provides an explicit mechanism through which this context sensitivity would manifest: the comparison class.
+
+%Like almost all of the extant psychological work on generics, we have focused our efforts on simple sentences about natural kinds, particularly animals.
+%In addition to being the main focus of past theoretical and empirical work, focusing on animals is methodologically convenient as the contrast class for animal properties is quite plausibly \emph{other animals}.
+%Indeed, this assumption was explicit in our first experiment, where we elicited  property prevalence for many different animal kinds. 
+%As we move away from statements about animals, or even natural kinds, determining what goes into the contrast class becomes a lot more complicated. 
+
+There are some hints that the comparison class can be derived with respect to the property \cite{Keil1979}.
 For example, the statement ``iPhones are useful'' could be in contrast to other forms of technology (like a desktop computer), while ``iPhones are heavy'' could really only be true relative to other handheld devices.
 This could be another way for the slipperiness of generics to manifest; if a speaker and listener fail to coordinate on the same contrast class, our theory predicts disagreements as to the veracity of generic claims.
 
 Other failures to coordinate could result in individual differences in generic endorsements as well.
-In addition to differences in the contrast class, our theory proposes individual differences may result from disagreements in the target-kind prevalence as well as in the distribution of prevalence.
+In addition to differences in the comparison class, our theory proposes individual differences may result from disagreements in the target-kind prevalence as well as in the distribution of prevalence.
 For example, there is considerable disagreement as to whether or not ``Humans cause global warming''.
 Our theory predicts this disagreement may be the result of differences in the estimated \emph{causal power} of humans influencing global warming as well as the causal power of \emph{other forces} (e.g., plate tectonics) on climate change.
 This is a promising area for future research.
+
+\mht{discuss more the relationship to gradable adjectives. that our theory is the first to posit such a thing for generics, that we unify the treatment of adjectives and generics?}
 
 \subsection*{The parallel problem of generic identification}
 
