@@ -1171,19 +1171,20 @@ Participants responded using sliders ranging from ``very unlikely'' to ``very li
 
 We used 2 different types of properties: colors (e.g. \emph{Lorches are green.}) and body parts (e.g. \emph{Dobles have claws})\footnote{
 For each type of property, there were approximately 8 different exemplars (e.g. different colors, different body parts for different creatures)}.
-The creatures were either birds, bugs, or fish, with randomly sampled dimensions.
+The creatures were either birds, bugs, or fish, with randomly sampled dimensions. \ndg{say what you mean by dimensions.}
 The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/predictive/predictive-elicitation-1-elicitation.html}.
 
 
 \subsubsection*{Results and truth judgment predictions}
 
 The average predicted prevalence for the 4 experimental conditions are shown in Figure \ref{fig:dobles-predictive}(a, top).
+\ndg{figure uses condition names `extrinsic/intrinsic' but those aren't used/introduced in text....}
 We observe a main effect of origins, such that when participants read that the creatures had the property from birth, future creatures  are much more likely to have the property as compared to when the property is acquired.
 We see that, in our paradigm, participants are also sensitive to the outcome of the event.\footnote{
 It's worth noting that our experiments (Expts.~3a and 3b) differ from the original study by \citeauthor{Gelman2007} in a couple of ways.
 In the original study, the first sentence of each vignette used the possessive ``my'': ``These are my dobles.''.
 At the end of each vignette, the original study had participants judge two statements in counterbalanced order: ``Do my dobles have claws?'' and ``Do dobles have claws?''
-These differences may account for the differences in results.
+These differences may account for the differences in results. \ndg{this footnote is very cryptic because you haven't said what the original results were...!}
 }
 %This is surprising because \citeA{Gelman2007} observed no effect of the event outcome on generic endorsement.
 When participants observe a creature who loses the property by drinking a chemical, they report future members of the category are less likely to have the property.
@@ -1192,7 +1193,7 @@ Examining the data by item type (color vs. body part), we see this effect is sli
 
 We use these predicted probabilities as the prevalence $x$ that the speaker model is trying to communicate: $S_2(u\mid x)$, and examine the model's predicted truth judgments.
 For priors $P(x)$, we use the body part and color priors elicited in Expt.~2a.
-We see that the model predictions track closely the predicted prevalence, including the subtle by-item difference (Figure \ref{fig:dobles-predictive}b, top and bottom)\footnote{Note that our model's predictions do not deviate substantially from the predicted prevalence because there are only two different priors being used, and the shapes of those distributions do not vary appreciably (see Figure \ref{fig:prior2}).
+We see that the model predictions track closely the predicted prevalence, including the subtle by-item difference (Figure \ref{fig:dobles-predictive}b, top and bottom)\footnote{Note that our model's predictions do not deviate substantially from the predicted prevalence because there are only two different priors being used, and the shapes of those distributions do not vary appreciably (see Figure \ref{fig:prior2}). \ndg{huh? two priors does not explain why the model tracks predicted prevalence. instead it's that the priors are broad and unimodal or something right?}
 }.
 Thus, we make two novel predictions for generic endorsement in the paradigm by \citeA{Gelman2007}.
 We predict that in addition to the main effect of origins, we should see a second main effect of event outcome.
@@ -1242,12 +1243,13 @@ As predicted, we found two main effects (Figure \ref{fig:dobles-results}a).
 The main effect of property origins replicated ($\beta=3.6, SE=0.57, z=6.5, p<1\text{e}10$): participants were more likely to endorse the generic when it was about a property that the creature was born with.
 As well, we find a second main effect of event outcome 
  ($\beta = 2.69, SE = 0.56, z=4.8, p<1\text{e}5$): participants were more likely to endorse the generic when the property was maintained than when it was lost.
-\footnote{
-To see whether this second main effect could be attributed to a subgroup of participants making their judgments based only on the final screen (which showed creatures with or without the property, depending on  the event outcome), we classified each participant according to their pattern of responses. 
-Just as many participants endorsed the generic based on the final screen alone (``Only outcome''; 19) as there were basing their endorsement on both the outcome and the origins (``Both outcome and origins'' ; 16).
-36 participants based their responses on only the origins, and 9 participants exhibited some other pattern of responses.
-Thus, it seems this effect is not due to a subgroup of participants basing their responses on only the final screen.
-}
+%%NDG: i commented this out because it's weird and distracting. can put it back if reviewers suggest this is a confound....
+%\footnote{
+%To see whether this second main effect could be attributed to a subgroup of participants making their judgments based only on the final screen (which showed creatures with or without the property, depending on  the event outcome), we classified each participant according to their pattern of responses. 
+%Just as many participants endorsed the generic based on the final screen alone (``Only outcome''; 19) as there were basing their endorsement on both the outcome and the origins (``Both outcome and origins'' ; 16).
+%36 participants based their responses on only the origins, and 9 participants exhibited some other pattern of responses.
+%Thus, it seems this effect is not due to a subgroup of participants basing their responses on only the final screen.
+%}
 
 %\begin{table}[]
 %\centering
@@ -1266,9 +1268,9 @@ When we break down the results by item, we see that this effect is  stronger for
 The endorsement of a generic for color properties (e.g. \emph{Lorches are green}) seems to be less sensitive to the outcome of the event (i.e. Lorches losing their color as a result of drinking a chemical).
 This may be due to participants' intuitive theories of properties and their stability (skin color is more stable than body parts like feathers).
 Indeed this difference is apparent in the predictive prevalence task (Expt.~3a).
-For the 8 data points of generic endorsement based on origins, outcome, and property type, our model's predictions match the data well ($r^2(8) = 0.96$; see Figure \ref{fig:dobles-predictive}b, bottom).
-We, thus, elaborate our theory.
-The semantics of generics can be understood as a threshold on property prevalence, though prevalence is a speaker's subjective belief about what is likely to be the case in the future.
+For the 8 data points of generic endorsement based on origins, outcome, and property type, our model's predictions match the data well ($r^2(8) = 0.96$; see Figure \ref{fig:dobles-predictive}b, bottom \ndg{6b isn't model vs data on expt 3b...}).
+We, thus, elaborate our theory:
+The semantics of generics can be understood as a threshold on property prevalence, and this prevalence is a speaker's subjective belief about what is likely to be the case in the future.
 
 \begin{figure*}
 \begin{tabular}{l l}
