@@ -1295,32 +1295,33 @@ Generic language is the simple and ubiquitous way by which generalizations are c
 Yet the dramatic flexibility of generic language has confounded psychologists, linguists and philosophers who have tried to articulate what exactly generic statements mean. 
 We evaluated a theory of generic language derived from general principles of language understanding using a simple, but uncertain, basic meaning---a threshold on property prevalence.
 Our formal model is a minimal extension of the RSA theory of language understanding, together with an underspecified threshold semantics.
-The model was able to explain two major puzzles of generics: their extreme flexibility in truth conditions and the contrastingly strong interpretation of novel generics.
+The model was able to explain two major puzzles of generics: their extreme flexibility in truth conditions and the contrastingly strong interpretation of many novel generics.
 Both of these phenomena were revealed to depend in systematic ways on prior knowledge about properties.
 This prior knowledge was revealed through Bayesian model analysis to be structured, providing a promising bridge to conceptual accounts of generic language.
-With a formal model, we were able to test the novel prediction that generic language is about speakers' expectations of future prevalence, and not necessarily what the current state of the world is like. 
+To understand the nature of the underlying prevalence scale, we showed that generic language is about speakers' expectations of future prevalence, and not necessarily what the current state of the world is like. 
 Across all experiments, the formal model predicted the quantitative details of participants' judgments with high accuracy.
 
 %In this discussion, we discuss the previous empirical findings that have been used to argue that property prevalence is not sufficient for formalizing generic language.
 
-\subsection*{Evidence against prevalence-based accounts}
+%\subsection*{Evidence against prevalence-based accounts}
 
 %The truth conditions of generic language have been of interest to linguists and philosophers. 
 There have been numerous demonstrations arguing that statistics (e.g., property prevalence) are insufficient to explain generic meaning \cite{Gelman2002, Gelman2007, Cimpian2010, Cimpian2010c,Khemlani2012, Prasada2013}.
 %We agree with the spirit of these claims, but disavow the conclusions.
 %Prevalence is usually framed as a ``null hypothesis'', bordering on straw-man.
 In these experiments, the prevalence considered is only the prevalence of the property for the target category \cite<e.g. the percentage of birds that lay eggs; >{Khemlani2012, Prasada2013}, what we have referred to as \emph{within-kind prevalence}. 
-It also fails to explain our data (Figure \ref{fig:commongenerics}b, right).
-Our formal model, by contrast, considers not only within-kind prevalence, but a listener's prior distribution on prevalence in order to arrive at a meaning for a generic utterance.
+Indeed, this simple statistic also fails to explain our data (Figure \ref{fig:commongenerics}b, right).
+Our formal model, by contrast, considers not only within-kind prevalence, but a listener's prior beliefs about prevalence across kinds in order to arrive at a meaning for a generic utterance.
 
 It has also been argued that \emph{cue validity} --- the probability of the kind given the feature: $P(K \mid F)$  --- is an important factor in generic meaning \cite<e.g., >{Khemlani2012}.
 For example, the \emph{cue validity} of malaria for mosquitos (i.e., the probability that an animal is a mosquito given that it carries malaria) is very high. 
+\ndg{argument gets a bit fuzzy here... want to say that cue validity may be correlated with our model but is distinct. correlation comes at least partly from $\phi$?}
 In our formal model, the mixture parameter $\phi$ (the potential of the property to be present in a kind) used in the prior distribution on prevalence is conceptually similar. 
 However, cue validity is defined with respect to a particular kind and property, whereas our mixture parameter is a function of the property alone. 
 That is, our theory makes the claim that speakers need not believe that the cue validity for a kind and property is high, only that the potential for the property to be present is low.
 For instance, for the property \emph{eats people}, the mixture parameter $\phi$ is very low because most animals don't eat people; yet learning that some animal \emph{ate a person} is not a particularly good cue for any one kind of animal.
 
-Finally, we note that unlike a data-analytic model (e.g., a regression model) that uses predictors of prevalence and cue-validity to \emph{describe} data, our model is a unified cognitive model --- a formal instantiation of an explicit psychological hypothesis --- that \emph{predicts} both generic endorsements and interpretations from a simple set of assumptions (a prior belief distribution and general pragmatic computation).
+We note that unlike a data-analytic model (e.g., a regression model) that uses predictors of prevalence and cue-validity to \emph{describe} data \ndg{cite?}, our model is a unified cognitive model --- a formal instantiation of an explicit psychological hypothesis --- that \emph{predicts} both generic endorsements and interpretations from a simple set of assumptions (a prior belief distribution and general pragmatic computation). \ndg{this paragraph seems a little heavy-handed. cut it?}
 
 %In some cases, the two can be similar.
 %For instance, \emph{having a mane} is a good cue for being a \emph{lion} and similarly \emph{has manes} has a low $\phi$ parameter (since it is not present in many kinds). 
@@ -1334,13 +1335,16 @@ Finally, we note that unlike a data-analytic model (e.g., a regression model) th
 
 In this paper, we proposed a model for understanding generic language that relies upon interlocutors' belief distribution over the statistics of the property to accurately arrive at generic interpretation identical to that of human participants. 
 The prior belief distribution for a property (e.g., lays eggs), is a distribution over kinds (and their associated prevalence of the property).
-These other kinds form a \emph{comparison class} against which the target kind is evaluated. 
+These other kinds form a \emph{comparison class} against which the target kind is evaluated. \ndg{need to expand a bit on this? maybe say that the prior $P(\theta)$ really needs to be considered as relative to a category of categories (the comparison class) $P_K(\theta)$?}
+
+\ndg{say that throughout our experiments we used animal target kinds, which lead naturally to comparison class of other animals. future work to extend to other kinds; sometimes the comparison class is less clear....}
 
 This framework opens up a number of interesting directions. 
 This is the first work to show how the understanding of generic language can depend on context.
 It makes the prediction that generics should be subject to context-effects in the a way analogous to how gradable adjectives (e.g., \emph{tall}) are subject to context-effects.
 Hearing that ``Abigail is tall'' means different things is Abigail is 20 years old or if she is 4. 
 
+\ndg{maybe put past and recent work on comparison classes first in this section and then point out that this matters in our model as well? also don't make it seem like we have a solution to this problem, just a place to start on it in future work.}
 Recent work in philosophy and linguistics suggest that such context-effects are present for generics \cite{Nickel2008, Sterken2015}.
 \citeA{Nickel2008} argues that \emph{Dobermans have floppy ears} may be true in the context of a discussion of evolutionary biology but that \emph{Dobermans have pointy ears} is true in a discussion of dog breeding.
 Our theory provides an explicit mechanism through which this context sensitivity would manifest: the comparison class.
@@ -1354,11 +1358,6 @@ There are some hints that the comparison class can be derived with respect to th
 For example, the statement ``iPhones are useful'' could be in comparison to other forms of technology (like a desktop computer), while ``iPhones are heavy'' could really only be informative relative to other handheld devices.
 The incorporation of a comparison class into the generic language understanding points to an additional mechanism by which the slipperiness of generics may manifest; if a speaker and listener fail to coordinate on the same comparison class, our theory predicts disagreements into the veracity and interpretation of generic claims.
 
-Other failures to coordinate could result in individual differences in generic endorsements as well.
-In addition to differences in the comparison class, our theory posits two other ways individual differences in generic endorsement and understanding may arise: disagreements in the within-kind prevalence as well as in the distribution of prevalence.
-For example, there is considerable disagreement as to whether or not ``Humans cause global warming''.
-Our theory predicts this disagreement may be the result of differences in the estimated \emph{causal power} of humans influencing global warming as well as the causal power of \emph{other forces} (e.g., plate tectonics) on climate change.
-This is a promising area for future research.
 
 \mht{discuss more the relationship to gradable adjectives. that our theory is the first to posit such a thing for generics, that we unify the treatment of adjectives and generics?}
 
@@ -1372,6 +1371,7 @@ The problem of \emph{identifying} a generic meaning from a bare plural construct
 \citeA{Declerck1991} suggests that generic and non-generic bare plurals can be treated in the same way, and that pragmatic considerations alone may resolve interpretative differences. 
 Indeed it does appear that knowledge of the properties under discussion (e.g., the state of being on a front lawn; the state of having fur) could facilitate the generic identification process.
 Other pragmatic factors, like knowledge of the speaker, can also disambiguate generic and non-generic meaning \cite{Cimpian2008}.
+\ndg{mention the pragmatic approach of mike's cogsci paper.}
 The formal theory introduced in this article couches generic language understanding in a communicative framework.
 Addressing the question of generic identification from an information-theoretic, communicative perspective is a natural extension.
 
@@ -1412,34 +1412,49 @@ Leslie suggests information that is striking (e.g.~\emph{Tigers eat people.}) is
 Gelman outlines how generics tend to express \emph{essential} qualities that are relatively timeless and enduring. 
 Where in the prevalence-based semantics could such conceptual distinctions come into play?
 
-Our theory claims that causal beliefs about kinds and properties lead to differences in prevalence distributions, and these differences lead to variable endorsements and interpretations of generic sentences for our formal model. 
-In our experiments with novel generics, we showed how the structure of prevalence priors about different kinds of properties leads to variable inferences. 
-Biological properties tend to have bimodal prior distributions on prevalence (with 0\% and 100\% prevalence being the most likely \emph{a priori}) and get updated, upon hearing a generic, to concave posterior distributions peaked at 100\%.
-Accidental properties have unimodal prior distributions (peaked at only 0\%). 
-This distinction arises because even when participants learn the property is present in one instance of the category, they were unwilling to extend it to many others of the category \cite{Goodman1955}. 
-In this case, this prior distribution of prevalence for accidental properties gets updated to a convex posterior distribution.
-This posterior distribution has high variance, indicating that interpretations of generic statements about accidental properties should be highly variable.
-These predictions were corroborated by the empirical data of generic interpretation. 
-
-Our approach thus makes the strong claim that beliefs about predicted prevalence are the connective tissue between conceptual knowledge and generic language.
+Our approach makes the strong claim that beliefs about predicted prevalence are the connective tissue between conceptual knowledge and generic language.
 That is, the effect of conceptually meaningful differences on generic language is predicted to be mediated by differences in corresponding prevalence distributions.
 %And though prevalence may not be considered consciously by the interlocutor when thinking about generics, the theory presented here suggests that this statistical information is along for the ride. 
-Indeed, we found that empirical prevalence distributions are structured in a way that reflects intuitions about causal mechanisms underlying different properties.
-It is plausible that richer conceptual knowledge also influences these distributions, such as higher-order conceptual knowledge about the nature of properties and categories \cite{Gelman2003,Keil1992}. 
+It is important to note that our approach is based on \emph{subjective} probability, and not mere frequency.
+Indeed, we elucidated in Expt.~3, that participants' \emph{predictions} of probability perfectly track generic endorsement, when the present frequency would not correctly predict generic endorsement.
 
-It has been argued that conceptual structure takes the form represented by probabilisitic causal models \cite{pearl1988probabilistic, Gopnik2003theory, Goodmanconcepts}. 
-Such a representation would give rise to the prevalence distributions we observed are foundational for understanding generic language. 
-Further work will be needed to make connection from the prevalence distributions uncovered here to probabilisitic causal models.
-
-Finally, it is important to note that our approach is based on \emph{subjective} probability, and not mere frequency.
-Indeed, we elucidated in Expt.~3, that participants' \emph{predictions} of probability perfectly track generic endorsement, when the present frequency would not hold.
-This resolves another theoretical issue in the generics literature: Current frequency is not sufficient.%\footnote{This is usually paired alongside ``Frequency is not necessary'' and given the example of ``Mosquitos carry  malaria''.}
-The classic example of this phenomenon is the statement ``Supreme Court Justices have even social security numbers'', which is predicted by linguists to be rejected even if every single Supreme Court Justice has an even social security number.
+%This resolves another theoretical issue in the generics literature: Current frequency is not sufficient \ndg{need cite}. %\footnote{This is usually paired alongside ``Frequency is not necessary'' and given the example of ``Mosquitos carry  malaria''.} 
+The focus on subjective, predictive probability casts new light on puzzles surrounding accidentally-true situations. \ndg{need cite}
+An example is the statement ``Supreme Court Justices have even social security numbers'', which is predicted by linguists to be rejected even if every single Supreme Court Justice has an even social security number.
 Our explanation is that abstract intuitive theories lead us to reject observed frequencies in forming our subjective probabilities.
 That is, because we may believe selection for the Supreme Court is not influenced by one's social security number, we would assign roughly 50\% subjective probability to the \emph{next} justice having an even number.
 Thus, we would still reject the generic \emph{Supreme Court Justices have even social security numbers}, because the predictive prevalence would not be any different for Supreme Court Justices than any other profession. 
 Our perspective makes the intriguing prediction that if we learned much more surprising information, such as all justices having \emph{prime numbered} social security numbers (a probabilistically much less likely outcome to happen by random sampling), we might be compelled to revise our theory, for instance appealing to a conspiracy; perhaps in this case, we might accept the generic.
-The relationship between conceptual distinctions, subjective probabilities for prevalence, and generic language is another area of research opened up by this work. 
+
+Turning back to conceptual relations and structure, it is natural to ask when subjective probabilities might reflect conceptual knowledge?
+We found that empirical prevalence distributions are structured in a way that reflects intuitions about causal mechanisms underlying different properties; the differences in shape of these distributions in turn led to variable endorsements and interpretations of generic sentences. 
+It is plausible that richer conceptual knowledge also influences these distributions, such as higher-order conceptual knowledge about the nature of properties and categories \cite{Gelman2003,Keil1992}. 
+Indeed, it has been argued that conceptual structure in general, including higher-order abstractions, can be captured by probabilisitic causal models and their generalizations \cite{pearl1988probabilistic, Gopnik2003theory, Goodmanconcepts}. 
+Future work will be needed to explore whether probabilistic representations of conceptual knowledge can capture the relations identified in other accounts of generics (such as characteristic, essential, and striking properties), and whether the effect of these relations can then be adequately captured via their impact on subjective prevalence.
+
+%Of particular importance may be beliefs about which types of properties are most \emph{projectible}  into the future \cite{Goodman1955}. 
+
+
+%Such a representation would give rise to the prevalence distributions we observed are foundational for understanding generic language. 
+%Further work will be needed to make connection from the prevalence distributions uncovered here to probabilisitic causal models.
+%The relationship between conceptual distinctions, subjective probabilities for prevalence, and generic language is another area of research opened up by this work. 
+%
+
+%Our theory claims that causal beliefs about kinds and properties lead to differences in prevalence distributions, and these differences lead to variable endorsements and interpretations of generic sentences. 
+%In our experiments with novel generics, we showed how the structure of prevalence priors about different kinds of properties leads to variable inferences. 
+%Biological properties tend to have bimodal prior distributions on prevalence (with 0\% and 100\% prevalence being the most likely \emph{a priori}). Such beliefs are updated, upon hearing a generic, to concave posterior distributions peaked at 100\%.
+%In contrast, accidental properties have unimodal prior distributions (peaked at only 0\%), which support weaker generic interpretations. 
+%This distinction arises because even when participants learn the property is present in one instance of the category, they were unwilling to extend it to many others of the category \cite{Goodman1955}. 
+%In this case, this prior distribution of prevalence for accidental properties gets updated to a convex posterior distribution.
+%This posterior distribution has high variance, indicating that interpretations of generic statements about accidental properties should be highly variable.
+%These predictions were corroborated by the empirical data of generic interpretation. 
+
+
+
+
+
+
+
 
 %We do not disagree with these claims. 
 %Rather than carve out the distinctions amongst generics, we highlight what is shared. 
@@ -1467,6 +1482,7 @@ The relationship between conceptual distinctions, subjective probabilities for p
 
 
 \mht{say something about development?}
+\ndg{meh. only if we have something new to say...}
 
 
 %Beliefs about prevalence in our approach are represented as probability distributions, a framework that is useful for representing rich, structured knowledge of the world \cite{Goodmanconcepts}. 
@@ -1497,9 +1513,18 @@ In our work, context takes the form of a listener and speaker's shared beliefs a
 By leveraging this common ground, generics provide a powerful way to communicate and learn generalizations about categories, 
 which would otherwise be difficult or costly information to learn through direct experience.
 %This, coupled with standard inferences from conversational pragmatics, allows the listener to arrive at a specific meaning of the otherwise underspecified utterance.
+
 The dark side of this flexibility is the potential for miscommunication or deceit: A speaker might assert a generic utterance that he himself would not accept, conveying a too-strong generalization to a na\"{i}ve listener.  
 Our model predicts this potential particularly for properties which, when present, are widespread in a category---we showed that biological properties are believed to have this distribution, but many properties of social categories may as well \cite{Cimpian2011a,Cimpian2012b,Rhodes2012}.
 %This listener would then have a belief distribution even further from the truth. 
+%Other failures to coordinate could result in individual differences in generic endorsements as well.
+%In addition to differences in the comparison class, our theory posits two other ways 
+%individual differences in generic endorsement and understanding may arise: 
+Disagreements are also predicted when interlocutors fail to share background assumptions:
+differences in the within-kind prevalence, the prior distributions of prevalence, or the contrast category.
+For example, there is considerable disagreement as to whether or not ``Humans cause global warming''.
+Our theory predicts this disagreement may be the result of differences in the estimated \emph{causal power} of humans influencing global warming as well as the causal power of \emph{other forces} (e.g., plate tectonics) on climate change.
+This is a promising area for future research.
 
 
 Categories are inherently unobservable. 
