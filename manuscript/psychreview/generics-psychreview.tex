@@ -490,7 +490,8 @@ That is, \emph{Mosquitos carry malaria} and \emph{Birds lay eggs} are reasonable
 The pragmatic speaker model $S_2$, Eq.~\ref{eq:S2}, is a model of truth judgments. 
 We test our model on thirty generic sentences 
 that cover a range of conceptual distinctions discussed in the literature  \cite{Prasada2013}: characteristic (e.g. \emph{Ducks have wings.}), minority (e.g. \emph{Robins lay eggs.}), striking (e.g. \emph{Mosquitos carry malaria.}), false generalization (e.g. \emph{Robins are female.}), and false (e.g. \emph{Lions lay eggs.}).
-The sentences were also chosen to elicit a range of acceptability judgments (intuitively, ``acceptable'', ``unacceptable'', and ``uncertain'') with low-, medium-, and high-prevalence properties. \ndg{last bit is redundant with methods of 1b... maybe simplify here?}
+In additional to the canonical cases from the linguistics literature, we selected sentences to elicit the full range of acceptability judgments (intuitively, ``acceptable'', ``unacceptable'', and ``uncertain'') with low-, medium-, and high-prevalence properties. 
+%\ndg{last bit is redundant with methods of 1b... maybe simplify here?}
 
 The pragmatic speaker model $S_2$ is fully-specified except for the prior distribution over prevalence $P(x)$, which plausibly varies by the type of property in question.
 To compare the model to empirical truth judgments, we thus first measure the prior distribution over prevalence of these properties (Expt.~1a).
@@ -531,7 +532,7 @@ The experiment can be viewed at \url{http://stanford.edu/~mtessler/experiments/g
 \subsection*{Data analysis and model predictions}
 
 To process the priors data, we discretize the prevalence judgments to 12 discrete bins: $\{[0-0.01), (0.01-0.05), (0.05-0.15), (0.15-0.25),  ..., (0.75-0.85), (0.85-0.95), (0.95-1]\}$, and look at the counts within each bin, after doing add-1 Laplace smoothing, as the relative probability of that prevalence. 
-Using these priors, we can explore how $P_{L_{1}}(x , \theta \mid u)$, the pragmatic listener model, interprets a generic utterance (Figure \ref{fig:commongenerics}a, insets). 
+Using these priors, we can explore how $L_{1}(x , \theta \mid u)$, the pragmatic listener model, interprets a generic utterance (Figure \ref{fig:commongenerics}a, insets). 
 The prior beliefs over the prevalence of the property, $P(x)$, can also be interpreted as the pragmatic listener's posterior upon hearing the null utterance, because the null utterance has no information content.
 We see the interpretation of the generic is quite variable across our empirically measured priors.
 For instance, in the case of \textsc{carries malaria}, the prior is very left-skewed; here, the threshold $\theta$ can plausibly be quite low while still being informative, since a low threshold still rules out many possible alternative kinds (and their corresponding degree of prevalence).
@@ -561,11 +562,11 @@ The experiment took about 3 minutes and participants were compensated \$0.35.
 Participants were shown thirty generic sentences in bare plural form, one after another.
 They were asked to press one of two buttons to signify whether they agreed or disagreed with the sentence (see Appendix for complete list). 
 %\ndg{the order was randomized between particiapants?}
-The thirty sentences were presented in a random order between participants and covered a range of conceptual categories \cite{Prasada2013}: Characteristic (e.g. \emph{Ducks have wings.}), Minority (e.g. \emph{Robins lay eggs.}), Striking (e.g. \emph{Mosquitos carry malaria.}), False generalization (e.g. \emph{Robins are female.}), and False (e.g. \emph{Lions lay eggs.}).
-We also aimed to include generics that were both acceptable and unacceptable with low, medium, and high prevalence.
+The thirty sentences were presented in a random order between participants and covered a range of conceptual categories described above.
+%We also aimed to include generics that were both acceptable and unacceptable with low, medium, and high prevalence.
 Approximately 10 true, 10 false, and 10 uncertain truth-value generics were selected.
 
-As a manipulation check, participants were asked at the end of the trials which button corresponded to ``Agree''.
+As an attention check, participants were asked at the end of the trials which button corresponded to ``Agree''.
 4 participants were excluded for failing this trial.
 
 \subsection*{Data analysis and results}
@@ -715,7 +716,7 @@ This statistical model reproduces the prior elicitation data very well ($r^2 = 0
 The other test of this hypothesis is to re-examine the truth judgments from Expt.~1b using the pragmatics model with the inferred structured priors (as opposed to bootstrapping the raw empirical counts). 
 We find the same correspondence to the empirical truth judgments data ($r^2 = 0.98$).
 This provides further evidence that the prior distribution over prevalence $P(x)$ is structured.
-The implication of this finding is that conceptual structure may indeed find its way into generic judgements, but via the prevalence prior, rather than directly in the semantics of the generic. We return to this idea \ndg{below}.
+The implication of this finding is that conceptual structure may indeed find its way into generic judgments, but via the prevalence prior, rather than directly in the semantics of the generic. We return to this idea below.
 
 %The only substantial disagreement between the prior model and the data occur for  the properties \textsc{is male, is female} in the bin $(0.45-0.55)$. 
 %The normalized empirical counts put about 75\% probability in this bin; the model predicts roughly 50\% probability of this bin. 
@@ -764,7 +765,7 @@ The implication of this finding is that conceptual structure may indeed find its
 
 One of the most important roles for generic language is to provide learners information about new or poorly understood categories. 
 This role depends on how unfamiliar generic sentences are interpreted \cite<e.g.>{Gelman2002, Cimpian2010}.
-The pragmatic theory we present includes such a theory of generic comprehension: the listener model (Eq.~\ref{eq:L1}) describes interpretation of a generic utterance---\emph{Feps \textsc{have property}}---without previously knowing the prevalence of the property within this kind.
+The pragmatic theory we present includes such a theory of generic comprehension: the listener model (Eq.~\ref{eq:L1}) describes interpretation of a generic utterance---\emph{Kind \textsc{has property}}---without previously knowing the prevalence of the property within this kind.
 In our theory, the meaning is uncertain, but the pressure to be informative operates over \emph{a priori} beliefs about properties to produce an interpretation. 
 Classic work in generalization suggests beliefs about the prevalence of properties differ by type of property, including relatively fine distinctions among properties that are all biological in nature \cite{Nisbett1983}. 
 We leverage these diverse expectations, using properties that explore a wide range of \emph{a priori} beliefs about prevalence. 
@@ -821,7 +822,7 @@ Because pilot testing revealed more variability for items in the accidental cate
 We used 8 exemplars of each of the three non-accidental properties (``parts'', ``colored parts'', ``vague parts''), and 16 exemplars of accidental properties, building on a stimulus set from \citeA{Cimpian2010}.
 All materials are shown in the Appendix.
 
-Participants were introduced to a ``data-collection robot'' that was tasked with learning about properties of animals. 
+In the task, participants were introduced to a ``data-collection robot'' that was tasked with learning about properties of animals. 
 Participants were told the robot randomly sampled an animal to ask the participant about (e.g. The robot says: ``We recently discovered animals called feps.''). 
 We then used a two-stage elicitation procedure, aimed to measure the two components of the structured prior model: (1) the potential of the property to be present in a kind and (2) the expected prevalence when present.
 To get at (1), the robot asked how likely it was that ``there was \emph{a} fep with \textsc{property}'' (potential to be present), to which participants reported on a scale from ``unlikely'' to ``likely''.
@@ -866,8 +867,8 @@ Figure \ref{fig:prior2}a shows a summary of the elicited priors, in terms of the
 Biological properties are expected to be \emph{a priori} more prevalent within a kind when present than accidental properties, with additional fine-grained differences within biological and accidental properties.
 Like the priors elicited using familiar categories, these priors elicited using unfamiliar categories have diverse shapes (see insets). 
 Biological properties (``biological'', ``vague'', and ``color'' body parts) have prevalence distributions that are bimodal with peaks at 0\% and near-100\% prevalence. 
-Interpretations of generics about these properties ($L_1$ model, Eq.~\ref{eq:L1}) update these distribution to concave posteriors peaked at 100\% (Figure \ref{fig:prior2}; red, blue and green insets); the model predicts these novel generics will be interpreted as implying the property is widespread in the category \cite{Gelman2002}.
-By contrast, accidental properties (both ``rare'' and ``common'') follow unimodal prior distributions and update to convex posterior distributions, predicting weaker and more variable interpretations of novel generics for these properties \cite{Cimpian2010c}. 
+Interpretations of generics about these properties ($L_1$ model, Eq.~\ref{eq:L1}) update these distributions to concave posteriors peaked at 100\% (Figure \ref{fig:prior2}a; red, blue and green insets); the model predicts these novel generics will be interpreted as implying the property is widespread in the category.
+By contrast, accidental properties (both ``rare'' and ``common'') follow unimodal prior distributions and update to convex posterior distributions, predicting weaker and more variable interpretations of novel generics for these properties. 
 %These convex posteriors show that generics about accidental or temporary properties come with highly uncertain interpretations, plausibly as a consequence of theory-driven considerations \cite{Cimpian2010c}. 
 
 
@@ -923,7 +924,7 @@ The experiment took about 5 minutes and participants were compensated \$0.60.
 \subsubsection*{Procedure and materials}
 
 In order to get participants motivated to reason about novel kinds, they were told they were the resident zoologist of a team of scientists on a recently discovered island with many unknown animals; their task was to provide their expert opinion on questions about these animals.
-Participants were supplied with the generic (e.g. ``Feps have yellow fur.'') and asked to judge prevalence: ``What percentage of feps do you think have yellow fur?''. 
+Participants were supplied with the generic (e.g., ``Feps have yellow fur.'') and asked to judge prevalence: ``What percentage of feps do you think have yellow fur?''. 
 Participants completed in randomized order 25 trials: 5 for each of the biological properties and 10 for the accidental (described in Expt.~2a).
 The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/generics/experiments/asymmetry/asymmetry-2.html}. 
 
@@ -937,7 +938,7 @@ The MAP and 95\% credible interval for $\lambda_1$ are 14.8 [6.4, 19.9].
 
 We look at the posterior predictive distribution of $L_1$, integrating out the model parameter.
 We first explore two important trends predicted by the pragmatic listener model.
-In Figure \ref{fig:exp2b}, solid lines, we see the implied prevalence judgments are predicted (at the property class level) to vary linearly with the \emph{a proiri} expected prevalence. 
+In Figure \ref{fig:exp2b} (solid lines) we see the implied prevalence judgments are predicted (at the property class level) to vary linearly with the \emph{a proiri} expected prevalence. 
 A mixed-effects linear model with random by-participant effects of intercept and slope indeed reveals the more prevalent a property is expected to be \emph{a priori}, the stronger the implications of a generic statement ($\beta = 0.57; SE = 0.08; t(39) = 7.12; p < 0.001$).
 The prevalence implied by a generic is also predicted to be greater than the \emph{a proiri} expected prevalence.
 A mixed-effects linear model with random by-participant effects of intercept and random by-item effects of intercept and condition reveals implied prevalence after hearing a generic is significantly greater than the \emph{a priori} prevalence ($\beta = 0.17; SE = 0.018; t(39) = 9.7; d = 0.64; p < 0.001$).
@@ -1003,15 +1004,16 @@ We now have strong support for both of the major predictive components of our mo
 
 
 There is a surprising d\'{e}colage between the truth conditions and interpretations of generic language: Interpretations are often strong while truth conditions are flexible. 
-Generic statements (e.g. \emph{Glippets have yellow fur.}) thus show an asymmetry between their \emph{truth conditions} and the prevalence implied by the statement; this is in contrast to the behavior of quantifiers statements involving ``all'' or ``most'' \cite{Cimpian2010}. 
-Upon reading a generic, participants infer that the property is widespread (e.g. almost all glippets have yellow fur): \emph{implied prevalence} is near ceiling.
-By contrast, using a truth judgment task, participants endorsed generics for a much wider range of prevalence levels (e.g. even when ``30\% of glippets have yellow fur.''). 
-However, this mismatch between \emph{truth conditions} and \emph{implied prevalence} is significantly reduced for generics of properties plausibly construed as accidental (e.g. \emph{Glippets have wet fur.}).
+Generic statements (e.g. \emph{Glippets have yellow fur.}) thus show an asymmetry between their \emph{truth conditions} and the prevalence implied by the statement; this is in contrast to the behavior of quantified statements involving ``all'' or ``most'' \cite{Cimpian2010}. 
+Upon reading a generic, participants infer (\emph{implied prevalence}) that the property is widespread (e.g. almost all glippets have yellow fur).
+By contrast, participants endorse generics (\emph{truth conditions}) for a wider range of prevalence levels (e.g. even when ``30\% of glippets have yellow fur.''), thus showing an asymmetry between truth conditions and implied prevalence. 
+However, this mismatch is significantly reduced for generics of accidental properties  (e.g. \emph{Glippets have wet fur.}).
 \ndg{this paragraph needs editing for flow.}
+\mht{now?}
 
 %Because generics get judged ``true'' at almost all prevalence levels, the average prevalence to yield a ``true'' response is substantially less than the average prevalence inferred upon hearing a generic (which is near ceiling). 
 
-Below we replicate the basic asymmetry findings of \citeA{Cimpian2010} and discover even more variability in the mismatch between \emph{truth conditions} and \emph{implied prevalence} using the expanded stimulus set from Expt.~2a.
+Below we replicate the basic asymmetry findings of \citeA{Cimpian2010} and reveal even more variability in the mismatch between \emph{truth conditions} and \emph{implied prevalence} using the expanded stimulus set from Expt.~2a.
 In addition, we now test both our models (generic endorsement [speaker $S_2$] and generic interpretation [listener $L_1$]) in the same experimental paradigm. %models predicts the asymmetry and the context-sensitivity of this phenomenon.
 
 %Expt.~2b revealed how generics imply the property is more widespread than what would be expected \emph{a priori}. 
@@ -1060,22 +1062,37 @@ Interpretations of generic utterances are stronger than their average truth cond
 The listener and speaker pair of models predicts human endorsements and interpretations of novel generic utterances well ($r^2(10) = 0.87$, MSE = 0.008).
 Thus, our model predicts that the asymmetry between truth conditions and implied prevalence should hold, but only for properties with the most extreme prior beliefs.
 
+\subsection*{Extended model analysis}
+
 \ndg{i don't think the overall logic of this paragraph, connecting $\lambda_2$ to theoretical mismatch, will be clear to readers. explain better?}
 Having corroborated the model with empirical data, we again examine the model more closely.
-The $\lambda_2$ parameter, which is only used to model the truth judgments task, is credibly below 1: participants' behavior is slightly more random than veridical Bayesian updating according to our model.
-Our $S_2$ model predictions assume that the prevalence that the speaker model is aiming to communicate is, in fact, the prevalence told to the participant in the experimental prompt.
-However, if participants' beliefs about properties are inconsistent with the prevalence statement they are given (e.g., 90\% of lorches have broken legs), they may believe the current prevalence is aberrational, and assign a truth judgment to the generic based on theory-derived considerations (e.g., that in the future, fewer than 90\% of lorches will have broken legs).
-If this is so, we would predict that the $\lambda_2$ parameter would be lowest for properties that are unlikely to be present at all prevalence levels given in the experiment.
-We predict this would be the case for the accidental properties (which are unlikely to be present in high prevalence) and the body part properties (which are unlikely to be present in low prevalence; e.g. 10\% of lorches have wings).
-To investigate this, we implemented a model where the $\lambda_2$ parameter was allowed to vary by item-type.
-The posterior distributions over $\lambda_2$ are shown in Appendix Figure \ref{fig:asymmetry-params-byItem} \ndg{this fig isn't that useful}.
-Indeed, we found that the $\lambda_2$ parameter is lowest for the rare accidental properties (HPD = [0.03, 0.24]), followed by the common accidental properties (HPD = [0.27, 0.60]) and then the body part properties (HPD = [0.33, 0.76]).
-For the colored and vaguely described body parts, the speaker optimality parameters were considerably higher (color HPD = [0.50, 0.99]; vague HPD = [0.72, 1.32]).
-This suggests that there is more to communicating generalizations than conveying the current frequency. % evidence is interpreted through the lens of theoretical considerations, and that has important implications for generic truth conditions.
-But what is prevalence if not the current frequency?
+The $\lambda_2$ parameter, which is only used in the speaker $S_2$ model of the truth judgment data, is a soft-max parameter linking the $S_2$ model's probability of generic endorsement to the human behavioral data. Values below 1 imply that participants' behavior is slightly more random than one would expect from veridical Bayesian updating according to our model. Indeed, the value of the $\lambda_2$ parameter is credibly less than 1 (see above).
+This suggests that either the artificiality of the task leads participants to produce a substantial amount of random behavior or there is something in our model that isn't specified correctly.
+
+Recall that in order to generate $S_2$ model predictions above, we assumed that the prevalence level told to the participant in the experimental prompt was, in fact, the prevalence level that the speaker model $S_2$ seeks to communicate.
+That is, we have assumed here the semantic scale over which generic gets evaluated and interpreted is the \emph{objective}, current frequency in the world.
+If, however, what matters for generic language is a speaker's \emph{subjective} belief about the world (e.g., a prediction about the prevalence in the future), then we would expect the model's predictions (here, the truth judgments) using the objective information to deviate from the human data, when subjective and objective frequencies disagree the most.
+This deviation would be particularly pronounced for the objective information that is most inconsistent with participants' intuitive theories of properties.
+
+If the $\lambda_2$ parameter were inferred for each type of property independently, 
+we would expect it to be lowest for types of properties for which participants beliefs would be most inconsistent with all prevalence levels given to the participants (i.e., some prevalence levels are very implausible).
+% with the strongest \emph{a priori} beliefs about prevalence that are skewed to either low or high prevalence levels. 
+%These properties are that are unlikely to be present at \emph{all} prevalence levels given in the experiment. This is because, on average, the objective frequency would deviate the most from 
+This would be the case for the accidental properties (which are unlikely to be present in high prevalence; e.g. 90\% of glippets have broken legs) and the body part properties (which are unlikely to be present in low prevalence; e.g. 10\% of lorches have wings).
+To investigate this, we implemented a model where the $\lambda_2$ parameter was allowed to vary by property-type.
+%The posterior distributions over $\lambda_2$ are shown in Appendix Figure \ref{fig:asymmetry-params-byItem} \ndg{this fig isn't that useful}.
+Indeed, we found that the $\lambda_2$ parameter is lowest for the rare accidental properties (95\% HPD = [0.03, 0.24]), followed by the common accidental properties (HPD = [0.27, 0.60]) and then the body part properties (HPD = [0.33, 0.76]).
+For the colored and vaguely described body parts --- for which all levels of prevalence are plausible ---  the speaker optimality parameters were considerably higher (color HPD = [0.50, 0.99]; vague HPD = [0.72, 1.32]).
+This is consistent with the hypothesis that the underlying scale that the truth conditions of generic statements are evaluated against is not objective frequency but subjective probability (i.e., the probability that a future instance of the kind would have the feature).
+We directly test this hypothesis in the next experiment.
+%This suggests that there is more to communicating generalizations than conveying the current frequency. % evidence is interpreted through the lens of theoretical considerations, and that has important implications for generic truth conditions.
+%But what is prevalence if not the current frequency?
 %In our final experiment, we develop a paradigm for testing this idea.
 
 
+
+
+%participants' beliefs about properties are inconsistent with the prevalence statement they are given (e.g., 90\% of lorches have broken legs), they may believe the current prevalence is aberrational, and assign a truth judgment to the generic based on theory-derived considerations (e.g., that in the future, fewer than 90\% of lorches will have broken legs).
 %
 %\begin{figure}
 %\centering
@@ -1135,9 +1152,9 @@ Does generic language communicate prevalence in terms of past frequency or futur
 
 To answer this, we adopt an experimental paradigm used by \citeA{Gelman2007} to show that generic language is sensitive to theory-based considerations.
 In the original paradigm, participants are told a story about a novel creature (e.g. \emph{dobles}) and a property of that kind (e.g., \emph{having claws}).
-Participants are then either told that the creature is born with the property or that it acquires the property through extrinsic means (e.g., by finding claws and putting them on). 
+Participants are then either told that the creature was born with the property or that it acquired the property through extrinsic means (e.g., by finding claws and putting them on). 
 Then, participants are told about an event that either causes the property to disappear (e.g., they drank a chemical and their claws fell off) or that leaves the property intact, and are asked whether or not the generic (e.g. \emph{Dobles have claws}) applies.
-Adult judgments in this paradigm were sensitive to the origins of the property (i.e. born vs. acquired), and insensitive to the outcome of the event: Participants fully-endorsed the generic when it was inborn, and rejected it when it was acquired.
+The original finding was that adult judgments were sensitive to the origins of the property (i.e. born vs. acquired), and insensitive to the outcome of the event: Participants fully-endorsed the generic when it was inborn, and rejected it when it was acquired.
 
 In Experiment 3a, we use the same basic paradigm to measure \emph{predictive prevalence}: participants' expectations about future instances of the kind.
 We explore the predictions of our truth judgments model, assuming that \emph{predictive prevalence} is what is being communicated.
