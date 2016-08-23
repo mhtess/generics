@@ -274,14 +274,20 @@ Conceptual accounts of generics emphasize the structure of generic knowledge \ci
 From this perspective, \emph{Bishops move diagonally} because those are the rules of the game, not because they \emph{tend to} move diagonally.
 How do we come to know the rules of the game, though?
 \citeA{Leslie2007}'s influential theory posits that generics are tied to a ``default mode of generalization''. 
+
 This ``default mode'' comes equipped with the ability to single-out \emph{striking properties} (e.g. properties which are dangerous or appalling) as particularly useful aspects of the world to know about. 
 Hence, \emph{Mosquitos carry malaria} is true because carrying malaria is striking, and thus, a useful bit of information to convey.
+The default mode can also distinguish ``negative'' counter-instances of a property   (e.g. a bird that doesn't lay eggs) from ``positive'' counter-instances (e.g. a hypothetical bird that bears live young).
+Generics are much less reasonable when positive counter-instances exist. Hence, \emph{Birds are female} seems weird because ``being male'' is a positive counter-instance of ``being female'', but since there are no bird that bear live young,  \emph{Birds lay eggs} is fine.
+%For properties that have no principled relationship to the kind (e.g., in \emph{Barns are red}), conceptual accounts fall back to statistical information: \emph{Ks, in general, have F}.
 
-Parallel work in psychology supports this perspective.
+%\mht{anything more from Leslie?}
+
+Parallel work in the psychology of concepts supports this perspective.
 \citeA{Prasada2006} and later \citeA{Prasada2013} distinguish between \emph{principled}, \emph{statistical}, and \emph{causal} relations within concepts. 
 Generics like \emph{Birds lay eggs} (in which only a minority of K have F) exhibit characteristics of principled connections (operationalized by endorsement of the phrase \emph{In general, Ks have F}), supporting \citeA{Leslie2007}'s typology.
-Striking generics (e.g. \emph{Mosquitos carry malaria}) do not have the characteristics of principled connections, but do show characteristics of a third kind of connection: a \emph{causal connection} (operationalized using the phrase \emph{There is something about Ks that cause them to F}). 
-The fact that generics about different properties license different kinds of inferences is taken as evidence that the generics themselves represent different kinds of relations. 
+Striking generics (e.g. \emph{Mosquitos carry malaria}) show characteristics of \emph{causal connections} (operationalized using the phrase \emph{There is something about Ks that cause them to F}). 
+The fact that generics about different properties license different kinds of inferences is taken as evidence that the generics themselves represent different kinds of relations. Statistical information takes a backseat to the conceptual structure.
 
 
 %These distinct relation types manifest themselves empirically as different inferences one could draw concerning the kind and property. 
@@ -291,10 +297,6 @@ The fact that generics about different properties license different kinds of inf
 
 
 %Such an argument needs to be further augmented to capture intuitions: non-malaria carrying mosquitos must \emph{have the potential} to carry malaria, while other insects or animals must not. Otherwise, \emph{Insects carry malaria} or \emph{Animals carry malaria} would also be true \cite{Leslie2007}.
-%``Negative'' counter-instances must be distinguished from ``positive'' counter-instances: ``not having F'' (e.g. a bird that doesn't lay eggs) is not the same as ``having not-F'' (e.g. a hypothetical bird that bears live young).
-%When positive counter-instances exist, the generic is much less reasonable (e.g. \emph{Birds are female} seems weird because ``being male'' is a positive counter-instance of ``being female''). 
-%When only negative counters-instances exist, the generic is fine (e.g. \emph{Birds lay eggs.} since there no such bird that bears live young).
-%For properties that have no principled relationship to the kind (e.g., in \emph{Barns are red}), conceptual accounts fall back to statistical information: \emph{Ks, in general, have F}.
 
 
 %This is taken to support \citeA{Leslie2007}'s typology of different types of default generalizations.
@@ -305,7 +307,7 @@ The fact that generics about different properties license different kinds of inf
 %If this is the case, then a relatively simple semantic theory, phrased in terms of statistical regularities in the world, could be enough to formalize generic language.
 %Abstract, mental representations may still operate; yet we suggest generic language operates through the common currency of probability. 
 
-\ndg{ clean up this section to read less listy and more like a description of the essential ideas from this viewpoint, and highlights of empirical support (if that's relevant).}
+\ndg{ clean up this section to read less listy and more like a description of the essential ideas from this viewpoint, and highlights of empirical support (if that's relevant).} \mht{How does this seem?}
 
 
 \subsection*{The pragmatic perspective}
@@ -318,12 +320,12 @@ Can the puzzles of generic language be understood as effects of pragmatic reason
 If so, we may be able to get away with a relatively simple, statistical,  semantic theory.
 Abstract mental representations, then, may be the conceptual backdrop against which generic language is interpreted. 
 
-We pursue such a line of inquiry, assuming the simplest truth-conditional meaning: a threshold on prevalence $P(F\mid K)>\theta$ (cf.\citeA{Cohen1999}).
+We pursue such a line of inquiry, assuming the simplest truth-conditional meaning: a threshold on prevalence $P(F\mid K)>\theta$ \cite<cf.>{Cohen1999}).
 %\footnote{Because we aim to explain the psycholinguistics of generics, we are generally interested in the subjective probability, not the actual frequency in the world.}
 No fixed value of the threshold, $\theta$, would allow for the extreme flexibility generics exhibit (e.g. \emph{Mosquitos carry malaria}; \emph{Robins lay eggs} v. \emph{Robins are female}), % simultaneously with the interpretations of some novel generics being strong. 
 so instead we allow this threshold to be established in context through pragmatic reasoning. % and is not a fixed property of the language.
 Such an inference would depend on background knowledge about properties and categories---potentially structured, conceptual knowledge.
-This inference, nonetheless, is a general mechanism of language not specific to interpreting generic statements.
+This inference, nonetheless, is a general mechanism of understanding language, not specific to interpreting generic statements.
 We formalize this hypothesis in the Rational Speech Act (RSA) theory---a formal, probabilistic theory of language understanding.
 RSA is derived from social reasoning, formalized as recursive Bayesian inference between speaker and listener \cite{Frank2012,Goodman2013,Goodman2016}.
 % \ndg{last ref is the new tics review...}
@@ -344,8 +346,8 @@ L_{1}(x , \theta \mid u) &\propto& S_{1}(u \mid x, \theta) \cdot P(x) \cdot P(\t
 %Because the speaker's choice of utterance can depend on the prevalence threshold, $\theta$, used to establish the meaning of the generic, the 
 %%The semantic variable $\theta$ (i.e. the threshold) underspecified in the lexicon. 
 %That is, 
-In addition to not knowing what $x$ is \emph{a priori}, the listener does not know the value of the prevalence threshold, $\theta$, used to establish the meaning of the generic (as described below). Because the speaker's choice of utterance can depend on the  threshold the listener must reason about this as well, based on her prior distribution over possible thresholds $P(\theta)$.
-In principle, thresholds could be learned over time for different contexts, but here we assume the listener has no informative knowledge about the threshold: $\theta \sim \text{Uniform([0,1])}$.
+In addition to not knowing $x$ \emph{a priori}, the listener does not know the value of the prevalence threshold, $\theta$, used to establish the meaning of the generic (as described below). Because the speaker's choice of utterance can depend on the threshold, the listener must reason about the threshold as well, based on her prior distribution over possible thresholds $P(\theta)$.
+In principle, thresholds could be learned over time for different contexts, but here we assume the listener has no informative knowledge about the semantic variable: $\theta \sim \text{Uniform([0, 1])}$.
 
 To resolve an appropriate meaning, the listener uses her background knowledge about the property $P(x)$ and her intuitive theory of a speaker $S_1$ as a rational actor who has the goal of providing information to a hypothetical literal listener ($L_0$):
 \begin{eqnarray}
@@ -378,7 +380,7 @@ $S_1$ decides what is informative with respect to an idealized literal listener 
 The literal listener has access to the threshold $\theta$ as well, and simply restricts her prior beliefs to situations where the truth-functional denotation of the utterance, $\denote{u}$, is true (for the silent utterance: all worlds; for the generic utterance: the worlds with prevalence greater than $\theta$).
 %
 \begin{eqnarray}
-L_{0}(x \mid u, \theta) &\propto& {\delta_{\denote{u}(x, \theta)} P(x)} \label{eq:L0}
+L_{0}(x \mid u, \theta) &\propto& {\delta_{\denote{u}(x, \theta)} \cdot P(x)} \label{eq:L0}
 \end{eqnarray}
 %
 
@@ -388,7 +390,7 @@ We can now imagine a speaker who reasons about this kind of listener:
 %$S_2$ knows some prevalence $x$ and is trying to decide whether or not to produce a generic to describe it to $L_1$.
 
 \begin{equation} 
-S_{2}(u \mid x) \propto  \exp{(\lambda_2 \cdot \ln \int_{\theta} P_{L_{1}}(x , \theta \mid u) \diff \theta ) }% =  P_{L_{1}}(x \mid u)
+S_{2}(u \mid x) \propto  \exp{(\lambda_2 \cdot \ln \int_{\theta} L_{1}(x , \theta \mid u) \diff \theta ) }% =  P_{L_{1}}(x \mid u)
 \label{eq:S2}
 \end{equation}
 
@@ -402,23 +404,23 @@ We implemented this model in the probabilisitic programming language WebPPL \cit
 
 
 This model makes the prediction that the interpretation of a generic statement (and hence, it's corresponding truth judgment) depends on the prior on prevalence $P(x)$.
-We next explore the model by running simulations of $L_1$ and $S_2$ under various schematic priors.
+We can explore the model by running simulations of $L_1$ and $S_2$ under various schematic priors.
 $P(x)$ is a distribution on the prevalence of a given property (e.g. \textsc{lays eggs}) across animal categories. 
 %Thus, a sample from this prior distribution would be an animal category (e.g., \textsc{ducks}), and the corresponding property prevalence for that category (e.g., 50\%).
 In Figure \ref{fig:schematic-unif}, are $L_1$ (Eq.~\ref{eq:L1}) posterior prevalence distributions on $x$ (red solid line) for several example prior prevalence distributions $P(x)$ (blue dashed line), as well as the $S_2$ generic endorsement probability for different levels of prevalence.
 We name these example prior distributions to suggest properties that might be associated with such priors. 
 (Later, we will empirically measure these priors for properties of interest.)
-First, we explore generic interpretation and endorsement for priors of three different shapes (top row). 
-For each of these, the $L_1$ posterior distribution over prevalence is heavily driven by the prior.
-$S_2$ endorsement probabilities for the generic increase as a function of prevalence, and what counts as ``true'' (in terms of the prevalence) depends on the prior. 
+First, we explore generic interpretation and endorsement for priors of three different shapes (left column). 
+For each of these, the $L_1$ posterior distribution (red solid) over prevalence is heavily driven by the prior (blue dashed).
+$S_2$ endorsement probabilities for the generic (black solid) increase as a function of prevalence, and what counts as ``true'' (in terms of the prevalence) depends on the prior. 
 
 \begin{figure}
 \centering
     \includegraphics[width=\columnwidth]{schematics_s2.pdf}
     \caption{Schematic prior distributions for prevalence $x$ (blue dashed), the pragmatic listener $L_1$ model's posterior distribution over prevalence upon hearing a generic utterance (red), and speaker $S_2$ model's endorsement of a generic utterance for different levels of prevalence (black).
     The names given to these priors are meant to be suggestive of what kinds of properties these distributions might correspond to.
-    The top row uses prevalence priors modeled as Beta(5,5), Beta(4,1), and Beta(4,16) distributions.
-      The bottom row uses a prior distribution that is a mixture of the distribution above it with a second component, modeled as Beta(0.5, 4.5), reflecting categories with 0\% property prevalence.
+    The left column uses prevalence priors modeled as Beta(5,5), Beta(4,1), and Beta(4,16) distributions.
+      The right column uses a prior distribution that is a mixture of the distribution above it with a second component, modeled as Beta(0.5, 4.5), reflecting categories with 0\% property prevalence.
     Horizontal dashed line at 0.5 is for convenience of comparing the point at which an utterance becomes judged as more true than false for $S_2$.
 	Note that the prior distribution over prevalence will be the same as $L_1$'s posterior distribution upon hearing the ``null'' utterance.
     }
@@ -426,29 +428,27 @@ $S_2$ endorsement probabilities for the generic increase as a function of preval
 \end{figure}
 
 
-To take one example, consider the distribution over what might be ``are female'' (top-left facet).
-\ndg{could we make the prior distribution here peakier (lower variance)? i think that matches intuitions better...}
+To take one example, consider the distribution over what might be the property ``are female'' (top-left facet).
 The \emph{a priori} prevalence is centered around 0.5.
 Because of pragmatics, the pressure to be \emph{truthful} will drive likely threshold values below 0.5 (lower values are more likely to be true). 
 %At the same time, the maximum posterior density of the threshold is substantially greater than the lower bound. 
 At the same time, the pressure to be \emph{informative} will drive the threshold values up: Higher values are more likely to be informative. 
-The result is a posterior over prevalence that is somewhat greater than the prior, making higher prevalence values more likely after hearing the generic. 
-But the relative information gain is very little (the posterior is not very different from the prior), and thus the $S_2$ model is reluctant to endorse the generic unless the property is especially prevalent. 
-The same basic phenomenon can be observed for the other two example priors (top row): The posterior over prevalence heavily depends upon the prior, but is also not very different from the prior. %the quantitative details of this inference are heavily dependent on the shape of the prior distribution (i.e. the posteriors look dramatically different).
+The result is a posterior over prevalence that is only marginally greater than the prior, making higher prevalence values more likely after hearing the generic. 
+But the relative information gain is very little (the posterior is not very different from the prior), and thus the $S_2$ model is reluctant to endorse the generic unless the property is exceedingly prevalent. 
+The same basic phenomenon can be observed for the other two example priors (left column): The posterior over prevalence heavily depends upon the prior, but is also not very different from the prior. %the quantitative details of this inference are heavily dependent on the shape of the prior distribution (i.e. the posteriors look dramatically different).
 
 %Here, however, the generic interpretation ($L_1$) posterior is only slightly different from the prior. 
 %This suggests there is not much information content conveyed in communicating generic statements with these kinds of priors, because the property is relatively homogeneous across all categories. 
 %
 
-
 %While each $P(x)$ is a single distribution on prevalence, it may be structured as the result of deeper conceptual knowledge. 
 %For instance, if participants believe that some kinds have a causal mechanism that \emph{could} give rise to the property, while others do not, then we would expect $P(x)$ to be structured as a mixture distribution (cf. \citeA{Griffiths2005}).
 We now imagine what would happen if there were some kinds where the property was completely absent, while being present at some rate in other kinds.
-Figure \ref{fig:schematic-unif} (bottom row) shows this possibility: mixing the distribution above it with a second component at 0\% prevalence.
+Figure \ref{fig:schematic-unif} (right column) shows this possibility: mixing the distribution above it with a second component at 0\% prevalence.
 Consider the schematic prior over ``lay eggs''.
-We see the pragmatic listener $L_1$'s posterior prevalence distribution is not very different from the interpretation that doesn't include the second component in the prior (here, ``are female''), but it is dramatically different from the prior (compare red with blue dashed line for the bottom row).
+We see the pragmatic listener $L_1$'s posterior prevalence distribution is not very different from the interpretation that doesn't include the second component in the prior (here, ``are female''), but it is dramatically different from the prior (compare red with blue dashed line for the right column).
 This suggests that when many categories have 0\% prevalence, lower thresholds are informative. 
-Indeed, the $S_2$ model predicts that the generic becomes felicitous at lower prevalence levels (compare black line of top v. bottom row).
+Indeed, the $S_2$ model predicts that the generic becomes felicitous at lower prevalence levels (compare black line of left v. right column).
 For ``lay eggs'', when the property is prevalent in 50\% of the kind (e.g., 50\% of birds lay eggs), endorsement of the generic (e.g., \emph{Birds lay eggs}) by the $S_2$ is roughly 0.85; for ``are female'', with the same prevalence (50\% of birds are female), endorsement for \emph{Birds are female} is only 0.50: It is judged to be neither true nor false. 
 The important result is the asymmetry: the first generic can be endorsed more strongly than the second, at the same prevalence level; the exact endorsement rates depend on quantitative aspects of the priors, which must be determined empirically.
 %Interestingly, the posterior distribution over prevalence $x$ (red line) is not strongly affected by this component.
