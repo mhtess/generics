@@ -269,7 +269,7 @@ Conceptual information seems to be behind the pragmatic inference, but how Cohen
 %Since that time, there have been many other accounts of generics. 
 %We follow \citeA{Carlson1995essay}, and organize the extant theoretical literature by theories that appeal to either the statistics of the world (e.g. \emph{Barns are red} because most barns are) or 
 \subsubsection*{Conceptual accounts of generics}
-\mht{You said: "clean up this section to read less listy and more like a description of the essential ideas from this viewpoint, and highlights of empirical support (if that's relevant)."... How does this seem?}
+%\mht{You said: "clean up this section to read less listy and more like a description of the essential ideas from this viewpoint, and highlights of empirical support (if that's relevant)."... How does this seem?}
 
 Conceptual accounts of generics emphasize the structure of generic knowledge \cite{Prasada2000}, and view generic utterances as the way of expressing special mental relationships between kinds and properties \cite{Leslie2008, Prasada2012}.
 From this perspective, \emph{Bishops move diagonally} because those are the rules of the game, not because they \emph{tend to} move diagonally.
@@ -1002,13 +1002,12 @@ We now have strong support for both of the major predictive components of our mo
 
 \section*{Experiment 2c: The asymmetry between truth conditions and interpretations} 
 
-\mht{you wrote: "this paragraph needs editing for flow.".... now?}
-
 There is a surprising d\'{e}colage between the truth conditions and interpretations of generic language: Interpretations are often strong while truth conditions are flexible. 
-Generic statements (e.g. \emph{Glippets have yellow fur.}) thus show an asymmetry between their \emph{truth conditions} and the prevalence implied by the statement; this is in contrast to the behavior of quantified statements involving ``all'' or ``most'' \cite{Cimpian2010}. 
-Upon reading a generic, participants infer (\emph{implied prevalence}) that the property is widespread (e.g. almost all glippets have yellow fur).
-By contrast, participants endorse generics (\emph{truth conditions}) for a wider range of prevalence levels (e.g. even when ``30\% of glippets have yellow fur.''), thus showing an asymmetry between truth conditions and implied prevalence. 
-However, this mismatch is significantly reduced for generics of accidental properties  (e.g. \emph{Glippets have wet fur.}).
+%Generic statements (e.g. \emph{Glippets have yellow fur.}) show an asymmetry between the prevalence required for them to be judged true and the prevalence inferred from an assertion of the statement; 
+\citeA{Cimpian2010} found that upon reading a generic (e.g. \emph{Glippets have yellow fur.}), participants infer (in an \emph{implied prevalence} task) that the property is widespread (e.g. almost all glippets have yellow fur).
+By contrast, participants endorse generics (in a \emph{truth conditions} task) for a wide range of prevalence levels (e.g. even when ``30\% of glippets have yellow fur.''), thus showing an asymmetry between truth conditions and implied prevalence. 
+However, this mismatch is not found for the behavior of quantified statements involving ``all'' or ``most,'' and 
+is significantly reduced for generics of accidental properties  (e.g. \emph{Glippets have wet fur.}). % \cite{Cimpian2010}. 
 
 
 %Because generics get judged ``true'' at almost all prevalence levels, the average prevalence to yield a ``true'' response is substantially less than the average prevalence inferred upon hearing a generic (which is near ceiling). 
@@ -1065,8 +1064,9 @@ Thus, our model predicts that the asymmetry between truth conditions and implied
 \subsection*{Extended model analysis}
 
 \mht{you wrote: "i don't think the overall logic of this paragraph, connecting $\lambda_2$ to theoretical mismatch, will be clear to readers. explain better?" ... now?}
+\ndg{not really... i think we should remove this subsection and just segue directly to the subjective probability....}
 Having corroborated the model with empirical data, we again examine the model more closely.
-The $\lambda_2$ parameter, which is only used in the speaker $S_2$ model of the truth judgment data, is a soft-max parameter linking the $S_2$ model's probability of generic endorsement to the human behavioral data. Values below 1 imply that participants' behavior is slightly more random than one would expect from veridical Bayesian updating according to our model. Indeed, the value of the $\lambda_2$ parameter is credibly less than 1 (see above).
+The $\lambda_2$ parameter, which is only used in the speaker $S_2$ model of the truth judgment data, is a soft-max parameter linking the $S_2$ model's probability of generic endorsement to the human behavioral data. Values below 1 imply that participants' behavior is slightly more random than one would expect from veridical Bayesian updating according to our model. Indeed, the value of the $\lambda_2$ parameter was found to be credibly less than 1 (see above).
 This suggests that either the artificiality of the task leads participants to produce a substantial amount of random behavior or there is something in our model that isn't specified correctly.
 
 Recall that in order to generate $S_2$ model predictions above, we assumed that the prevalence level told to the participant in the experimental prompt was, in fact, the prevalence level that the speaker model $S_2$ seeks to communicate.
@@ -1331,12 +1331,12 @@ In these experiments, the prevalence considered is only the prevalence of the pr
 Indeed, this simple statistic also fails to explain our data (Figure \ref{fig:commongenerics}b, right).
 Our formal model, by contrast, considers not only within-kind prevalence, but a listener's prior beliefs about prevalence across kinds in order to arrive at a meaning for a generic utterance.
 
-\mht{check this}
 It has also been argued that \emph{cue validity} --- the probability of the kind given the feature: $P(K \mid F)$  --- is an important factor in generic meaning \cite<e.g., >{Khemlani2012}.
 For example, the \emph{cue validity} of malaria for mosquitos (i.e., the probability that an animal is a mosquito given that it carries malaria) is very high. 
-Cue validity may be correlated with our model predictions, but it is distinct.
-This correlation comes at least in part from the mixture parameter $\phi$ (the potential of the property to be present in a kind) used in the prior distribution on prevalence. 
-The correlation isn't perfect, however: for the property \emph{eats people}, the mixture parameter $\phi$ is very low because most animals don't eat people; yet learning that some animal \emph{ate a person} is not a particularly good cue for any one kind of animal.
+Cue validity is often correlated with our model predictions, supporting its explanatory value in previous studies, but it is distinct.
+In our model the mixture parameter $\phi$ (the potential of the property to be present in a kind) used in the prior distribution on prevalence has a large influence on generic endorsement. The cue validity $P(K \mid F)$ will often be high when only a single category is be capable of having the property, hence $\phi$ will be low and the generic will tend to be good. But this is only one special case: the generic can be good when $phi$ is not small, and $phi$ can be small for without cue validity being high. For instance, for the property \emph{eats people}, the mixture parameter $\phi$ is very low because most animals don't eat people; yet learning that some animal \emph{ate a person} is not a particularly good cue for any one kind of animal.
+\ndg{i revised this paragraph, but i'm not sure that it's right.... the connection between phi and cue validity doesn't really go either way. instead, i think cue validity is high when the category is in the right tail of the prevalence distribution or something? we should either work through the relation more carefully, or say something vaguer that doesn't hinge on phi....}
+
 %\ndg{argument gets a bit fuzzy here... want to say that cue validity may be correlated with our model but is distinct. correlation comes at least partly from $\phi$?}
 %In our formal model,
 %However, cue validity is defined with respect to a particular kind and property, whereas our mixture parameter is a function of the property alone. 
@@ -1353,7 +1353,6 @@ The correlation isn't perfect, however: for the property \emph{eats people}, the
 
 
 \subsection*{The comparison class}
-\mht{refactored}
 In this paper, we proposed a model for understanding generic language that relies upon interlocutors' belief distribution over the statistics of the property to accurately arrive at generic interpretation identical to that of human participants. 
 The prior belief distribution for a property (e.g., lays eggs), is a distribution over kinds (and their associated prevalence of the property).
 These other kinds form a \emph{comparison class} against which the target kind is evaluated. 
@@ -1369,11 +1368,12 @@ The incorporation of a comparison class into the study of generic language might
 Recent work in philosophy and linguistics, for instance, suggest generic language is context-sensitive \cite{Nickel2008, Sterken2015}.
 \citeA{Nickel2008} argues that \emph{Dobermans have floppy ears} may be true in the context of a discussion of evolutionary biology but that \emph{Dobermans have pointy ears} is true in a discussion of dog breeding.
 Our theory provides a hint from where to begin to understand this context sensitivity: the comparison class.
-Different conversational contexts could bring to mind different comparison classes, in a way analogous to the context-sensitivity of  gradable adjectives (e.g., \emph{tall}) 
+Different conversational contexts could bring to mind different comparison classes, in a way analogous to the context-sensitivity of  gradable adjectives (e.g., \emph{tall}). 
 %Our theory, thus, makes the prediction that generics should be subject to context-effects in the a way analogous to how gradable adjectives (e.g., \emph{tall}) are subject to context-effects.
 Hearing that ``Abigail is tall'' means different things is Abigail is 20 years old or if she is 4. 
+Future work will be needed to explore whether a pragmatic inference approach is also relevant to establishing the comparison class, and what background knowledge about properties, categories, and context is relevant.
 
-The comparison class also points to an additional mechanism by which the slipperiness of generics may manifest; if a speaker and listener fail to coordinate on the same comparison class, our theory predicts disagreements into the veracity and interpretation of generic claims.
+%The comparison class also points to an additional mechanism by which the slipperiness of generics may manifest; if a speaker and listener fail to coordinate on the same comparison class, our theory predicts disagreements into the veracity and interpretation of generic claims.
 
 
 %This sort of context matters for our model as well. 
