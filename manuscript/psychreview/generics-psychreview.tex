@@ -1333,13 +1333,16 @@ Our formal model, by contrast, considers not only within-kind prevalence, but a 
 
 It has also been argued that \emph{cue validity} --- the probability of the kind given the feature: $P(K \mid F)$  --- is an important factor in generic meaning \cite<e.g., >{Khemlani2012}.
 For example, the \emph{cue validity} of malaria for mosquitos (i.e., the probability that an animal is a mosquito given that it carries malaria) is very high. 
-\ndg{argument gets a bit fuzzy here... want to say that cue validity may be correlated with our model but is distinct. correlation comes at least partly from $\phi$?}
-In our formal model, the mixture parameter $\phi$ (the potential of the property to be present in a kind) used in the prior distribution on prevalence is conceptually similar. 
-However, cue validity is defined with respect to a particular kind and property, whereas our mixture parameter is a function of the property alone. 
-That is, our theory makes the claim that speakers need not believe that the cue validity for a kind and property is high, only that the potential for the property to be present is low.
-For instance, for the property \emph{eats people}, the mixture parameter $\phi$ is very low because most animals don't eat people; yet learning that some animal \emph{ate a person} is not a particularly good cue for any one kind of animal.
+Cue validity may be correlated with our model predictions, but it is distinct.
+This correlation comes at least in part from the mixture parameter $\phi$ (the potential of the property to be present in a kind) used in the prior distribution on prevalence. 
+The correlation isn't perfect, however: for the property \emph{eats people}, the mixture parameter $\phi$ is very low because most animals don't eat people; yet learning that some animal \emph{ate a person} is not a particularly good cue for any one kind of animal.
+%\ndg{argument gets a bit fuzzy here... want to say that cue validity may be correlated with our model but is distinct. correlation comes at least partly from $\phi$?}
+%In our formal model,
+%However, cue validity is defined with respect to a particular kind and property, whereas our mixture parameter is a function of the property alone. 
+%That is, our theory makes the claim that speakers need not believe that the cue validity for a kind and property is high, only that the potential for the property to be present is low.
+%For instance, 
 
-We note that unlike a data-analytic model (e.g., a regression model) that uses predictors of prevalence and cue-validity to \emph{describe} data \ndg{cite?}, our model is a unified cognitive model --- a formal instantiation of an explicit psychological hypothesis --- that \emph{predicts} both generic endorsements and interpretations from a simple set of assumptions (a prior belief distribution and general pragmatic computation). \ndg{this paragraph seems a little heavy-handed. cut it?}
+%We note that unlike a data-analytic model (e.g., a regression model) that uses predictors of prevalence and cue-validity to \emph{describe} data \ndg{cite?}, our model is a unified cognitive model --- a formal instantiation of an explicit psychological hypothesis --- that \emph{predicts} both generic endorsements and interpretations from a simple set of assumptions (a prior belief distribution and general pragmatic computation). \ndg{this paragraph seems a little heavy-handed. cut it?}
 
 %In some cases, the two can be similar.
 %For instance, \emph{having a mane} is a good cue for being a \emph{lion} and similarly \emph{has manes} has a low $\phi$ parameter (since it is not present in many kinds). 
@@ -1348,36 +1351,58 @@ We note that unlike a data-analytic model (e.g., a regression model) that uses p
 %It should be noted that our mixture parameter $\phi$ (the potential of the property to be present in a kind) is a different statistic from cue validity.
 
 
-
 \subsection*{The comparison class}
 
 In this paper, we proposed a model for understanding generic language that relies upon interlocutors' belief distribution over the statistics of the property to accurately arrive at generic interpretation identical to that of human participants. 
 The prior belief distribution for a property (e.g., lays eggs), is a distribution over kinds (and their associated prevalence of the property).
-These other kinds form a \emph{comparison class} against which the target kind is evaluated. \ndg{need to expand a bit on this? maybe say that the prior $P(\theta)$ really needs to be considered as relative to a category of categories (the comparison class) $P_K(\theta)$?}
+These other kinds form a \emph{comparison class} against which the target kind is evaluated. 
+$P(x)$ is always relative to a category of categories, a comparison class $K$: $P_K(x)$.
 
-\ndg{say that throughout our experiments we used animal target kinds, which lead naturally to comparison class of other animals. future work to extend to other kinds; sometimes the comparison class is less clear....}
+Throughout our experiments in this work, we have focused on sentences about animals. 
+In addition to being the main focus of past theoretical and empirical work, focusing on animals is methodologically convenient as the comparison class for generics about animals is quite naturally \emph{animals}.
+When we look beyond generics about animals, deciding what goes into a comparison class becomes less clear.
+There are some hints that the comparison class can be derived with respect to the property \cite{Keil1979}, but may involve pragmatic reasoning as well. 
+For example, the statement ``iPhones are useful'' could be in comparison to other forms of technology (like a desktop computer), while ``iPhones are heavy'' could really only be informative relative to other handheld devices.
 
-This framework opens up a number of interesting directions. 
-This is the first work to show how the understanding of generic language can depend on context.
-It makes the prediction that generics should be subject to context-effects in the a way analogous to how gradable adjectives (e.g., \emph{tall}) are subject to context-effects.
+The incorporation of a comparison class into the study of generic language might help elucidate other puzzles concerning generics.
+Recent work in philosophy and linguistics, for instance, suggest generic language is context-sensitive \cite{Nickel2008, Sterken2015}.
+\citeA{Nickel2008} argues that \emph{Dobermans have floppy ears} may be true in the context of a discussion of evolutionary biology but that \emph{Dobermans have pointy ears} is true in a discussion of dog breeding.
+Our theory provides a hint from where to begin to understand this context sensitivity: the comparison class.
+Different conversational contexts could bring to mind different comparison classes, in a way analogous to the context-sensitivity of  gradable adjectives (e.g., \emph{tall}) 
+%Our theory, thus, makes the prediction that generics should be subject to context-effects in the a way analogous to how gradable adjectives (e.g., \emph{tall}) are subject to context-effects.
 Hearing that ``Abigail is tall'' means different things is Abigail is 20 years old or if she is 4. 
 
-\ndg{maybe put past and recent work on comparison classes first in this section and then point out that this matters in our model as well? also don't make it seem like we have a solution to this problem, just a place to start on it in future work.}
-Recent work in philosophy and linguistics suggest that such context-effects are present for generics \cite{Nickel2008, Sterken2015}.
-\citeA{Nickel2008} argues that \emph{Dobermans have floppy ears} may be true in the context of a discussion of evolutionary biology but that \emph{Dobermans have pointy ears} is true in a discussion of dog breeding.
-Our theory provides an explicit mechanism through which this context sensitivity would manifest: the comparison class.
-
-%Like almost all of the extant psychological work on generics, we have focused our efforts on simple sentences about natural kinds, particularly animals.
-%In addition to being the main focus of past theoretical and empirical work, focusing on animals is methodologically convenient as the contrast class for animal properties is quite plausibly \emph{other animals}.
-%Indeed, this assumption was explicit in our first experiment, where we elicited  property prevalence for many different animal kinds. 
-%As we move away from statements about animals, or even natural kinds, determining what goes into the contrast class becomes a lot more complicated. 
-
-There are some hints that the comparison class can be derived with respect to the property \cite{Keil1979}.
-For example, the statement ``iPhones are useful'' could be in comparison to other forms of technology (like a desktop computer), while ``iPhones are heavy'' could really only be informative relative to other handheld devices.
-The incorporation of a comparison class into the generic language understanding points to an additional mechanism by which the slipperiness of generics may manifest; if a speaker and listener fail to coordinate on the same comparison class, our theory predicts disagreements into the veracity and interpretation of generic claims.
+The comparison class also points to an additional mechanism by which the slipperiness of generics may manifest; if a speaker and listener fail to coordinate on the same comparison class, our theory predicts disagreements into the veracity and interpretation of generic claims.
 
 
-\mht{discuss more the relationship to gradable adjectives. that our theory is the first to posit such a thing for generics, that we unify the treatment of adjectives and generics?}
+%This sort of context matters for our model as well. 
+%This framework opens up a number of interesting directions. 
+%This is the first work to show how the understanding of generic language can depend on context.
+%Our model for understanding generic language relies upon interlocutors' belief distribution over the statistics of the property to accurately arrive at generic interpretation identical to that of human participants. 
+%The prior belief distribution for a property (e.g., lays eggs), is a distribution over kinds (and their associated prevalence of the property).
+%These other kinds form a \emph{comparison class} against which the target kind is evaluated. 
+%$P(x)$ is always relative to a category of categories, the comparison class: $P_K(x)$. . This would be our approach to understanding the context effects described by \citeauthor{Nickel2008} and \citeauthor{Sterken2015}.
+
+
+
+
+
+
+%\ndg{need to expand a bit on this? maybe say that the prior $P(\theta)$ really needs to be considered as relative to a category of categories (the comparison class) $P_K(\theta)$?}
+
+%\ndg{maybe put past and recent work on comparison classes first in this section and then point out that this matters in our model as well? also don't make it seem like we have a solution to this problem, just a place to start on it in future work.}
+
+
+
+%As we move away from statements about animals, determining what goes into the contrast class becomes a lot more complicated. 
+
+%\ndg{say that throughout our experiments we used animal target kinds, which lead naturally to comparison class of other animals. future work to extend to other kinds; sometimes the comparison class is less clear....}
+
+
+
+
+
+%\mht{discuss more the relationship to gradable adjectives. that our theory is the first to posit such a thing for generics, that we unify the treatment of adjectives and generics?}
 
 \subsection*{Generic identification}
 
