@@ -586,21 +586,22 @@ However, large deviations from an account based purely on target-category preval
 
 
 %\mht{Add null model of cue validity?}
-\mht{a little below here, you said: "its a bit hard to follow why you're doing the things described in this paragraph. just add a bit of sign-posting?"... i put in overview in this first paragraph, and then went into the details in the second}
-The pragmatic speaker model, $S_2$ in Eq.~\ref{eq:S2}, predicts an endorsement probability for a generic sentence, given prior beliefs about the property and a prevalence-level within the kind-of-interest. 
-For the latter, we use the empirically estimated within--kind prevalence as the $x$ that the speaker $S_2$ is trying to communicate, and use the empirically measured priors from Expt.~1a as the listener's prior $P(x)$. 
-%\ndg{its a bit hard to follow why you're doing the things described in this paragraph. just add a bit of sign-posting? "in order to get model estimates of S2..."}
-In order to get estimates of the $S_2$ model's predictive probability for endorsing generic sentences, we performed a bootstrap procedure on the empirical prior data. For each sample of the bootstrapped prior, we performed a Bayesian data analysis to infer the likely values of the model parameters: the speaker optimality parameters $\lambda_1$ and $\lambda_2$ (in Eqs.~\ref{eq:S1}, \ref{eq:S2}). 
-
-Specifically, we resampled the prior data (with replacement) for 57 participants worth of data, discretizing and binning as we did above. We then inferred the parameter values using Bayesian data analysis \cite{LW2014}. We put an uninformative priors over these parameters, with a range consistent with previous literature using the same model class.
-%
-\begin{eqnarray*}
-\lambda_1 &\sim& \text{Uniform}(0,20) \\
-\lambda_2 &\sim& \text{Uniform}(0,5)
-\end{eqnarray*}
-%
+%\mht{a little below here, you said: "its a bit hard to follow why you're doing the things described in this paragraph. just add a bit of sign-posting?"... i put in overview in this first paragraph, and then went into the details in the second}
+The pragmatic speaker model, $S_2$ in Eq.~\ref{eq:S2}, predicts an endorsement probability for a generic sentence, given prior beliefs about the property, $P(x)$, and a prevalence-level,  $x$, within the kind-of-interest. (That is, $S_2$ provides a model of whether someone who knows $x$ would say the generic to someone who doesn't, but shares prior $P(x)$; as discussed above we adopt this as a model of agreement judgements.)  
+We use the empirically estimated within-kind prevalence as the $x$ that the speaker $S_2$ is trying to communicate, and use the empirically measured priors from Expt.~1a as the listener's prior $P(x)$. 
+The $S_2$ model is then fully specified after setting the speaker optimality parameters $\lambda_1$ and $\lambda_2$ (in Eqs.~\ref{eq:S1}, \ref{eq:S2}).
+%In order to get estimates of the $S_2$ model's predictive probability for endorsing generic sentences, we performed a bootstrap procedure on the empirical prior data. For each sample of the bootstrapped prior, we performed a Bayesian data analysis to infer the likely values of the model parameters. 
+Rather than fitting the parameters, we inferred them and integrated over their plausible values using Bayesian data analysis \cite{LW2014}. We put uninformative priors over these parameters, with a range consistent with previous literature using the same model class: $ \lambda_1 \sim \text{Uniform}(0,20)$, $\lambda_2 \sim \text{Uniform}(0,5)$.
+%%
+%\begin{eqnarray*}
+%\lambda_1 &\sim& \text{Uniform}(0,20) \\
+%\lambda_2 &\sim& \text{Uniform}(0,5)
+%\end{eqnarray*}
+%%
 We learn about the \emph{a posteriori} credible values of our model parameter by collecting samples from MCMC chains of 10,000 iterations removing the first 5,000 iterations, using the Metropolis-Hastings algorithm. 
-This procedure (re-sample prior, discretize and bin, infer parameters) was repeated 500 times for bootstrapping the prior.
+
+The above analysis provides a single estimate for model predictions, but it is based on noisy empirical measurements of $P(x)$. In order to estimate the impact of this empirical noise on our model predictions, we resampled the prior data (with replacement) for 57 participants worth of data, discretizing and binning as we did above and then inferring parameters.
+This procedure (re-sample prior, discretize and bin, infer parameters) was repeated 500 times to bootstrap the model predictions.
 The Maximum A-Posteriori (MAP) estimate and 95\% Highest Probability Density (HPD) interval for $\lambda_1$ is 0.5 [0.004, 12.7] and $\lambda_2$ is 1.7 [1.3, 2.1] (full posterior distributions can be found in Appendix B; Figure \ref{fig:tj1-params}).\footnote{
 The fact that $\lambda_1$ is credibly less than 1 suggests that the generic utterance may be more costly than ``staying silent'' (our model assumes equal cost).
 We maintain using only the two $\lambda$ parameters in the model for simplicity.
