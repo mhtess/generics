@@ -674,7 +674,7 @@ It could reflect accidental causes of the property, in which case, the prevalenc
 While an interesting possibility, its full consideration is beyond the scope of this article.
 }
 The relative contribution of these two components is governed by mixture parameter $\phi$, inferred from the data.\footnote{This is similar in spirit to Hurdle Models of epidemiological data, where the observed count of zeros is often substantially greater than one would expect from standard models, such as the Poisson (e.g. adverse events to vaccines)\cite{hurdleModels}}
-We think of $\phi$ the \emph{potential of a property to be present in a kind} and $\gamma$ is the \emph{mean prevalence of the property among the kinds with the potential to have it}.\footnote{We note that $\phi$ is not what other authors have described as \emph{cue validity} \ndg{cite?}, or $P(K \mid F)$. 
+We think of $\phi$ the \emph{potential of a property to be present in a kind} and $\gamma$ is the \emph{mean prevalence of the property among the kinds with the potential to have it}.\footnote{We note that $\phi$ is not what other authors have described as \emph{cue validity} \cite{Beach1964, Khemlani2012}, or $P(K \mid F)$. 
 $\phi$ is a mixture component in the distribution over $P(F\mid K$).
 }
 If this model is correct, the prevalences given by participants would then be distributed as: $P(d) = \phi \cdot \text{Beta}(d \mid \gamma,\xi)+ (1 - \phi) \cdot \delta_{d=0} $. 
@@ -1059,52 +1059,32 @@ A similar absence of a gradient was observed in the human data ($\beta = 2.82; S
 Interpretations of generic utterances are stronger than their average truth conditions for the biological properties but not for the accidental properties (Figure \ref{fig:exp2b}) with both human data, replicating \citeA{Cimpian2010}, and the model; the extent of the difference is governed by prior property knowledge (mean prevalence when present $\gamma$, from Expt.~2a).
 The listener and speaker pair of models predicts human endorsements and interpretations of novel generic utterances well ($r^2(10) = 0.87$, MSE = 0.008).
 Thus, our model predicts that the asymmetry between truth conditions and implied prevalence should hold, but only for properties with the most extreme prior beliefs.
-
-\subsection*{Extended model analysis}
-
-\mht{you wrote: "i don't think the overall logic of this paragraph, connecting $\lambda_2$ to theoretical mismatch, will be clear to readers. explain better?" ... now?}
-\ndg{not really... i think we should remove this subsection and just segue directly to the subjective probability....}
-Having corroborated the model with empirical data, we again examine the model more closely.
-The $\lambda_2$ parameter, which is only used in the speaker $S_2$ model of the truth judgment data, is a soft-max parameter linking the $S_2$ model's probability of generic endorsement to the human behavioral data. Values below 1 imply that participants' behavior is slightly more random than one would expect from veridical Bayesian updating according to our model. Indeed, the value of the $\lambda_2$ parameter was found to be credibly less than 1 (see above).
-This suggests that either the artificiality of the task leads participants to produce a substantial amount of random behavior or there is something in our model that isn't specified correctly.
-
-Recall that in order to generate $S_2$ model predictions above, we assumed that the prevalence level told to the participant in the experimental prompt was, in fact, the prevalence level that the speaker model $S_2$ seeks to communicate.
-That is, we have assumed here the semantic scale over which generic gets evaluated and interpreted is the \emph{objective}, current frequency in the world.
-If, however, what matters for generic language is a speaker's \emph{subjective} belief about the world (e.g., a prediction about the prevalence in the future), then we would expect the model's predictions (here, the truth judgments) using the objective information to deviate from the human data, when subjective and objective frequencies disagree the most.
-This deviation would be particularly pronounced for the objective information that is most inconsistent with participants' intuitive theories of properties.
-
-If the $\lambda_2$ parameter were inferred for each type of property independently, 
-we would expect it to be lowest for types of properties for which participants beliefs would be most inconsistent with all prevalence levels given to the participants (i.e., some prevalence levels are very implausible).
-% with the strongest \emph{a priori} beliefs about prevalence that are skewed to either low or high prevalence levels. 
-%These properties are that are unlikely to be present at \emph{all} prevalence levels given in the experiment. This is because, on average, the objective frequency would deviate the most from 
-This would be the case for the accidental properties (which are unlikely to be present in high prevalence; e.g. 90\% of glippets have broken legs) and the body part properties (which are unlikely to be present in low prevalence; e.g. 10\% of lorches have wings).
-To investigate this, we implemented a model where the $\lambda_2$ parameter was allowed to vary by property-type.
-%The posterior distributions over $\lambda_2$ are shown in Appendix Figure \ref{fig:asymmetry-params-byItem} \ndg{this fig isn't that useful}.
-Indeed, we found that the $\lambda_2$ parameter is lowest for the rare accidental properties (95\% HPD = [0.03, 0.24]), followed by the common accidental properties (HPD = [0.27, 0.60]) and then the body part properties (HPD = [0.33, 0.76]).
-For the colored and vaguely described body parts --- for which all levels of prevalence are plausible ---  the speaker optimality parameters were considerably higher (color HPD = [0.50, 0.99]; vague HPD = [0.72, 1.32]).
-This is consistent with the hypothesis that the underlying scale that the truth conditions of generic statements are evaluated against is not objective frequency but subjective probability (i.e., the probability that a future instance of the kind would have the feature).
-We directly test this hypothesis in the next experiment.
-%This suggests that there is more to communicating generalizations than conveying the current frequency. % evidence is interpreted through the lens of theoretical considerations, and that has important implications for generic truth conditions.
-%But what is prevalence if not the current frequency?
-%In our final experiment, we develop a paradigm for testing this idea.
-
-
-
-
-%participants' beliefs about properties are inconsistent with the prevalence statement they are given (e.g., 90\% of lorches have broken legs), they may believe the current prevalence is aberrational, and assign a truth judgment to the generic based on theory-derived considerations (e.g., that in the future, fewer than 90\% of lorches will have broken legs).
 %
-%\begin{figure}
-%\centering
-%    \includegraphics[width=0.5\columnwidth]{implied-byItem-mh100kX2b.pdf}
-%    \caption{Human interpretation of prevalence upon hearing a generic compared with the $L_1$ model posterior predictive. 
-%    Participants and the model interpret generics differently for different property types: Generics of biological properties (red, blue, green) have  strong interpretations while generics of accidental properties (purple, orange) are weak.}
-%    %    Error bars denote bootstrapped 95\% confidence intervals for the data and Bayesian 95\% credible intervals for the model.}
-%  \label{fig:impliedByItem}
-%\end{figure}
+%\subsection*{Extended model analysis}
+%
+%\mht{you wrote: "i don't think the overall logic of this paragraph, connecting $\lambda_2$ to theoretical mismatch, will be clear to readers. explain better?" ... now?}
+%\ndg{not really... i think we should remove this subsection and just segue directly to the subjective probability....}
+%Having corroborated the model with empirical data, we again examine the model more closely.
+%The $\lambda_2$ parameter, which is only used in the speaker $S_2$ model of the truth judgment data, is a soft-max parameter linking the $S_2$ model's probability of generic endorsement to the human behavioral data. Values below 1 imply that participants' behavior is slightly more random than one would expect from veridical Bayesian updating according to our model. Indeed, the value of the $\lambda_2$ parameter was found to be credibly less than 1 (see above).
+%This suggests that either the artificiality of the task leads participants to produce a substantial amount of random behavior or there is something in our model that isn't specified correctly.
+%
+%Recall that in order to generate $S_2$ model predictions above, we assumed that the prevalence level told to the participant in the experimental prompt was, in fact, the prevalence level that the speaker model $S_2$ seeks to communicate.
+%That is, we have assumed here the semantic scale over which generic gets evaluated and interpreted is the \emph{objective}, current frequency in the world.
+%If, however, what matters for generic language is a speaker's \emph{subjective} belief about the world (e.g., a prediction about the prevalence in the future), then we would expect the model's predictions (here, the truth judgments) using the objective information to deviate from the human data, when subjective and objective frequencies disagree the most.
+%This deviation would be particularly pronounced for the objective information that is most inconsistent with participants' intuitive theories of properties.
+%
+%If the $\lambda_2$ parameter were inferred for each type of property independently, 
+%we would expect it to be lowest for types of properties for which participants beliefs would be most inconsistent with all prevalence levels given to the participants (i.e., some prevalence levels are very implausible).
+%% with the strongest \emph{a priori} beliefs about prevalence that are skewed to either low or high prevalence levels. 
+%%These properties are that are unlikely to be present at \emph{all} prevalence levels given in the experiment. This is because, on average, the objective frequency would deviate the most from 
+%This would be the case for the accidental properties (which are unlikely to be present in high prevalence; e.g. 90\% of glippets have broken legs) and the body part properties (which are unlikely to be present in low prevalence; e.g. 10\% of lorches have wings).
+%To investigate this, we implemented a model where the $\lambda_2$ parameter was allowed to vary by property-type.
+%%The posterior distributions over $\lambda_2$ are shown in Appendix Figure \ref{fig:asymmetry-params-byItem} \ndg{this fig isn't that useful}.
+%Indeed, we found that the $\lambda_2$ parameter is lowest for the rare accidental properties (95\% HPD = [0.03, 0.24]), followed by the common accidental properties (HPD = [0.27, 0.60]) and then the body part properties (HPD = [0.33, 0.76]).
+%For the colored and vaguely described body parts --- for which all levels of prevalence are plausible ---  the speaker optimality parameters were considerably higher (color HPD = [0.50, 0.99]; vague HPD = [0.72, 1.32]).
+%This is consistent with the hypothesis that the underlying scale that the truth conditions of generic statements are evaluated against is not objective frequency but subjective probability (i.e., the probability that a future instance of the kind would have the feature).
+%We directly test this hypothesis in the next experiment.
 
-%Interestingly, we observe greater implied prevalence of common accidental properties than rare accidental properties, given our median split based on the prior elicitation task ($\beta=0.061; SE = 0.025; t(39) = 2.47; p = 0.018$) \footnote{These statistics are the result of a mixed-effects linear regression with a maximal mixed-effect structure: Random by-participant effects of intercept and slope}.
-%Implications of generics of body parts was significantly greater than those of the biological properties used by \cite{Cimpian2010} (here, ``color parts'') ($\beta=0.118; SE = 0.024; t(39) = 4.74; p < 0.001$). 
-%There was also a trending effect for the implications of vague body parts (e.g. curly fur) to be greater than those of color parts (e.g. yellow fur) ($\beta=0.032; SE = 0.016, t(54.8) = 1.95; p = 0.056$), possibly due to the belief that the same kind of animal can come in many different colors (e.g. dogs).
 \begin{figure*}
 \centering
     \includegraphics[width=\columnwidth]{unfamiliar-asymmetry-predictive-data.pdf}
