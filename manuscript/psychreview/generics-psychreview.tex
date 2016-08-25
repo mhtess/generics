@@ -25,6 +25,8 @@
 \usepackage{lipsum}
 \usepackage{setspace}
 \usepackage{booktabs}
+\usepackage{changepage}
+\usepackage[nomarkers,nofiglist, notablist]{endfloat}
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -1678,64 +1680,64 @@ In practice, stable pragmatic phenomena can be observed with just one level of r
 %\end{itemize}
 
 \newpage
-\section*{Appendix B: Model parameter posteriors}
+%\section*{Appendix B: Model parameter posteriors}
+%
+%
+%\begin{figure*}[h]
+%\centering
+%    \includegraphics[width=\columnwidth]
+%    {familiar-truthjudgments-parameters.pdf}
+%    \caption{
+%    Posterior distributions for truth judgments model parameters (Expt.~1b)
+%}
+%  \label{fig:tj1-params}
+%\end{figure*}
+%
+%
+%\begin{figure*}[h]
+%\centering
+%    \includegraphics[width=0.6\columnwidth]
+%    {unfamiliar-interpretations-parameter.pdf}
+%    \caption{
+%    Posterior distributions for model parameter (Expt.~2b)
+%}
+%  \label{fig:interpretation-param}
+%\end{figure*}
+%
+%\begin{figure*}[h]
+%\centering
+%    \includegraphics[width=\columnwidth]
+%    {unfamiliar-asymmetry-parameters.pdf}
+%    \caption{
+%    Posterior distributions for model parameters (Expt.~2c)
+%}
+%  \label{fig:asymmetry-params}
+%\end{figure*}
+%
+%\begin{figure*}[h]
+%\centering
+%    \includegraphics[width=\columnwidth]
+%    {unfamiliar-asymmetry-byItem-parameters.pdf}
+%    \caption{
+%    Posterior distributions for $\lambda_2$ inferred independently for each item type (Expt.~2c)
+%}
+%  \label{fig:asymmetry-params-byItem}
+%\end{figure*}
 
+%\newpage
 
-\begin{figure*}[h]
-\centering
-    \includegraphics[width=\columnwidth]
-    {familiar-truthjudgments-parameters.pdf}
-    \caption{
-    Posterior distributions for truth judgments model parameters (Expt.~1b)
-}
-  \label{fig:tj1-params}
-\end{figure*}
-
-
-\begin{figure*}[h]
-\centering
-    \includegraphics[width=0.6\columnwidth]
-    {unfamiliar-interpretations-parameter.pdf}
-    \caption{
-    Posterior distributions for model parameter (Expt.~2b)
-}
-  \label{fig:interpretation-param}
-\end{figure*}
-
-\begin{figure*}[h]
-\centering
-    \includegraphics[width=\columnwidth]
-    {unfamiliar-asymmetry-parameters.pdf}
-    \caption{
-    Posterior distributions for model parameters (Expt.~2c)
-}
-  \label{fig:asymmetry-params}
-\end{figure*}
-
-\begin{figure*}[h]
-\centering
-    \includegraphics[width=\columnwidth]
-    {unfamiliar-asymmetry-byItem-parameters.pdf}
-    \caption{
-    Posterior distributions for $\lambda_2$ inferred independently for each item type (Expt.~2c)
-}
-  \label{fig:asymmetry-params-byItem}
-\end{figure*}
-
-\newpage
-
-\section*{Appendix C: Tables}
+%\section*{Appendix C: Tables}
 
 
 
 
 \begin{table}[h]
+\begin{adjustwidth}{-1cm}{}
 \centering
-
 \caption{Stimuli used in Experiment 1. 
 Estimates are proportion agreement for truth judgments and Maximum A-Posteriori (MAP) estimates for prevalence. 
 Brackets denote 95\% confidence intervals for truth judgments and 95\% credible intervals for prevalences.}
-\begin{tabular}{| l | l | p{3.5cm} | p{3.5cm} |}
+\begin{tabular}{| l | l | p{3.5cm} | p{3cm} |}
 \hline
 Conceptual type & Item & Truth judgment & Prevalence \\
 \hline \hline
@@ -1772,7 +1774,7 @@ False or Uncertain & 18. Leopards have wings.       &0.022	[0, 0.055]& 1.0 [0.0,
 \hline
 
 \end{tabular}
-
+\end{adjustwidth}
 \label{tab:expt1}
 \end{table}
 
@@ -1790,7 +1792,7 @@ False or Uncertain & 18. Leopards have wings.       &0.022	[0, 0.055]& 1.0 [0.0,
 \centering
 \caption{Stimuli used in Experiment 2 and statistics of the priors measure in the prior elicitation task. 
 \emph{Potential to be present} is a measure of how many different kinds are expected to have the property. Mean prevalence when present is a measure of how widespread the property is expected to be, assuming that it is present within a kind.
-Maximum A-Posteriori (MAP) estimates and 95\% Highest Probability Density Intervals from the Bayesian data analysis model described in Section \ref{sec:bda2} are shown for each measure.
+Maximum A-Posteriori (MAP) estimates and 95\% Highest Probability Density Intervals are shown for each measure.
 The majority of these items are taken from Cimpian et al. (2010)}
 \label{tab:novelGenericsStimuli}
 \begin{tabular}{| l || l | l | l |}
