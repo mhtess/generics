@@ -327,8 +327,7 @@ so instead we allow this threshold to be established in context through pragmati
 Such an inference would depend on background knowledge about properties and categories---potentially structured, conceptual knowledge.
 This inference, nonetheless, is a general mechanism of understanding language, not specific to interpreting generic statements.
 We formalize this hypothesis in the Rational Speech Act (RSA) theory---a formal, probabilistic theory of language understanding.
-RSA is derived from social reasoning, formalized as recursive Bayesian inference between speaker and listener \cite{Frank2012,Goodman2013,Goodman2016}.
-% \ndg{last ref is the new tics review...}
+RSA is derived from social reasoning, formalized as recursive Bayesian inference between speaker and listener (\citeNP{Frank2012, Goodman2013, Goodman2016}; see also, \citeNP{Franke2009, Franke2015}).
 \citeA{Goodman2016} provides a good introduction to the RSA framework and Appendix A presents a brief tutorial on RSA for the reader unfamiliar.
 % We will describe the basic RSA framework before articulating the full pragmatic theory of generic meaning.
 
@@ -1314,7 +1313,7 @@ Our formal model, by contrast, considers not only within-kind prevalence, but a 
 It has also been argued that \emph{cue validity} --- the probability of the kind given the feature: $P(K \mid F)$  --- is an important factor in generic meaning \cite<e.g., >{Khemlani2012}.
 For example, the \emph{cue validity} of malaria for mosquitos (i.e., the probability that an animal is a mosquito given that it carries malaria) is very high. 
 Cue validity is often correlated with our model predictions, supporting its explanatory value in previous studies, but it is distinct.
-The reason for preferring a semantics based on prevalence $P(F \mid K)$ alone is that prevalence provides a way to go from generic statements to beliefs about individuals in the world. 
+The reason for preferring a semantics based on prevalence $P(F \mid K)$ alone is that it provides a way to go from generic statements to beliefs about individuals in the world. 
 %It also unifies the treatment of generic statements and quantifier sentences, a result often believed to not be possible \cite{Leslie2012default, Prasada2013, Gelman2015d}.
 
 %In our model the mixture parameter $\phi$ (the potential of the property to be present in a kind) used in the prior distribution on prevalence has a large influence on generic endorsement. The cue validity $P(K \mid F)$ will often be high when only a single category is be capable of having the property, hence $\phi$ will be low and the generic will tend to be good. But this is only one special case: the generic can be good when $phi$ is not small, and $phi$ can be small for without cue validity being high. For instance, for the property \emph{eats people}, the mixture parameter $\phi$ is very low because most animals don't eat people; yet learning that some animal \emph{ate a person} is not a particularly good cue for any one kind of animal.
@@ -1605,9 +1604,9 @@ Office of Naval Research Grant N00014-13-1-0788 (to N.D.G.)
 
 \section*{Appendix A: The Rational Speech Act framework}
 
-The goal of this section is introduce the reader to the Rational Speech Act framework and point to various applications and areas of ongoing research where appropriate.
+The goal of this section is introduce the reader to the Rational Speech Act (RSA) framework. \citeA{Goodman2016} provides another introduction and useful review of the framework.
 
-The Rational Speech Act theory views language understanding as a special case of social cognition instantiated in a Bayesian model \cite{Frank2012, Goodman2013, Goodman2016}. 
+The Rational Speech Act theory views language understanding as a special case of social cognition instantiated in a Bayesian model (\citeNP{Frank2012, Goodman2013, Goodman2016}; see also, \citeNP{Franke2009, Franke2015}).
 In this view, an utterance is \emph{interpreted} by a Bayesian listener by integrating her prior beliefs with her generative model of the utterance.
 The generative model of the utterance is her intuitive theory of speech \emph{production}, i.e. her theory of a speaker. 
 This intuitive theory of speech production views speakers are rational actors who behave in accord with Bayesian decision-theory \cite{berger1988}.
@@ -1632,8 +1631,8 @@ $$
 S_{1}(u \mid x) \propto \exp{(\lambda \cdot U_{S_{1}}(u; s) )}\label{eq:RSA_S}
 $$
 
-Manipulating an utterance's cost has been used to derive Manner implicatures \cite{Bergen2016}, though in many applications utterance cost is kept uniform across alternative utterances. 
-The specification of alternatives is an area of ongoing research \cite{Franke2014cogsci, Peloquin2016} and is currently determined by the modeler for the problem at hand.
+%Manipulating an utterance's cost has been used to derive Manner implicatures \cite{Bergen2016}, though in many applications utterance cost is kept uniform across alternative utterances. 
+%The specification of alternatives is an area of ongoing research \cite{Franke2014cogsci, Peloquin2016} and is currently determined by the modeler for the problem at hand.
 
 The speaker's decision is made with respect to a hypothetical literal listener $L_0$. The literal listener evaluates an utterance according to its truth-functional denotation, a notion adopted from formal semantics. The semantics is a context-invariant mapping, from utterances and worlds to truth values:  $\denote{u}: X \rightarrow \text{Boolean}$. 
 From this, we construct a base case of a \emph{literal listener}, who interprets utterances with respect to their literal meaning.
@@ -1645,16 +1644,17 @@ Note that this model is the same as $L_1$ except for the likelihood function.
 %
 Here, the likelihood $\delta_{\denote{u}(x)}$ is the Kronecker delta function returning $1$ for states $x$ compatible with utterance $u$, and $0$ otherwise.
 
-The Rational Speech-Acts model formalizes the Gricean maxim to be information: The speaker produces utterances not with respect to their literal meaning, but with respect to how a naive listener (the literal listener) would interpret them, given the literal meaning and the listener's prior beliefs\footnote{Technically, this is what the listener believes the speaker believes is her prior beliefs.}.
-This literal listener base case also gives us the Gricean maxim to be truthful: the speaker who reasons about the literal listener has the goal of communicating the state $x$ given an utterance $u$ and given its literal meaning $\denote{u}$. 
+The RSA framework formalizes the Gricean maxim to be information: The speaker produces utterances not with respect to their literal meaning, but with respect to how a naive listener (the literal listener) would interpret them, given the literal meaning and the listener's prior beliefs.
+The fact that the literal listener updates her beliefs based on the truth-functional meaning of the utterance results in the speaker behaving in accord with the Gricean maxim to be truthful: the speaker who reasons about the literal listener has the goal of communicating the state $x$ given an utterance $u$ and given its literal meaning $\denote{u}$. 
 In principle, the speaker--listener recursion could grow for ever. 
-In practice, stable pragmatic phenomena can be observed with just one level of recursion. %\red{(CITE something?)}. 
+In practice, stable pragmatic phenomena can be observed with just one level of recursion.
 
-This general framework has been applied to host of language and reasoning phenomena including understanding scalar implicature \cite{Goodman2013, Degen2015cogsci}, communication in a noisy channel \cite{Bergen2015}, question--answer behavior \cite{Hawkins2015}, syllogistic reasoning \cite{Tessler2014}, and figurative language including hyperbole \cite{Kao2014}, metaphor \cite{Kao2014b}, and irony \cite{Kao2015}.
-In addition, RSA has been used to bridge the semantics--pragmatics divide, by using pragmatic reasoning to understand the very meaning of words in domains where literal meanings are hard to specify \cite<e.g. vague adjectives such as \emph{tall}, >{Lassiter2015}.
-These applications often extend RSA by introducing an additional uncertainty for the pragmatic listener. 
-For example, in addition to the listener being uncertain about the state of the world ($x$, above), she may have uncertainty about what is in common ground, what is the topic being discussed (the Question Under Discussion, or QUD), and even what is the very meaning of the word. 
-This kind of uncertainty posited at the level of the pragmatic listener can be resolved incorporating the Gricean pressure to be informative.
+%This general framework has been applied to host of language and reasoning phenomena including understanding scalar implicature \cite{Goodman2013, Degen2015cogsci}, communication in a noisy channel \cite{Bergen2015}, question--answer behavior \cite{Hawkins2015}, syllogistic reasoning \cite{Tessler2014}, and figurative language including hyperbole \cite{Kao2014}, metaphor \cite{Kao2014b}, and irony \cite{Kao2015}.
+%In addition, RSA has been used to bridge the semantics--pragmatics divide, by using pragmatic reasoning to understand the very meaning of words in domains where literal meanings are hard to specify \cite<e.g. vague adjectives such as \emph{tall}, >{Lassiter2015}.
+%These applications often extend RSA by introducing an additional uncertainty for the pragmatic listener. 
+%For example, in addition to the listener being uncertain about the state of the world ($x$, above), she may have uncertainty about what is in common ground, what is the topic being discussed (the Question Under Discussion, or QUD), and even what is the very meaning of the word. 
+%This kind of uncertainty posited at the level of the pragmatic listener can be resolved incorporating the Gricean pressure to be informative.
+
 %We now return to the question of what a pragmatic theory of generic meaning would look like.
 
 %The fact that pragmatic reasoning can be used for semantic inference (i.e. for learning the meaning of words) is suggestive that the difference between semantics and pragmatics is at least a little bit fuzzy.
