@@ -439,7 +439,7 @@ $S_2$ endorsement probabilities for the generic (black solid) increase as a func
     \includegraphics[width=\columnwidth]{schematics_s2.pdf}
     \caption{Schematic prior distributions for prevalence $x$ (blue dashed), the pragmatic listener $L_1$ model's posterior distribution over prevalence upon hearing a generic utterance (red), and speaker $S_2$ model's endorsement of a generic utterance for different levels of prevalence (black).
     The names given to these priors are meant to be suggestive of what kinds of properties these distributions might correspond to.
-    The left column uses prevalence priors modeled as Beta(5,5), Beta(4,1), and Beta(4,16) distributions.
+    The left column uses prevalence priors modeled as Beta(15,15), Beta(4,1), and Beta(4,16) distributions.
       The right column uses a prior distribution that is a mixture of the distribution above it with a second component, modeled as Beta(0.5, 4.5), reflecting categories with 0\% property prevalence.
     Horizontal dashed line at 0.5 is for convenience of comparing the point at which an utterance becomes judged as more true than false for $S_2$.
 	Note that the prior distribution over prevalence will be the same as $L_1$'s posterior distribution upon hearing the ``null'' utterance.
@@ -622,7 +622,8 @@ We learn about the \emph{a posteriori} credible values of our model parameter by
 
 The above analysis provides a single estimate for model predictions, but it is based on noisy empirical measurements of $P(x)$. In order to estimate the impact of this empirical noise on our model predictions, we resampled the prior data (with replacement) for 57 participants worth of data, discretizing and binning as we did above and then inferring parameters.
 This procedure (re-sample prior, discretize and bin, infer parameters) was repeated 500 times to bootstrap the model predictions.
-The Maximum A-Posteriori (MAP) estimate and 95\% Highest Probability Density (HPD) interval for $\lambda_1$ is 0.5 [0.004, 12.7] and $\lambda_2$ is 1.7 [1.3, 2.1] (full posterior distributions can be found in Appendix B; Figure \ref{fig:tj1-params}).\footnote{
+The Maximum A-Posteriori (MAP) estimate and 95\% Highest Probability Density (HPD) interval for $\lambda_1$ is 0.5 [0.004, 12.7] and $\lambda_2$ is 1.7 [1.3, 2.1]. %(full posterior distributions can be found in Appendix B; Figure \ref{fig:tj1-params}).
+\footnote{
 The fact that $\lambda_1$ is credibly less than 1 suggests that the generic utterance may be more costly than ``staying silent'' (our model assumes equal cost).
 We maintain using only the two $\lambda$ parameters in the model for simplicity.
 }
@@ -695,8 +696,12 @@ It could reflect accidental causes of the property, in which case, the prevalenc
 While an interesting possibility, its full consideration is beyond the scope of this article.
 }
 The relative contribution of these two components is governed by mixture parameter $\phi$, inferred from the data.\footnote{This is similar in spirit to Hurdle Models of epidemiological data, where the observed count of zeros is often substantially greater than one would expect from standard models, such as the Poisson (e.g. adverse events to vaccines)\cite{hurdleModels}}
-We think of $\phi$ the \emph{potential of a property to be present in a kind} and $\gamma$ is the \emph{mean prevalence of the property among the kinds with the potential to have it}.\footnote{We note that $\phi$ is not what other authors have described as \emph{cue validity} \cite{Beach1964, Khemlani2012}, or $P(K \mid F)$. 
-$\phi$ is a mixture component in the distribution over $P(F\mid K$).
+We think of $\phi$ the \emph{potential of a property to be present in a kind} and $\gamma$ is the \emph{mean prevalence of the property among the kinds with the potential to have it}.\footnote{
+We note that $\phi$ is not what other authors have described as \emph{cue validity} \cite{Beach1964, Khemlani2012}, or $P(K \mid F)$. 
+ $\phi$ is a mixture component in the prior distribution over prevalence: $P(F\mid K$). 
+Cue validity and prevalence are related via Bayes Rule': $P(K \mid F) \propto P(F \mid K) \cdot P(K)$. 
+%Due to this relationship, there will be a correlation between \emph{cue validity} and our model using prevalence priors.
+%The details of the precise mathematical relationship between cue validity and our model are beyond the scope of this article.
 }
 If this model is correct, the prevalences given by participants would then be distributed as: $P(d) = \phi \cdot \text{Beta}(d \mid \gamma,\xi)+ (1 - \phi) \cdot \delta_{d=0} $. 
 
@@ -1330,11 +1335,15 @@ There have been numerous demonstrations arguing that statistics (e.g., property 
 In these experiments, the prevalence considered is only the prevalence of the property for the target category \cite<e.g. the percentage of birds that lay eggs; >{Khemlani2012, Prasada2013}, what we have referred to as \emph{within-kind prevalence}. 
 Indeed, this simple statistic also fails to explain our data (Figure \ref{fig:commongenerics}b, right).
 Our formal model, by contrast, considers not only within-kind prevalence, but a listener's prior beliefs about prevalence across kinds in order to arrive at a meaning for a generic utterance.
+By establishing the validity of a semantics based on prevalence alone, we provide a formalism to go from generic statements to beliefs about categories. 
+Further, since prevalence is a predictive probability, the information conveyed with a generic can extend to actual entities in the world. 
 
-It has also been argued that \emph{cue validity} --- the probability of the kind given the feature: $P(K \mid F)$  --- is an important factor in generic meaning \cite<e.g., >{Khemlani2012}.
-For example, the \emph{cue validity} of malaria for mosquitos (i.e., the probability that an animal is a mosquito given that it carries malaria) is very high. 
-Cue validity is often correlated with our model predictions, supporting its explanatory value in previous studies, but it is distinct.
-The reason for preferring a semantics based on prevalence $P(F \mid K)$ alone is that it provides a way to go from generic statements to beliefs about individuals in the world. 
+%It has also been argued that \emph{cue validity} --- the probability of the kind given the feature: $P(K \mid F)$  --- is an important factor in generic meaning \cite<e.g., >{Khemlani2012}.
+%For example, the \emph{cue validity} of malaria for mosquitos (i.e., the probability that an animal is a mosquito given that it carries malaria) is very high. 
+%Cue validity is often correlated with our model predictions, supporting its explanatory value in previous studies, but it is distinct.
+%The reason for preferring a semantics based on prevalence $P(F \mid K)$ alone is that it provides a way to go from generic statements to beliefs about individuals in the world. 
+
+
 %It also unifies the treatment of generic statements and quantifier sentences, a result often believed to not be possible \cite{Leslie2012default, Prasada2013, Gelman2015d}.
 
 %In our model the mixture parameter $\phi$ (the potential of the property to be present in a kind) used in the prior distribution on prevalence has a large influence on generic endorsement. The cue validity $P(K \mid F)$ will often be high when only a single category is be capable of having the property, hence $\phi$ will be low and the generic will tend to be good. But this is only one special case: the generic can be good when $phi$ is not small, and $phi$ can be small for without cue validity being high. For instance, for the property \emph{eats people}, the mixture parameter $\phi$ is very low because most animals don't eat people; yet learning that some animal \emph{ate a person} is not a particularly good cue for any one kind of animal.
