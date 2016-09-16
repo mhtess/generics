@@ -1,0 +1,344 @@
+---
+title: "An alternative model for generic production"
+author: "M. H. Tessler"
+date: "September 15, 2016"
+output: pdf_document
+---
+```{r global_options, include=FALSE}
+rm(list=ls())
+knitr::opts_chunk$set(fig.width=7, fig.height=5, fig.crop = F, fig.path='figs/',
+                      echo=FALSE, warning=FALSE, cache=T, message=FALSE, sanitize = T)
+```
+```{r load_endorsement_data}
+data.path <- "~/Documents/research/generics-paper/data/familiar_generics/"
+
+tj <-read.csv(file = paste(data.path,'truth-judgments.csv',sep=''))
+# catch trials
+c <- read.csv(file = paste(data.path,'truth-judgments_catch-trials.csv', sep=''))
+
+# subject info-- to find native language
+s<- read.csv(file = paste(data.path,'truth-judgments_subject-information.csv', sep=''))
+
+# excluding the nonenglish native speakers has no effect on results
+# nonenglish<-c(1,4,19,38,39)
+
+# participants who failed the catch trials
+catch.ids <- c[c$pass==0,]$workerid
+
+#tj <- tj %>% filter(!(workerid %in% c(nonenglish, catch)))
+tj <- tj %>% filter(!(workerid %in% catch.ids))
+
+tj.bs <- tj %>% 
+  mutate(response = as.numeric(response=='agree-key')) %>%
+  group_by(sentence) %>%
+  multi_boot_standard(column = "response")
+
+
+# adjust naming of sentence to correspond to that used in the prior data
+tj.bs$sentence <- gsub('&quotechar','', tj.bs$sentence)
+tj.bs$sentence <- gsub('lyme','Lyme', tj.bs$sentence)
+
+# order sentences by increasing endorsement
+tj.bs$sentence<-with(tj.bs, reorder(sentence, mean, function(x) x))
+```
+
+# Motivation
+
+The intuition behind this alternative model is that a generic can signal both "this kind, as opposed to other kinds, has this feature" as well as "this feature, as opposed to other features, is central to this kind". In fact, this latter interpretation (though not what the "pragmatic theory" instantiates) is very similar to the perspectives of Cohen, Leslie, Prasada, ant others. Cohen's view is what I might call *feature centric* because it invokes domain restriction to those instances who could plausibly possess an alternative feature (thus, implicilty invokving a comparison class of alternative features). Leslie does a similar move with her "positive counterinstances" vs. "negative counterinstances". A positive counterinstance is a instance of the kind who possesses an alternative feature; thus, an implicit comparison class of alternative features.
+
+The reason why we might be interested in considering alternative features is when we want to move behind a truth judgment task, to a more general production task. For example, if we gave participants a bare plural (e.g., "Giraffes"), and had them fill in the sentence with a property, we might find some properties mentioned a lot more often for a given kind, though our generics model might say they are all good generics. That is because our generics model is evaluating a [K F] sentence in isolation (perhaps, compared against the negation or staying silent), and implicilty against other alternative kinds (through our prior / comparison class), but not against other kinds of generics you could say about K.
+
+
+# The proposal 
+
+Michael Franke suggests an alternative model for generics where you consider $P(F \mid K)$ both across $k_i$ (as the prior of the current model is structured) as well as across $f_j$. Given some table of $k_i$'s by $f_j$'s, where $d_{ij}$ refers to the $P(f_j \mid k_i)$: 
+
+$$
+P_S(\text{accept } k_i \text{ } f_{j}) \propto \frac{d_{ij}}{\sum_{k \in \mathcal{K} \setminus \{i\}} w(k) \cdot d_{kj} }
+$$
+
+where, $w(k)$ is a weight assigned to each kind (perhaps, psychological availability). For simplicity, we can assume all the weights are equal:
+
+$$
+w(k) = \frac{1}{|\mathcal{K}| - 1}
+$$
+
+Then, a log, logistic, or log-logistic transform could be applied to link it to the data.
+
+
+One potential issue with this is that for many kinds and features $d_{ij}$ will be 0, but this will only be terrible if *all* other kinds lack the feature (e.g., *has pouches*). 
+
+
+# Implementation
+
+## Only the 12 prespecified animals.
+
+We'll start with an analysis of the priors data presented in *A pragmatic theory*. In this paradigm, participants were presented with a set of 12 prespecified animal kinds (e.g., ducks, mosquitos) and generated 10 more. They then filled in the prevalence for 16 different properties. We'll first do this analysis for only the 12 prespecified animals.
+
+Plotting here the average prevalence for different kinds and features. These are the means of the raw data in a table format.
+
+```{r prevalenceTable}
+d<- read.csv("~/Documents/research/generics/manuscript/data/naturalGenerics-prior-trials-n57.csv")
+
+generics.of.interest <- data.frame(
+  animal=c("Robins","Leopards","Ducks","Lions",
+           "Mosquitos","Sharks","Cardinals","Kangaroos",
+           "Peacocks","Tigers","Ticks","Swans"),
+  property=c("lay eggs", "have spots","have wings",
+             "have manes","carry malaria",
+              "attacks swimmers","are red","have pouches",
+             "have beautiful feathers","eat people",
+             "carry Lyme disease","are white"))
+
+
+d.stat <- d %>%
+  mutate(ofInterest = ifelse(Category %in% generics.of.interest$animal, 1, 0)) %>%
+  filter(ofInterest == 1) %>%
+  group_by(Property, Category ) %>%
+  multi_boot_standard(column = "prevalence")
+
+ggplot(d.stat, aes(x = Category, y = Property, fill = mean)) + 
+  geom_tile()+
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+Now, let's use the above formula to generate predictions of how well certain features apply to certain animals. We'll also apply a log transform and then a logistic function to the raw prediction score.
+
+```{r predictions}
+
+logistic = function(x){
+  k = 1
+  x0 = 0.5
+  return( 1 / (1 + exp(-k*(x - x0))) )
+}
+
+kinds <- unique(d.stat$Category)
+features <- unique(d.stat$Property)
+
+predictions <- data.frame()
+
+for (k in kinds){
+  for (f in features){
+    pfk <- filter(d.stat, Category == k & Property == f)$mean
+    pfk_bar <- mean(filter(d.stat, Category != k & Property == f)$mean)
+    predictions <- bind_rows(predictions, 
+              data.frame(pred = pfk / pfk_bar, Category = k, Property = f))
+  }
+}
+
+predictions <- predictions %>%
+  mutate(logpred = ifelse(pred == 0, -10, log(pred)),
+         logisticlogpred = logistic(logpred),
+         logisticpred = logistic(pred))
+
+ggplot(predictions, aes(x = Category, y = Property, fill = pred)) + 
+  geom_tile()+
+  theme(axis.text.x = element_text(angle = 90))+
+  ggtitle("Prediction score")
+
+# ggplot(predictions, aes(x = Category, y = Property, fill = logpred)) + 
+#   geom_tile()+
+#   theme(axis.text.x = element_text(angle = 90))+
+#   ggtitle("Log prediction score")
+# 
+# ggplot(predictions, aes(x = Category, y = Property, fill = logisticpred)) + 
+#   geom_tile()+
+#   theme(axis.text.x = element_text(angle = 90))+
+#   ggtitle("Logistic prediction score")
+
+ggplot(predictions, aes(x = Category, y = Property, fill = logisticlogpred)) + 
+  geom_tile()+
+  theme(axis.text.x = element_text(angle = 90))+
+  ggtitle("Logistic log prediction score")
+```
+
+And compare with the endorsement data
+
+```{r model-data_fit}
+predictions <- predictions %>%
+  mutate(sentence = paste(Category, " ", Property, ".", sep =""))
+
+md <- left_join(tj.bs, predictions, by = "sentence")
+
+ggplot(md, aes( x = pred, y = mean ) )+
+  geom_point()+
+  ggtitle("raw score vs. endorsement")
+
+# ggplot(md, aes( x = logpred, y = mean ) )+
+#   geom_point()+
+#   ggtitle("log score vs. endorsement")
+# 
+# ggplot(md, aes( x = logisticpred, y = mean ) )+
+#   geom_point()+
+#   ggtitle("logistic score vs. endorsement")
+
+ggplot(md, aes( x = logisticlogpred, y = mean ) )+
+  geom_point()+
+  ggtitle("logistic of log score vs. endorsement")
+# View(md %>% mutate(predLogistic =  logistic(log(pred))))
+```
+
+## The most commonly produced animals.
+
+We'll repeat the analysis using the most commonly produced animals (and the prespcified ones) in the free generation task.
+
+```{r helpers2, echo=F}
+upperFirst <- function(name){
+  return (paste(toupper(substr(name, 1, 1)), substr(name, 2, nchar(name)), sep=""))
+}
+
+removeS <- function(name.in){
+  exceptions = c("Turtles", "Bees", "Horses", "Giraffes","Whales","Beetles","Eagles","Snakes","Moles")
+  bluejays =  c("Blue jay","Blue Jay","Bluejay")
+  fleas = c("Flea", "Fly")
+  name<-removeSpace(name.in)
+  last<-substr(name,nchar(name),nchar(name))
+  last2<-substr(name,nchar(name)-1,nchar(name))
+  if (name%in%exceptions){
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else if (name%in%bluejays){
+    name.singular <- "Bluejay"
+  } else if (name%in%fleas){
+    name.singular <- "Flea"
+  } else if (name=="Wolves") {
+    name.singular <- "Wolf"
+  } else if (name=='Dolpin') {
+    name.singular <- "Dolphin"
+  } else if (name=='Giraffs') {
+    name.singular <- "Giraffe"
+  }  else if (last2=='es') {
+    name.singular <- substr(name,1,nchar(name)-2)
+  } else if (last=='s') {
+    name.singular <- substr(name,1,nchar(name)-1)
+  } else {
+    name.singular <- name
+  }
+return(name.singular)
+}
+
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+
+removeSpace <- function(name){
+  if (substrRight(name,1)==' ') {
+    name.edit <- substr(name,1, nchar(name)-1)
+  } else {
+    name.edit <- name
+  }
+  return(name.edit)
+}
+```
+
+16 animals other than the prespecified 12 were produced by at least 8 participants. 
+(8 was chosen arbitrarily.)
+
+```{r mostCommonAnimals}
+d$animal.parsed<- factor(unlist(Map(removeS, upperFirst(as.character(d$Category)))))
+
+unique(d %>% select(workerid, animal.parsed)) %>%
+         group_by(animal.parsed) %>%
+  summarize(count = n()) %>%
+  filter(count >= 8 & count < 57)
+```
+
+Prevalence table
+
+```{r prevalenceTable2}
+most.popular.animals <- unique(d %>% select(workerid, animal.parsed)) %>%
+         group_by(animal.parsed) %>%
+  summarize(count = n()) %>%
+  filter(count >= 8) %>%
+  select(animal.parsed) %>%
+  rename(Category = animal.parsed)
+
+d.stat <- d %>% 
+  mutate(ofInterest = ifelse(animal.parsed %in% most.popular.animals$Category, 1, 0)) %>% 
+  select(-Category) %>%
+  rename(Category = animal.parsed) %>% 
+  filter(ofInterest == 1) %>%
+  group_by(Property, Category ) %>%
+  multi_boot_standard(column = "prevalence")
+
+ggplot(d.stat, aes(x = Category, y = Property, fill = mean)) + 
+  geom_tile()+
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+Predictions
+
+```{r predictions2}
+
+logistic = function(x){
+  k = 1
+  x0 = 0.5
+  return( 1 / (1 + exp(-k*(x - x0))) )
+}
+
+kinds <- unique(d.stat$Category)
+features <- unique(d.stat$Property)
+
+predictions <- data.frame()
+
+for (k in kinds){
+  for (f in features){
+    pfk <- filter(d.stat, Category == k & Property == f)$mean
+    pfk_bar <- mean(filter(d.stat, Category != k & Property == f)$mean)
+    predictions <- bind_rows(predictions, 
+              data.frame(pred = pfk / pfk_bar, Category = k, Property = f))
+  }
+}
+
+predictions <- predictions %>%
+  mutate(logpred = ifelse(pred == 0, -10, log(pred)),
+         logisticlogpred = logistic(logpred),
+         logisticpred = logistic(pred))
+
+ggplot(predictions, aes(x = Category, y = Property, fill = pred)) + 
+  geom_tile()+
+  theme(axis.text.x = element_text(angle = 90))+
+  ggtitle("Prediction score")
+
+# ggplot(predictions, aes(x = Category, y = Property, fill = logpred)) + 
+#   geom_tile()+
+#   theme(axis.text.x = element_text(angle = 90))+
+#   ggtitle("Log prediction score")
+# 
+# ggplot(predictions, aes(x = Category, y = Property, fill = logisticpred)) + 
+#   geom_tile()+
+#   theme(axis.text.x = element_text(angle = 90))+
+#   ggtitle("Logistic prediction score")
+
+ggplot(predictions, aes(x = Category, y = Property, fill = logisticlogpred)) + 
+  geom_tile()+
+  theme(axis.text.x = element_text(angle = 90))+
+  ggtitle("Logistic log prediction score")
+```
+
+And compare with the endorsement data
+
+```{r model-data_fit2}
+predictions <- predictions %>%
+  mutate(sentence = paste(Category, "s ", Property, ".", sep =""))
+
+md <- left_join(tj.bs, predictions, by = "sentence")
+
+ggplot(md, aes( x = pred, y = mean ) )+
+  geom_point()+
+  ggtitle("raw score vs. endorsement")
+
+# ggplot(md, aes( x = logpred, y = mean ) )+
+#   geom_point()+
+#   ggtitle("log score vs. endorsement")
+# 
+# ggplot(md, aes( x = logisticpred, y = mean ) )+
+#   geom_point()+
+#   ggtitle("logistic score vs. endorsement")
+
+ggplot(md, aes( x = logisticlogpred, y = mean ) )+
+  geom_point()+
+  ggtitle("logistic of log score vs. endorsement")
+# View(md %>% mutate(predLogistic =  logistic(log(pred))))
+```
+
+
